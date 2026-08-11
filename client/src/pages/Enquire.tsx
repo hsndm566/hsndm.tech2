@@ -3,7 +3,7 @@
  * not a generic contact page. Use sharp rules, visible status, and a single next action.
  */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, FileText, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FileText, Loader2, ShieldCheck } from "lucide-react";
 import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
 
@@ -16,6 +16,7 @@ export default function Enquire() {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [fileName, setFileName] = useState("");
+  const [isHandingOff, setIsHandingOff] = useState(false);
 
   useEffect(() => {
     applyPageSeo({ title: "Start a Campaign | AutoApply SA", description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.", path: "/enquire" });
@@ -27,6 +28,7 @@ export default function Enquire() {
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isHandingOff) return;
     const message = [
       "Hi AutoApply SA, I want to start a campaign.",
       `Name: ${name}`,
@@ -34,8 +36,15 @@ export default function Enquire() {
       `Target lane: ${role}`,
       fileName ? `CV selected: ${fileName} — I will attach it in this chat.` : "CV: I will share it in this chat.",
     ].join("\n");
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+    const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
+    if (handoffWindow) handoffWindow.opener = null;
+    setIsHandingOff(true);
+    window.setTimeout(() => {
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      if (handoffWindow) handoffWindow.location.replace(whatsappUrl);
+      else window.location.assign(whatsappUrl);
+      setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+    }, 850);
   };
 
   return (
@@ -59,7 +68,7 @@ export default function Enquire() {
             <div className="response-guard"><ShieldCheck size={17} /><div><b>Response safeguard</b><span>For the fastest direct reply, keep this page open and follow up via WhatsApp if you have not heard back within one business day.</span></div></div>
           </aside>
 
-          <form className="campaign-form" onSubmit={submit}>
+          <form className="campaign-form" onSubmit={submit} aria-busy={isHandingOff}>
             <div className="form-heading"><span>YOUR CAMPAIGN BRIEF</span><b>Required fields are marked <em>*</em></b></div>
             <label>
               <span>Full name <em>*</em></span>
@@ -83,8 +92,9 @@ export default function Enquire() {
               <ArrowRight size={18} />
             </label>
             <div className="form-protection"><Check size={15} /> On submit, a prefilled WhatsApp message opens so you can send your campaign brief and attach your CV directly.</div>
-            <button className="button button-accent" type="submit">Continue to WhatsApp <ArrowRight size={18} /></button>
+            <button className="button button-accent" type="submit" disabled={isHandingOff}>{isHandingOff ? <>Preparing your chat <Loader2 className="handoff-inline-spinner" size={17} /></> : <>Continue to WhatsApp <ArrowRight size={18} /></>}</button>
             <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
+            {isHandingOff && <div className="whatsapp-handoff" role="status" aria-live="polite"><Loader2 size={25} className="handoff-spinner" /><div><b>Building your WhatsApp brief</b><span>Opening your chat with the campaign details in a moment.</span></div></div>}
           </form>
         </div>
       </section>
