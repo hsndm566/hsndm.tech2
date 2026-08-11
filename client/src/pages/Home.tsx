@@ -127,6 +127,7 @@ export default function Home() {
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
   const [campaignStage, setCampaignStage] = useState(1);
   const [briefShared, setBriefShared] = useState(false);
+  const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
@@ -183,6 +184,7 @@ export default function Home() {
     setScanResult(null);
     setSelectedSuggestedRole(null);
     setBriefShared(false);
+    setBriefStatus("idle");
 
     const tick = (now: number) => {
       const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
@@ -224,6 +226,7 @@ export default function Home() {
     setScanResult(null);
     setSelectedSuggestedRole(null);
     setBriefShared(false);
+    setBriefStatus("idle");
     setScanState("idle");
   };
 
@@ -239,6 +242,7 @@ export default function Home() {
       `Detected role lanes: ${targetRoles.join(", ")}`,
       "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign.",
     ].join("\n");
+    const whatsappHref = `https://wa.me/966571448656?text=${encodeURIComponent(campaignMessage)}`;
 
     trackEngagement("campaign_readiness_brief_shared", {
       page: window.location.pathname,
@@ -246,6 +250,7 @@ export default function Home() {
       language: matchPreferences.language,
       role_count: String(targetRoles.length),
     });
+    setBriefStatus("submitting");
     setBriefShared(true);
     if (backendAvailable) {
       recordReadiness.mutate({
@@ -260,7 +265,10 @@ export default function Home() {
         source: "landing-readiness-check",
       });
     }
-    window.open(`https://wa.me/966571448656?text=${encodeURIComponent(campaignMessage)}`, "_blank", "noopener,noreferrer");
+    window.setTimeout(() => {
+      setBriefStatus("success");
+      window.open(whatsappHref, "_blank", "noopener,noreferrer");
+    }, 650);
   };
 
   const returnToTop = () => {
@@ -516,10 +524,12 @@ export default function Home() {
                       <div><dt>Application language</dt><dd>{matchPreferences.language}</dd></div>
                     </dl>
                     <div className="readiness-checklist"><b>Ready for the next step</b><span><Check size={13} /> CV text read locally</span><span><Check size={13} /> Saudi location selected</span><span><Check size={13} /> Role lanes identified</span></div>
-                    <button className="readiness-share" type="button" onClick={shareCampaignBrief} disabled={recordReadiness.isPending}>
-                      {recordReadiness.isPending ? "Opening your brief…" : "Send this brief to Hasan"} <MessageCircle size={16} />
+                    <button className="readiness-share" type="button" onClick={shareCampaignBrief} disabled={briefStatus === "submitting"}>
+                      {briefStatus === "submitting" ? "Preparing your brief…" : "Send this brief to Hasan"} <MessageCircle size={16} />
                     </button>
-                    <small>{briefShared ? (backendAvailable ? "Your brief was opened in WhatsApp. A minimal campaign brief may be saved for follow-up; your CV file and CV text are not sent or stored by this check." : "Your brief was opened in WhatsApp. This static site does not save the preview; your CV file and CV text are not sent or stored by this check.") : "By sharing, you choose to send this brief to the team. Your CV file and CV text remain in this browser unless you separately share them."}</small>
+                    {briefStatus === "submitting" && <div className="readiness-handoff readiness-loading" role="status" aria-live="polite"><span className="readiness-spinner" aria-hidden="true" /><span><b>Preparing your campaign brief</b><small>Creating a clean WhatsApp handoff…</small></span></div>}
+                    {briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>Campaign brief ready.</b><small>WhatsApp has opened with your selected Saudi role direction. If it did not open, use the link below.</small><a href={`https://wa.me/966571448656?text=${encodeURIComponent(["Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.", `City: ${matchPreferences.city}`, `Industry: ${industryLabels[matchPreferences.industry]}`, `Seniority: ${matchPreferences.seniority}`, `Application language: ${matchPreferences.language}`, `Detected role lanes: ${(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles).join(", ")}`, "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign."].join("\n"))}`} target="_blank" rel="noreferrer">Open WhatsApp</a></span></div>}
+                    <small>{briefShared ? (backendAvailable ? "A minimal campaign brief may be saved for follow-up; your CV file and CV text are not sent or stored by this check." : "This static site does not save the preview; your CV file and CV text are not sent or stored by this check.") : "By sharing, you choose to send this brief to the team. Your CV file and CV text remain in this browser unless you separately share them."}</small>
                   </section>
                 </div>
               )}
