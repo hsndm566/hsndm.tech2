@@ -41,9 +41,17 @@
 .campaign-upload small { font-size: 9px; }
 .form-protection { font-size: 12px; }
 .handoff-inline-spinner, .handoff-spinner { animation: handoff-spin .72s linear infinite; }
-.whatsapp-handoff { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; gap: 14px; padding: 24px; text-align: center; color: var(--paper); background: rgba(21,21,21,.96); }
-.whatsapp-handoff > svg { justify-self: center; color: var(--signal); }
-.whatsapp-handoff div { display: grid; gap: 6px; }
+.whatsapp-handoff { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; gap: 14px; padding: 24px; text-align: center; color: var(--paper); background: rgba(21,21,21,.96); animation: handoff-fade-in 220ms cubic-bezier(.23,1,.32,1) both; }
+.whatsapp-handoff > svg { justify-self: center; color: var(--signal); animation: handoff-content-in 310ms 65ms cubic-bezier(.23,1,.32,1) both, handoff-spin .72s linear infinite; }
+.whatsapp-handoff div { display: grid; gap: 6px; animation: handoff-content-in 310ms 110ms cubic-bezier(.23,1,.32,1) both; }
 .whatsapp-handoff b { font-family: "Space Grotesk", sans-serif; font-size: 20px; letter-spacing: -.05em; }
 .whatsapp-handoff span { max-width: 260px; color: rgba(245,242,235,.65); font-size: 13px; line-height: 1.55; }
+.campaign-form .button-accent { position: relative; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); transition: transform 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms cubic-bezier(.23,1,.32,1), background 180ms cubic-bezier(.23,1,.32,1); }
+.campaign-form .button-accent::after { position: absolute; inset: 0; content: ""; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.24) 50%, transparent 70%); transform: translateX(-125%); transition: transform 430ms cubic-bezier(.23,1,.32,1); pointer-events: none; }
+@media (hover: hover) { .campaign-form .button-accent:hover { transform: translateY(-2px); background: #f65a3b; box-shadow: 0 8px 20px rgba(229,72,42,.25); }.campaign-form .button-accent:hover::after { transform: translateX(125%); } }
+.campaign-form .button-accent:focus-visible { transform: translateY(-1px); box-shadow: 0 0 0 3px rgba(229,72,42,.3); }
+.campaign-form .button-accent:active { transform: scale(.98); }
 @keyframes handoff-spin { to { transform: rotate(360deg); } }
+@keyframes handoff-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes handoff-content-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .whatsapp-handoff, .whatsapp-handoff > svg, .whatsapp-handoff div, .handoff-inline-spinner, .handoff-spinner { animation: none !important; } }
