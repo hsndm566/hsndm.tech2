@@ -5,6 +5,7 @@
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { MapView } from "@/components/Map";
+import { trackEngagement } from "@/lib/analytics";
 import { demoLists, readCvText } from "@/lib/careerMatcher";
 import { applyPageSeo } from "@/lib/seo";
 import {
@@ -126,6 +127,18 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateBackToTopVisibility);
   }, []);
 
+  useEffect(() => {
+    const trackCampaignAction = (event: MouseEvent) => {
+      const target = (event.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[href]');
+      const href = target?.getAttribute("href") || "";
+      if (!target || (!href.startsWith("/enquire") && !href.includes("wa.me/966571448656"))) return;
+      const label = (target.textContent || "campaign action").trim().replace(/\s+/g, " ").slice(0, 64);
+      trackEngagement("campaign_cta_clicked", { page: window.location.pathname, placement: label });
+    };
+    document.addEventListener("click", trackCampaignAction);
+    return () => document.removeEventListener("click", trackCampaignAction);
+  }, []);
+
   useEffect(() => () => {
     if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
   }, []);
@@ -195,6 +208,7 @@ export default function Home() {
 
   const returnToTop = () => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    trackEngagement("back_to_top_clicked", { page: window.location.pathname });
     window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
   };
 
