@@ -1,5 +1,5 @@
 /** Shared client-side SEO metadata for the static routed application. */
-export const SITE_URL = "https://hsndmstudio-lyaavagg.manus.space";
+export const SITE_URL = "https://hsndm.tech";
 export const SOCIAL_IMAGE_URL = `${SITE_URL}/manus-storage/autoapply-hero-operations_ad007abc.jpg`;
 
 type SeoOptions = {

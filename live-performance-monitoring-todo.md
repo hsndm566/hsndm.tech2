@@ -40,5 +40,9 @@
 - [x] Validate public Saudi geography, service, pricing, contact, and privacy claims; flag unsupported claims for removal or clarification.
 - [x] Confirm no bilingual content mismatch or stale legacy copy requires correction after the final audit.
 - [x] Verify English and Arabic desktop/mobile/RTL rendering and direct-route behavior.
-- [ ] Publish the final bilingual audited release to GitHub Pages.
+- [x] Publish the final bilingual audited release to GitHub Pages.
+- [x] Verify English contact form and WhatsApp prefill without submission; verify Arabic localized readiness intake and Arabic WhatsApp handoff without submission.
+- [x] Audit live English and Arabic SEO metadata, crawl controls, and performance indicators; confirmed static canonical/sitemap/robots domain references and static Arabic metadata require correction.
+- [x] Replace the stale managed-domain static canonical, sitemap, and robots references with hsndm.tech and generate route-specific Arabic metadata.
+- [ ] Report the verified bilingual contact, SEO, and performance audit results.
 - [ ] Deliver the audit findings and monitoring status.
