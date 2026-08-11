@@ -294,7 +294,7 @@ export default function Home() {
         </nav>
 
         <div className="nav-actions">
-          <Link className="language-link" href="/ar" lang="ar" aria-label="Visit the Arabic version">العربية</Link>
+          <Link className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></Link>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"

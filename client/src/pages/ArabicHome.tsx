@@ -17,12 +17,16 @@ import {
   ScanSearch,
   Send,
   ShieldCheck,
+  SlidersHorizontal,
   Sparkles,
   Zap,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
+import { demoLists, readCvText } from "@/lib/careerMatcher";
+import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
+import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 
 const MapView = lazy(async () => {
@@ -52,6 +56,35 @@ const faqs = [
   { question: "متى أتوقع الرد؟", answer: "يراجع الفريق طلبات الحملة أولاً بأول. للحصول على أسرع رد مباشر، استخدم WhatsApp بعد إرسال ملخصك؛ وإذا لم تسمع رداً خلال يوم عمل واحد، أرسل متابعة قصيرة تتضمن اسمك والوظيفة المستهدفة." },
 ];
 
+const industryLabels = {
+  all: "جميع المجالات",
+  "technology-data": "التقنية والبيانات",
+  "business-operations": "الأعمال والعمليات",
+  "people-service": "الأفراد والخدمات",
+  "engineering-construction": "الهندسة والإنشاءات",
+};
+
+const roleTranslations: Record<string, string> = {
+  "Software Engineer": "مهندس برمجيات", "Backend Developer": "مطور خلفي", "Full Stack Developer": "مطور متكامل",
+  "Data Analyst": "محلل بيانات", "Business Intelligence Analyst": "محلل ذكاء أعمال", "Data Scientist": "عالم بيانات",
+  "Accountant": "محاسب", "Financial Analyst": "محلل مالي", "Finance Officer": "مسؤول مالي",
+  "Sales Executive": "مسؤول مبيعات", "Account Manager": "مدير حسابات", "Business Development Manager": "مدير تطوير أعمال",
+  "Marketing Specialist": "أخصائي تسويق", "Digital Marketing Executive": "مسؤول تسويق رقمي", "Social Media Manager": "مدير وسائل التواصل",
+  "HR Specialist": "أخصائي موارد بشرية", "Recruiter": "أخصائي توظيف", "HR Coordinator": "منسق موارد بشرية",
+  "Registered Nurse": "ممرض مسجل", "Clinical Coordinator": "منسق سريري", "Medical Officer": "مسؤول طبي",
+  "Civil Engineer": "مهندس مدني", "Site Engineer": "مهندس موقع", "Project Engineer": "مهندس مشروع",
+  "Mechanical Engineer": "مهندس ميكانيكي", "Electrical Engineer": "مهندس كهربائي", "Maintenance Engineer": "مهندس صيانة",
+  "IT Support Specialist": "أخصائي دعم تقني", "Network Administrator": "مسؤول شبكات", "Systems Administrator": "مسؤول أنظمة",
+  "Customer Service Representative": "ممثل خدمة عملاء", "Call Center Agent": "موظف مركز اتصال", "Client Support Specialist": "أخصائي دعم عملاء",
+  "Teacher": "معلم", "Training Specialist": "أخصائي تدريب", "Academic Coordinator": "منسق أكاديمي",
+  "Operations Lead": "قائد عمليات", "Process Improvement Specialist": "أخصائي تحسين عمليات", "Operations Coordinator": "منسق عمليات",
+  "Logistics Coordinator": "منسق لوجستي", "Supply Chain Analyst": "محلل سلسلة إمداد", "Warehouse Supervisor": "مشرف مستودع",
+  "Project Manager": "مدير مشروع", "Project Coordinator": "منسق مشروع", "PMO Analyst": "محلل مكتب إدارة المشاريع",
+};
+
+type MatchPreferences = { city: string; industry: keyof typeof industryLabels; seniority: string; language: "Arabic" };
+type ScanResult = { field: string; roles: string[]; confidence: string; rationale: string };
+
 function RailLabel({ children }: { children: React.ReactNode }) {
   return <span className="rail-label">{children}</span>;
 }
@@ -63,6 +96,20 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
 export default function ArabicHome() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [campaignStage, setCampaignStage] = useState(1);
+  const [selectedFile, setSelectedFile] = useState("");
+  const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
+  const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "Arabic" });
+  const scanFrame = useRef<number | null>(null);
+  const scanVersion = useRef(0);
+  const recordReadiness = trpc.campaign.readiness.record.useMutation();
+  const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
+    || window.location.hostname === "localhost"
+    || window.location.hostname.endsWith(".manus.space")
+    || window.location.hostname.includes("manus.computer");
 
   useEffect(() => {
     applyPageSeo({
@@ -71,6 +118,53 @@ export default function ArabicHome() {
       path: "/ar",
     });
   }, []);
+
+  useEffect(() => () => {
+    if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
+  }, []);
+
+  const roleLabel = (role: string) => roleTranslations[role] || role;
+  const cityLabel = (city: string) => ({ Jeddah: "جدة", Riyadh: "الرياض", Dammam: "الدمام", Makkah: "مكة المكرمة", Madinah: "المدينة المنورة", "Anywhere in Saudi Arabia": "أي مكان في المملكة العربية السعودية" }[city] || city);
+  const seniorityLabel = (level: string) => ({ "Any level": "أي مستوى", "Entry level": "مستوى مبتدئ", "Mid level": "مستوى متوسط", "Senior level": "مستوى متقدم" }[level] || level);
+  const makeArabicWhatsAppHref = (roles: string[]) => `https://wa.me/966571448656?text=${encodeURIComponent(["مرحباً AutoApply SA، أكملت فحص جاهزية الحملة السعودية.", `المدينة: ${cityLabel(matchPreferences.city)}`, `المجال: ${industryLabels[matchPreferences.industry]}`, `المستوى: ${seniorityLabel(matchPreferences.seniority)}`, "لغة التقديم: العربية", `مسارات الوظائف المقترحة: ${roles.map(roleLabel).join("، ")}`, "أفهم أن هذه معاينة فقط ولم يتم إرسال أي طلب تقديم. أرغب في مناقشة حملة تقديم."].join("\n"))}`;
+
+  const startScan = (file?: File) => {
+    if (!file) return;
+    if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
+    const version = scanVersion.current + 1;
+    scanVersion.current = version;
+    const scanDuration = 8000 + Math.floor(Math.random() * 4001);
+    const preferencesAtScan = matchPreferences;
+    const fieldPromise = readCvText(file).then((text) => demoLists(text, preferencesAtScan.industry));
+    const startedAt = performance.now();
+    setSelectedFile(file.name); setScanState("scanning"); setScanProgress(0); setScanResult(null); setSelectedSuggestedRole(null); setBriefStatus("idle");
+    const tick = (now: number) => {
+      const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
+      setScanProgress(progress);
+      if (progress < 100) { scanFrame.current = window.requestAnimationFrame(tick); return; }
+      void fieldPromise.then((fields) => {
+        if (scanVersion.current !== version) return;
+        const bestFit = fields[0];
+        if (!bestFit) { setScanState("fallback"); return; }
+        setScanResult({ field: bestFit.title, roles: bestFit.items.slice(0, 3), confidence: fields.length > 1 ? "مطابقة قوية" : "مطابقة مركزة", rationale: `تمت المطابقة محلياً من إشارات سيرتك الذاتية وتفضيلاتك: ${cityLabel(preferencesAtScan.city)}، ${seniorityLabel(preferencesAtScan.seniority)}، والعربية.` });
+        setScanState("matched");
+      });
+    };
+    scanFrame.current = window.requestAnimationFrame(tick);
+  };
+
+  const resetScan = () => { scanVersion.current += 1; if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current); setSelectedFile(""); setScanProgress(0); setScanResult(null); setSelectedSuggestedRole(null); setBriefStatus("idle"); setScanState("idle"); };
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => startScan(event.target.files?.[0]);
+  const onFileDrop = (event: DragEvent<HTMLLabelElement>) => { event.preventDefault(); startScan(event.dataTransfer.files?.[0]); };
+  const shareArabicBrief = () => {
+    if (!scanResult) return;
+    const targetRoles = selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles;
+    const whatsappHref = makeArabicWhatsAppHref(targetRoles);
+    trackEngagement("campaign_readiness_brief_shared", { page: window.location.pathname, city: matchPreferences.city, language: "Arabic", role_count: String(targetRoles.length) });
+    setBriefStatus("submitting");
+    if (backendAvailable) recordReadiness.mutate({ city: matchPreferences.city as "Jeddah" | "Riyadh" | "Dammam" | "Makkah" | "Madinah" | "Anywhere in Saudi Arabia", industry: matchPreferences.industry, seniority: matchPreferences.seniority as "Any level" | "Entry level" | "Mid level" | "Senior level", language: "Arabic", targetRoles, primaryField: scanResult.field, cvReadable: true, consent: true, source: "landing-readiness-check" });
+    window.setTimeout(() => { setBriefStatus("success"); window.open(whatsappHref, "_blank", "noopener,noreferrer"); }, 650);
+  };
 
   return (
     <div className="site-shell" lang="ar" dir="rtl">
@@ -82,7 +176,7 @@ export default function ArabicHome() {
         <nav className="desktop-nav" aria-label="روابط الصفحة">
           <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة</a>
         </nav>
-        <Link href="/" className="language-link">English <ArrowLeft size={15} /></Link>
+        <Link href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></Link>
       </header>
 
       <main id="top">
@@ -118,7 +212,7 @@ export default function ArabicHome() {
         </section>
 
         <section id="upload" className="upload-section section-paper">
-          <div className="page-frame upload-grid"><div className="upload-image-wrap"><img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="مساحة عمل جاهزة لبدء البحث عن وظيفة" /><div className="image-stamp"><span>ابدأ / 60 ثانية</span><ArrowUpRight size={17} /></div></div><div className="upload-copy"><div className="section-kicker"><Paperclip size={15} /> استلام السيرة الذاتية</div><h2>أضف سيرتك الذاتية. <i>اكتشف مساراتك.</i></h2><p className="section-summary">اختر أحدث نسخة من سيرتك الذاتية وأكمل المحادثة مباشرة مع الفريق.</p><div className="drop-zone has-file" aria-label="رفع السيرة الذاتية"><span className="drop-symbol"><FileText size={24} /></span><span className="drop-copy"><b>اختر أو أضف سيرتك الذاتية</b><small>PDF أو DOC أو DOCX أو TXT</small></span><span className="drop-arrow"><ArrowUpRight size={20} /></span></div><p className="privacy-note"><ShieldCheck size={16} /> هذه المعاينة التجريبية تحتفظ بالاختيار في متصفحك فقط. لبدء حملة فعلية، تابع مع الفريق أدناه.</p><a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">تابع عبر WhatsApp <MessageCircle size={18} /></a></div></div>
+          <div className="page-frame upload-grid"><div className="upload-image-wrap"><img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="مساحة عمل جاهزة لبدء البحث عن وظيفة" /><div className="image-stamp"><span>ابدأ / 60 ثانية</span><ArrowUpRight size={17} /></div></div><div className="upload-copy"><div className="section-kicker"><Paperclip size={15} /> استلام السيرة الذاتية</div><h2>أضف سيرتك الذاتية. <i>اكتشف مساراتك.</i></h2><p className="section-summary">اختر أحدث نسخة من سيرتك الذاتية وحدّد تفضيلاتك للحملة داخل السعودية. تتم القراءة والمطابقة في متصفحك فقط، ولا يُرسل أي طلب تقديم في هذه المعاينة.</p><div className="match-preferences" aria-label="تفضيلات مطابقة الوظائف في السعودية"><div className="preferences-heading"><span><SlidersHorizontal size={14} /> تفضيلات المطابقة</span><small>تُطبّق محلياً</small></div><div className="preferences-grid"><label><span>المدينة</span><select value={matchPreferences.city} onChange={(event) => setMatchPreferences((current) => ({ ...current, city: event.target.value }))}><option value="Jeddah">جدة</option><option value="Riyadh">الرياض</option><option value="Dammam">الدمام</option><option value="Makkah">مكة المكرمة</option><option value="Madinah">المدينة المنورة</option><option value="Anywhere in Saudi Arabia">أي مكان في السعودية</option></select></label><label><span>المجال</span><select value={matchPreferences.industry} onChange={(event) => setMatchPreferences((current) => ({ ...current, industry: event.target.value as MatchPreferences["industry"] }))}><option value="all">جميع المجالات</option><option value="technology-data">التقنية والبيانات</option><option value="business-operations">الأعمال والعمليات</option><option value="people-service">الأفراد والخدمات</option><option value="engineering-construction">الهندسة والإنشاءات</option></select></label><label><span>المستوى الوظيفي</span><select value={matchPreferences.seniority} onChange={(event) => setMatchPreferences((current) => ({ ...current, seniority: event.target.value }))}><option value="Any level">أي مستوى</option><option value="Entry level">مستوى مبتدئ</option><option value="Mid level">مستوى متوسط</option><option value="Senior level">مستوى متقدم</option></select></label><label><span>لغة التقديم</span><select value="Arabic" disabled aria-label="لغة التقديم العربية"><option value="Arabic">العربية</option></select></label></div></div><label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}><input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} /><span className="drop-symbol"><FileText size={24} /></span><span className="drop-copy"><b>{selectedFile || "اختر أو أضف سيرتك الذاتية"}</b><small>{selectedFile ? "الفحص المحلي نشط — يبقى ملفك داخل هذا المتصفح" : "PDF أو DOC أو DOCX أو TXT"}</small></span><span className="drop-arrow"><ArrowUpRight size={20} /></span></label>{scanState === "scanning" && <div className="role-scan" role="status" aria-live="polite"><div className="scan-meta"><span><ScanSearch size={14} /> جارٍ العثور على مسارات مناسبة لك…</span><b>{scanProgress}%</b></div><div className="scan-track" role="progressbar" aria-label="جارٍ العثور على وظائف مناسبة" aria-valuemin={0} aria-valuemax={100} aria-valuenow={scanProgress}><span style={{ width: `${scanProgress}%` }} /></div><p>نقرأ المهارات والخبرة والإشارات المهنية محلياً.</p></div>}{scanState === "matched" && scanResult && <div className="role-results" role="status" aria-live="polite"><div className="result-heading"><span><Check size={14} /> تم العثور على إشارات وظيفية</span><button onClick={resetScan}>افحص سيرة أخرى</button></div><p>المسار الأنسب <b>{scanResult.field}</b> <em>{scanResult.confidence}</em></p><div className="role-chips" aria-label="مسارات الوظائف المقترحة">{scanResult.roles.map((role) => <button type="button" key={role} className={selectedSuggestedRole === role ? "selected" : ""} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}><span>{roleLabel(role)}</span><ArrowUpRight size={13} /></button>)}</div>{selectedSuggestedRole && <p className="role-selection"><Check size={13} /> تم اختيار <b>{roleLabel(selectedSuggestedRole)}</b> لملخص حملتك.</p>}<div className="match-rationale"><b>سبب المطابقة</b><span>{scanResult.rationale}</span></div><section className="readiness-card" aria-label="فحص جاهزية الحملة السعودية"><div className="readiness-heading"><span><Zap size={14} /> جاهزية الحملة السعودية</span><b>معاينة فقط</b></div><p>هذا هو الاتجاه الذي سنستخدمه لبدء محادثة حول الحملة — وليس طلب تقديم أو توقعاً لمقابلة.</p><dl className="readiness-grid"><div><dt>المدينة المستهدفة</dt><dd>{cityLabel(matchPreferences.city)}</dd></div><div><dt>المجال</dt><dd>{industryLabels[matchPreferences.industry]}</dd></div><div><dt>المستوى</dt><dd>{seniorityLabel(matchPreferences.seniority)}</dd></div><div><dt>لغة التقديم</dt><dd>العربية</dd></div></dl><div className="readiness-checklist"><b>جاهز للخطوة التالية</b><span><Check size={13} /> تمت قراءة نص السيرة محلياً</span><span><Check size={13} /> تم تحديد موقع داخل السعودية</span><span><Check size={13} /> تم تحديد مسارات وظيفية</span></div><button className="readiness-share" type="button" onClick={shareArabicBrief} disabled={briefStatus === "submitting"}>{briefStatus === "submitting" ? "جارٍ تجهيز ملخصك…" : "أرسل هذا الملخص إلى حسن"} <MessageCircle size={16} /></button>{briefStatus === "submitting" && <div className="readiness-handoff readiness-loading" role="status" aria-live="polite"><span className="readiness-spinner" aria-hidden="true" /><span><b>جارٍ تجهيز ملخص حملتك</b><small>نُنشئ تحويلاً واضحاً إلى WhatsApp…</small></span></div>}{briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>ملخص الحملة جاهز.</b><small>تم فتح WhatsApp مع اتجاهك الوظيفي السعودي المحدد. إذا لم يُفتح، استخدم الرابط أدناه.</small><a href={makeArabicWhatsAppHref(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles)} target="_blank" rel="noreferrer">فتح WhatsApp</a></span></div>}<small>{backendAvailable ? "قد يُحفظ ملخص محدود للحملة للمتابعة؛ لا يُرسل هذا الفحص ملف السيرة أو نصها ولا يخزنه." : "لا يحفظ هذا الموقع الثابت المعاينة؛ ملف سيرتك ونصها لا يُرسلان ولا يُخزنان في هذا الفحص."}</small></section></div>}{scanState === "fallback" && <div className="scan-fallback" role="status" aria-live="polite"><div><ShieldCheck size={16} /><span><b>نحتاج إلى إلقاء نظرة أقرب.</b> تعذر قراءة هذا الملف بوضوح في المتصفح، لذلك لن نخمن الوظائف المناسبة.</span></div><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">أرسلها عبر WhatsApp <ArrowUpRight size={15} /></a><button onClick={resetScan}>جرّب سيرة أخرى</button></div>}<p className="privacy-note"><ShieldCheck size={16} /> يبقي هذا الفحص نص السيرة واختيار الملف داخل متصفحك. لا يُرسل سوى ملخص حملة اختياري عند اختيار WhatsApp.</p><a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">تابع عبر WhatsApp <MessageCircle size={18} /></a></div></div>
         </section>
 
         <section className="proof-strip" aria-label="خصائص الخدمة"><div className="page-frame proof-grid"><div><StatusDot /> إرسال موثّق</div><div><StatusDot /> تقديم عبر البريد الإلكتروني والمنصات</div><div><StatusDot /> الدفع عبر STC Pay أو الآيبان</div><div><StatusDot /> عربي / إنجليزي · المملكة العربية السعودية</div></div></section>

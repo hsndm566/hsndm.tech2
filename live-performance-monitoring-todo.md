@@ -29,6 +29,11 @@
 - [x] Map the supplied full Arabic copy across all matching landing-page sections.
 - [x] Populate ArabicHome.tsx without changing the English page or visual design system.
 - [x] Verify full RTL rendering and responsive behavior against the supplied Arabic copy.
-- [ ] Publish the completed Arabic landing-page release to GitHub Pages.
-- [ ] Verify and publish the final English and Arabic interaction update.
+- [x] Publish the completed Arabic landing-page release to GitHub Pages.
+- [x] Verify and publish the final English and Arabic interaction update.
+- [x] Add a smooth, accessible navigation language toggle between English and Arabic routes.
+- [x] Add fully localized Arabic Campaign Readiness Check preferences, CV interaction copy, and outcome labels.
+- [x] Add Arabic loading, success, and WhatsApp-prefill feedback for the Arabic readiness flow.
+- [x] Verify bilingual navigation and Arabic readiness behavior across desktop and mobile.
+- [ ] Publish the bilingual interaction release to GitHub Pages.
 - [ ] Deliver the audit findings and monitoring status.
