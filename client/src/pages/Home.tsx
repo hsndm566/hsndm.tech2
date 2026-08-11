@@ -9,6 +9,7 @@ import { demoLists, readCvText } from "@/lib/careerMatcher";
 import { applyPageSeo } from "@/lib/seo";
 import {
   ArrowDownRight,
+  ArrowUp,
   ArrowUpRight,
   Check,
   ChevronDown,
@@ -108,6 +109,7 @@ export default function Home() {
   const [scanProgress, setScanProgress] = useState(0);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
   const [campaignStage, setCampaignStage] = useState(1);
   const scanFrame = useRef<number | null>(null);
@@ -115,6 +117,13 @@ export default function Home() {
 
   useEffect(() => {
     applyPageSeo({ title: "AutoApply SA | AI Job Application Engine for Saudi Arabia", description: "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.", path: "/" });
+  }, []);
+
+  useEffect(() => {
+    const updateBackToTopVisibility = () => setShowBackToTop(window.scrollY > window.innerHeight * 1.15);
+    updateBackToTopVisibility();
+    window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateBackToTopVisibility);
   }, []);
 
   useEffect(() => () => {
@@ -182,6 +191,11 @@ export default function Home() {
     setScanResult(null);
     setSelectedSuggestedRole(null);
     setScanState("idle");
+  };
+
+  const returnToTop = () => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
   };
 
   return (
@@ -601,6 +615,7 @@ export default function Home() {
       <div className="mobile-campaign-cta">
         <Link href="/enquire"><span><StatusDot /> OPEN CAMPAIGN</span><b>Start now <ArrowUpRight size={17} /></b></Link>
       </div>
+      {showBackToTop && <button className="back-to-top" type="button" onClick={returnToTop} aria-label="Back to top" title="Back to top"><ArrowUp size={17} /><span>TOP</span></button>}
 
       <footer className="footer">
         <div className="page-frame footer-top">

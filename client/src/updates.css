@@ -55,3 +55,12 @@
 @keyframes handoff-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes handoff-content-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .whatsapp-handoff, .whatsapp-handoff > svg, .whatsapp-handoff div, .handoff-inline-spinner, .handoff-spinner { animation: none !important; } }
+
+/* Long-page navigation: stays above the page surface and clears the fixed mobile campaign action. */
+.back-to-top { position: fixed; z-index: 28; right: 28px; bottom: 28px; min-width: 46px; min-height: 46px; padding: 0 11px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--paper); border: 1px solid rgba(245,242,235,.35); background: rgba(21,21,21,.91); box-shadow: 0 9px 24px rgba(0,0,0,.18); backdrop-filter: blur(8px); font-family: "DM Mono", monospace; font-size: 8px; letter-spacing: .065em; animation: back-to-top-in 190ms cubic-bezier(.23,1,.32,1) both; transition: transform 170ms cubic-bezier(.23,1,.32,1), background 170ms cubic-bezier(.23,1,.32,1), border-color 170ms cubic-bezier(.23,1,.32,1); }
+.back-to-top svg { color: var(--signal); }
+.back-to-top:hover, .back-to-top:focus-visible { color: var(--ink); border-color: var(--paper); background: var(--paper); transform: translateY(-3px); outline: none; }
+.back-to-top:active { transform: scale(.96); }
+@keyframes back-to-top-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 680px) { .back-to-top { right: 16px; bottom: 72px; min-width: 42px; min-height: 42px; padding: 0 9px; } }
+@media (prefers-reduced-motion: reduce) { .back-to-top { animation: none; } }
