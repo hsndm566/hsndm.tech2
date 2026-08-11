@@ -13,6 +13,8 @@ import "./updates.css";
 import "./saudi-experience.css";
 
 const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
+const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
+const ArabicThankYou = lazy(() => import("@/pages/ArabicThankYou"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
@@ -22,6 +24,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
+      <Route path="/ar/enquire" component={ArabicEnquire} />
+      <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/404" component={NotFound} />

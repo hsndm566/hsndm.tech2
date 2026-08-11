@@ -5,7 +5,7 @@
 import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { trackEngagement } from "@/lib/analytics";
-import { demoLists, readCvText } from "@/lib/careerMatcher";
+import { demoLists } from "@/lib/careerTaxonomy";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
 import {
@@ -175,7 +175,7 @@ export default function Home() {
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
     const preferencesAtScan = matchPreferences;
-    const fieldPromise = readCvText(file).then((text) => demoLists(text, preferencesAtScan.industry));
+    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file)).then((text) => demoLists(text, preferencesAtScan.industry));
     const startedAt = performance.now();
 
     setSelectedFile(file.name);

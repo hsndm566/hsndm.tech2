@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import path from "node:path";
-import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { defineConfig, type Plugin, type ResolvedConfig, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
 // =============================================================================
@@ -75,11 +75,16 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
  * - Auto-trimmed when exceeding 1MB (keeps newest entries)
  */
 function vitePluginManusDebugCollector(): Plugin {
+  let resolvedConfig: ResolvedConfig | undefined;
   return {
     name: "manus-debug-collector",
 
+    configResolved(config) {
+      resolvedConfig = config;
+    },
+
     transformIndexHtml(html) {
-      if (process.env.NODE_ENV === "production") {
+      if (resolvedConfig?.command === "build") {
         return html;
       }
       return {
@@ -150,7 +155,7 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), ...(process.env.NODE_ENV === "production" ? [] : [vitePluginManusRuntime()]), vitePluginManusDebugCollector()];
 
 export default defineConfig({
   plugins,
@@ -167,6 +172,16 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
+          if (id.includes("lucide-react")) return "icons";
+          if (id.includes("@tanstack") || id.includes("@trpc") || id.includes("superjson")) return "data-client";
+        },
+      },
+    },
   },
   server: {
     host: true,

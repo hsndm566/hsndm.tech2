@@ -13,6 +13,23 @@ const pageMetadata = {
     direction: "rtl",
     locale: "ar_SA",
   },
+  "ar/enquire": {
+    title: "ابدأ حملتك | أوتوأبلاي السعودية",
+    description: "ابدأ حملة أوتوأبلاي السعودية وشارك المعلومات الأساسية لبحثك عن وظيفة داخل المملكة.",
+    path: "/ar/enquire",
+    lang: "ar",
+    direction: "rtl",
+    locale: "ar_SA",
+  },
+  "ar/thank-you": {
+    title: "ملخص الحملة جاهز | أوتوأبلاي السعودية",
+    description: "تم تجهيز ملخص حملتك للخطوة التالية في أوتوأبلاي السعودية.",
+    path: "/ar/thank-you",
+    lang: "ar",
+    direction: "rtl",
+    locale: "ar_SA",
+    robots: "noindex, follow",
+  },
   enquire: {
     title: "Start a Campaign | AutoApply SA",
     description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.",

@@ -44,5 +44,11 @@
 - [x] Verify English contact form and WhatsApp prefill without submission; verify Arabic localized readiness intake and Arabic WhatsApp handoff without submission.
 - [x] Audit live English and Arabic SEO metadata, crawl controls, and performance indicators; confirmed static canonical/sitemap/robots domain references and static Arabic metadata require correction.
 - [x] Replace the stale managed-domain static canonical, sitemap, and robots references with hsndm.tech and generate route-specific Arabic metadata.
+- [x] Inspect the existing enquiry flow and document safe bundle-splitting targets.
+- [x] Add a dedicated `/ar/enquire` form with localized fields, validation, confirmation copy, and Arabic WhatsApp prefill.
+- [x] Add a staged visual countdown before WhatsApp opens on English and Arabic enquiry forms.
+- [x] Defer document-processing libraries and development instrumentation to reduce initial browser transfer cost.
+- [x] Measure the resulting production bundle and verify bilingual mobile/desktop enquiry flows.
+- [ ] Publish the bilingual enquiry and performance optimization release.
 - [ ] Report the verified bilingual contact, SEO, and performance audit results.
 - [ ] Deliver the audit findings and monitoring status.
