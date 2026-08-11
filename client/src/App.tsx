@@ -4,16 +4,18 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import ArabicHome from "@/pages/ArabicHome";
-import Enquire from "@/pages/Enquire";
-import NotFound from "@/pages/NotFound";
-import ThankYou from "@/pages/ThankYou";
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import "./updates.css";
 import "./saudi-experience.css";
+
+const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
+const Enquire = lazy(() => import("@/pages/Enquire"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const ThankYou = lazy(() => import("@/pages/ThankYou"));
 
 function Router() {
   return (
@@ -34,7 +36,9 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster richColors position="top-right" />
-          <Router />
+          <Suspense fallback={<main className="min-h-screen bg-[#f3f0e9]" aria-busy="true" />}>
+            <Router />
+          </Suspense>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

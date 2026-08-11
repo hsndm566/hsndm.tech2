@@ -2,9 +2,8 @@
  * Design reminder — Operational Clarity: Swiss information design with a signal rail,
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
-import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
-import { MapView } from "@/components/Map";
 import { trackEngagement } from "@/lib/analytics";
 import { demoLists, readCvText } from "@/lib/careerMatcher";
 import { applyPageSeo } from "@/lib/seo";
@@ -31,6 +30,11 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "wouter";
+
+const MapView = lazy(async () => {
+  const module = await import("@/components/Map");
+  return { default: module.MapView };
+});
 
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
@@ -606,7 +610,9 @@ export default function Home() {
               </div>
             </div>
             <div className="map-frame">
-              <MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} />
+              <Suspense fallback={<div className="location-map-canvas" role="status" aria-label="Loading Jeddah map" />}>
+                <MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} />
+              </Suspense>
               <div className="map-caption"><span><StatusDot /> SERVICE BASE</span><b>JEDDAH / KSA</b></div>
             </div>
           </div>
