@@ -17,7 +17,7 @@ export default function HeroMedia({ poster, alt }: HeroMediaProps) {
 
   return (
     <>
-      <img className="hero-image" src={poster} alt={alt} />
+      <img className="hero-image hero-poster" src={poster} alt={alt} />
       {mayRenderVideo && (
         <video className="hero-video" autoPlay muted loop playsInline preload="metadata" poster={poster} aria-hidden="true">
           <source src={HERO_VIDEO_URL} type="video/mp4" />

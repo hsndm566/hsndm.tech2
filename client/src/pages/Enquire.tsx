@@ -8,6 +8,7 @@ import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
 
 const campaignLanes = ["Operations", "Logistics", "Sales", "Technology", "Hospitality", "Other"];
+const WHATSAPP_NUMBER = "966571448656";
 
 export default function Enquire() {
   const [, setLocation] = useLocation();
@@ -26,6 +27,14 @@ export default function Enquire() {
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const message = [
+      "Hi AutoApply SA, I want to start a campaign.",
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Target lane: ${role}`,
+      fileName ? `CV selected: ${fileName} — I will attach it in this chat.` : "CV: I will share it in this chat.",
+    ].join("\n");
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
     setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
   };
 
@@ -73,8 +82,8 @@ export default function Enquire() {
               <span><b>{fileName || "Select a CV (optional)"}</b><small>PDF, DOC, DOCX or TXT · remains on this device in preview</small></span>
               <ArrowRight size={18} />
             </label>
-            <div className="form-protection"><Check size={15} /> This form takes you to a confirmation page. Use WhatsApp to complete a real campaign enquiry.</div>
-            <button className="button button-accent" type="submit">Send campaign enquiry <ArrowRight size={18} /></button>
+            <div className="form-protection"><Check size={15} /> On submit, a prefilled WhatsApp message opens so you can send your campaign brief and attach your CV directly.</div>
+            <button className="button button-accent" type="submit">Continue to WhatsApp <ArrowRight size={18} /></button>
             <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
           </form>
         </div>
