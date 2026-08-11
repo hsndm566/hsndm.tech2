@@ -2,7 +2,7 @@
  * Design reminder — Operational Clarity: Swiss information design; warm paper, near-black ink,
  * signal vermilion. Use the signal rail, sharp editorial type, restrained motion, and practical hierarchy.
  */
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -190,4 +190,37 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .site-shell .section-summary { font-size: 14px; }
   .site-shell .process-content p { font-size: 14px; }
   .site-shell .faq-answer p { font-size: 14px; }
+}
+
+/* Arabic typography: keep Latin display tracking out of Arabic script and give RTL copy more breathing room. */
+.site-shell[lang="ar"] {
+  font-family: "Noto Sans Arabic", "Tahoma", "Arial", sans-serif;
+  letter-spacing: normal;
+  word-spacing: .08em;
+  font-variant-ligatures: common-ligatures contextual;
+  text-rendering: optimizeLegibility;
+}
+.site-shell[lang="ar"] :is(button, input, select, textarea) { font-family: inherit; }
+.site-shell[lang="ar"] :is(h1, h2, h3, h4, .brand, .button, .text-button, .plan-cta, .faq-item button b, .process-content h3, .capability-card h3, .dashboard-progress b, .dashboard-spotlight b, .case-ledger b) {
+  font-family: "Noto Sans Arabic", "Tahoma", "Arial", sans-serif;
+  letter-spacing: normal;
+  word-spacing: .04em;
+}
+.site-shell[lang="ar"] :is(.hero h1, h2, .final-cta h2) { font-weight: 700; line-height: 1.22; }
+.site-shell[lang="ar"] :is(p, li, blockquote, dd, small, .section-summary, .hero-lead > p, .process-content p, .capability-card p, .detail-points p, .faq-answer p, .plan-card > p, .review-card blockquote) {
+  letter-spacing: normal;
+  word-spacing: .08em;
+  line-height: 1.95;
+}
+.site-shell[lang="ar"] :is(.eyebrow, .section-kicker, .rail-label, .section-rail p, .plan-top, .plan-flag, .plan-cta, .faq-item button span, .review-index, .preferences-heading, .preferences-grid span, .readiness-heading, .readiness-grid dt, .campaign-switcher button, .dashboard-top, .queue-heading, .ledger-queue > div, .hero-note, .hero-trust-row, .proof-grid > div) {
+  font-family: "Noto Sans Arabic", "Tahoma", "Arial", sans-serif;
+  letter-spacing: normal;
+  word-spacing: .06em;
+  line-height: 1.7;
+  text-transform: none;
+}
+.site-shell[lang="ar"] .hero h1 i, .site-shell[lang="ar"] h2 i { font-family: inherit; letter-spacing: normal; }
+@media (max-width: 680px) {
+  .site-shell[lang="ar"] :is(.hero h1, h2, .final-cta h2) { line-height: 1.27; }
+  .site-shell[lang="ar"] :is(p, li, blockquote, dd, small, .section-summary, .hero-lead > p, .process-content p, .capability-card p, .detail-points p, .faq-answer p, .plan-card > p, .review-card blockquote) { line-height: 2; }
 }

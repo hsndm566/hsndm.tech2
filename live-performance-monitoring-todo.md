@@ -49,6 +49,7 @@
 - [x] Add a staged visual countdown before WhatsApp opens on English and Arabic enquiry forms.
 - [x] Defer document-processing libraries and development instrumentation to reduce initial browser transfer cost.
 - [x] Measure the resulting production bundle and verify bilingual mobile/desktop enquiry flows.
-- [ ] Publish the bilingual enquiry and performance optimization release.
+- [x] Publish the bilingual enquiry and performance optimization release.
+- [x] Verify the managed and public Arabic pages use the same release, improve RTL word spacing and line-height, then publish and recheck hsndm.tech.
 - [ ] Report the verified bilingual contact, SEO, and performance audit results.
 - [ ] Deliver the audit findings and monitoring status.
