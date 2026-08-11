@@ -22,5 +22,13 @@
 - [x] Publish the production release and synchronize it to the GitHub Pages repository.
 - [x] Add a smooth accessible loading state to the Campaign Readiness Check submission.
 - [x] Add a clear success confirmation that preserves the WhatsApp handoff and privacy explanation.
-- [x] Verify the readiness submission feedback on desktop and mobile.
+- [x] Verify and publish the readiness submission feedback on desktop and mobile.
+- [x] Review the current campaign-stage slider against the Uptal interaction reference.
+- [x] Remove the semantically mismatched range slider and retain direct discrete stage controls.
+- [x] Integrate the user-provided optimized Arabic design and copy across the full landing-page journey.
+- [x] Map the supplied full Arabic copy across all matching landing-page sections.
+- [x] Populate ArabicHome.tsx without changing the English page or visual design system.
+- [x] Verify full RTL rendering and responsive behavior against the supplied Arabic copy.
+- [ ] Publish the completed Arabic landing-page release to GitHub Pages.
+- [ ] Verify and publish the final English and Arabic interaction update.
 - [ ] Deliver the audit findings and monitoring status.
