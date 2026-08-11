@@ -3,6 +3,21 @@
 - [x] Audit mobile performance, SEO metadata, crawl files, and live error signals on hsndm.tech.
 - [x] Add direct static entry documents for the Arabic and enquiry routes so public route URLs do not return 404 on GitHub Pages.
 - [x] Add privacy-conscious browser error telemetry alongside existing engagement analytics.
-- [ ] Compare lightweight recurring monitoring with a durable background monitor and confirm the preferred alert destination.
-- [ ] Configure the chosen uptime and error check, then verify its first successful run.
+- [x] Publish the static release to GitHub Pages and verify direct Arabic, enquiry, and thank-you URLs resolve successfully.
+- [x] Select the lowest-credit independent GitHub monitor and connect failure alerts to the GitHub account using hasanadam506@gmail.com.
+- [x] Configure the chosen uptime and error check, then verify its first successful run.
+- [x] Record each independent health-check result through the uptime monitor’s workflow-run history so weekly statistics are based on real data.
+- [x] Send a weekly uptime-summary notification to hasanadam506@gmail.com through the connected GitHub account.
+- [x] Manually run and verify the weekly summary workflow.
+- [x] Capture per-route response times and structured health-check failures in the monitor output.
+- [x] Calculate weekly uptime, error rate, and response-time performance metrics from completed monitor runs.
+- [x] Trigger and verify a manual Monday-summary email-notification test.
+- [x] Review the live conversion journey and identify where visitors need clearer proof before committing.
+- [x] Compare suitable service-preview and trial models that do not create unverified claims or unsustainable manual work.
+- [x] Prepare a prioritized, no-build enhancement roadmap for approval.
+- [x] Inspect the current Railway connection and document the backend deployment boundary.
+- [x] Validate supported Saudi locations and Arabic interaction conventions against current authoritative sources.
+- [x] Upgrade the project to include a secure backend and implement the Saudi Campaign Readiness Check.
+- [x] Verify English, Arabic, mobile, client-privacy, and backend-ready flows.
+- [ ] Publish the production release and synchronize it to the GitHub Pages repository.
 - [ ] Deliver the audit findings and monitoring status.

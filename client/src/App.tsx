@@ -16,8 +16,8 @@ const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />

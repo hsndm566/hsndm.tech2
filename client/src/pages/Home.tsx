@@ -7,6 +7,7 @@ import HeroMedia from "@/components/HeroMedia";
 import { trackEngagement } from "@/lib/analytics";
 import { demoLists, readCvText } from "@/lib/careerMatcher";
 import { applyPageSeo } from "@/lib/seo";
+import { trpc } from "@/lib/trpc";
 import {
   ArrowDownRight,
   ArrowUp,
@@ -106,6 +107,14 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
 type ScanResult = { field: string; roles: string[]; confidence: "Focused" | "Strong"; rationale: string };
 type MatchPreferences = { city: string; industry: string; seniority: string; language: string };
 
+const industryLabels: Record<string, string> = {
+  all: "All industries",
+  "technology-data": "Technology & Data",
+  "business-operations": "Business & Operations",
+  "people-service": "People & Services",
+  "engineering-construction": "Engineering & Construction",
+};
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
@@ -117,8 +126,14 @@ export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
   const [campaignStage, setCampaignStage] = useState(1);
+  const [briefShared, setBriefShared] = useState(false);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
+  const recordReadiness = trpc.campaign.readiness.record.useMutation();
+  const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
+    || window.location.hostname === "localhost"
+    || window.location.hostname.endsWith(".manus.space")
+    || window.location.hostname.includes("manus.computer");
 
   useEffect(() => {
     applyPageSeo({ title: "AutoApply SA | AI Job Application Engine for Saudi Arabia", description: "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.", path: "/" });
@@ -167,6 +182,7 @@ export default function Home() {
     setScanProgress(0);
     setScanResult(null);
     setSelectedSuggestedRole(null);
+    setBriefShared(false);
 
     const tick = (now: number) => {
       const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
@@ -207,7 +223,44 @@ export default function Home() {
     setScanProgress(0);
     setScanResult(null);
     setSelectedSuggestedRole(null);
+    setBriefShared(false);
     setScanState("idle");
+  };
+
+  const shareCampaignBrief = () => {
+    if (!scanResult) return;
+    const targetRoles = selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles;
+    const campaignMessage = [
+      "Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.",
+      `City: ${matchPreferences.city}`,
+      `Industry: ${industryLabels[matchPreferences.industry]}`,
+      `Seniority: ${matchPreferences.seniority}`,
+      `Application language: ${matchPreferences.language}`,
+      `Detected role lanes: ${targetRoles.join(", ")}`,
+      "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign.",
+    ].join("\n");
+
+    trackEngagement("campaign_readiness_brief_shared", {
+      page: window.location.pathname,
+      city: matchPreferences.city,
+      language: matchPreferences.language,
+      role_count: String(targetRoles.length),
+    });
+    setBriefShared(true);
+    if (backendAvailable) {
+      recordReadiness.mutate({
+        city: matchPreferences.city as "Jeddah" | "Riyadh" | "Dammam" | "Makkah" | "Madinah" | "Anywhere in Saudi Arabia",
+        industry: matchPreferences.industry as "all" | "technology-data" | "business-operations" | "people-service" | "engineering-construction",
+        seniority: matchPreferences.seniority as "Any level" | "Entry level" | "Mid level" | "Senior level",
+        language: matchPreferences.language as "English" | "Arabic",
+        targetRoles,
+        primaryField: scanResult.field,
+        cvReadable: true,
+        consent: true,
+        source: "landing-readiness-check",
+      });
+    }
+    window.open(`https://wa.me/966571448656?text=${encodeURIComponent(campaignMessage)}`, "_blank", "noopener,noreferrer");
   };
 
   const returnToTop = () => {
@@ -420,7 +473,7 @@ export default function Home() {
             <div className="upload-copy">
               <div className="section-kicker"><Paperclip size={15} /> CV INTAKE</div>
               <h2>Drop your CV. <i>Find your lanes.</i></h2>
-              <p className="section-summary">Select the latest version of your CV, then set the Saudi Arabia role preferences that matter to you. The local scan uses both inputs to make its match more relevant.</p>
+              <p className="section-summary">Select the latest version of your CV, then set the Saudi Arabia role preferences that matter to you. The local scan uses both inputs to make its match more relevant. No applications are sent during this readiness check.</p>
               <div className="match-preferences" aria-label="Saudi Arabia role preferences">
                 <div className="preferences-heading"><span><SlidersHorizontal size={14} /> MATCH PREFERENCES</span><small>Applied locally</small></div>
                 <div className="preferences-grid">
@@ -453,6 +506,21 @@ export default function Home() {
                   <div className="role-chips" aria-label="Suggested target roles">{scanResult.roles.map((role) => <button type="button" key={role} className={selectedSuggestedRole === role ? "selected" : ""} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}><span>{role}</span><ArrowUpRight size={13} /></button>)}</div>
                   {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
+                  <section className="readiness-card" aria-label="Saudi Campaign Readiness Check">
+                    <div className="readiness-heading"><span><Zap size={14} /> SAUDI CAMPAIGN READINESS</span><b>PREVIEW ONLY</b></div>
+                    <p>Here is the direction we would use to begin a campaign conversation—not a job application or interview prediction.</p>
+                    <dl className="readiness-grid">
+                      <div><dt>Target city</dt><dd>{matchPreferences.city}</dd></div>
+                      <div><dt>Industry</dt><dd>{industryLabels[matchPreferences.industry]}</dd></div>
+                      <div><dt>Seniority</dt><dd>{matchPreferences.seniority}</dd></div>
+                      <div><dt>Application language</dt><dd>{matchPreferences.language}</dd></div>
+                    </dl>
+                    <div className="readiness-checklist"><b>Ready for the next step</b><span><Check size={13} /> CV text read locally</span><span><Check size={13} /> Saudi location selected</span><span><Check size={13} /> Role lanes identified</span></div>
+                    <button className="readiness-share" type="button" onClick={shareCampaignBrief} disabled={recordReadiness.isPending}>
+                      {recordReadiness.isPending ? "Opening your brief…" : "Send this brief to Hasan"} <MessageCircle size={16} />
+                    </button>
+                    <small>{briefShared ? (backendAvailable ? "Your brief was opened in WhatsApp. A minimal campaign brief may be saved for follow-up; your CV file and CV text are not sent or stored by this check." : "Your brief was opened in WhatsApp. This static site does not save the preview; your CV file and CV text are not sent or stored by this check.") : "By sharing, you choose to send this brief to the team. Your CV file and CV text remain in this browser unless you separately share them."}</small>
+                  </section>
                 </div>
               )}
               {scanState === "fallback" && (
@@ -462,7 +530,7 @@ export default function Home() {
                   <button onClick={resetScan}>Try another CV</button>
                 </div>
               )}
-              <p className="privacy-note"><ShieldCheck size={16} /> This static preview keeps the selection in your browser only. For a real campaign, continue with the team below.</p>
+              <p className="privacy-note"><ShieldCheck size={16} /> This readiness check keeps CV text and file selection in your browser. Only a voluntary campaign brief is sent when you choose WhatsApp.</p>
               <a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
                 Continue on WhatsApp <MessageCircle size={18} />
               </a>
