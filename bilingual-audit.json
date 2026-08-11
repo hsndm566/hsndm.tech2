@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-08-11T22:11:49.554Z",
+  "passed": true,
+  "checks": [
+    {
+      "name": "matching public section anchors",
+      "pass": true,
+      "details": {
+        "english": [
+          "case-study",
+          "faq",
+          "how",
+          "location",
+          "pricing",
+          "product",
+          "reviews",
+          "upload"
+        ],
+        "arabic": [
+          "case-study",
+          "faq",
+          "how",
+          "location",
+          "pricing",
+          "product",
+          "reviews",
+          "upload"
+        ]
+      }
+    },
+    {
+      "name": "matching published prices",
+      "pass": true,
+      "details": {
+        "english": [
+          "99",
+          "149",
+          "249"
+        ],
+        "arabic": [
+          "99",
+          "149",
+          "249"
+        ]
+      }
+    },
+    {
+      "name": "shared Saudi contact and city values",
+      "pass": true,
+      "details": {
+        "englishMissing": [],
+        "arabicMissing": []
+      }
+    },
+    {
+      "name": "no legacy Gulf-wide geography",
+      "pass": true,
+      "details": {
+        "englishMatch": null,
+        "arabicMatch": null
+      }
+    },
+    {
+      "name": "localized Arabic readiness flow",
+      "pass": true,
+      "details": "Arabic CV readiness, WhatsApp prefill, and success feedback are present."
+    },
+    {
+      "name": "private browser-only CV handling",
+      "pass": true,
+      "details": "Both routes use local text extraction and communicate the file-privacy boundary."
+    }
+  ]
+}

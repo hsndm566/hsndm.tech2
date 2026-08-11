@@ -35,5 +35,10 @@
 - [x] Add fully localized Arabic Campaign Readiness Check preferences, CV interaction copy, and outcome labels.
 - [x] Add Arabic loading, success, and WhatsApp-prefill feedback for the Arabic readiness flow.
 - [x] Verify bilingual navigation and Arabic readiness behavior across desktop and mobile.
-- [ ] Publish the bilingual interaction release to GitHub Pages.
+- [x] Publish the bilingual interaction release to GitHub Pages.
+- [x] Compare every English and Arabic landing-page section, interaction, and CTA for structural parity.
+- [x] Validate public Saudi geography, service, pricing, contact, and privacy claims; flag unsupported claims for removal or clarification.
+- [x] Confirm no bilingual content mismatch or stale legacy copy requires correction after the final audit.
+- [x] Verify English and Arabic desktop/mobile/RTL rendering and direct-route behavior.
+- [ ] Publish the final bilingual audited release to GitHub Pages.
 - [ ] Deliver the audit findings and monitoring status.
