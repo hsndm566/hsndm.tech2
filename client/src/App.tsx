@@ -16,6 +16,7 @@ const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
 const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
 const ArabicThankYou = lazy(() => import("@/pages/ArabicThankYou"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/ar/enquire" component={ArabicEnquire} />
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
