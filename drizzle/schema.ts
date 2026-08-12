@@ -50,6 +50,7 @@ export type InsertCampaignReadiness = typeof campaignReadiness.$inferInsert;
  */
 export const jobApplications = mysqlTable("job_applications", {
   id: int("id").autoincrement().primaryKey(),
+  candidateOpenId: varchar("candidateOpenId", { length: 64 }),
   candidateName: varchar("candidateName", { length: 120 }).notNull(),
   candidateEmail: varchar("candidateEmail", { length: 320 }),
   candidatePhone: varchar("candidatePhone", { length: 64 }),

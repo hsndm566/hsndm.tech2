@@ -103,10 +103,13 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
 import { jobApplications, InsertJobApplication, JobApplication } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
 
-export async function getJobApplications(): Promise<JobApplication[]> {
+export async function getJobApplications(candidateOpenId?: string): Promise<JobApplication[]> {
   const db = await getDb();
   if (!db) return [];
   try {
+    if (candidateOpenId) {
+      return await db.select().from(jobApplications).where(eq(jobApplications.candidateOpenId, candidateOpenId)).orderBy(desc(jobApplications.createdAt));
+    }
     return await db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
   } catch (error) {
     console.warn("[Database] Failed to fetch job applications:", error);

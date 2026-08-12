@@ -30,8 +30,15 @@ export const appRouter = router({
       }),
     }),
     applications: router({
-      list: publicProcedure.query(async () => {
-        return await getJobApplications();
+      list: publicProcedure.query(async ({ ctx }) => {
+        const user = ctx.user;
+        if (!user) {
+          return []; // Unauthenticated users see empty feed
+        }
+        if (user.role === "admin") {
+          return await getJobApplications(); // Admins see all applications
+        }
+        return await getJobApplications(user.openId); // Candidates see only their own applications
       }),
       create: publicProcedure
         .input(
