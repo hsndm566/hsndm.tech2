@@ -129,3 +129,42 @@ export async function insertJobApplication(data: InsertJobApplication): Promise<
     return null;
   }
 }
+
+import { candidateProfiles, InsertCandidateProfile, CandidateProfile } from "../drizzle/schema";
+
+export async function getCandidateProfile(openId: string): Promise<CandidateProfile | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [profile] = await db.select().from(candidateProfiles).where(eq(candidateProfiles.openId, openId));
+    if (profile) return profile;
+    
+    // Default profile if none exists
+    const defaultProfile: InsertCandidateProfile = {
+      openId,
+      targetCity: "Jeddah",
+      targetIndustry: "Technology & Engineering",
+      salaryExpectation: "15,000 - 25,000 SAR",
+      notifyWhatsApp: true,
+      notifyEmail: true,
+    };
+    await db.insert(candidateProfiles).values(defaultProfile);
+    const [created] = await db.select().from(candidateProfiles).where(eq(candidateProfiles.openId, openId));
+    return created || null;
+  } catch (error) {
+    console.warn("[Database] Failed to get/create candidate profile:", error);
+    return null;
+  }
+}
+
+export async function updateCandidateProfile(openId: string, data: Partial<InsertCandidateProfile>): Promise<CandidateProfile | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    await db.update(candidateProfiles).set(data).where(eq(candidateProfiles.openId, openId));
+    return await getCandidateProfile(openId);
+  } catch (error) {
+    console.warn("[Database] Failed to update candidate profile:", error);
+    return null;
+  }
+}

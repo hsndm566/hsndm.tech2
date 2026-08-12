@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { createCampaignReadiness, getJobApplications, insertJobApplication } from "./db";
+import { createCampaignReadiness, getJobApplications, insertJobApplication, getCandidateProfile, updateCandidateProfile } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -54,10 +54,35 @@ export const appRouter = router({
             notes: z.string().optional(),
           })
         )
-        .mutation(async ({ input }) => {
-          const created = await insertJobApplication(input);
+        .mutation(async ({ input, ctx }) => {
+          const candidateOpenId = ctx.user?.openId;
+          const created = await insertJobApplication({
+            ...input,
+            candidateOpenId,
+          });
           return { success: true, created } as const;
         }),
+      profile: router({
+        get: publicProcedure.query(async ({ ctx }) => {
+          if (!ctx.user) return null;
+          return await getCandidateProfile(ctx.user.openId);
+        }),
+        update: publicProcedure
+          .input(
+            z.object({
+              targetCity: z.string().optional(),
+              targetIndustry: z.string().optional(),
+              salaryExpectation: z.string().optional(),
+              notifyWhatsApp: z.boolean().optional(),
+              notifyEmail: z.boolean().optional(),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            if (!ctx.user) throw new Error("Unauthorized");
+            const updated = await updateCandidateProfile(ctx.user.openId, input);
+            return { success: true, updated } as const;
+          }),
+      }),
     }),
   }),
 });

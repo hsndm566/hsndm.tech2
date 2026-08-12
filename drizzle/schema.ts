@@ -66,3 +66,20 @@ export const jobApplications = mysqlTable("job_applications", {
 
 export type JobApplication = typeof jobApplications.$inferSelect;
 export type InsertJobApplication = typeof jobApplications.$inferInsert;
+
+/**
+ * Candidate profile settings for Saudi target cities, salary, and notifications.
+ */
+export const candidateProfiles = mysqlTable("candidate_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  openId: varchar("openId", { length: 64 }).notNull().unique(),
+  targetCity: varchar("targetCity", { length: 64 }).default("Jeddah").notNull(),
+  targetIndustry: varchar("targetIndustry", { length: 64 }).default("Technology & Engineering").notNull(),
+  salaryExpectation: varchar("salaryExpectation", { length: 64 }).default("15,000 - 25,000 SAR").notNull(),
+  notifyWhatsApp: boolean("notifyWhatsApp").default(true).notNull(),
+  notifyEmail: boolean("notifyEmail").default(true).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CandidateProfile = typeof candidateProfiles.$inferSelect;
+export type InsertCandidateProfile = typeof candidateProfiles.$inferInsert;
