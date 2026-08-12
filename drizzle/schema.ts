@@ -44,3 +44,24 @@ export const campaignReadiness = mysqlTable("campaign_readiness", {
 });
 
 export type InsertCampaignReadiness = typeof campaignReadiness.$inferInsert;
+
+/**
+ * Job applications tracker for monitoring submissions made on behalf of candidates.
+ */
+export const jobApplications = mysqlTable("job_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  candidateName: varchar("candidateName", { length: 120 }).notNull(),
+  candidateEmail: varchar("candidateEmail", { length: 320 }),
+  candidatePhone: varchar("candidatePhone", { length: 64 }),
+  companyName: varchar("companyName", { length: 150 }).notNull(),
+  roleTitle: varchar("roleTitle", { length: 150 }).notNull(),
+  city: varchar("city", { length: 64 }).notNull(),
+  status: mysqlEnum("status", ["queued", "applied", "interview", "offer", "skipped"]).default("applied").notNull(),
+  channel: varchar("channel", { length: 64 }).default("email-portal").notNull(),
+  notes: text("notes"),
+  appliedAt: timestamp("appliedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type JobApplication = typeof jobApplications.$inferSelect;
+export type InsertJobApplication = typeof jobApplications.$inferInsert;
