@@ -76,6 +76,8 @@ export const candidateProfiles = mysqlTable("candidate_profiles", {
   targetCity: varchar("targetCity", { length: 64 }).default("Jeddah").notNull(),
   targetIndustry: varchar("targetIndustry", { length: 64 }).default("Technology & Engineering").notNull(),
   salaryExpectation: varchar("salaryExpectation", { length: 64 }).default("15,000 - 25,000 SAR").notNull(),
+  resumeFileName: varchar("resumeFileName", { length: 255 }),
+  resumeSummary: text("resumeSummary"),
   notifyWhatsApp: boolean("notifyWhatsApp").default(true).notNull(),
   notifyEmail: boolean("notifyEmail").default(true).notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
