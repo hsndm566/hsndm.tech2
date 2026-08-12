@@ -53,3 +53,24 @@
 - [x] Verify the managed and public Arabic pages use the same release, improve RTL word spacing and line-height, then publish and recheck hsndm.tech.
 - [ ] Report the verified bilingual contact, SEO, and performance audit results.
 - [ ] Deliver the audit findings and monitoring status.
+
+## Architecture Layer Inventory (Phase 1)
+- [x] Phase 1: Inventory the current frontend, backend, Railway, GitHub, domain, database, and monitoring boundaries.
+- [ ] Phase 2: Define production architecture, data-retention rules, and source of truth.
+- [ ] Phase 3: Single public API boundary, CORS, health checks, and secrets.
+- [ ] Phase 4: Public backend hardening, validation, rate limiting, and privacy.
+- [ ] Phase 5: Production observability, structured logs, and safe alerts.
+- [ ] Phase 6: Expanded testing, CI/CD gates, security checks, and smoke tests.
+- [ ] Phase 7: Caching, CDN, performance budgets, and scaling rules.
+- [ ] Phase 8: Live domain verification and reversible checkpoint publishing.
+- [ ] Phase 9: Production-readiness report, limitations, and rollback path.
+
+## Production Architecture Design (Phase 2)
+- **Frontend Source of Truth:** `https://hsndm.tech` (GitHub Pages main branch `hsndm566/hsndm.tech`, static export with route-specific prerendered entry documents).
+- **Backend Source of Truth:** Express + tRPC 11 server running on Node.js, supporting MySQL/TiDB via Drizzle ORM and Railway / managed deployment config.
+- **Data Retention Boundary:** Raw CV files and extracted CV text remain strictly client-side within browser memory during extraction. Only voluntary, anonymized or consented campaign summary metadata (city, industry, seniority, language, target roles) are sent to the database backend upon explicit user action.
+- **Environment Matrix:**
+  - `VITE_API_BASE_URL`: API origin for frontend tRPC requests.
+  - `DATABASE_URL`: MySQL/TiDB connection string.
+  - `JWT_SECRET`: Session cookie signing secret.
+  - `VITE_ANALYTICS_ENDPOINT` / `VITE_ANALYTICS_WEBSITE_ID`: Umami engagement tracking.
