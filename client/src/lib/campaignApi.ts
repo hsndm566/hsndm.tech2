@@ -24,6 +24,15 @@ export type CampaignEvent = {
   metadata: Record<string, unknown>;
 };
 
+export type PlatformHealth = {
+  ok: boolean;
+  external_execution_enabled: boolean;
+  health?: {
+    checks?: Array<{ check_name: string; status: string; detail?: string }>;
+    sources?: Array<{ source: string; status: string }>;
+  };
+};
+
 export type CampaignSession = {
   campaignId: string;
   token: string;
@@ -101,6 +110,10 @@ export async function getCampaignEvents(session: CampaignSession): Promise<Campa
     await fetch(endpoint(`/v1/campaigns/${session.campaignId}/events`), { headers: { "X-Campaign-Token": session.token } }),
   );
   return data.events;
+}
+
+export async function getPlatformHealth(): Promise<PlatformHealth> {
+  return decode<PlatformHealth>(await fetch(endpoint("/healthz")));
 }
 
 export async function startCampaign(session: CampaignSession): Promise<Campaign> {

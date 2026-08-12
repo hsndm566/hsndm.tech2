@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { applyPageSeo } from "@/lib/seo";
 import { Link } from "wouter";
-import { Campaign, CampaignEvent, getCampaign, getCampaignEvents, loadCampaignSession, startCampaign } from "@/lib/campaignApi";
+import { Campaign, CampaignEvent, PlatformHealth, getCampaign, getCampaignEvents, getPlatformHealth, loadCampaignSession, startCampaign } from "@/lib/campaignApi";
 
 function formatEventTime(value: number) {
   return new Date(value * 1000).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
@@ -14,6 +14,7 @@ export default function ThankYou() {
   const requestedCampaign = params.get("campaign");
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [events, setEvents] = useState<CampaignEvent[]>([]);
+  const [platformHealth, setPlatformHealth] = useState<PlatformHealth | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
 
@@ -32,10 +33,14 @@ export default function ThankYou() {
     const refresh = async (activate = false) => {
       try {
         const current = activate ? await startCampaign(session) : await getCampaign(session);
-        const currentEvents = await getCampaignEvents(session);
+        const [currentEvents, currentHealth] = await Promise.all([
+          getCampaignEvents(session),
+          getPlatformHealth().catch(() => null),
+        ]);
         if (!active) return;
         setCampaign(current);
         setEvents(currentEvents);
+        setPlatformHealth(currentHealth);
         setStatus("ready");
       } catch (caught) {
         if (!active) return;
@@ -74,6 +79,7 @@ export default function ThankYou() {
               <div><span>SUBMISSION EVIDENCE</span><b>{campaign.evidence_count}</b></div>
             </div>
             <div className="campaign-safety-note"><ShieldCheck size={17} /><span><b>Audit safeguard active.</b> External execution is {campaign.external_execution_enabled ? "enabled only through approved evidence paths." : "currently locked until a source-specific upload proof exists."}</span></div>
+            {platformHealth && <div className="campaign-safety-note portal-monitoring-note"><ShieldCheck size={17} /><span><b>Portal monitoring active.</b> {platformHealth.health?.checks?.some((check) => check.check_name === "portal_sentinel" && check.status === "healthy") ? "Public form structures are monitored for changes; a changed source is held for review." : "Portal monitoring is initializing; no form is submitted by this check."}</span></div>}
             <div className="campaign-event-list">
               <div className="campaign-event-heading"><span>LIVE CAMPAIGN LOG</span><RefreshCw size={15} /></div>
               {events.slice(0, 5).map((event) => <div className={`campaign-event ${event.level}`} key={event.id}><i /><div><b>{event.event_type.replace(/_/g, " ")}</b><span>{event.message}</span></div><time>{formatEventTime(event.created_at)}</time></div>)}
