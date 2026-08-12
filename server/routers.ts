@@ -1,5 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
-import { createCampaignReadiness } from "./db";
+import { createCampaignReadiness, getJobApplications, insertJobApplication } from "./db";
+import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -27,6 +28,29 @@ export const appRouter = router({
         });
         return { stored } as const;
       }),
+    }),
+    applications: router({
+      list: publicProcedure.query(async () => {
+        return await getJobApplications();
+      }),
+      create: publicProcedure
+        .input(
+          z.object({
+            candidateName: z.string().min(2),
+            candidateEmail: z.string().email().optional().or(z.literal("")),
+            candidatePhone: z.string().optional(),
+            companyName: z.string().min(2),
+            roleTitle: z.string().min(2),
+            city: z.string().min(2),
+            status: z.enum(["queued", "applied", "interview", "offer", "skipped"]).default("applied"),
+            channel: z.string().default("email-portal"),
+            notes: z.string().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const created = await insertJobApplication(input);
+          return { success: true, created } as const;
+        }),
     }),
   }),
 });

@@ -99,3 +99,30 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
   await db.insert(campaignReadiness).values(record);
   return true;
 }
+
+import { jobApplications, InsertJobApplication, JobApplication } from "../drizzle/schema";
+import { desc } from "drizzle-orm";
+
+export async function getJobApplications(): Promise<JobApplication[]> {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
+  } catch (error) {
+    console.warn("[Database] Failed to fetch job applications:", error);
+    return [];
+  }
+}
+
+export async function insertJobApplication(data: InsertJobApplication): Promise<JobApplication | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [result] = await db.insert(jobApplications).values(data);
+    const [inserted] = await db.select().from(jobApplications).where(eq(jobApplications.id, result.insertId));
+    return inserted || null;
+  } catch (error) {
+    console.warn("[Database] Failed to insert job application:", error);
+    return null;
+  }
+}
