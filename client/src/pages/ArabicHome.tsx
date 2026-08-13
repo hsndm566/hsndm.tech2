@@ -27,6 +27,7 @@ import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
+import { saudiCities } from "@/lib/saudiTaxonomy";
 import { Link } from "wouter";
 
 const MapView = lazy(async () => {
@@ -124,7 +125,7 @@ export default function ArabicHome() {
   }, []);
 
   const roleLabel = (role: string) => roleTranslations[role] || role;
-  const cityLabel = (city: string) => ({ Jeddah: "جدة", Riyadh: "الرياض", Dammam: "الدمام", Makkah: "مكة المكرمة", Madinah: "المدينة المنورة", "Anywhere in Saudi Arabia": "أي مكان في المملكة العربية السعودية" }[city] || city);
+  const cityLabel = (city: string) => saudiCities.find(option => option.en === city)?.ar || city;
   const seniorityLabel = (level: string) => ({ "Any level": "أي مستوى", "Entry level": "مستوى مبتدئ", "Mid level": "مستوى متوسط", "Senior level": "مستوى متقدم" }[level] || level);
   const makeArabicWhatsAppHref = (roles: string[]) => `https://wa.me/966571448656?text=${encodeURIComponent(["مرحباً AutoApply SA، أكملت فحص جاهزية الحملة السعودية.", `المدينة: ${cityLabel(matchPreferences.city)}`, `المجال: ${industryLabels[matchPreferences.industry]}`, `المستوى: ${seniorityLabel(matchPreferences.seniority)}`, "لغة التقديم: العربية", `مسارات الوظائف المقترحة: ${roles.map(roleLabel).join("، ")}`, "أفهم أن هذه معاينة فقط ولم يتم إرسال أي طلب تقديم. أرغب في مناقشة حملة تقديم."].join("\n"))}`;
 
