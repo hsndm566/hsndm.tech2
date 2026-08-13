@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, Calendar, Bell, CheckCircle2, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
+import { saudiCities } from "@/lib/saudiTaxonomy";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -151,27 +153,7 @@ export default function Dashboard() {
                         <div className="space-y-4 py-4">
                           <div className="space-y-2">
                             <label className="text-sm font-medium">Target Saudi City</label>
-                            <Select 
-                              defaultValue={profile?.targetCity || "Jeddah"}
-                              onValueChange={(val) => updateProfileMutation.mutate({ targetCity: val })}
-                            >
-                              <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Jeddah">Jeddah</SelectItem>
-                                <SelectItem value="Riyadh">Riyadh</SelectItem>
-                                <SelectItem value="Dammam">Dammam</SelectItem>
-                                <SelectItem value="Khobar">Khobar</SelectItem>
-                                <SelectItem value="Makkah">Makkah</SelectItem>
-                                <SelectItem value="Madinah">Madinah</SelectItem>
-                                <SelectItem value="Taif">Taif</SelectItem>
-                                <SelectItem value="Jubail">Jubail</SelectItem>
-                                <SelectItem value="Yanbu">Yanbu</SelectItem>
-                                <SelectItem value="Abha">Abha</SelectItem>
-                                <SelectItem value="Tabuk">Tabuk</SelectItem>
-                                <SelectItem value="Al Khobar">Al Khobar</SelectItem>
-                                <SelectItem value="Anywhere in Saudi Arabia">Anywhere in Saudi Arabia</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <SearchableSaudiSelect options={saudiCities} value={profile?.targetCity || "Jeddah"} onChange={(val) => updateProfileMutation.mutate({ targetCity: val })} placeholder="Search Saudi cities…" />
                           </div>
                           <div className="space-y-2">
                             <label className="text-sm font-medium">Target Industry</label>

@@ -24,3 +24,5 @@
 - [ ] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.
 - [ ] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
 - [ ] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.
+- [ ] Add a searchable, comprehensive English-Arabic Saudi city and industry taxonomy with verified label parity.
+- [ ] Improve ATS loading feedback and verify downloadable AI-result export behavior.
