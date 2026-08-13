@@ -4,6 +4,7 @@ import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { analyzeAts, atsInput } from "./ats";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
@@ -20,6 +21,7 @@ export const appRouter = router({
     }),
   }),
   campaign: router({
+    ats: router({ analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => analyzeAts(input)) }),
     readiness: router({
       record: publicProcedure.input(campaignReadinessInputSchema).mutation(async ({ input }) => {
         const stored = await createCampaignReadiness({

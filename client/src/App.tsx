@@ -19,6 +19,7 @@ const Enquire = lazy(() => import("@/pages/Enquire"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
+const Ats = lazy(() => import("@/pages/Ats"));
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/enquire" component={Enquire} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/thank-you" component={ThankYou} />
+      <Route path="/ats" component={Ats} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
