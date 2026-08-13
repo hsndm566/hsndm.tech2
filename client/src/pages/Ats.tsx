@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Download, FileText, Loader2, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { extractAtsCvText } from "@/lib/atsUpload";
+import { applyPageSeo } from "@/lib/seo";
 
 export default function Ats() {
   const [text, setText] = useState("");
@@ -14,6 +15,9 @@ export default function Ats() {
   const [industry, setIndustry] = useState("Technology & Software");
   const analyze = trpc.campaign.ats.analyze.useMutation();
   const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
+  useEffect(() => {
+    applyPageSeo({ title: "ATS Review | AutoApply SA", description: "Review CV structure, keywords, and evidence for Saudi Arabia job applications with AutoApply SA.", path: "/ats" });
+  }, []);
   const choose = async (f?: File) => { if (!f) return; setFile(f.name); setText(await extractAtsCvText(f, () => reportCvExtractionFailure.mutate({ route: "/ats" }))); };
   const exportResult = () => { if (!analyze.data) return; const blob = new Blob([`AutoApply SA ATS review\n\nScore: ${analyze.data.score}/100\n\n${analyze.data.summary}\n\nStrengths\n${analyze.data.strengths.map(x => `- ${x}`).join("\n")}\n\nPriority improvements\n${analyze.data.gaps.map(x => `- ${x}`).join("\n")}\n\nOptimized CV bullets\n${analyze.data.optimizedBullets.map(x => `- ${x}`).join("\n")}\n\n${analyze.data.disclaimer}`], { type: "text/plain" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "autoapply-sa-ats-review.txt"; a.click(); URL.revokeObjectURL(a.href); };
   const targetRole = [role, industry, city].filter(Boolean).join(" · ");

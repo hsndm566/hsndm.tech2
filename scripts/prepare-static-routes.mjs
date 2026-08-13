@@ -57,6 +57,7 @@ const pageMetadata = {
   "ar/terms": { title: "شروط الاستخدام | أوتوأبلاي السعودية", description: "اقرأ شروط المعاينة واستفسار الحملة وتتبع الطلبات في AutoApply SA.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
   pricing: { title: "Pricing | AutoApply SA", description: "Review provisional Saudi job-application campaign plans and begin with a contact-only discussion.", path: "/pricing", lang: "en", direction: "ltr", locale: "en_SA" },
   "ar/pricing": { title: "الأسعار | أوتوأبلاي السعودية", description: "اطلع على خطط حملة التقديم الإرشادية وابدأ بمحادثة داخل السعودية.", path: "/ar/pricing", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  ats: { title: "ATS Review | AutoApply SA", description: "Review CV structure, keywords, and evidence for Saudi Arabia job applications with AutoApply SA.", path: "/ats", lang: "en", direction: "ltr", locale: "en_SA" },
 };
 
 const staticMeta = (indexHtml, metadata) => {
