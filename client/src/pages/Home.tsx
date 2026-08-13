@@ -8,6 +8,8 @@ import { trackEngagement } from "@/lib/analytics";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
+import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
+import { saudiCities } from "@/lib/saudiTaxonomy";
 import {
   ArrowDownRight,
   ArrowUp,
@@ -486,7 +488,7 @@ export default function Home() {
               <div className="match-preferences" aria-label="Saudi Arabia role preferences">
                 <div className="preferences-heading"><span><SlidersHorizontal size={14} /> MATCH PREFERENCES</span><small>Applied locally</small></div>
                 <div className="preferences-grid">
-                  <label><span>City</span><select value={matchPreferences.city} onChange={(event) => setMatchPreferences((current) => ({ ...current, city: event.target.value }))}><option>Jeddah</option><option>Riyadh</option><option>Dammam</option><option>Khobar</option><option>Makkah</option><option>Madinah</option><option>Taif</option><option>Jubail</option><option>Yanbu</option><option>Abha</option><option>Tabuk</option><option>Anywhere in Saudi Arabia</option></select></label>
+                  <label><span>City</span><SearchableSaudiSelect options={saudiCities} value={matchPreferences.city} onChange={(city) => setMatchPreferences((current) => ({ ...current, city }))} placeholder="Search Saudi cities…" /></label>
                   <label><span>Industry</span><select value={matchPreferences.industry} onChange={(event) => setMatchPreferences((current) => ({ ...current, industry: event.target.value }))}><option value="all">All industries</option><option value="technology-data">Technology & Data</option><option value="technology-data">Cybersecurity & Cloud</option><option value="business-operations">Finance & Banking</option><option value="business-operations">Sales, Retail & E-commerce</option><option value="people-service">Healthcare & Life Sciences</option><option value="people-service">Hospitality, Tourism & Events</option><option value="engineering-construction">Engineering & Construction</option><option value="engineering-construction">Energy, Utilities & Sustainability</option><option value="engineering-construction">Logistics, Supply Chain & Aviation</option></select></label>
                   <label><span>Seniority</span><select value={matchPreferences.seniority} onChange={(event) => setMatchPreferences((current) => ({ ...current, seniority: event.target.value }))}><option>Any level</option><option>Entry level</option><option>Mid level</option><option>Senior level</option></select></label>
                   <label><span>Language</span><select value={matchPreferences.language} onChange={(event) => setMatchPreferences((current) => ({ ...current, language: event.target.value }))}><option>English</option><option>Arabic</option></select></label>
