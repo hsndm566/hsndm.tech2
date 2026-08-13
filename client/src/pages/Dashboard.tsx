@@ -161,6 +161,33 @@ export default function Dashboard() {
                                 <SelectItem value="Riyadh">Riyadh</SelectItem>
                                 <SelectItem value="Dammam">Dammam</SelectItem>
                                 <SelectItem value="Khobar">Khobar</SelectItem>
+                                <SelectItem value="Makkah">Makkah</SelectItem>
+                                <SelectItem value="Madinah">Madinah</SelectItem>
+                                <SelectItem value="Taif">Taif</SelectItem>
+                                <SelectItem value="Jubail">Jubail</SelectItem>
+                                <SelectItem value="Yanbu">Yanbu</SelectItem>
+                                <SelectItem value="Abha">Abha</SelectItem>
+                                <SelectItem value="Tabuk">Tabuk</SelectItem>
+                                <SelectItem value="Al Khobar">Al Khobar</SelectItem>
+                                <SelectItem value="Anywhere in Saudi Arabia">Anywhere in Saudi Arabia</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Target Industry</label>
+                            <Select defaultValue={profile?.targetIndustry || "Technology & Engineering"} onValueChange={(val) => updateProfileMutation.mutate({ targetIndustry: val })}>
+                              <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Technology & Data">Technology & Data</SelectItem>
+                                <SelectItem value="Engineering & Construction">Engineering & Construction</SelectItem>
+                                <SelectItem value="Healthcare & Life Sciences">Healthcare & Life Sciences</SelectItem>
+                                <SelectItem value="Finance & Banking">Finance & Banking</SelectItem>
+                                <SelectItem value="Sales, Retail & E-commerce">Sales, Retail & E-commerce</SelectItem>
+                                <SelectItem value="Hospitality, Tourism & Events">Hospitality, Tourism & Events</SelectItem>
+                                <SelectItem value="Logistics, Supply Chain & Aviation">Logistics, Supply Chain & Aviation</SelectItem>
+                                <SelectItem value="Education & Training">Education & Training</SelectItem>
+                                <SelectItem value="Human Resources & Administration">Human Resources & Administration</SelectItem>
+                                <SelectItem value="Energy, Utilities & Sustainability">Energy, Utilities & Sustainability</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
