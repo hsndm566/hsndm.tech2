@@ -289,6 +289,7 @@ export default function Home() {
           <button onClick={() => scrollTo("how")}>How it works</button>
           <button onClick={() => scrollTo("product")}>Product</button>
           <button onClick={() => scrollTo("upload")}>Upload CV</button>
+          <Link href="/ats">ATS review</Link>
           <button onClick={() => scrollTo("pricing")}>Pricing</button>
           <button onClick={() => scrollTo("faq")}>FAQ</button>
         </nav>
