@@ -1,6 +1,20 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { campaignReadiness, InsertCampaignReadiness, InsertUser, users } from "../drizzle/schema";
+import {
+  backupSnapshots,
+  campaignReadiness,
+  CandidateProfile,
+  candidateProfiles,
+  InsertBackupSnapshot,
+  InsertCampaignReadiness,
+  InsertJobApplication,
+  InsertCandidateProfile,
+  InsertUser,
+  JobApplication,
+  jobApplications,
+  systemJobs,
+  users,
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -100,9 +114,6 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
   return true;
 }
 
-import { jobApplications, InsertJobApplication, JobApplication } from "../drizzle/schema";
-import { desc } from "drizzle-orm";
-
 export async function getJobApplications(candidateOpenId?: string): Promise<JobApplication[]> {
   const db = await getDb();
   if (!db) return [];
@@ -129,8 +140,6 @@ export async function insertJobApplication(data: InsertJobApplication): Promise<
     return null;
   }
 }
-
-import { candidateProfiles, InsertCandidateProfile, CandidateProfile } from "../drizzle/schema";
 
 export async function getCandidateProfile(openId: string): Promise<CandidateProfile | null> {
   const db = await getDb();
@@ -167,4 +176,79 @@ export async function updateCandidateProfile(openId: string, data: Partial<Inser
     console.warn("[Database] Failed to update candidate profile:", error);
     return null;
   }
+}
+
+export type DatabaseBackupPayload = {
+  generatedAt: string;
+  schemaVersion: 1;
+  recordCounts: Record<string, number>;
+  data: {
+    users: unknown[];
+    campaignReadiness: unknown[];
+    jobApplications: unknown[];
+    candidateProfiles: unknown[];
+  };
+};
+
+export async function buildDatabaseBackupPayload(): Promise<DatabaseBackupPayload> {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable; backup was not created");
+
+  const [userRows, readinessRows, applicationRows, profileRows] = await Promise.all([
+    db.select().from(users),
+    db.select().from(campaignReadiness),
+    db.select().from(jobApplications),
+    db.select().from(candidateProfiles),
+  ]);
+
+  return {
+    generatedAt: new Date().toISOString(),
+    schemaVersion: 1,
+    recordCounts: {
+      users: userRows.length,
+      campaignReadiness: readinessRows.length,
+      jobApplications: applicationRows.length,
+      candidateProfiles: profileRows.length,
+    },
+    data: {
+      users: userRows,
+      campaignReadiness: readinessRows,
+      jobApplications: applicationRows,
+      candidateProfiles: profileRows,
+    },
+  };
+}
+
+export async function getBackupSnapshotForPeriod(scheduleTaskUid: string, periodKey: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable; backup snapshot could not be checked");
+  const snapshots = await db
+    .select()
+    .from(backupSnapshots)
+    .where(eq(backupSnapshots.scheduleTaskUid, scheduleTaskUid));
+  return snapshots.find(snapshot => snapshot.periodKey === periodKey) ?? null;
+}
+
+export async function recordBackupSnapshot(data: InsertBackupSnapshot) {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable; backup snapshot could not be recorded");
+  const [result] = await db.insert(backupSnapshots).values(data);
+  const [snapshot] = await db.select().from(backupSnapshots).where(eq(backupSnapshots.id, result.insertId));
+  return snapshot ?? null;
+}
+
+export async function getSystemJobByTaskUid(heartbeatTaskUid: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database unavailable; scheduled job could not be checked");
+  const [job] = await db.select().from(systemJobs).where(eq(systemJobs.heartbeatTaskUid, heartbeatTaskUid));
+  return job ?? null;
+}
+
+export async function updateSystemJobRun(taskUid: string, status: "succeeded" | "failed") {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(systemJobs)
+    .set({ lastRunAt: new Date(), lastStatus: status })
+    .where(eq(systemJobs.heartbeatTaskUid, taskUid));
 }

@@ -1,4 +1,4 @@
-import { boolean, int, json, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, json, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -85,3 +85,34 @@ export const candidateProfiles = mysqlTable("candidate_profiles", {
 
 export type CandidateProfile = typeof candidateProfiles.$inferSelect;
 export type InsertCandidateProfile = typeof candidateProfiles.$inferInsert;
+
+/**
+ * Metadata for private, application-controlled database snapshots. The JSON
+ * payload itself is stored in private object storage, never in a database row.
+ */
+export const backupSnapshots = mysqlTable("backup_snapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  scheduleTaskUid: varchar("scheduleTaskUid", { length: 65 }).notNull(),
+  periodKey: varchar("periodKey", { length: 10 }).notNull(),
+  storageKey: varchar("storageKey", { length: 512 }).notNull(),
+  sha256: varchar("sha256", { length: 64 }).notNull(),
+  byteSize: int("byteSize").notNull(),
+  recordCounts: json("recordCounts").$type<Record<string, number>>().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, table => ({
+  backupSnapshotSchedulePeriodIdx: uniqueIndex("backup_snapshot_schedule_period_idx").on(table.scheduleTaskUid, table.periodKey),
+}));
+
+export type BackupSnapshot = typeof backupSnapshots.$inferSelect;
+export type InsertBackupSnapshot = typeof backupSnapshots.$inferInsert;
+
+/** Durable ownership record for project-level scheduled operations. */
+export const systemJobs = mysqlTable("system_jobs", {
+  name: varchar("name", { length: 100 }).primaryKey(),
+  heartbeatTaskUid: varchar("heartbeatTaskUid", { length: 65 }).notNull(),
+  lastRunAt: timestamp("lastRunAt"),
+  lastStatus: varchar("lastStatus", { length: 32 }),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemJob = typeof systemJobs.$inferSelect;
