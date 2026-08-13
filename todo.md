@@ -18,7 +18,7 @@
 - [x] Verify and strengthen authenticated candidate isolation with explicit two-candidate authorization tests.
 - [ ] Add secure persisted resume metadata and an ATS-friendliness workflow with free preview and contact-based unlock, without changing the existing visual design.
 - [x] Add clear ATS processing animations and an accessible export action for AI-generated ATS results.
-- [ ] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
+- [x] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [ ] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
 - [ ] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
 - [ ] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.

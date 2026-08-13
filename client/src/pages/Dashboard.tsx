@@ -17,6 +17,7 @@ import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const { user, isAuthenticated, logout, loading: authLoading } = useAuth();
   
@@ -38,12 +39,10 @@ export default function Dashboard() {
     }
   });
 
-  const filteredApps = applications.filter((app) => 
-    app.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.roleTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.city.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredApps = applications.filter((app) => {
+    const matchesSearch = app.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) || app.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || app.roleTitle.toLowerCase().includes(searchQuery.toLowerCase()) || app.city.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch && (statusFilter === "all" || app.status === statusFilter);
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -206,6 +205,17 @@ export default function Dashboard() {
                   className="pl-9 bg-[#fbf9f5] border-[#151515]/20"
                 />
               </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-52 bg-[#fbf9f5] border-[#151515]/20"><SelectValue placeholder="Filter status" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="queued">Queued</SelectItem>
+                  <SelectItem value="applied">Application sent</SelectItem>
+                  <SelectItem value="interview">Interview</SelectItem>
+                  <SelectItem value="offer">Offer</SelectItem>
+                  <SelectItem value="skipped">Not proceeding</SelectItem>
+                </SelectContent>
+              </Select>
               <div className="text-sm text-[#151515]/60 flex items-center gap-3">
                 <span>Showing {filteredApps.length} applications</span>
               </div>
