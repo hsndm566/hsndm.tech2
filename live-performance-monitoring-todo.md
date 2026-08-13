@@ -53,6 +53,7 @@
 - [x] Verify the managed and public Arabic pages use the same release, improve RTL word spacing and line-height, then publish and recheck hsndm.tech.
 - [ ] Report the verified bilingual contact, SEO, and performance audit results.
 - [ ] Deliver the audit findings and monitoring status.
+- [ ] Prepare a non-billable, no-cutover Azure fallback plan for the Railway backend without moving data, creating services, or changing live traffic.
 
 ## Architecture Layer Inventory (Phase 1)
 - [x] Phase 1: Inventory the current frontend, backend, Railway, GitHub, domain, database, and monitoring boundaries.

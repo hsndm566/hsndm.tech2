@@ -1,0 +1,50 @@
+name: Azure fallback deployment (manual approval required)
+
+on:
+  workflow_dispatch:
+    inputs:
+      approval_phrase:
+        description: 'Type PROVISION_AZURE only after cost, data, and traffic gates are approved'
+        required: true
+        type: string
+      target_environment:
+        description: 'Target label only; this workflow does not change DNS'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject unapproved provisioning attempts
+        run: |
+          test "${{ inputs.approval_phrase }}" = "PROVISION_AZURE" || {
+            echo "Azure provisioning is intentionally blocked until the exact approval phrase is provided."
+            exit 1
+          }
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Verify the Railway-compatible build before any Azure action
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm test
+          pnpm check
+          pnpm build
+      - name: Deliberate stop before Azure resource creation
+        run: |
+          echo "Preflight succeeded for ${{ inputs.target_environment }}."
+          echo "No Azure login, resource deployment, DNS change, secret creation, or data migration is defined in this workflow yet."
+          echo "Add those steps only after the Azure Entra deployment identity and cost/data cutover approvals are complete."

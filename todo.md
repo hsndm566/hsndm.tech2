@@ -11,3 +11,4 @@
 - [x] Add a Jeddah location map and a directions link.
 - [x] Do not add customer reviews: no authentic, verifiable source was identified, and fabricated or unverified testimonials are excluded.
 - [x] Validate desktop and mobile navigation, submit flow, metadata assets, and production build.
+- [x] Prepare an inert Azure fallback package, migration runbook, environment contract, and manually gated deployment workflow without provisioning Azure resources or changing live traffic.
