@@ -14,8 +14,8 @@
 - [x] Prepare an inert Azure fallback package, migration runbook, environment contract, and manually gated deployment workflow without provisioning Azure resources or changing live traffic.
 - [x] Verify the Azure deployment service principal `new registraion form` has Contributor access at the Azure for Students subscription scope without provisioning resources.
 - [x] Audit the live hosting, DNS, TLS, uptime alerting, persistence, backups, and route-level SEO status against the approved staged roadmap.
-- [ ] Apply the missing application/profile database tables and establish a project-controlled, private data-backup snapshot routine.
-- [ ] Verify and strengthen authenticated candidate isolation with explicit two-candidate authorization tests.
+- [x] Apply the missing application/profile database tables and establish a project-controlled, private data-backup snapshot routine.
+- [x] Verify and strengthen authenticated candidate isolation with explicit two-candidate authorization tests.
 - [ ] Add secure persisted resume metadata and an ATS-friendliness workflow with free preview and contact-based unlock, without changing the existing visual design.
 - [ ] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [ ] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.

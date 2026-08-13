@@ -4,7 +4,7 @@ import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -30,17 +30,14 @@ export const appRouter = router({
       }),
     }),
     applications: router({
-      list: publicProcedure.query(async ({ ctx }) => {
+      list: protectedProcedure.query(async ({ ctx }) => {
         const user = ctx.user;
-        if (!user) {
-          return []; // Unauthenticated users see empty feed
-        }
         if (user.role === "admin") {
           return await getJobApplications(); // Admins see all applications
         }
         return await getJobApplications(user.openId); // Candidates see only their own applications
       }),
-      create: publicProcedure
+      create: protectedProcedure
         .input(
           z.object({
             candidateName: z.string().min(2),
@@ -55,7 +52,7 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const candidateOpenId = ctx.user?.openId;
+          const candidateOpenId = ctx.user.openId;
           const created = await insertJobApplication({
             ...input,
             candidateOpenId,
@@ -63,11 +60,10 @@ export const appRouter = router({
           return { success: true, created } as const;
         }),
       profile: router({
-        get: publicProcedure.query(async ({ ctx }) => {
-          if (!ctx.user) return null;
+        get: protectedProcedure.query(async ({ ctx }) => {
           return await getCandidateProfile(ctx.user.openId);
         }),
-        update: publicProcedure
+        update: protectedProcedure
           .input(
             z.object({
               targetCity: z.string().optional(),
@@ -78,7 +74,6 @@ export const appRouter = router({
             })
           )
           .mutation(async ({ input, ctx }) => {
-            if (!ctx.user) throw new Error("Unauthorized");
             const updated = await updateCandidateProfile(ctx.user.openId, input);
             return { success: true, updated } as const;
           }),
