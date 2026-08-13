@@ -9,7 +9,7 @@ import { demoLists } from "@/lib/careerTaxonomy";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
-import { saudiCities } from "@/lib/saudiTaxonomy";
+import { saudiCities, saudiIndustries, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import {
   ArrowDownRight,
   ArrowUp,
@@ -127,6 +127,7 @@ export default function Home() {
   const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
+  const [selectedIndustry, setSelectedIndustry] = useState("Technology & Software");
   const [campaignStage, setCampaignStage] = useState(1);
   const [briefShared, setBriefShared] = useState(false);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
@@ -489,7 +490,7 @@ export default function Home() {
                 <div className="preferences-heading"><span><SlidersHorizontal size={14} /> MATCH PREFERENCES</span><small>Applied locally</small></div>
                 <div className="preferences-grid">
                   <label><span>City</span><SearchableSaudiSelect options={saudiCities} value={matchPreferences.city} onChange={(city) => setMatchPreferences((current) => ({ ...current, city }))} placeholder="Search Saudi cities…" /></label>
-                  <label><span>Industry</span><select value={matchPreferences.industry} onChange={(event) => setMatchPreferences((current) => ({ ...current, industry: event.target.value }))}><option value="all">All industries</option><option value="technology-data">Technology & Data</option><option value="technology-data">Cybersecurity & Cloud</option><option value="business-operations">Finance & Banking</option><option value="business-operations">Sales, Retail & E-commerce</option><option value="people-service">Healthcare & Life Sciences</option><option value="people-service">Hospitality, Tourism & Events</option><option value="engineering-construction">Engineering & Construction</option><option value="engineering-construction">Energy, Utilities & Sustainability</option><option value="engineering-construction">Logistics, Supply Chain & Aviation</option></select></label>
+                  <label><span>Industry</span><SearchableSaudiSelect options={saudiIndustries} value={selectedIndustry} onChange={(industry) => { setSelectedIndustry(industry); setMatchPreferences((current) => ({ ...current, industry: toMatchIndustry(industry) })); }} placeholder="Search industries…" /></label>
                   <label><span>Seniority</span><select value={matchPreferences.seniority} onChange={(event) => setMatchPreferences((current) => ({ ...current, seniority: event.target.value }))}><option>Any level</option><option>Entry level</option><option>Mid level</option><option>Senior level</option></select></label>
                   <label><span>Language</span><select value={matchPreferences.language} onChange={(event) => setMatchPreferences((current) => ({ ...current, language: event.target.value }))}><option>English</option><option>Arabic</option></select></label>
                 </div>
