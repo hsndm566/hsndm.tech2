@@ -47,6 +47,14 @@ const pageMetadata = {
     locale: "en_SA",
     robots: "noindex, follow",
   },
+  "how-it-works": { title: "How AutoApply SA Works | AutoApply SA", description: "Understand the Saudi-focused AutoApply SA campaign journey from role direction through candidate tracking.", path: "/how-it-works", lang: "en", direction: "ltr", locale: "en_SA" },
+  support: { title: "Support | AutoApply SA", description: "Get campaign, dashboard, and privacy support for your Saudi Arabia job search with AutoApply SA.", path: "/support", lang: "en", direction: "ltr", locale: "en_SA" },
+  privacy: { title: "Privacy | AutoApply SA", description: "Learn how AutoApply SA handles Saudi job-search campaign information and browser-based CV review.", path: "/privacy", lang: "en", direction: "ltr", locale: "en_SA" },
+  terms: { title: "Terms of Use | AutoApply SA", description: "Read the terms for AutoApply SA previews, campaign enquiries, and candidate tracking.", path: "/terms", lang: "en", direction: "ltr", locale: "en_SA" },
+  "ar/how-it-works": { title: "كيف تعمل أوتوأبلاي السعودية | AutoApply SA", description: "تعرّف على مسار حملة AutoApply SA للبحث عن عمل داخل السعودية.", path: "/ar/how-it-works", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/support": { title: "الدعم | أوتوأبلاي السعودية", description: "الدعم للحملة ولوحة التحكم وطلبات الخصوصية للباحثين عن عمل في السعودية.", path: "/ar/support", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/privacy": { title: "الخصوصية | أوتوأبلاي السعودية", description: "تعرّف على كيفية التعامل مع معلومات حملة البحث عن عمل ومراجعة السيرة داخل المتصفح.", path: "/ar/privacy", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/terms": { title: "شروط الاستخدام | أوتوأبلاي السعودية", description: "اقرأ شروط المعاينة واستفسار الحملة وتتبع الطلبات في AutoApply SA.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
 };
 
 const staticMeta = (indexHtml, metadata) => {

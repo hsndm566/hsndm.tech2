@@ -730,7 +730,7 @@ export default function Home() {
         </div>
         <div className="page-frame footer-bottom">
           <span>© 2026 AUTOAPPLY SA</span>
-          <div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div>
+          <div><Link href="/how-it-works">How it works</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div>
           <span>JEDDAH, KSA</span>
         </div>
       </footer>

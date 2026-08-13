@@ -20,6 +20,7 @@ const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
+const InformationPage = lazy(() => import("@/pages/InformationPage"));
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -32,6 +33,14 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
+      <Route path="/how-it-works" component={() => <InformationPage kind="how" />} />
+      <Route path="/support" component={() => <InformationPage kind="support" />} />
+      <Route path="/privacy" component={() => <InformationPage kind="privacy" />} />
+      <Route path="/terms" component={() => <InformationPage kind="terms" />} />
+      <Route path="/ar/how-it-works" component={() => <InformationPage kind="how" language="ar" />} />
+      <Route path="/ar/support" component={() => <InformationPage kind="support" language="ar" />} />
+      <Route path="/ar/privacy" component={() => <InformationPage kind="privacy" language="ar" />} />
+      <Route path="/ar/terms" component={() => <InformationPage kind="terms" language="ar" />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
