@@ -15,6 +15,8 @@ describe("Arabic readiness experience", () => {
     expect(source).toContain("تفضيلات المطابقة");
     expect(source).toContain("language-toggle is-arabic");
     expect(source).toContain("roleTranslations");
+    expect(source).toContain("ArabicMarketSelector");
+    expect(source).toContain("toMatchIndustry");
   });
 
   it("uses scoped Arabic typography with normal script spacing and readable leading", () => {
@@ -22,5 +24,6 @@ describe("Arabic readiness experience", () => {
     expect(styles).toContain('"Noto Sans Arabic"');
     expect(styles).toContain("word-spacing: .08em");
     expect(styles).toContain("line-height: 1.95");
+    expect(styles).toContain("#upload .preferences-grid > label:nth-child(1)");
   });
 });

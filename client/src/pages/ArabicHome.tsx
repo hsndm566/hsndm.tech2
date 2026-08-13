@@ -27,7 +27,8 @@ import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
-import { saudiCities } from "@/lib/saudiTaxonomy";
+import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
+import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
 import { Link } from "wouter";
 
 const MapView = lazy(async () => {
@@ -104,6 +105,7 @@ export default function ArabicHome() {
   const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "Arabic" });
+  const [selectedArabicIndustry, setSelectedArabicIndustry] = useState("Technology & Software");
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
@@ -201,10 +203,11 @@ export default function ArabicHome() {
               <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> استلام بيانات السيرة الذاتية <span>جاهز</span></div><div><StatusDot /> مسار الوظائف السعودية <span>في الانتظار</span></div></div>
             </div>
             <div className="hero-stats" dir="rtl"><div><strong>500+</strong><span>وظيفة سعودية تم فحصها</span></div><div><strong>24/7</strong><span>محرك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div>
-          </div>
-        </section>
+	          </div>
+	        </section>
+	        <ArabicMarketSelector city={matchPreferences.city} industry={selectedArabicIndustry} onCityChange={(city) => setMatchPreferences((current) => ({ ...current, city }))} onIndustryChange={(industry) => { setSelectedArabicIndustry(industry); setMatchPreferences((current) => ({ ...current, industry: toMatchIndustry(industry) as MatchPreferences["industry"] })); }} />
 
-        <section id="product" className="service-intro section-paper">
+	        <section id="product" className="service-intro section-paper">
           <div className="page-frame split-layout"><aside className="section-rail"><RailLabel>01 / البنية التحتية</RailLabel><span className="rail-rule" /><p>ليست مجرد منصة توظيف أخرى</p></aside><div className="intro-main"><div className="section-kicker"><Zap size={15} /> البنية التحتية للتقديم</div><h2>كل ما يحتاجه بحث جاد عن عمل <i>لمواصلة التقدّم.</i></h2><p className="section-summary">من فهم السيرة الذاتية إلى متابعة الإرسال، يحوّل النظام بحثك عن وظيفة إلى إيقاع عمل منظم — وليس نسخاً ولصقاً في ساعات متأخرة من الليل.</p><div className="capability-grid"><article className="capability-card"><span className="capability-index">A/01</span><ScanSearch size={27} strokeWidth={1.6} /><h3>محرك التقديم</h3><p>تتم مطابقة تفاصيل سيرتك الذاتية مع الوظائف الفعلية المتاحة في السعودية، ويُخصَّص كل طلب حسب الوظيفة المعلن عنها.</p><span className="card-rule" /></article><article className="capability-card dark-card"><span className="capability-index">A/02</span><Languages size={27} strokeWidth={1.6} /><h3>مطابقة السيرة الذاتية</h3><p>إبراز الوظائف الأكثر ملاءمة أولاً، بحيث يتماشى جهدك مع ملفك الفعلي.</p><span className="card-rule" /></article><article className="capability-card accent-card"><span className="capability-index">A/03</span><Clock3 size={27} strokeWidth={1.6} /><h3>أتمتة العمليات</h3><p>المتابعات، وإعادة الإرسال، والتحقق من التسليم، كلها تساعد في الحفاظ على وتيرة نشاط التقديم.</p><span className="card-rule" /></article></div></div></div>
         </section>
 

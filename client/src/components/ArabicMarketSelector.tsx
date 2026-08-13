@@ -1,0 +1,6 @@
+import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
+import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
+
+export function ArabicMarketSelector({ city, industry, onCityChange, onIndustryChange }: { city: string; industry: string; onCityChange: (value: string) => void; onIndustryChange: (value: string) => void }) {
+  return <section className="section-paper" dir="rtl" aria-label="تصفية المدن والمجالات في السعودية"><div className="page-frame py-10"><p className="font-mono text-xs text-[#e5482a]">التصفية السعودية</p><h2 className="mt-2 text-2xl font-bold">ابحث حسب المدينة والمجال</h2><p className="mt-2 text-sm text-[#151515]/70">اختر من المدن السعودية والمجالات المتاحة لتوجيه مطابقة السيرة الذاتية محلياً.</p><div className="mt-5 grid gap-4 md:grid-cols-2"><div><label className="mb-2 block text-sm font-medium">المدينة المستهدفة</label><SearchableSaudiSelect options={saudiCities} value={city} onChange={onCityChange} language="ar" placeholder="ابحث عن مدينة سعودية…" /></div><div><label className="mb-2 block text-sm font-medium">المجال المستهدف</label><SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={onIndustryChange} language="ar" placeholder="ابحث عن مجال…" /></div></div></div></section>;
+}

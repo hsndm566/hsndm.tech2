@@ -224,3 +224,9 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .site-shell[lang="ar"] :is(.hero h1, h2, .final-cta h2) { line-height: 1.27; }
   .site-shell[lang="ar"] :is(p, li, blockquote, dd, small, .section-summary, .hero-lead > p, .process-content p, .capability-card p, .detail-points p, .faq-answer p, .plan-card > p, .review-card blockquote) { line-height: 2; }
 }
+
+/* The searchable Arabic market selector drives the same local matching state. */
+.site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(1),
+.site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(2) {
+  display: none;
+}

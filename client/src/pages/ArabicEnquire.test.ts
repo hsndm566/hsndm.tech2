@@ -16,4 +16,13 @@ describe("bilingual enquiry handoff", () => {
     expect(englishSource).toContain("handoffSteps");
     expect(englishSource).toContain("Opening WhatsApp");
   });
+
+  it("includes canonical Saudi city and industry selections in both campaign handoffs", () => {
+    expect(arabicSource).toContain("saudiCities");
+    expect(arabicSource).toContain("saudiIndustries");
+    expect(arabicSource).toContain("المدينة المستهدفة");
+    expect(arabicSource).toContain("المجال المستهدف");
+    expect(englishSource).toContain("Target city:");
+    expect(englishSource).toContain("Target industry:");
+  });
 });

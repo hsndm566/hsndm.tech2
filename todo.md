@@ -17,7 +17,7 @@
 - [x] Apply the missing application/profile database tables and establish a project-controlled, private data-backup snapshot routine.
 - [x] Verify and strengthen authenticated candidate isolation with explicit two-candidate authorization tests.
 - [ ] Add secure persisted resume metadata and an ATS-friendliness workflow with free preview and contact-based unlock, without changing the existing visual design.
-- [ ] Add clear ATS processing animations and an accessible export action for AI-generated ATS results.
+- [x] Add clear ATS processing animations and an accessible export action for AI-generated ATS results.
 - [ ] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [ ] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
 - [ ] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
@@ -25,4 +25,11 @@
 - [ ] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
 - [ ] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.
 - [ ] Add a searchable, comprehensive English-Arabic Saudi city and industry taxonomy with verified label parity.
-- [ ] Improve ATS loading feedback and verify downloadable AI-result export behavior.
+- [x] Improve ATS loading feedback and verify downloadable AI-result export behavior.
+- [ ] Wire searchable Saudi city and industry controls into the Arabic matching and campaign journey.
+- [ ] Run automated bilingual taxonomy parity tests and confirm the Arabic UI consumes the canonical taxonomy source.
+- [x] Update the English and Arabic campaign enquiry forms to consume the expanded canonical Saudi city and industry taxonomy.
+- [ ] Replace the legacy limited Arabic upload preference controls with the canonical searchable city and industry selectors.
+- [ ] Add automated UI-level coverage for canonical Arabic labels and English/Arabic campaign taxonomy state.
+- [ ] Replace Arabic upload control markup in place rather than relying on a parallel selector or CSS hiding.
+- [ ] Add rendered interaction tests proving city and industry selections flow into Arabic matching and bilingual campaign handoffs.

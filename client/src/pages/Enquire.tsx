@@ -6,6 +6,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, FileText, Loader2, ShieldCheck } from "lucide-react";
 import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
+import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
+import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 
 const campaignLanes = ["Operations", "Logistics", "Sales", "Technology", "Hospitality", "Other"];
 const WHATSAPP_NUMBER = "966571448656";
@@ -15,6 +17,8 @@ export default function Enquire() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const [city, setCity] = useState("Jeddah");
+  const [industry, setIndustry] = useState("Technology & Software");
   const [fileName, setFileName] = useState("");
   const [isHandingOff, setIsHandingOff] = useState(false);
   const [handoffStep, setHandoffStep] = useState(0);
@@ -36,6 +40,8 @@ export default function Enquire() {
       `Name: ${name}`,
       `Email: ${email}`,
       `Target lane: ${role}`,
+      `Target city: ${city}`,
+      `Target industry: ${industry}`,
       fileName ? `CV selected: ${fileName} — I will attach it in this chat.` : "CV: I will share it in this chat.",
     ].join("\n");
     const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
@@ -90,6 +96,10 @@ export default function Enquire() {
                 {campaignLanes.map((lane) => <option key={lane} value={lane}>{lane}</option>)}
               </select>
             </label>
+            <div className="grid gap-4 md:grid-cols-2">
+              <label><span>Target Saudi city</span><SearchableSaudiSelect options={saudiCities} value={city} onChange={setCity} placeholder="Search Saudi cities…" /></label>
+              <label><span>Target industry</span><SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={setIndustry} placeholder="Search industries…" /></label>
+            </div>
             <label className="campaign-upload">
               <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={chooseFile} />
               <span className="upload-icon"><FileText size={19} /></span>
