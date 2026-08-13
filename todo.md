@@ -20,7 +20,7 @@
 - [x] Add clear ATS processing animations and an accessible export action for AI-generated ATS results.
 - [x] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [x] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
-- [ ] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
+- [x] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
 - [ ] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.
 - [ ] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
 - [ ] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.

@@ -55,6 +55,8 @@ const pageMetadata = {
   "ar/support": { title: "الدعم | أوتوأبلاي السعودية", description: "الدعم للحملة ولوحة التحكم وطلبات الخصوصية للباحثين عن عمل في السعودية.", path: "/ar/support", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/privacy": { title: "الخصوصية | أوتوأبلاي السعودية", description: "تعرّف على كيفية التعامل مع معلومات حملة البحث عن عمل ومراجعة السيرة داخل المتصفح.", path: "/ar/privacy", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/terms": { title: "شروط الاستخدام | أوتوأبلاي السعودية", description: "اقرأ شروط المعاينة واستفسار الحملة وتتبع الطلبات في AutoApply SA.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  pricing: { title: "Pricing | AutoApply SA", description: "Review provisional Saudi job-application campaign plans and begin with a contact-only discussion.", path: "/pricing", lang: "en", direction: "ltr", locale: "en_SA" },
+  "ar/pricing": { title: "الأسعار | أوتوأبلاي السعودية", description: "اطلع على خطط حملة التقديم الإرشادية وابدأ بمحادثة داخل السعودية.", path: "/ar/pricing", lang: "ar", direction: "rtl", locale: "ar_SA" },
 };
 
 const staticMeta = (indexHtml, metadata) => {

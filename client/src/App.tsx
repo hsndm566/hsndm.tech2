@@ -21,6 +21,7 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
+const PricingPage = lazy(() => import("@/pages/PricingPage"));
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -33,6 +34,8 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
+      <Route path="/pricing" component={() => <PricingPage />} />
+      <Route path="/ar/pricing" component={() => <PricingPage language="ar" />} />
       <Route path="/how-it-works" component={() => <InformationPage kind="how" />} />
       <Route path="/support" component={() => <InformationPage kind="support" />} />
       <Route path="/privacy" component={() => <InformationPage kind="privacy" />} />
