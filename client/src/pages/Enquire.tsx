@@ -8,6 +8,7 @@ import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
+import { trpc } from "@/lib/trpc";
 
 const campaignLanes = ["Operations", "Logistics", "Sales", "Technology", "Hospitality", "Other"];
 const WHATSAPP_NUMBER = "966571448656";
@@ -22,6 +23,7 @@ export default function Enquire() {
   const [fileName, setFileName] = useState("");
   const [isHandingOff, setIsHandingOff] = useState(false);
   const [handoffStep, setHandoffStep] = useState(0);
+  const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
   const handoffSteps = [["Reviewing your campaign brief", "Checking the essentials for your handoff."], ["Preparing your WhatsApp message", "Adding your selected campaign direction."], ["Opening WhatsApp", "Your chat will be ready in a moment."]] as const;
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function Enquire() {
     ].join("\n");
     const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
     if (handoffWindow) handoffWindow.opener = null;
+    else reportBlockedHandoff.mutate({ route: "/enquire" });
     setHandoffStep(0);
     setIsHandingOff(true);
     window.setTimeout(() => setHandoffStep(1), 520);

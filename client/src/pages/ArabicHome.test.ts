@@ -26,4 +26,14 @@ describe("Arabic readiness experience", () => {
     expect(styles).toContain("line-height: 1.95");
     expect(styles).toContain("#upload .preferences-grid > label:nth-child(1)");
   });
+
+  it("reports only a route when local CV extraction throws", () => {
+    const englishSource = readFileSync(new URL("./Home.tsx", import.meta.url), "utf8");
+    const atsSource = readFileSync(new URL("./Ats.tsx", import.meta.url), "utf8");
+    expect(englishSource).toContain('reportCvExtractionFailure.mutate({ route: "/" })');
+    expect(englishSource).toContain('reportBlockedHandoff.mutate({ route: "/" })');
+    expect(source).toContain('reportCvExtractionFailure.mutate({ route: "/ar" })');
+    expect(source).toContain('reportBlockedHandoff.mutate({ route: "/ar" })');
+    expect(atsSource).toContain("extractAtsCvText");
+  });
 });

@@ -25,4 +25,9 @@ describe("bilingual enquiry handoff", () => {
     expect(englishSource).toContain("Target city:");
     expect(englishSource).toContain("Target industry:");
   });
+
+  it("reports only a blocked WhatsApp handoff route without sending campaign form fields", () => {
+    expect(englishSource).toContain('reportBlockedHandoff.mutate({ route: "/enquire" })');
+    expect(arabicSource).toContain('reportBlockedHandoff.mutate({ route: "/ar/enquire" })');
+  });
 });

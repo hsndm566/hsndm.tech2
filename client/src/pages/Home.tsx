@@ -134,6 +134,8 @@ export default function Home() {
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
+  const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
+  const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
   const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
     || window.location.hostname === "localhost"
     || window.location.hostname.endsWith(".manus.space")
@@ -178,7 +180,7 @@ export default function Home() {
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
     const preferencesAtScan = matchPreferences;
-    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file)).then((text) => demoLists(text, preferencesAtScan.industry));
+    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/" }) })).then((text) => demoLists(text, preferencesAtScan.industry));
     const startedAt = performance.now();
 
     setSelectedFile(file.name);
@@ -253,6 +255,9 @@ export default function Home() {
       language: matchPreferences.language,
       role_count: String(targetRoles.length),
     });
+    const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
+    if (handoffWindow) handoffWindow.opener = null;
+    else reportBlockedHandoff.mutate({ route: "/" });
     setBriefStatus("submitting");
     setBriefShared(true);
     if (backendAvailable) {
@@ -270,7 +275,8 @@ export default function Home() {
     }
     window.setTimeout(() => {
       setBriefStatus("success");
-      window.open(whatsappHref, "_blank", "noopener,noreferrer");
+      if (handoffWindow) handoffWindow.location.replace(whatsappHref);
+      else window.location.assign(whatsappHref);
     }, 650);
   };
 

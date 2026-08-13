@@ -29,7 +29,7 @@ async function readDocxText(file: File): Promise<string> {
 }
 
 /** Extracts plain text only in the visitor's browser; no CV file leaves the page. */
-export async function readCvText(file: File): Promise<string> {
+export async function readCvText(file: File, options?: { onExtractionFailure?: () => void }): Promise<string> {
   const extension = file.name.split(".").pop()?.toLowerCase();
   try {
     if (file.type === "application/pdf" || extension === "pdf") return normaliseReadableText(await readPdfText(file));
@@ -38,6 +38,7 @@ export async function readCvText(file: File): Promise<string> {
     return "";
   } catch (error) {
     console.warn("Local CV text extraction failed", error);
+    options?.onExtractionFailure?.();
     return "";
   }
 }

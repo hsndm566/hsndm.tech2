@@ -21,7 +21,7 @@
 - [x] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [x] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
 - [x] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
-- [ ] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.
+- [x] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.
 - [ ] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
 - [ ] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.
 - [ ] Add a searchable, comprehensive English-Arabic Saudi city and industry taxonomy with verified label parity.
@@ -36,3 +36,10 @@
 - [x] Add visible English and Arabic navigation links to privacy, terms, support, and how-it-works pages.
 - [x] Verify every English and Arabic information route renders on direct access with route-specific metadata.
 - [x] Extend static-route generation for all public information pages.
+- [x] Report ATS CV extraction failures through the privacy-preserving owner-alert path.
+- [x] Detect null or false persistence results so campaign-readiness and application failures always notify the owner.
+- [x] Add regression tests proving alerts fire for ATS extraction, campaign-readiness persistence, and application persistence failures.
+- [x] Report blocked WhatsApp readiness handoffs from both English and Arabic landing pages without sending campaign content.
+- [x] Add a behavioral ATS upload test proving a local extraction exception triggers the route-only owner-alert mutation.
+- [x] Use the correct landing-page route in blocked readiness-handoff owner alerts.
+- [x] Exercise the ATS page upload callback through a React integration test, not only the extraction helper.

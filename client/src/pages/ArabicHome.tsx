@@ -109,6 +109,8 @@ export default function ArabicHome() {
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
+  const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
+  const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
   const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
     || window.location.hostname === "localhost"
     || window.location.hostname.endsWith(".manus.space")
@@ -138,7 +140,7 @@ export default function ArabicHome() {
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
     const preferencesAtScan = matchPreferences;
-    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file)).then((text) => demoLists(text, preferencesAtScan.industry));
+    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/ar" }) })).then((text) => demoLists(text, preferencesAtScan.industry));
     const startedAt = performance.now();
     setSelectedFile(file.name); setScanState("scanning"); setScanProgress(0); setScanResult(null); setSelectedSuggestedRole(null); setBriefStatus("idle");
     const tick = (now: number) => {
@@ -164,9 +166,12 @@ export default function ArabicHome() {
     const targetRoles = selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles;
     const whatsappHref = makeArabicWhatsAppHref(targetRoles);
     trackEngagement("campaign_readiness_brief_shared", { page: window.location.pathname, city: matchPreferences.city, language: "Arabic", role_count: String(targetRoles.length) });
+    const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
+    if (handoffWindow) handoffWindow.opener = null;
+    else reportBlockedHandoff.mutate({ route: "/ar" });
     setBriefStatus("submitting");
     if (backendAvailable) recordReadiness.mutate({ city: matchPreferences.city as "Jeddah" | "Riyadh" | "Dammam" | "Makkah" | "Madinah" | "Anywhere in Saudi Arabia", industry: matchPreferences.industry, seniority: matchPreferences.seniority as "Any level" | "Entry level" | "Mid level" | "Senior level", language: "Arabic", targetRoles, primaryField: scanResult.field, cvReadable: true, consent: true, source: "landing-readiness-check" });
-    window.setTimeout(() => { setBriefStatus("success"); window.open(whatsappHref, "_blank", "noopener,noreferrer"); }, 650);
+    window.setTimeout(() => { setBriefStatus("success"); if (handoffWindow) handoffWindow.location.replace(whatsappHref); else window.location.assign(whatsappHref); }, 650);
   };
 
   return (

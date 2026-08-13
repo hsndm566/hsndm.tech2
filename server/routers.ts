@@ -6,6 +6,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { analyzeAts, atsInput } from "./ats";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { notifyClientCvExtractionFailure, notifyClientWorkflowFallback, notifyOperationalFailure } from "./operationalAlerts";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -21,14 +22,24 @@ export const appRouter = router({
     }),
   }),
   campaign: router({
-    ats: router({ analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => analyzeAts(input)) }),
+    clientIssue: router({
+      reportBlockedWhatsAppHandoff: publicProcedure
+        .input(z.object({ route: z.enum(["/", "/ar", "/enquire", "/ar/enquire"]) }))
+        .mutation(async ({ input }) => ({ delivered: await notifyClientWorkflowFallback(input.route) })),
+      reportCvExtractionFailure: publicProcedure
+        .input(z.object({ route: z.enum(["/", "/ar", "/ats"]) }))
+        .mutation(async ({ input }) => ({ delivered: await notifyClientCvExtractionFailure(input.route) })),
+    }),
+    ats: router({ analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => {
+      try { return await analyzeAts(input); } catch (error) { await notifyOperationalFailure("ATS analysis", error); throw error; }
+    }) }),
     readiness: router({
       record: publicProcedure.input(campaignReadinessInputSchema).mutation(async ({ input }) => {
-        const stored = await createCampaignReadiness({
-          ...input,
-          consented: input.consent,
-        });
-        return { stored } as const;
+        try {
+          const stored = await createCampaignReadiness({ ...input, consented: input.consent });
+          if (!stored) throw new Error("campaign readiness record was not persisted");
+          return { stored } as const;
+        } catch (error) { await notifyOperationalFailure("campaign readiness", error); throw error; }
       }),
     }),
     applications: router({
@@ -54,12 +65,12 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const candidateOpenId = ctx.user.openId;
-          const created = await insertJobApplication({
-            ...input,
-            candidateOpenId,
-          });
-          return { success: true, created } as const;
+          try {
+            const candidateOpenId = ctx.user.openId;
+            const created = await insertJobApplication({ ...input, candidateOpenId });
+            if (!created) throw new Error("application record was not persisted");
+            return { success: true, created } as const;
+          } catch (error) { await notifyOperationalFailure("application creation", error); throw error; }
         }),
       profile: router({
         get: protectedProcedure.query(async ({ ctx }) => {
