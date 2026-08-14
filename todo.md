@@ -146,4 +146,5 @@
 
 - [x] Add mobile-only sticky "Upload CV Now" CTA button directly below the new explainer video in English and Arabic.
 
-- [ ] Implement a visual scanning laser animation over the CV drop zone immediately after file selection in English and Arabic.
+- [x] Implement a visual scanning laser animation over the CV drop zone immediately after file selection in English and Arabic.
+- [x] Implement a visual scanning laser animation over the CV drop zone immediately after file selection in English and Arabic.
