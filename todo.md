@@ -50,6 +50,8 @@
 - [ ] Replace the legacy Arabic upload selector markup in place and remove the CSS-hide/portal workaround.
 - [x] Add real-selector rendered Arabic interaction coverage for canonical labels, matching state, and campaign handoff context.
 - [x] Add a rendered ArabicHome interaction test that proves selected canonical city and industry values update Arabic readiness or matching output.
-- [ ] Assess Clerk, Neon, Hermes integration options, and current frontend-to-backend connection status without making stack changes.
-- [ ] Reconcile the staged optimization checklist against the active Manus full-stack deployment and static GitHub Pages mirror.
-- [ ] Document the required production backend dependency boundary and remaining independent-hosting gap without changing services.
+- [x] Assess Clerk, Neon, Hermes integration options, and current frontend-to-backend connection status without making stack changes.
+- [x] Reconcile the staged optimization checklist against the active Manus full-stack deployment and static GitHub Pages mirror.
+- [x] Document the required production backend dependency boundary and remaining independent-hosting gap without changing services.
+- [x] Create a target-by-target release reconciliation mapping each staged capability to the Manus full-stack deployment or static GitHub Pages mirror.
+- [x] Expand the release reconciliation to list every optimization stage and its runtime dependencies per deployment target.
