@@ -14,6 +14,7 @@ describe("HeroMedia", () => {
     expect(component).toContain('pointer-events-none select-none');
     expect(component).toContain('aria-hidden="true"');
     expect(component).toContain('disablePictureInPicture');
-    expect(component).toContain('min-width: 768px');
+    expect(component).toContain('(prefers-reduced-motion: no-preference)');
+    expect(component).not.toContain('min-width: 768px');
   });
 });

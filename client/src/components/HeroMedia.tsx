@@ -8,7 +8,7 @@ export default function HeroMedia({ poster, alt }: HeroMediaProps) {
   const [mayRenderVideo, setMayRenderVideo] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px) and (prefers-reduced-motion: no-preference)");
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const sync = () => setMayRenderVideo(Boolean(HERO_VIDEO_URL) && mediaQuery.matches);
     sync();
     mediaQuery.addEventListener("change", sync);

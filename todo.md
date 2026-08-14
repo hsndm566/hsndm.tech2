@@ -77,6 +77,8 @@
 - [x] Verify desktop and mobile background-video behavior, silence, fallback behavior, tests, build, and publication.
 - [ ] Deploy the verified background-video release to each live target and confirm the managed video asset loads on the desktop English homepage.
 - [ ] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
+- [x] Enable the managed silent looping hero video on supported mobile devices while retaining the reduced-motion fallback.
+- [ ] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
 - [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
 - [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
 - [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
