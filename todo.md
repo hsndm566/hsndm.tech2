@@ -63,9 +63,10 @@
 - [ ] Present the exact first Azure resource-creation action, expected service impact, and rollback point for explicit approval.
 - [ ] Provision and validate Azure staging services sequentially after approval, without changing production traffic.
 - [ ] Execute a controlled production data and DNS cutover only after staging acceptance and an approved maintenance window.
-- [ ] Document the steady-state Azure operating model, release synchronization process, backup verification, and recovery responsibilities.
+- [x] Document the steady-state Azure operating model, release synchronization process, backup verification, and recovery responsibilities.
 - [x] Diagnose the slow-browser Azure access path and document a browser-independent authentication alternative.
 - [x] Preserve a verified source, build, asset, and deployment release inventory without copying production data.
 - [x] Prepare a low-friction Azure CLI or GitHub Actions authentication handoff for a reliable device, without creating cloud resources.
 - [x] Create a complete version-controlled build and asset manifest for the verified release without copying production data.
 - [x] Create a complete Azure migration inventory worksheet for the live API, OAuth callbacks, database write-primary, DNS, assets, and operational jobs without creating resources.
+- [x] Add explicit Azure backup verification evidence and recovery responsibility assignments to the steady-state operations documentation.

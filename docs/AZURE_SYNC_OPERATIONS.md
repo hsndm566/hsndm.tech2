@@ -37,7 +37,8 @@ This contract defines a repeatable release path from the verified source reposit
 
 | Name | Type | Use |
 |---|---|---|
-| `AZURE_CREDENTIALS` | Environment secret | Azure deployment identity credential; never store it in repository files. |
+| `AZURE_CLIENT_ID` | Environment secret | Entra application client ID used by the short-lived GitHub OIDC deployment identity. |
+| `AZURE_TENANT_ID` | Environment secret | Entra tenant ID paired with the GitHub OIDC deployment identity. |
 | `AZURE_SUBSCRIPTION_ID` | Environment variable | Active Azure subscription identifier. |
 | `AZURE_RESOURCE_GROUP` | Environment variable | Target resource group; use a staging group before production. |
 | `AZURE_CONTAINER_APPS_ENVIRONMENT_ID` | Environment variable | Pre-created managed environment identifier for the staged API. |
@@ -68,3 +69,30 @@ The appropriate long-term model is **manual promotion from a verified commit**, 
 ## Evidence to attach to every release
 
 Every staged or production migration action should retain the verified commit SHA, test/type/build results, Bicep `what-if` output, deployed image digest, health-check timestamp, smoke-test record, data reconciliation result, DNS change record if any, and named rollback revision/artifact.
+
+## Backup verification before cutover
+
+No database write-primary changes until each requirement in this table has evidence attached to the change record. A backup is not considered verified merely because a job reports success; it must have a known storage location, integrity evidence, and a restore-readiness test.
+
+| Check | Required evidence | Responsible role | Blocking outcome |
+|---|---|---|---|
+| Legacy recovery point | Timestamp, private object key or provider snapshot ID, SHA-256 where the backup format supports it, record counts, and source database identifier. | Data operator | Stop cutover; the legacy data has no accepted recovery point. |
+| Azure target recovery point | Equivalent Azure backup/snapshot record after the staging target contains data. | Data operator | Do not make Azure the write-primary. |
+| Restore readiness | A non-production restore or documented provider restore test that verifies schema creation, representative row counts, and application read access. | Data operator with release operator | Do not retire legacy data or finalise DNS/API cutover. |
+| Application data reconciliation | Before/after table counts for users, campaign readiness, job applications, candidate profiles, backup snapshots, and system jobs; investigate every unexplained difference. | Data operator | Freeze writes and reconcile before promotion. |
+| Scheduled backup successor | One idempotent manual staging run stores a new backup with metadata and is visible to monitoring. | Release operator | Do not disable the current scheduled backup. |
+
+For the present system, the legacy daily backup routine writes a private JSON snapshot, records a SHA-256, byte size, and row counts, and runs through a cron-authenticated route. These properties are the minimum successor behavior; the private payload itself is never attached to Git or a release record.
+
+## Recovery responsibility matrix
+
+| Situation | Release owner | Data operator | Site owner | On-call operator |
+|---|---|---|---|---|
+| Prepare a candidate release | Records commit/artifact, tests, and infrastructure plan. | Reviews schema compatibility if data is affected. | Approves production scope and maintenance window. | Monitors staging health. |
+| Approve Azure resource creation | Presents exact service, region, and expected effect. | Confirms no data move is implied. | Gives explicit approval. | No action until approval exists. |
+| Staging failure | Stops promotion and retains legacy service. | Confirms no unintended writes reached Azure. | Decides whether to retry after diagnosis. | Captures health/log evidence. |
+| Production API/static rollback | Reverts to the last healthy release/API revision without changing data primary blindly. | Reconciles any Azure-only writes before a database reversal. | Authorizes traffic rollback if customer impact exists. | Executes monitored rollback and confirms recovery. |
+| Backup or restore failure | Blocks cutover and records the failure. | Repairs/retakes backup and repeats restore readiness test. | Defers production move. | Monitors the current production backup path. |
+| Post-cutover incident | Keeps the legacy fallback available during the observation window. | Preserves evidence and leads data reconciliation. | Decides on customer communication and final rollback authority. | Triage, alerts, and status evidence. |
+
+For this project, the **site owner** is the user. The **release owner** is the person or controlled workflow applying the verified release; the **data operator** is the person with approved database recovery access; and the **on-call operator** is the person monitoring the deployed service. One person may hold several roles, but the evidence and decision points remain separate.
