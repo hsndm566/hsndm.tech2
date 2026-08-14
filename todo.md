@@ -123,3 +123,6 @@
 - [x] Add Enhancement 3: Add rank-based confidence labels to role match results.
 - [x] Add Enhancement 4: Add static ATS score anchoring text and starter-plan pricing link on the /ats page.
 - [x] Add Enhancement 5: Implement zero-match fallback state with custom heading, subtext, and pre-filled WhatsApp button.
+
+- [ ] Add AI & Emerging Tech and Renewable Energy & CleanTech custom career track filters to careerTaxonomy.ts.
+- [ ] Add a lightweight, non-blocking feedback prompt ("Were these results helpful?") after the ATS score display on the /ats page.

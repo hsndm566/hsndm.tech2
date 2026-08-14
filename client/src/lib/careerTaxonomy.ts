@@ -7,6 +7,8 @@ export type CareerField = {
 export const FIELD_MAP: CareerField[] = [
   { title: "Software & Engineering", keywords: ["software", "developer", "javascript", "python", "java", "react", "node", "backend", "frontend", "full stack", "programmer", "api", "database", "sql", "devops", "مطور", "برمجة"], items: ["Software Engineer", "Backend Developer", "Full Stack Developer"] },
   { title: "Data & Analytics", keywords: ["data", "analyst", "analytics", "machine learning", "power bi", "tableau", "statistics", "sql", "excel", "dashboard", "بيانات", "تحليل"], items: ["Data Analyst", "Business Intelligence Analyst", "Data Scientist"] },
+  { title: "AI & Emerging Tech", keywords: ["artificial intelligence", "ai", "machine learning", "deep learning", "nlp", "computer vision", "llm", "generative ai", "robotics", "automation", "الذكاء الاصطناعي", "تعلم الآلة"], items: ["AI Engineer", "Machine Learning Specialist", "Generative AI Developer"] },
+  { title: "Renewable Energy & CleanTech", keywords: ["renewable", "solar", "wind", "energy", "cleantech", "sustainability", "carbon", "net zero", "power generation", "grid", "طاقة متجددة", "استدامة", "شمسية"], items: ["Solar Energy Engineer", "Sustainability Consultant", "CleanTech Project Manager"] },
   { title: "Accounting & Finance", keywords: ["accounting", "accountant", "finance", "financial", "audit", "tax", "sap fico", "bookkeep", "payable", "receivable", "cpa", "محاسب", "مالية"], items: ["Accountant", "Financial Analyst", "Finance Officer"] },
   { title: "Sales & Business Development", keywords: ["sales", "business development", "account manager", "client", "revenue", "crm", "quota", "b2b", "مبيعات", "تطوير أعمال"], items: ["Sales Executive", "Account Manager", "Business Development Manager"] },
   { title: "Marketing & Digital", keywords: ["marketing", "seo", "social media", "content", "brand", "campaign", "digital marketing", "advertis", "تسويق", "محتوى"], items: ["Marketing Specialist", "Digital Marketing Executive", "Social Media Manager"] },
@@ -23,10 +25,10 @@ export const FIELD_MAP: CareerField[] = [
 ];
 
 export const INDUSTRY_SCOPES: Record<string, string[]> = {
-  "technology-data": ["Software & Engineering", "Data & Analytics", "IT & Support"],
+  "technology-data": ["Software & Engineering", "Data & Analytics", "AI & Emerging Tech", "IT & Support"],
   "business-operations": ["Accounting & Finance", "Sales & Business Development", "Operations Management", "Logistics & Supply Chain", "Project Management"],
   "people-service": ["Human Resources", "Healthcare & Medical", "Customer Service", "Teaching & Education"],
-  "engineering-construction": ["Civil & Construction", "Mechanical & Electrical"],
+  "engineering-construction": ["Civil & Construction", "Mechanical & Electrical", "Renewable Energy & CleanTech"],
 };
 
 export type UserProfileType = "Fresh Graduate" | "Experienced Hire" | "Career Switcher" | "Default";
@@ -43,7 +45,7 @@ export function demoLists(cvText: string, industryScope = "all", userType: UserP
         score += 1;
       }
     } else if (userType === "Experienced Hire") {
-      if (field.title.includes("Operations") || field.title.includes("Project") || field.title.includes("Sales") || field.title.includes("Software")) {
+      if (field.title.includes("Operations") || field.title.includes("Project") || field.title.includes("Sales") || field.title.includes("Software") || field.title.includes("AI")) {
         score += 1;
       }
     } else if (userType === "Career Switcher") {
