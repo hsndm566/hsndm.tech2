@@ -25,6 +25,7 @@ import HeroMedia from "@/components/HeroMedia";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
+import { HERO_VIDEO_URL } from "@/lib/media";
 import { trpc } from "@/lib/trpc";
 import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
@@ -37,8 +38,8 @@ const MapView = lazy(async () => {
 
 const WHATSAPP_URL = "https://wa.me/966571448656?text=مرحباً%20AutoApply%20SA،%20أرغب%20في%20بدء%20حملة%20تقديم.";
 
-// Replace with a Manus storage URL only after the approved optimized Arabic walkthrough video is uploaded.
-const ARABIC_EXPLAINER_VIDEO_SRC: string | null = null;
+// Reusing the approved managed silent loop for Arabic explanation.
+const ARABIC_EXPLAINER_VIDEO_SRC = HERO_VIDEO_URL;
 
 const plans = [
   { name: "الباقة الأساسية", price: "99", descriptor: "مسار بداية مركّز.", features: ["حوالي 40 طلب تقديم", "تقديم عبر البريد الإلكتروني والمنصات", "تقرير أسبوعي"] },
@@ -223,7 +224,7 @@ export default function ArabicHome() {
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
             <h2 id="arabic-video-explainer-heading">30 ثانية فقط. <i>وهذا يكفي لفهمها.</i></h2>
             {ARABIC_EXPLAINER_VIDEO_SRC ? (
-              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA">
+              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA">
                 <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
               </video>
             ) : (

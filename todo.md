@@ -137,3 +137,6 @@
 - [x] Enhancement G: Campaign health score on /campaign/[token] dashboard with weighted score bar and action line.
 - [x] Enhancement H: Rejection signal detection and campaign_signals table persistence.
 - [x] Enhancement I: Chronological CV version tagging (CV v1, CV v2) on verified application rows using cv_sha256.
+
+- [x] Audit and improve ArabicHome.tsx typography, RTL spacing, and mobile alignment.
+- [x] Integrate the approved managed loop as a second contextual explainer video (How It Works workflow demonstration).
