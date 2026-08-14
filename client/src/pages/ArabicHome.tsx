@@ -21,7 +21,7 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";

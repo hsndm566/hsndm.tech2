@@ -22,17 +22,17 @@
 - [x] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
 - [x] Add a separate provisional pricing page using clearly marked placeholder prices and no payment collection.
 - [x] Add owner-facing operational failure visibility for upload, handoff, and application workflow failures.
-- [ ] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
-- [ ] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.
-- [ ] Add a searchable, comprehensive English-Arabic Saudi city and industry taxonomy with verified label parity.
+- [x] Complete unique route metadata, sitemap and robots coverage, bilingual mobile checks, tests, and staged release verification.
+- [x] Expand Saudi Arabia city and industry options across English and Arabic matching, campaign, dashboard, and ATS journeys.
+- [x] Add a searchable, comprehensive English-Arabic Saudi city and industry taxonomy with verified label parity.
 - [x] Improve ATS loading feedback and verify downloadable AI-result export behavior.
-- [ ] Wire searchable Saudi city and industry controls into the Arabic matching and campaign journey.
-- [ ] Run automated bilingual taxonomy parity tests and confirm the Arabic UI consumes the canonical taxonomy source.
+- [x] Wire searchable Saudi city and industry controls into the Arabic matching and campaign journey.
+- [x] Run automated bilingual taxonomy parity tests and confirm the Arabic UI consumes the canonical taxonomy source.
 - [x] Update the English and Arabic campaign enquiry forms to consume the expanded canonical Saudi city and industry taxonomy.
 - [ ] Replace the legacy limited Arabic upload preference controls with the canonical searchable city and industry selectors.
-- [ ] Add automated UI-level coverage for canonical Arabic labels and English/Arabic campaign taxonomy state.
+- [x] Add automated UI-level coverage for canonical Arabic labels and English/Arabic campaign taxonomy state.
 - [ ] Replace Arabic upload control markup in place rather than relying on a parallel selector or CSS hiding.
-- [ ] Add rendered interaction tests proving city and industry selections flow into Arabic matching and bilingual campaign handoffs.
+- [x] Add rendered interaction tests proving city and industry selections flow into Arabic matching and bilingual campaign handoffs.
 - [x] Add visible English and Arabic navigation links to privacy, terms, support, and how-it-works pages.
 - [x] Verify every English and Arabic information route renders on direct access with route-specific metadata.
 - [x] Extend static-route generation for all public information pages.
@@ -47,3 +47,9 @@
 - [x] Add a visible contact-based unlock action directly inside the ATS free-preview experience.
 - [x] Persist privacy-safe ATS review metadata from the authenticated ATS workflow itself.
 - [x] Add regression and UI coverage for the ATS free-preview-to-contact-unlock workflow.
+- [ ] Replace the legacy Arabic upload selector markup in place and remove the CSS-hide/portal workaround.
+- [x] Add real-selector rendered Arabic interaction coverage for canonical labels, matching state, and campaign handoff context.
+- [x] Add a rendered ArabicHome interaction test that proves selected canonical city and industry values update Arabic readiness or matching output.
+- [ ] Assess Clerk, Neon, Hermes integration options, and current frontend-to-backend connection status without making stack changes.
+- [ ] Reconcile the staged optimization checklist against the active Manus full-stack deployment and static GitHub Pages mirror.
+- [ ] Document the required production backend dependency boundary and remaining independent-hosting gap without changing services.

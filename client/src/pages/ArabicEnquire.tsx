@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ArrowUpRight, Check, FileText, Loader2, ShieldCheck } from "lucide-react";
 import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";

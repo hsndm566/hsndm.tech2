@@ -2,7 +2,7 @@
  * Design reminder — Operational Clarity: the enquiry route is a focused intake sheet,
  * not a generic contact page. Use sharp rules, visible status, and a single next action.
  */
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, FileText, Loader2, ShieldCheck } from "lucide-react";
 import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
