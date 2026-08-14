@@ -159,6 +159,15 @@ export default function Dashboard() {
                             <SearchableSaudiSelect options={saudiIndustries} value={profile?.targetIndustry || "Technology & Software"} onChange={(val) => updateProfileMutation.mutate({ targetIndustry: val })} placeholder="Search industries…" />
                           </div>
                           <div className="space-y-2">
+                            <label className="text-sm font-medium">Private resume reference</label>
+                            <Input maxLength={255} defaultValue={profile?.resumeFileName || ""} placeholder="For example: Hasan-CV-August-2026.pdf" onBlur={(event) => updateProfileMutation.mutate({ resumeFileName: event.target.value })} />
+                            <p className="text-xs text-[#151515]/60">Only this label and an optional short note are saved here. Your CV file and extracted text are never stored in this profile.</p>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">ATS follow-up note</label>
+                            <Input maxLength={500} defaultValue={profile?.resumeSummary || ""} placeholder="For example: Asked for a human review of finance roles in Riyadh." onBlur={(event) => updateProfileMutation.mutate({ resumeSummary: event.target.value })} />
+                          </div>
+                          <div className="space-y-2">
                             <label className="text-sm font-medium">Salary Expectation</label>
                             <Select 
                               defaultValue={profile?.salaryExpectation || "15,000 - 25,000 SAR"}
@@ -187,6 +196,7 @@ export default function Dashboard() {
                               onCheckedChange={(checked) => updateProfileMutation.mutate({ notifyEmail: checked })}
                             />
                           </div>
+                          <Link href="/enquire" className="inline-flex w-full items-center justify-center rounded-md bg-[#151515] px-4 py-2.5 text-sm font-medium text-[#fbf9f5] transition-colors hover:bg-[#e5482a]">Request a human ATS follow-up</Link>
                         </div>
                       )}
                     </DialogContent>

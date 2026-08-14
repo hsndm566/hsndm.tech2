@@ -77,4 +77,22 @@ describe("application access control and authentication", () => {
     const anonymous = appRouter.createCaller(makeContext(null));
     await expect(anonymous.campaign.applications.list()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
+
+  it("persists bounded resume metadata only against the authenticated candidate profile", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await candidate.campaign.applications.profile.update({
+      resumeFileName: "candidate-a-cv.pdf",
+      resumeSummary: "Requested a human ATS follow-up for Riyadh finance roles.",
+    });
+
+    expect(mocks.updateCandidateProfile).toHaveBeenCalledWith("candidate-a", expect.objectContaining({
+      resumeFileName: "candidate-a-cv.pdf",
+      resumeSummary: "Requested a human ATS follow-up for Riyadh finance roles.",
+    }));
+  });
+
+  it("rejects an oversized resume note rather than accepting CV text", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.applications.profile.update({ resumeSummary: "x".repeat(501) })).rejects.toBeTruthy();
+  });
 });

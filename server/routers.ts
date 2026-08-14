@@ -82,6 +82,8 @@ export const appRouter = router({
               targetCity: z.string().optional(),
               targetIndustry: z.string().optional(),
               salaryExpectation: z.string().optional(),
+              resumeFileName: z.string().max(255).optional(),
+              resumeSummary: z.string().max(500).optional(),
               notifyWhatsApp: z.boolean().optional(),
               notifyEmail: z.boolean().optional(),
             })

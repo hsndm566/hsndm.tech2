@@ -16,7 +16,7 @@
 - [x] Audit the live hosting, DNS, TLS, uptime alerting, persistence, backups, and route-level SEO status against the approved staged roadmap.
 - [x] Apply the missing application/profile database tables and establish a project-controlled, private data-backup snapshot routine.
 - [x] Verify and strengthen authenticated candidate isolation with explicit two-candidate authorization tests.
-- [ ] Add secure persisted resume metadata and an ATS-friendliness workflow with free preview and contact-based unlock, without changing the existing visual design.
+- [x] Add secure persisted resume metadata and an ATS-friendliness workflow with free preview and contact-based unlock, without changing the existing visual design.
 - [x] Add clear ATS processing animations and an accessible export action for AI-generated ATS results.
 - [x] Extend the existing candidate dashboard from the same application-tracking records and verify ownership boundaries.
 - [x] Add bilingual privacy, terms, support, and how-it-works pages that preserve the established UI system.
@@ -44,3 +44,6 @@
 - [x] Use the correct landing-page route in blocked readiness-handoff owner alerts.
 - [x] Exercise the ATS page upload callback through a React integration test, not only the extraction helper.
 - [x] Add accessible bilingual help cues explaining how Saudi city and industry selectors guide matching and campaign handoff context.
+- [x] Add a visible contact-based unlock action directly inside the ATS free-preview experience.
+- [x] Persist privacy-safe ATS review metadata from the authenticated ATS workflow itself.
+- [x] Add regression and UI coverage for the ATS free-preview-to-contact-unlock workflow.
