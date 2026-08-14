@@ -154,3 +154,7 @@
 - [x] Localize AI skill output for English and Arabic and use an empty, honest fallback when extraction is unavailable; disclose transient processing without CV storage.
 - [x] Add regression coverage for both page integrations and the Arabic flow tRPC mock.
 
+
+- [x] Implement friendly error state UI displaying "AI skills unavailable" when transient model request fails during extraction.
+- [x] Enhance extracted skills display with interactive tooltips explaining skill alignment with selected Saudi role.
+- [x] Audit dual-video integration so both hero background loop and second explainer video render as distinct optimized sections in English and Arabic.

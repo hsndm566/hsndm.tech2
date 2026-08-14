@@ -639,18 +639,24 @@ export default function Home() {
                     })()}
                   </div>
                   {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
-                  {scanResult.keySkills && scanResult.keySkills.length > 0 && (
+                  {scanResult.keySkills && scanResult.keySkills.length > 0 ? (
                     <div className="p-3 bg-black/[0.03] border border-black/10 my-3">
                       <div className="flex items-center gap-1.5 font-mono text-xs font-semibold mb-2 text-[#151515]">
                         <Sparkles size={13} className="text-[#e5482a]" /> AI Extracted Key Skills ({scanResult.topDomain || scanResult.field})
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {scanResult.keySkills.map((skill) => (
-                          <span key={skill} className="px-2 py-0.5 bg-white border border-black/15 text-xs font-mono text-[#151515]">
+                          <span key={skill} title={`Directly aligns with ${scanResult.field} in Saudi Arabia`} className="px-2 py-0.5 bg-white border border-black/15 text-xs font-mono text-[#151515] cursor-help transition-colors hover:border-[#e5482a]">
                             {skill}
                           </span>
                         ))}
                       </div>
+                      <p className="text-[11px] font-mono text-black/60 mt-2">Hover skill chips to see alignment with your target Saudi role lane.</p>
+                    </div>
+                  ) : (
+                    <div className="p-3 bg-black/[0.02] border border-black/10 my-3 text-xs font-mono text-black/70 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
+                      <span>AI skills currently unavailable — local role matching remains fully active.</span>
                     </div>
                   )}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
