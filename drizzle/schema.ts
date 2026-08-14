@@ -67,6 +67,18 @@ export const jobApplications = mysqlTable("job_applications", {
 export type JobApplication = typeof jobApplications.$inferSelect;
 export type InsertJobApplication = typeof jobApplications.$inferInsert;
 
+export const campaignSignals = mysqlTable("campaign_signals", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: varchar("campaignId", { length: 64 }).notNull(),
+  signalType: varchar("signalType", { length: 64 }).notNull(),
+  detectedAt: timestamp("detectedAt").defaultNow().notNull(),
+  message: text("message").notNull(),
+  resolved: boolean("resolved").default(false).notNull(),
+});
+
+export type CampaignSignal = typeof campaignSignals.$inferSelect;
+export type InsertCampaignSignal = typeof campaignSignals.$inferInsert;
+
 /**
  * Candidate profile settings for Saudi target cities, salary, and notifications.
  */

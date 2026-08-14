@@ -8,9 +8,11 @@ import { applyPageSeo } from "@/lib/seo";
 import {
   CampaignAccessError,
   CampaignConnectionError,
+  computeCampaignHealth,
   type CampaignDashboardPayload,
   fetchCampaignDashboard,
   formatCampaignTime,
+  getCvVersionTag,
   humanCampaignStatus,
   readCampaignLink,
   verifiedApplicationCompanies,
@@ -139,6 +141,24 @@ function CampaignDataView({ payload }: { payload: CampaignDashboardPayload }) {
         <MetricCard icon={<Clock3 className="h-4 w-4" />} label="Campaign started" value={formatCampaignTime(campaign.created_at)} detail="Times display in your device time zone." />
       </section>
 
+      {(() => {
+        const health = computeCampaignHealth(campaign);
+        const filledBlocks = Math.round((health.score / 100) * 10);
+        const emptyBlocks = 10 - filledBlocks;
+        const barStr = "█".repeat(Math.max(0, filledBlocks)) + "░".repeat(Math.max(0, emptyBlocks));
+        return (
+          <Card className="border-[#151515]/10 bg-white shadow-sm p-5">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-medium">
+                <span>Campaign Health: <strong className="text-[#e5482a]">{health.label}</strong></span>
+                <span className="font-mono text-xs text-[#151515]/70">[{barStr}] {health.score}%</span>
+              </div>
+              <p className="text-xs text-[#151515]/60">{health.actionLine}</p>
+            </div>
+          </Card>
+        );
+      })()}
+
       {evidenceCount > 0 && (
         <div className="flex justify-end">
           <Button
@@ -204,12 +224,21 @@ function CampaignDataView({ payload }: { payload: CampaignDashboardPayload }) {
             <p className="py-8 text-sm leading-6 text-[#151515]/65">No evidence-linked company records are available yet.</p>
           ) : (
             <ol className="divide-y divide-[#151515]/10">
-              {verifiedCompanies.map((application) => (
-                <li key={application.id} className="grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-5">
-                  <div><p className="font-medium">{application.company}</p><p className="mt-1 text-sm text-[#151515]/60">{application.title || "Application evidence recorded"}{application.location ? ` · ${application.location}` : ""}</p></div>
-                  <time className="font-mono text-[10px] leading-5 text-[#151515]/50">{formatCampaignTime(application.created_at)}</time>
-                </li>
-              ))}
+              {verifiedCompanies.map((application) => {
+                const cvVersion = getCvVersionTag(application, verifiedCompanies);
+                return (
+                  <li key={application.id} className="grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-5">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{application.company}</p>
+                        <span className="inline-block px-1.5 py-0.5 text-[10px] font-mono bg-[#151515]/5 border border-[#151515]/10 text-[#151515]/70">{cvVersion}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-[#151515]/60">{application.title || "Application evidence recorded"}{application.location ? ` · ${application.location}` : ""}</p>
+                    </div>
+                    <time className="font-mono text-[10px] leading-5 text-[#151515]/50">{formatCampaignTime(application.created_at)}</time>
+                  </li>
+                );
+              })}
             </ol>
           )}
         </CardContent>

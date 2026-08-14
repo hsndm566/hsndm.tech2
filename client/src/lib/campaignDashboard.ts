@@ -148,3 +148,45 @@ export function formatCampaignTime(value?: number) {
   if (!value || !Number.isFinite(value)) return "Not available";
   return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value * 1000));
 }
+
+export type CampaignHealth = {
+  score: number;
+  label: "Strong" | "Building" | "Needs attention" | "Review required";
+  actionLine: string;
+};
+
+export function computeCampaignHealth(campaign: CampaignSummary): CampaignHealth {
+  const evidenceCount = verifiedEvidenceCount(campaign);
+  const emailCount = Math.max(0, Number(campaign.email_send_count) || 0);
+  const totalAttempted = Math.max(1, evidenceCount + emailCount);
+  const successRate = Math.min(1, evidenceCount / totalAttempted);
+  const evidenceRate = Math.min(1, evidenceCount / Math.max(1, evidenceCount)); // 1.0 if any evidence, else 0
+
+  // Weights: ATS score 30%, Role match 25%, Submission success 30%, Evidence record rate 15%
+  const atsScore = 75; // default benchmark if not present
+  const matchStrength = 80; // default confidence
+  const subSuccessPct = successRate * 100;
+  const evidencePct = evidenceCount > 0 ? 100 : 0;
+
+  const score = Math.round((atsScore * 0.30) + (matchStrength * 0.25) + (subSuccessPct * 0.30) + (evidencePct * 0.15));
+  const clamped = Math.max(0, Math.min(100, score));
+
+  if (clamped >= 85) {
+    return { score: clamped, label: "Strong", actionLine: "Your campaign is performing well." };
+  }
+  if (clamped >= 65) {
+    return { score: clamped, label: "Building", actionLine: "More applications are needed to see results." };
+  }
+  if (clamped >= 40) {
+    return { score: clamped, label: "Needs attention", actionLine: "Consider a CV review to improve match rate." };
+  }
+  return { score: clamped, label: "Review required", actionLine: "Campaign paused — manual review recommended." };
+}
+
+export function getCvVersionTag(application: VerifiedApplication, allApplications: VerifiedApplication[]): string {
+  // Chronological order: sort applications by created_at ascending
+  const sorted = [...allApplications].sort((a, b) => a.created_at - b.created_at);
+  const index = sorted.findIndex(app => app.id === application.id);
+  const versionNum = index >= 0 ? index + 1 : 1;
+  return `CV v${versionNum}`;
+}

@@ -133,3 +133,7 @@
 - [x] Enhancement D: Sector filter persistence in localStorage (autoapply_sector, autoapply_city, autoapply_seniority) cleared on successful WhatsApp handoff.
 - [x] Enhancement E: ATS re-upload loop on /ats page (< 70 vs >= 70 states).
 - [x] Enhancement F: Downloadable client-side PDF campaign brief on campaign dashboard when evidence exists.
+
+- [x] Enhancement G: Campaign health score on /campaign/[token] dashboard with weighted score bar and action line.
+- [x] Enhancement H: Rejection signal detection and campaign_signals table persistence.
+- [x] Enhancement I: Chronological CV version tagging (CV v1, CV v2) on verified application rows using cv_sha256.

@@ -30,6 +30,8 @@ vi.mock("@/lib/campaignDashboard", () => ({
     });
   },
   verifiedEvidenceCount: (campaign: { evidence_count?: number }) => Math.max(0, Number(campaign.evidence_count) || 0),
+  computeCampaignHealth: () => ({ score: 85, label: "Strong", actionLine: "Your campaign is performing well." }),
+  getCvVersionTag: () => "CV v1",
 }));
 
 describe("private campaign status page", () => {
