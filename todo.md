@@ -79,6 +79,18 @@
 - [ ] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
 - [x] Enable the managed silent looping hero video on supported mobile devices while retaining the reduced-motion fallback.
 - [ ] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
+- [x] Audit the existing See It Work video section, live GitHub Pages deployment, repository source, and Railway API integration against the attached production-finalization brief.
+- [ ] Verify the current live hsndm.tech GitHub Pages deployment against the production-finalization brief and record evidence for the See It Work section, homepage copy and flow, and video behavior.
+- [x] Finalize the existing video-section experience using only approved managed media or an honest polished fallback, without changing protected design systems.
+- [x] Reconcile the requested homepage copy, engine labels, intake wording, and ordered page flow against the active English landing page without duplicating completed work.
+- [x] Implement a private token-based campaign dashboard route that reads only existing Railway campaign endpoints when their safe public integration contract is available.
+- [x] Add automated coverage for campaign dashboard loading, unavailable-backend handling, and evidence-only application counts.
+- [x] Add page-level coverage that confirms the private campaign route renders a loading state before its data resolves.
+- [x] Add page-level coverage that confirms private campaign connection and access failures show the correct recovery state.
+- [x] Add page-level coverage that confirms campaign activity is contextual only and totals remain evidence-derived.
+- [x] Create source-grounded SYSTEM.md, MANUS_CONTEXT.md, and STATUS.md handoff documents without credentials, fabricated clients, or unsupported service claims.
+- [ ] Validate one authorized production campaign link in a browser after the Railway deployment completes, without copying its bearer token into logs or source control.
+- [ ] Verify all production-finalization changes on desktop and mobile, publish them to GitHub Pages, and record live deployment evidence.
 - [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
 - [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
 - [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
