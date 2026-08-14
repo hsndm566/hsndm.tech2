@@ -515,6 +515,11 @@ export default function Home() {
               </div>
             )}
             <p>Powered by AutoApply SA. This is what runs while you sleep.</p>
+            <div className="mt-4 sm:hidden">
+              <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
+                Upload CV Now →
+              </a>
+            </div>
           </div>
         </section>
 

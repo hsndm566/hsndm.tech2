@@ -143,3 +143,5 @@
 
 - [x] Upload gemini_generated_video_DCF37916.mp4 as second managed asset and integrate as second explainer video in English and Arabic.
 - [x] Optimize both hero and second explainer videos for mobile-first rendering, low-res performance, and touch-free loop stability.
+
+- [x] Add mobile-only sticky "Upload CV Now" CTA button directly below the new explainer video in English and Arabic.

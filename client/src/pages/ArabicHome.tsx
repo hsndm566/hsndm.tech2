@@ -234,6 +234,11 @@ export default function ArabicHome() {
               </div>
             )}
             <p>هذا ما يعمل بينما تتابع يومك.</p>
+            <div className="mt-4 sm:hidden">
+              <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
+                ارفع سيرتك الذاتية الآن ←
+              </a>
+            </div>
           </div>
         </section>
 
