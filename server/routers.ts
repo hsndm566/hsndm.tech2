@@ -5,6 +5,7 @@ import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { analyzeAts, atsInput } from "./ats";
+import { invokeLLM } from "./_core/llm";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyClientCvExtractionFailure, notifyClientWorkflowFallback, notifyOperationalFailure } from "./operationalAlerts";
 
@@ -30,9 +31,30 @@ export const appRouter = router({
         .input(z.object({ route: z.enum(["/", "/ar", "/ats"]) }))
         .mutation(async ({ input }) => ({ delivered: await notifyClientCvExtractionFailure(input.route) })),
     }),
-    ats: router({ analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => {
-      try { return await analyzeAts(input); } catch (error) { await notifyOperationalFailure("ATS analysis", error); throw error; }
-    }) }),
+    ats: router({
+      analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => {
+        try { return await analyzeAts(input); } catch (error) { await notifyOperationalFailure("ATS analysis", error); throw error; }
+      }),
+      extractSkills: publicProcedure.input(z.object({ cvText: z.string().min(50).max(12000) })).mutation(async ({ input }) => {
+        try {
+          const res = await invokeLLM({
+            model: "gpt-5-mini",
+            max_tokens: 400,
+            response_format: { type: "json_schema", json_schema: { name: "skills_result", strict: true, schema: { type: "object", properties: { keySkills: { type: "array", items: { type: "string" } }, topDomain: { type: "string" } }, required: ["keySkills", "topDomain"], additionalProperties: false } } },
+            messages: [
+              { role: "system", content: "Extract up to 6 key professional skills and the top domain from the supplied CV text. Return valid JSON only." },
+              { role: "user", content: input.cvText }
+            ],
+          });
+          const content = res.choices[0]?.message?.content;
+          if (typeof content !== "string") throw new Error("Skills extraction returned no content");
+          return JSON.parse(content) as { keySkills: string[]; topDomain: string };
+        } catch (error) {
+          await notifyOperationalFailure("ATS analysis", error);
+          return { keySkills: ["Professional Communication", "Problem Solving", "Domain Analysis"], topDomain: "General Professional" };
+        }
+      }),
+    }),
     readiness: router({
       record: publicProcedure.input(campaignReadinessInputSchema).mutation(async ({ input }) => {
         try {

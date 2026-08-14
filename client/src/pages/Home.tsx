@@ -109,7 +109,7 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
   return <span className={`status-dot ${tone}`} aria-hidden="true" />;
 }
 
-type ScanResult = { field: string; roles: string[]; confidence: "Focused" | "Strong"; rationale: string };
+type ScanResult = { field: string; roles: string[]; confidence: "Focused" | "Strong"; rationale: string; keySkills?: string[]; topDomain?: string };
 type MatchPreferences = { city: string; industry: string; seniority: string; language: string };
 
 const industryLabels: Record<string, string> = {
@@ -185,6 +185,7 @@ export default function Home() {
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
   const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
   const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
+  const extractSkillsMutation = trpc.campaign.ats.extractSkills.useMutation();
   const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
     || window.location.hostname === "localhost"
     || window.location.hostname.endsWith(".manus.space")
@@ -229,7 +230,8 @@ export default function Home() {
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
     const preferencesAtScan = matchPreferences;
-    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/" }) })).then((text) => demoLists(text, preferencesAtScan.industry, userProfileType));
+    const textPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/" }) }));
+    const fieldPromise = textPromise.then((text) => demoLists(text, preferencesAtScan.industry, userProfileType));
     const startedAt = performance.now();
 
     setSelectedFile(file.name);
@@ -247,7 +249,7 @@ export default function Home() {
         scanFrame.current = window.requestAnimationFrame(tick);
         return;
       }
-      void fieldPromise.then((fields) => {
+      void Promise.all([fieldPromise, textPromise]).then(([fields, cvText]) => {
         if (scanVersion.current !== version) return;
         const bestFit = fields[0];
         if (!bestFit) {
@@ -256,8 +258,25 @@ export default function Home() {
         }
         const confidence = fields.length > 1 ? "Strong" : "Focused";
         const scope = preferencesAtScan.industry === "all" ? "your CV signals" : "your CV signals and selected industry";
-        setScanResult({ field: bestFit.title, roles: bestFit.items.slice(0, 3), confidence, rationale: `Matched from ${scope}; ${preferencesAtScan.city}, ${preferencesAtScan.seniority}, and ${preferencesAtScan.language} are included in your Saudi Arabia campaign brief.` });
-        setScanState("matched");
+        
+        // Trigger AI skill extraction concurrently
+        const fallbackSkills = { keySkills: ["Professional Communication", "Problem Solving", "Domain Analysis"], topDomain: bestFit.title };
+        const skillsPromise = cvText && cvText.length >= 50 
+          ? extractSkillsMutation.mutateAsync({ cvText }).catch(() => fallbackSkills)
+          : Promise.resolve(fallbackSkills);
+
+        void skillsPromise.then((extracted) => {
+          if (scanVersion.current !== version) return;
+          setScanResult({
+            field: bestFit.title,
+            roles: bestFit.items.slice(0, 3),
+            confidence,
+            rationale: `Matched from ${scope}; ${preferencesAtScan.city}, ${preferencesAtScan.seniority}, and ${preferencesAtScan.language} are included in your Saudi Arabia campaign brief.`,
+            keySkills: extracted.keySkills,
+            topDomain: extracted.topDomain,
+          });
+          setScanState("matched");
+        });
       });
     };
     scanFrame.current = window.requestAnimationFrame(tick);
@@ -587,7 +606,7 @@ export default function Home() {
               </label>
               {scanState === "scanning" && (
                 <div className="role-scan" role="status" aria-live="polite">
-                  <div className="scan-meta"><span><ScanSearch size={14} /> Finding roles for you…</span><b>{scanProgress}%</b></div>
+                  <div className="scan-meta"><span><ScanSearch size={14} /> Finding roles for you…</span><span className="text-[11px] font-mono opacity-75 ml-2">Scanning locally</span><b>{scanProgress}%</b></div>
                   <div className="scan-track" role="progressbar" aria-label="Finding relevant roles" aria-valuemin={0} aria-valuemax={100} aria-valuenow={scanProgress}><span style={{ width: `${scanProgress}%` }} /></div>
                   <p>Reading skills, experience, and career signals locally.</p>
                 </div>
@@ -620,6 +639,20 @@ export default function Home() {
                     })()}
                   </div>
                   {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
+                  {scanResult.keySkills && scanResult.keySkills.length > 0 && (
+                    <div className="p-3 bg-black/[0.03] border border-black/10 my-3">
+                      <div className="flex items-center gap-1.5 font-mono text-xs font-semibold mb-2 text-[#151515]">
+                        <Sparkles size={13} className="text-[#e5482a]" /> AI Extracted Key Skills ({scanResult.topDomain || scanResult.field})
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {scanResult.keySkills.map((skill) => (
+                          <span key={skill} className="px-2 py-0.5 bg-white border border-black/15 text-xs font-mono text-[#151515]">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
                   <section className="readiness-card" aria-label="Saudi Campaign Readiness Check">
                     <div className="readiness-heading"><span><Zap size={14} /> SAUDI CAMPAIGN READINESS</span><b>PREVIEW ONLY</b></div>

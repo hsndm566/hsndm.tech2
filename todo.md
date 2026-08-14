@@ -148,3 +148,6 @@
 
 - [x] Implement a visual scanning laser animation over the CV drop zone immediately after file selection in English and Arabic.
 - [x] Implement a visual scanning laser animation over the CV drop zone immediately after file selection in English and Arabic.
+
+- [x] Add a small "Scanning locally" status label next to the progress percentage during the CV scan.
+- [x] Integrate an AI feature to automatically extract and display key skills from the CV immediately after the scan finishes.
