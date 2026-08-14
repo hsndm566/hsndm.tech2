@@ -24,7 +24,7 @@ describe("Arabic readiness experience", () => {
     expect(styles).toContain('"Noto Sans Arabic"');
     expect(styles).toContain("word-spacing: .08em");
     expect(styles).toContain("line-height: 1.95");
-    expect(styles).toContain("#upload .preferences-grid > label:nth-child(1)");
+    expect(styles).toContain("arabic-canonical-preference");
   });
 
   it("reports only a route when local CV extraction throws", () => {
@@ -35,5 +35,12 @@ describe("Arabic readiness experience", () => {
     expect(source).toContain('reportCvExtractionFailure.mutate({ route: "/ar" })');
     expect(source).toContain('reportBlockedHandoff.mutate({ route: "/ar" })');
     expect(atsSource).toContain("extractAtsCvText");
+  });
+
+  it("mounts the canonical Arabic market selector into the upload preference grid", () => {
+    expect(source).toContain("ArabicMarketSelector");
+    const selectorSource = readFileSync(new URL("../components/ArabicMarketSelector.tsx", import.meta.url), "utf8");
+    expect(selectorSource).toContain('#upload .preferences-grid');
+    expect(selectorSource).toContain("SearchableSaudiSelect");
   });
 });

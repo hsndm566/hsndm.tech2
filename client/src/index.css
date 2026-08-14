@@ -225,8 +225,14 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .site-shell[lang="ar"] :is(p, li, blockquote, dd, small, .section-summary, .hero-lead > p, .process-content p, .capability-card p, .detail-points p, .faq-answer p, .plan-card > p, .review-card blockquote) { line-height: 2; }
 }
 
-/* The searchable Arabic market selector drives the same local matching state. */
+/* Canonical Arabic controls render inside the upload preference grid; legacy limited controls remain hidden. */
 .site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(1),
 .site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(2) {
   display: none;
 }
+
+.site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(3) { order: 3; }
+.site-shell[lang="ar"] #upload .preferences-grid > label:nth-child(4) { order: 4; }
+.site-shell[lang="ar"] #upload .preferences-grid > .arabic-canonical-preference:nth-last-child(2) { order: 1; }
+.site-shell[lang="ar"] #upload .preferences-grid > .arabic-canonical-preference:last-child { order: 2; }
+.site-shell[lang="ar"] #upload .arabic-canonical-preference > .space-y-2 { margin-top: 7px; }

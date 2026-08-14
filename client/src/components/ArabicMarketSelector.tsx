@@ -1,7 +1,23 @@
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
-import { Link } from "wouter";
 
+/** Renders canonical Arabic market controls directly inside the CV-upload preference grid. */
 export function ArabicMarketSelector({ city, industry, onCityChange, onIndustryChange }: { city: string; industry: string; onCityChange: (value: string) => void; onIndustryChange: (value: string) => void }) {
-  return <section className="section-paper" dir="rtl" aria-label="تصفية المدن والمجالات في السعودية"><div className="page-frame py-10"><p className="font-mono text-xs text-[#e5482a]">التصفية السعودية</p><h2 className="mt-2 text-2xl font-bold">ابحث حسب المدينة والمجال</h2><p className="mt-2 text-sm text-[#151515]/70">اختر من المدن السعودية والمجالات المتاحة لتوجيه مطابقة السيرة الذاتية محلياً.</p><div className="mt-5 grid gap-4 md:grid-cols-2"><div><label className="mb-2 block text-sm font-medium">المدينة المستهدفة</label><SearchableSaudiSelect options={saudiCities} value={city} onChange={onCityChange} language="ar" placeholder="ابحث عن مدينة سعودية…" /></div><div><label className="mb-2 block text-sm font-medium">المجال المستهدف</label><SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={onIndustryChange} language="ar" placeholder="ابحث عن مجال…" /></div></div><nav className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm underline" aria-label="روابط الخدمة"><Link href="/ar/how-it-works">كيف تعمل الخدمة</Link><Link href="/ar/support">الدعم</Link><Link href="/ar/privacy">الخصوصية</Link><Link href="/ar/terms">الشروط</Link></nav></div></section>;
+  const [target, setTarget] = useState<Element | null>(null);
+
+  useEffect(() => {
+    setTarget(document.querySelector('.site-shell[lang="ar"] #upload .preferences-grid'));
+  }, []);
+
+  if (!target) return null;
+
+  return createPortal(
+    <>
+      <label className="arabic-canonical-preference"><span>المدينة</span><SearchableSaudiSelect options={saudiCities} value={city} onChange={onCityChange} language="ar" placeholder="ابحث عن مدينة سعودية…" /></label>
+      <label className="arabic-canonical-preference"><span>المجال</span><SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={onIndustryChange} language="ar" placeholder="ابحث عن مجال…" /></label>
+    </>,
+    target,
+  );
 }

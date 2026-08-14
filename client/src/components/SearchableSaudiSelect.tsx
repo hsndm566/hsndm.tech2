@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import type { Option } from "@/lib/saudiTaxonomy";
 
 export function SearchableSaudiSelect({ options, value, onChange, language = "en", placeholder }: { options: Option[]; value: string; onChange: (value: string) => void; language?: "en" | "ar"; placeholder: string }) {
