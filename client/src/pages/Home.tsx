@@ -483,18 +483,39 @@ export default function Home() {
                   <label><span>Language</span><select value={matchPreferences.language} onChange={(event) => setMatchPreferences((current) => ({ ...current, language: event.target.value }))}><option>English</option><option>Arabic</option></select></label>
                 </div>
               </div>
-              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-                <span className="font-mono text-[#151515]/70">Profile type (optional):</span>
-                {(["Fresh Graduate", "Experienced Hire", "Career Switcher"] as const).map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setUserProfileType(userProfileType === type ? "Default" : type)}
-                    className={`px-3 py-1.5 border transition-all ${userProfileType === type ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20 hover:border-black"}`}
-                  >
-                    {type}
-                  </button>
-                ))}
+              <div className="mb-3 space-y-2 text-xs">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-[#151515]/70">Profile type:</span>
+                  {(["Fresh Graduate", "Experienced Hire", "Career Switcher"] as const).map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setUserProfileType(userProfileType === type ? "Default" : type)}
+                      className={`px-3 py-1.5 border transition-all ${userProfileType === type ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20 hover:border-black"}`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-[#151515]/70">Emerging sector filter:</span>
+                  {[
+                    { label: "AI & Emerging Tech", industryVal: "Data, AI & Analytics", scopeVal: "technology-data" },
+                    { label: "Renewable Energy", industryVal: "Energy, Oil & Gas", scopeVal: "engineering-construction" },
+                  ].map((sector) => (
+                    <button
+                      key={sector.label}
+                      type="button"
+                      onClick={() => {
+                        setSelectedIndustry(sector.industryVal);
+                        setMatchPreferences((current) => ({ ...current, industry: sector.scopeVal }));
+                      }}
+                      className={`px-3 py-1.5 border transition-all ${selectedIndustry === sector.industryVal ? "bg-[#e5482a] text-white border-[#e5482a]" : "bg-white text-[#151515] border-black/20 hover:border-black"}`}
+                    >
+                      {sector.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
                 <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />

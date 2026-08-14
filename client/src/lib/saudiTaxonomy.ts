@@ -10,7 +10,8 @@ export const saudiIndustries: Option[] = [
 
 export function toMatchIndustry(industry: string) {
   if (["Technology & Software", "Data, AI & Analytics", "Cybersecurity", "Cloud & Infrastructure", "Telecommunications"].includes(industry)) return "technology-data";
-  if (industry.includes("AI") || industry.includes("Energy") || industry.includes("Sustainability") || industry.includes("Utilities")) return "technology-data";
+  if (industry.includes("AI") || industry.includes("Emerging Tech")) return "technology-data";
+  if (industry.includes("Renewable")) return "engineering-construction";
   if (["Healthcare & Hospitals", "Pharmaceuticals & Life Sciences", "Education & Training", "Hospitality & Tourism", "Events & Entertainment", "Human Resources & Recruitment", "Food & Beverage", "Fashion & Beauty", "Sports & Wellness", "Nonprofit & Social Impact"].includes(industry)) return "people-service";
   if (["Engineering", "Construction & Real Estate", "Energy, Oil & Gas", "Utilities & Sustainability", "Manufacturing & Industrial", "Automotive", "Logistics & Supply Chain", "Aviation & Airports", "Maritime & Ports", "Agriculture & Food Production", "Security & Facilities"].includes(industry)) return "engineering-construction";
   return "business-operations";
