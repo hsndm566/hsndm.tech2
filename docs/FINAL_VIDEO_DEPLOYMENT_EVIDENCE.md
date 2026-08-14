@@ -4,7 +4,7 @@
 
 | Target | Release evidence | Result |
 | --- | --- | --- |
-| GitHub Pages source | Commit `1c9e4867352790b774aace3a63b5e377c35c74fa` to `hsndm566/hsndm.tech` | Published through the repository release script. |
+| GitHub Pages source | Commit `a43837829cf4140a2e4ccf1733b124e186f5a087` to `hsndm566/hsndm.tech` | Final validated release, published through the repository release script. |
 | GitHub Pages deployment | Pages API status | `built`. |
 | Public MP4 | `https://hsndm.tech/manus-storage/autoapply-sa-loop-bg_7ecfd5bb.mp4` | HTTP `200`, `Content-Type: video/mp4`, `Content-Length: 2658566`. |
 | Live English homepage | `https://hsndm.tech/` | The public page returned the approved hero statement, Saudi Arabia/Jeddah positioning, revised engine labels, the See It Work section, its managed MP4 source, the AutoApply SA caption, and priority human review. |
