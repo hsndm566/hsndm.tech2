@@ -81,6 +81,7 @@
 - [ ] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
 - [x] Audit the existing See It Work video section, live GitHub Pages deployment, repository source, and Railway API integration against the attached production-finalization brief.
 - [ ] Verify the current live hsndm.tech GitHub Pages deployment against the production-finalization brief and record evidence for the See It Work section, homepage copy and flow, and video behavior.
+- [ ] Correct the GitHub Pages MP4 source because the relative managed-video path returns HTTP 404 on hsndm.tech.
 - [x] Finalize the existing video-section experience using only approved managed media or an honest polished fallback, without changing protected design systems.
 - [x] Reconcile the requested homepage copy, engine labels, intake wording, and ordered page flow against the active English landing page without duplicating completed work.
 - [x] Implement a private token-based campaign dashboard route that reads only existing Railway campaign endpoints when their safe public integration contract is available.

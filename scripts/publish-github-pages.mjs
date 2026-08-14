@@ -1,9 +1,11 @@
-import { readdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { relative, resolve } from "node:path";
 
 const repository = "hsndm566/hsndm.tech";
 const buildRoot = resolve("dist/public");
+const managedVideo = resolve("/home/ubuntu/upload/Generate_a_short_looping_backg.mp4");
+const publishedVideo = resolve(buildRoot, "manus-storage", "autoapply-sa-loop-bg_7ecfd5bb.mp4");
 
 function ghApi(args, payload) {
   const result = spawnSync("gh", ["api", ...args], {
@@ -35,6 +37,8 @@ async function collectFiles(directory) {
 }
 
 const branch = ghApi([`repos/${repository}/git/ref/heads/main`]);
+await mkdir(resolve(buildRoot, "manus-storage"), { recursive: true });
+await copyFile(managedVideo, publishedVideo);
 const files = await collectFiles(buildRoot);
 const tree = [];
 
@@ -60,7 +64,7 @@ const createdTree = ghApi(
 const commit = ghApi(
   [`repos/${repository}/git/commits`, "--method", "POST", "--input", "-"],
   {
-    message: "feat: simplify bilingual homepage clarity flow",
+    message: "feat: publish verified AutoApply SA release assets",
     tree: createdTree.sha,
     parents: [branch.object.sha],
   },
