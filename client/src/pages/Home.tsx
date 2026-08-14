@@ -576,7 +576,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
+              <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""} ${scanState === "scanning" ? "is-scanning-laser" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
                 <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />
                 <span className="drop-symbol"><FileText size={24} /></span>
                 <span className="drop-copy">

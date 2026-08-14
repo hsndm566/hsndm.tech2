@@ -238,3 +238,34 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 
 /* Canonical Arabic controls now render directly inside the upload preference grid source markup. */
 .site-shell[lang="ar"] #upload .arabic-canonical-preference > .space-y-2 { margin-top: 7px; }
+
+@keyframes cv-scan-laser {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.8; }
+}
+
+.drop-zone.is-scanning-laser {
+  position: relative;
+  overflow: hidden;
+}
+
+.drop-zone.is-scanning-laser::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--signal, #e5482a);
+  box-shadow: 0 0 12px 3px rgba(229, 72, 42, 0.65);
+  animation: cv-scan-laser 1.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-zone.is-scanning-laser::after {
+    animation: none;
+    top: 50%;
+    opacity: 0.9;
+  }
+}
