@@ -72,6 +72,11 @@
 - [x] Add explicit Azure backup verification evidence and recovery responsibility assignments to the steady-state operations documentation.
 - [ ] Verify a browser-independent Azure identity through device code or GitHub OIDC without modifying cloud resources.
 - [ ] Configure the required GitHub OIDC federated identity credential on the existing Entra application, then re-run the read-only inventory.
+- [x] Inspect the uploaded video and the existing homepage background-video integration point.
+- [x] Publish the uploaded video as a managed static asset and integrate it as a muted, looping, non-interactive background.
+- [x] Verify desktop and mobile background-video behavior, silence, fallback behavior, tests, build, and publication.
+- [ ] Deploy the verified background-video release to each live target and confirm the managed video asset loads on the desktop English homepage.
+- [ ] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
 - [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
 - [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
 - [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
