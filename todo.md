@@ -43,3 +43,4 @@
 - [x] Add a behavioral ATS upload test proving a local extraction exception triggers the route-only owner-alert mutation.
 - [x] Use the correct landing-page route in blocked readiness-handoff owner alerts.
 - [x] Exercise the ATS page upload callback through a React integration test, not only the extraction helper.
+- [x] Add accessible bilingual help cues explaining how Saudi city and industry selectors guide matching and campaign handoff context.
