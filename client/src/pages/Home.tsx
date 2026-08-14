@@ -260,9 +260,9 @@ export default function Home() {
         const scope = preferencesAtScan.industry === "all" ? "your CV signals" : "your CV signals and selected industry";
         
         // Trigger AI skill extraction concurrently
-        const fallbackSkills = { keySkills: ["Professional Communication", "Problem Solving", "Domain Analysis"], topDomain: bestFit.title };
+        const fallbackSkills = { keySkills: [], topDomain: "" };
         const skillsPromise = cvText && cvText.length >= 50 
-          ? extractSkillsMutation.mutateAsync({ cvText }).catch(() => fallbackSkills)
+          ? extractSkillsMutation.mutateAsync({ cvText, language: "English" }).catch(() => fallbackSkills)
           : Promise.resolve(fallbackSkills);
 
         void skillsPromise.then((extracted) => {
@@ -669,7 +669,7 @@ export default function Home() {
                     </button>
                     {briefStatus === "submitting" && <div className="readiness-handoff readiness-loading" role="status" aria-live="polite"><span className="readiness-spinner" aria-hidden="true" /><span><b>Preparing your campaign brief</b><small>Creating a clean WhatsApp handoff…</small></span></div>}
                     {briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>Campaign brief ready.</b><small>WhatsApp has opened with your selected Saudi role direction. If it did not open, use the link below.</small><a href={`https://wa.me/966571448656?text=${encodeURIComponent(["Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.", `City: ${matchPreferences.city}`, `Industry: ${industryLabels[matchPreferences.industry]}`, `Seniority: ${matchPreferences.seniority}`, `Application language: ${matchPreferences.language}`, `Detected role lanes: ${(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles).join(", ")}`, "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign."].join("\n"))}`} target="_blank" rel="noreferrer">Open WhatsApp</a></span></div>}
-                    <small>Your CV is read on your device. Only what you choose to share continues.</small>
+                    <small>Your CV is read on your device. The AI receives extracted text only for this one-time skill summary; no CV file or text is stored.</small>
                   </section>
                 </div>
               )}

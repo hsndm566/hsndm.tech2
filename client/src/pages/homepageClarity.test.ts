@@ -38,6 +38,18 @@ describe("homepage clarity release", () => {
     expect(source).not.toContain("Julie copilot");
   });
 
+  it("shows the local-scan status and AI skill result wiring in both landing pages", () => {
+    const english = homeSource();
+    const arabic = arabicHomeSource();
+
+    expect(english).toContain("Scanning locally");
+    expect(english).toContain("extractSkillsMutation");
+    expect(english).toContain("AI Extracted Key Skills");
+    expect(arabic).toContain("الفحص محلياً");
+    expect(arabic).toContain("extractSkillsMutation");
+    expect(arabic).toContain("المهارات الأساسية المستخرجة بالذكاء الاصطناعي");
+  });
+
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
     const source = arabicHomeSource();
 

@@ -9,7 +9,7 @@ vi.mock("wouter", () => ({ Link: ({ children, ...props }: React.AnchorHTMLAttrib
 vi.mock("@/components/HeroMedia", () => ({ default: () => <div /> }));
 vi.mock("@/components/Map", () => ({ MapView: () => <div /> }));
 vi.mock("@/lib/seo", () => ({ applyPageSeo: vi.fn() }));
-vi.mock("@/lib/trpc", () => ({ trpc: { campaign: { readiness: { record: { useMutation: () => ({ mutate: vi.fn() }) } }, clientIssue: { reportCvExtractionFailure: { useMutation: () => ({ mutate: vi.fn() }) }, reportBlockedWhatsAppHandoff: { useMutation: () => ({ mutate: vi.fn() }) } } } } }));
+vi.mock("@/lib/trpc", () => ({ trpc: { campaign: { ats: { extractSkills: { useMutation: () => ({ mutateAsync: vi.fn().mockResolvedValue({ keySkills: ["Excel"], topDomain: "Finance" }) }) } }, readiness: { record: { useMutation: () => ({ mutate: vi.fn() }) } }, clientIssue: { reportCvExtractionFailure: { useMutation: () => ({ mutate: vi.fn() }) }, reportBlockedWhatsAppHandoff: { useMutation: () => ({ mutate: vi.fn() }) } } } } }));
 vi.mock("@/lib/careerMatcher", () => ({ readCvText: async () => "finance experience" }));
 vi.mock("@/lib/careerTaxonomy", () => ({ demoLists: () => [{ title: "Finance", items: ["Financial Analyst"] }] }));
 

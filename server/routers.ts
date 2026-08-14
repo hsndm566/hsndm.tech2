@@ -9,6 +9,15 @@ import { invokeLLM } from "./_core/llm";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyClientCvExtractionFailure, notifyClientWorkflowFallback, notifyOperationalFailure } from "./operationalAlerts";
 
+const keySkillsOutputSchema = z.object({
+  keySkills: z.array(z.string().trim().min(1).max(80)).max(6),
+  topDomain: z.string().trim().max(100),
+});
+
+const emptySkillsResult = { keySkills: [], topDomain: "" };
+
+// The CV text is received only for this transient extraction request; no file or text is persisted.
+
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -35,23 +44,22 @@ export const appRouter = router({
       analyze: publicProcedure.input(atsInput).mutation(async ({ input }) => {
         try { return await analyzeAts(input); } catch (error) { await notifyOperationalFailure("ATS analysis", error); throw error; }
       }),
-      extractSkills: publicProcedure.input(z.object({ cvText: z.string().min(50).max(12000) })).mutation(async ({ input }) => {
+      extractSkills: publicProcedure.input(z.object({ cvText: z.string().min(50).max(12000), language: z.enum(["English", "Arabic"]).default("English") })).mutation(async ({ input }) => {
         try {
           const res = await invokeLLM({
             model: "gpt-5-mini",
             max_tokens: 400,
-            response_format: { type: "json_schema", json_schema: { name: "skills_result", strict: true, schema: { type: "object", properties: { keySkills: { type: "array", items: { type: "string" } }, topDomain: { type: "string" } }, required: ["keySkills", "topDomain"], additionalProperties: false } } },
+            response_format: { type: "json_schema", json_schema: { name: "skills_result", strict: true, schema: { type: "object", properties: { keySkills: { type: "array", items: { type: "string" }, maxItems: 6 }, topDomain: { type: "string" } }, required: ["keySkills", "topDomain"], additionalProperties: false } } },
             messages: [
-              { role: "system", content: "Extract up to 6 key professional skills and the top domain from the supplied CV text. Return valid JSON only." },
+              { role: "system", content: `Extract up to 6 explicit professional skills and one broad professional domain from the supplied CV text. Use only evidence in the text. Do not infer credentials, employers, seniority, or outcomes. Return JSON only. Write the skill labels and domain in ${input.language === "Arabic" ? "Arabic" : "English"}.` },
               { role: "user", content: input.cvText }
             ],
           });
           const content = res.choices[0]?.message?.content;
-          if (typeof content !== "string") throw new Error("Skills extraction returned no content");
-          return JSON.parse(content) as { keySkills: string[]; topDomain: string };
-        } catch (error) {
-          await notifyOperationalFailure("ATS analysis", error);
-          return { keySkills: ["Professional Communication", "Problem Solving", "Domain Analysis"], topDomain: "General Professional" };
+          if (typeof content !== "string") return emptySkillsResult;
+          return keySkillsOutputSchema.parse(JSON.parse(content));
+        } catch {
+          return emptySkillsResult;
         }
       }),
     }),

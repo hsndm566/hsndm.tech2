@@ -151,3 +151,6 @@
 
 - [x] Add a small "Scanning locally" status label next to the progress percentage during the CV scan.
 - [x] Integrate an AI feature to automatically extract and display key skills from the CV immediately after the scan finishes.
+- [x] Localize AI skill output for English and Arabic and use an empty, honest fallback when extraction is unavailable; disclose transient processing without CV storage.
+- [x] Add regression coverage for both page integrations and the Arabic flow tRPC mock.
+
