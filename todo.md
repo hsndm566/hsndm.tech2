@@ -84,10 +84,10 @@
 - [ ] Complete production Azure cutover and ongoing operations after staged acceptance.
 - [x] Inspect the local environment and project configuration for Azure service-principal variables or key references without exposing secret values.
 - [x] Remove the unsupported “Julie copilot” reference from public pricing copy and related regression coverage.
-- [ ] Validate and checkpoint the pricing-copy cleanup with deployment-ready build artifacts.
+- [x] Validate and checkpoint the pricing-copy cleanup with deployment-ready build artifacts.
 - [x] Inspect for an existing Azure static, storage, or container-registry upload destination without exposing credentials.
 - [x] Build and verify a portable Azure deployment bundle containing approved source and generated artifacts only.
-- [ ] Save a verified checkpoint containing the pricing-copy cleanup, regression test, rebuilt production artifacts, and refreshed Azure deployment bundle checksum.
+- [x] Save a verified checkpoint containing the pricing-copy cleanup, regression test, rebuilt production artifacts, and refreshed Azure deployment bundle checksum.
 - [ ] Upload the verified deployment bundle to a confirmed Azure destination without changing production traffic.
 - [x] Prepare a minimal secure Azure credential handoff template with only the required Entra values and known identifiers.
 - [x] Validate the user-supplied candidate Azure tenant ID through supported Microsoft identity metadata without exposing credentials.
@@ -102,5 +102,7 @@
 - [x] Add regression coverage and verify the simplified bilingual homepage on desktop and mobile before publishing.
 - [x] Update the Arabic CV-intake stamp, kicker, and heading with the approved clarity-focused wording.
 - [x] Verify English and Arabic homepages on both desktop and mobile, then save a release checkpoint for the simplified homepage.
-- [ ] Confirm the new simplified homepage release is published and its checkpoint represents the deployed artifact.
-- [ ] Save and publish the verified bilingual homepage simplification checkpoint.
+- [x] Confirm the new simplified homepage release is published and its checkpoint represents the deployed artifact.
+- [x] Save and publish the verified bilingual homepage simplification checkpoint.
+- [x] Deploy the simplified bilingual homepage build to each intended live target and verify it matches checkpoint 652baa66.
+- [x] Record live deployment evidence for English and Arabic pages, including target, source checkpoint, and verification result.
