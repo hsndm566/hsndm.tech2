@@ -70,3 +70,11 @@
 - [x] Create a complete version-controlled build and asset manifest for the verified release without copying production data.
 - [x] Create a complete Azure migration inventory worksheet for the live API, OAuth callbacks, database write-primary, DNS, assets, and operational jobs without creating resources.
 - [x] Add explicit Azure backup verification evidence and recovery responsibility assignments to the steady-state operations documentation.
+- [ ] Verify a browser-independent Azure identity through device code or GitHub OIDC without modifying cloud resources.
+- [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
+- [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
+- [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
+- [ ] Complete the separately approved production traffic and data cutover and verify ongoing Azure synchronization and recovery operations.
+- [x] Inspect and verify any pre-existing Azure deployment credential, contributor configuration, or local authenticated state available to this session.
+- [ ] Run a read-only Azure subscription validation through the first confirmed credential path before provisioning resources.
+- [ ] Obtain a working Azure authentication token through an authorized existing credential path so the read-only subscription validation can run.
