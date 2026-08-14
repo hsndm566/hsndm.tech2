@@ -25,7 +25,7 @@ import HeroMedia from "@/components/HeroMedia";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
-import { HERO_VIDEO_URL } from "@/lib/media";
+import { HERO_VIDEO_URL, EXPLAINER_VIDEO_URL } from "@/lib/media";
 import { trpc } from "@/lib/trpc";
 import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
@@ -39,7 +39,7 @@ const MapView = lazy(async () => {
 const WHATSAPP_URL = "https://wa.me/966571448656?text=مرحباً%20AutoApply%20SA،%20أرغب%20في%20بدء%20حملة%20تقديم.";
 
 // Reusing the approved managed silent loop for Arabic explanation.
-const ARABIC_EXPLAINER_VIDEO_SRC = HERO_VIDEO_URL;
+const ARABIC_EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL;
 
 const plans = [
   { name: "الباقة الأساسية", price: "99", descriptor: "مسار بداية مركّز.", features: ["حوالي 40 طلب تقديم", "تقديم عبر البريد الإلكتروني والمنصات", "تقرير أسبوعي"] },

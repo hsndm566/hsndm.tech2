@@ -140,3 +140,6 @@
 
 - [x] Audit and improve ArabicHome.tsx typography, RTL spacing, and mobile alignment.
 - [x] Integrate the approved managed loop as a second contextual explainer video (How It Works workflow demonstration).
+
+- [x] Upload gemini_generated_video_DCF37916.mp4 as second managed asset and integrate as second explainer video in English and Arabic.
+- [x] Optimize both hero and second explainer videos for mobile-first rendering, low-res performance, and touch-free loop stability.

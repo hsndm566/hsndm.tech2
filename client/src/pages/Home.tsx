@@ -42,7 +42,8 @@ const MapView = lazy(async () => {
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
 
-const EXPLAINER_VIDEO_SRC = HERO_VIDEO_URL;
+import { EXPLAINER_VIDEO_URL } from "@/lib/media";
+const EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL;
 
 const plans = [
   {

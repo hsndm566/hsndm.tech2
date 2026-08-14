@@ -29,7 +29,7 @@ describe("homepage clarity release", () => {
     const source = homeSource();
 
     expect(source).toContain("30 seconds. That&apos;s all it takes to understand.");
-    expect(source).toContain("EXPLAINER_VIDEO_SRC = HERO_VIDEO_URL");
+    expect(source).toContain("EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL");
     expect(source).toContain("autoPlay loop muted playsInline disablePictureInPicture");
     expect(source).toContain('controlsList="nodownload noplaybackrate"');
     expect(source).toContain("Powered by AutoApply SA.");
