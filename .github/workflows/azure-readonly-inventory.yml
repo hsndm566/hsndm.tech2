@@ -21,9 +21,9 @@ jobs:
       - name: Authenticate with short-lived GitHub OIDC identity
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: 6250b570-898d-4bc0-8f8b-910078d4c7c5
+          tenant-id: 801585e2-0e6a-4322-a002-e7fc8457bab4
+          subscription-id: 5974c845-4443-4b80-a0cd-b83696573637
       - name: Record subscription and resource inventory
         uses: azure/cli@v2
         with:
