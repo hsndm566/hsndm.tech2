@@ -91,3 +91,16 @@
 - [ ] Upload the verified deployment bundle to a confirmed Azure destination without changing production traffic.
 - [x] Prepare a minimal secure Azure credential handoff template with only the required Entra values and known identifiers.
 - [x] Validate the user-supplied candidate Azure tenant ID through supported Microsoft identity metadata without exposing credentials.
+- [x] Test the supplied Entra tenant and application identifiers through a supported non-secret token-request validation.
+- [x] Inspect supported local workload-identity, attached-token, and federated-credential contexts for the existing Entra application.
+- [x] Map homepage sections and protected interactions against the approved content-reduction brief.
+- [x] Replace the English hero and application-engine labels with the approved client-friendly wording.
+- [x] Remove the three duplicate English homepage explanation sections while preserving the approved page flow.
+- [x] Update the CV-intake labels and replace the unsupported Pro-tier claim with priority human review.
+- [x] Add the requested video-ready placeholder between the retained how-it-works and CV-intake sections.
+- [x] Add aligned professional Arabic clarity copy and remove matching duplicated sections without changing protected interactions.
+- [x] Add regression coverage and verify the simplified bilingual homepage on desktop and mobile before publishing.
+- [x] Update the Arabic CV-intake stamp, kicker, and heading with the approved clarity-focused wording.
+- [x] Verify English and Arabic homepages on both desktop and mobile, then save a release checkpoint for the simplified homepage.
+- [ ] Confirm the new simplified homepage release is published and its checkpoint represents the deployed artifact.
+- [ ] Save and publish the verified bilingual homepage simplification checkpoint.

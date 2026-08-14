@@ -19,7 +19,6 @@ import {
   Clock3,
   FileText,
   Globe2,
-  Languages,
   Menu,
   MessageCircle,
   MoveRight,
@@ -42,6 +41,9 @@ const MapView = lazy(async () => {
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
 
+// Replace with a Manus storage URL only after the approved optimized walkthrough video is uploaded.
+const EXPLAINER_VIDEO_SRC: string | null = null;
+
 const plans = [
   {
     name: "Starter",
@@ -53,7 +55,7 @@ const plans = [
     name: "Pro",
     price: "149",
     descriptor: "For active multi-channel momentum.",
-    features: ["~90 applications", "Priority tailoring", "Daily report"],
+    features: ["~90 applications", "Priority tailoring", "Priority human review", "Daily report"],
     featured: true,
   },
   {
@@ -349,12 +351,12 @@ export default function Home() {
             <div className="hero-lead">
               <div className="eyebrow light"><StatusDot /> 24/7 job engine <span /> Jeddah, Saudi Arabia</div>
               <h1 id="hero-heading">
-                Your applications,<br />
-                <i>engineered</i> while<br />
-                you sleep.
+                We apply to jobs for you.<br />
+                Every day.<br />
+                Automatically.
               </h1>
               <p>
-                AutoApply SA finds, tailors, and submits applications to Saudi Arabia roles by email and portal—built around your CV and your preferred language.
+                AutoApply SA submits tailored job applications to Saudi companies on your behalf — by email and portal — while you focus on everything else.
               </p>
               <div className="hero-actions">
                 <Link className="button button-paper" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
@@ -372,7 +374,7 @@ export default function Home() {
                   <span>LIVE / 24H</span>
                 </div>
               <div className="ledger-route">
-                <div><StatusDot /> CV parsed</div>
+                <div><StatusDot /> CV read</div>
                 <span />
                 <div><StatusDot /> Roles matched</div>
                 <span />
@@ -381,15 +383,15 @@ export default function Home() {
               <div className="ledger-record">
                 <span className="record-number">03</span>
                 <div>
-                  <b>Targeting ready</b>
+                  <b>Ready to apply</b>
                   <small>Skills, experience & language mapped</small>
                 </div>
                 <ArrowUpRight size={16} />
               </div>
               <div className="ledger-queue" aria-label="Saudi Arabia campaign workflow preview">
                 <div className="queue-heading"><span>CAMPAIGN QUEUE / PREVIEW</span><b>JEDDAH · SA</b></div>
-                <div><StatusDot /> CV signal intake <span>READY</span></div>
-                <div><StatusDot /> Saudi role lane <span>QUEUED</span></div>
+                <div><StatusDot /> Your CV is ready</div>
+                <div><StatusDot /> Roles being matched</div>
               </div>
             </div>
 
@@ -397,46 +399,6 @@ export default function Home() {
               <div><strong>500+</strong><span>Saudi roles scanned</span></div>
               <div><strong>24/7</strong><span>Engine in motion</span></div>
               <div><strong>2</strong><span>Languages supported</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="product" className="service-intro section-paper">
-          <div className="page-frame split-layout">
-            <aside className="section-rail">
-              <RailLabel>01 / Platform</RailLabel>
-              <span className="rail-rule" />
-              <p>NOT ANOTHER JOB BOARD</p>
-            </aside>
-            <div className="intro-main">
-              <div className="section-kicker"><Zap size={15} /> APPLICATION INFRASTRUCTURE</div>
-              <h2>Everything a serious search <i>needs to keep moving.</i></h2>
-              <p className="section-summary">
-                From CV interpretation to submission follow-through, the system turns your job search into a planned operating rhythm—not a late-night copy-and-paste exercise.
-              </p>
-              <div className="capability-grid">
-                <article className="capability-card">
-                  <span className="capability-index">A/01</span>
-                  <ScanSearch size={27} strokeWidth={1.6} />
-                  <h3>Application engine</h3>
-                  <p>CV details are matched to live Saudi Arabia roles and each application is tailored to the opening.</p>
-                  <span className="card-rule" />
-                </article>
-                <article className="capability-card dark-card">
-                  <span className="capability-index">A/02</span>
-                  <Languages size={27} strokeWidth={1.6} />
-                  <h3>CV matching</h3>
-                  <p>Surface the most relevant target roles first, so your effort follows your actual profile.</p>
-                  <span className="card-rule" />
-                </article>
-                <article className="capability-card accent-card">
-                  <span className="capability-index">A/03</span>
-                  <Clock3 size={27} strokeWidth={1.6} />
-                  <h3>Ops automation</h3>
-                  <p>Follow-ups, resends, and delivery checks help keep application activity from losing pace.</p>
-                  <span className="card-rule" />
-                </article>
-              </div>
             </div>
           </div>
         </section>
@@ -482,15 +444,33 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="product" className="video-explainer section-paper" aria-labelledby="video-explainer-heading">
+          <div className="page-frame video-explainer-inner">
+            <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
+            <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
+            {EXPLAINER_VIDEO_SRC ? (
+              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline preload="metadata" aria-label="AutoApply SA walkthrough video">
+                <source src={EXPLAINER_VIDEO_SRC} type="video/mp4" />
+              </video>
+            ) : (
+              <div className="video-placeholder" role="img" aria-label="Video loading placeholder for an AutoApply SA walkthrough">
+                <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
+                <span>Video loading — generated by AutoApply SA</span>
+              </div>
+            )}
+            <p>This is what runs while you sleep.</p>
+          </div>
+        </section>
+
         <section id="upload" className="upload-section section-paper">
           <div className="page-frame upload-grid">
             <div className="upload-image-wrap">
               <img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" />
-              <div className="image-stamp"><span>START / 60 SEC</span><ArrowDownRight size={17} /></div>
+              <div className="image-stamp"><span>Try it now — 60 seconds</span><ArrowDownRight size={17} /></div>
             </div>
             <div className="upload-copy">
-              <div className="section-kicker"><Paperclip size={15} /> CV INTAKE</div>
-              <h2>Drop your CV. <i>Find your lanes.</i></h2>
+              <div className="section-kicker"><Paperclip size={15} /> Try it now — takes 60 seconds</div>
+              <h2>Drop your CV. <i>We&apos;ll show you what&apos;s possible.</i></h2>
               <p className="section-summary">Select the latest version of your CV, then set the Saudi Arabia role preferences that matter to you. The local scan uses both inputs to make its match more relevant. No applications are sent during this readiness check.</p>
               <div className="match-preferences" aria-label="Saudi Arabia role preferences">
                 <div className="preferences-heading"><span><SlidersHorizontal size={14} /> MATCH PREFERENCES</span><small>Applied locally</small></div>
@@ -571,51 +551,6 @@ export default function Home() {
           <div className="page-frame campaign-preview-grid">
             <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> BEFORE YOU COMMIT</div><h2>See the campaign <i>take shape.</i></h2><p className="section-summary inverse-summary">Choose a stage to see how the Saudi Arabia campaign moves from your CV signal to a visible application rhythm.</p><div className="campaign-switcher" role="tablist" aria-label="Campaign preview stages">{campaignStages.map((stage, index) => <button key={stage.label} className={campaignStage === index ? "active" : ""} role="tab" aria-selected={campaignStage === index} aria-controls="campaign-preview-status" onClick={() => setCampaignStage(index)}><span>0{index + 1}</span>{stage.label}</button>)}</div><Link href="/enquire" className="text-button light-text">Open your campaign brief <MoveRight size={17} /></Link></div>
             <div id="campaign-preview-status" className="campaign-dashboard" aria-label="Interactive example campaign status dashboard"><div className="dashboard-top"><span>SAUDI CAMPAIGN / PREVIEW</span><b>{campaignStages[campaignStage].status}</b></div><div className="dashboard-spotlight"><span>0{campaignStage + 1}</span><div><b>{campaignStages[campaignStage].title}</b><p>{campaignStages[campaignStage].detail}</p></div></div>{campaignStages.map((stage, index) => <button className={`dashboard-progress ${index === campaignStage ? "active" : ""} ${index > campaignStage ? "quiet" : ""}`} key={stage.label} onClick={() => setCampaignStage(index)}><span>0{index + 1}</span><div><b>{stage.label}</b><small>{index < campaignStage ? "Step prepared" : index === campaignStage ? "Current preview" : "Next in the flow"}</small></div>{index < campaignStage ? <Check size={16} /> : index === campaignStage ? <Clock3 size={16} /> : <ArrowUpRight size={16} />}</button>)}</div>
-          </div>
-        </section>
-
-        <section className="detail-section section-fog">
-          <div className="page-frame detail-layout">
-            <aside className="section-rail">
-              <RailLabel>03 / In practice</RailLabel>
-              <span className="rail-rule" />
-              <p>VISIBLE WORK. NOT VAGUE PROMISES.</p>
-            </aside>
-            <div className="detail-content">
-              <div>
-                <div className="section-kicker"><ScanSearch size={15} /> WHAT THE SERVICE DOES</div>
-                <h2>The moving parts behind a <i>considered application.</i></h2>
-              </div>
-              <img className="flow-image" src="/manus-storage/autoapply-flow_6c03602a.jpg" alt="Desk workspace illustrating a structured job application process" />
-              <div className="detail-points">
-                <article><span>01</span><p><b>Read the signal.</b> Interpret your CV, availability, language, and target direction before a role is selected.</p></article>
-                <article><span>02</span><p><b>Match with context.</b> Focus on openings where your profile has relevance, instead of treating every vacancy the same.</p></article>
-                <article><span>03</span><p><b>Carry the thread.</b> Tailor, submit, and follow through on the operational tasks that can otherwise interrupt a search.</p></article>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="case-study" className="case-study-section section-paper">
-          <div className="page-frame split-layout">
-            <aside className="section-rail">
-              <RailLabel>04 / Case note</RailLabel>
-              <span className="rail-rule" />
-              <p>AN EXAMPLE OF THE SERVICE PROCESS</p>
-            </aside>
-            <div className="case-main">
-              <div className="section-kicker"><FileText size={15} /> PROCESS CASE STUDY</div>
-              <h2>One brief. A clearer <i>application operating rhythm.</i></h2>
-              <p className="section-summary">This illustrative process note shows how a campaign moves from a candidate’s existing CV to a maintained job-application workflow. It is a service walkthrough, not a customer testimonial.</p>
-              <div className="case-ledger">
-                <div className="case-heading"><span>CAMPAIGN TRACE / EXAMPLE</span><span>SAUDI ARABIA ROLE SEARCH</span></div>
-                <article><span className="case-stage">01</span><div><b>Candidate brief</b><p>Role preference, experience, language, and availability are organised into a usable campaign brief.</p></div><span className="case-time">START</span></article>
-                <article><span className="case-stage">02</span><div><b>Role lanes identified</b><p>Relevant openings are prioritised so the campaign focuses on jobs that make sense for the profile.</p></div><span className="case-time">MATCH</span></article>
-                <article><span className="case-stage">03</span><div><b>Applications prepared</b><p>Each application gets the necessary tailoring before email or portal submission is carried out.</p></div><span className="case-time">APPLY</span></article>
-                <article><span className="case-stage">04</span><div><b>Follow-through retained</b><p>Reports, delivery checks, and subsequent actions keep the candidate’s application activity visible.</p></div><span className="case-time">TRACK</span></article>
-              </div>
-              <Link href="/enquire" className="text-button case-link">Start a campaign brief <MoveRight size={18} /></Link>
-            </div>
           </div>
         </section>
 

@@ -11,5 +11,6 @@ describe("public pricing copy", () => {
 
     expect(englishHome).not.toContain("Julie copilot");
     expect(arabicHome).not.toContain("مساعدة Julie الرقمية");
+    expect(arabicHome).toContain("مراجعة بشرية بأولوية");
   });
 });

@@ -10,7 +10,6 @@ import {
   Clock3,
   FileText,
   Globe2,
-  Languages,
   MessageCircle,
   MoveLeft,
   Paperclip,
@@ -38,9 +37,12 @@ const MapView = lazy(async () => {
 
 const WHATSAPP_URL = "https://wa.me/966571448656?text=مرحباً%20AutoApply%20SA،%20أرغب%20في%20بدء%20حملة%20تقديم.";
 
+// Replace with a Manus storage URL only after the approved optimized Arabic walkthrough video is uploaded.
+const ARABIC_EXPLAINER_VIDEO_SRC: string | null = null;
+
 const plans = [
   { name: "الباقة الأساسية", price: "99", descriptor: "مسار بداية مركّز.", features: ["حوالي 40 طلب تقديم", "تقديم عبر البريد الإلكتروني والمنصات", "تقرير أسبوعي"] },
-  { name: "الباقة الاحترافية", price: "149", descriptor: "لزخم نشط عبر قنوات متعددة.", features: ["حوالي 90 طلب تقديم", "تخصيص ذو أولوية", "تقرير يومي"], featured: true },
+  { name: "الباقة الاحترافية", price: "149", descriptor: "لزخم نشط عبر قنوات متعددة.", features: ["حوالي 90 طلب تقديم", "تخصيص ذو أولوية", "مراجعة بشرية بأولوية", "تقرير يومي"], featured: true },
   { name: "باقة المؤسس", price: "249", descriptor: "استهداف عالي الدقة لخطوة مفصلية في مسارك المهني.", features: ["حوالي 150 طلب تقديم", "استهداف متعدد الوظائف", "تأهيل شامل ومخصص"] },
 ];
 
@@ -195,29 +197,43 @@ export default function ArabicHome() {
           <div className="hero-content page-frame" dir="ltr">
             <div className="hero-lead" dir="rtl">
               <div className="eyebrow light"><StatusDot /> محرك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
-              <h1 id="arabic-hero-heading">طلباتك الوظيفية،<br /><i>تُعالَج</i> أثناء<br />نومك.</h1>
-              <p>AutoApply SA يبحث عن الوظائف في السعودية، ويُخصّص طلبات التقديم، ويرسلها عبر البريد الإلكتروني والمنصات — بناءً على سيرتك الذاتية ولغتك المفضلة.</p>
+              <h1 id="arabic-hero-heading">نتقدّم للوظائف <br />نيابةً عنك.<br /><i>كل يوم.</i></h1>
+              <p>يتولى AutoApply SA إرسال طلبات توظيف مخصصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تركز أنت على ما يهمك.</p>
               <div className="hero-actions"><Link className="button button-paper" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال / شهرياً <b /> بدون بطاقة لبدء المحادثة</div>
               <div className="hero-trust-row"><span><ShieldCheck size={14} /> ابدأ بملخص موجز</span><span><Clock3 size={14} /> سنتواصل خلال يوم عمل واحد</span></div>
             </div>
             <div className="hero-ledger" dir="rtl" aria-label="حالة محرك التقديم">
               <div className="ledger-topline"><span>محرك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
-              <div className="ledger-route"><div><StatusDot /> تم تحليل السيرة الذاتية</div><span /><div><StatusDot /> جارٍ مطابقة الوظائف</div><span /><div><StatusDot tone="quiet" /> جارٍ التقديم</div></div>
-              <div className="ledger-record"><span className="record-number">03</span><div><b>الاستهداف جاهز</b><small>تمت مطابقة المهارات والخبرة واللغة</small></div><ArrowUpRight size={16} /></div>
-              <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> استلام بيانات السيرة الذاتية <span>جاهز</span></div><div><StatusDot /> مسار الوظائف السعودية <span>في الانتظار</span></div></div>
+              <div className="ledger-route"><div><StatusDot /> تمت قراءة السيرة الذاتية</div><span /><div><StatusDot /> جارٍ مطابقة الوظائف</div><span /><div><StatusDot tone="quiet" /> جارٍ التقديم</div></div>
+              <div className="ledger-record"><span className="record-number">03</span><div><b>جاهز للتقديم</b><small>تمت مطابقة المهارات والخبرة واللغة</small></div><ArrowUpRight size={16} /></div>
+              <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> سيرتك الذاتية جاهزة</div><div><StatusDot /> جارٍ مطابقة الوظائف</div></div>
             </div>
             <div className="hero-stats" dir="rtl"><div><strong>500+</strong><span>وظيفة سعودية تم فحصها</span></div><div><strong>24/7</strong><span>محرك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div>
 	          </div>
 	        </section>
 
 
-	        <section id="product" className="service-intro section-paper">
-          <div className="page-frame split-layout"><aside className="section-rail"><RailLabel>01 / البنية التحتية</RailLabel><span className="rail-rule" /><p>ليست مجرد منصة توظيف أخرى</p></aside><div className="intro-main"><div className="section-kicker"><Zap size={15} /> البنية التحتية للتقديم</div><h2>كل ما يحتاجه بحث جاد عن عمل <i>لمواصلة التقدّم.</i></h2><p className="section-summary">من فهم السيرة الذاتية إلى متابعة الإرسال، يحوّل النظام بحثك عن وظيفة إلى إيقاع عمل منظم — وليس نسخاً ولصقاً في ساعات متأخرة من الليل.</p><div className="capability-grid"><article className="capability-card"><span className="capability-index">A/01</span><ScanSearch size={27} strokeWidth={1.6} /><h3>محرك التقديم</h3><p>تتم مطابقة تفاصيل سيرتك الذاتية مع الوظائف الفعلية المتاحة في السعودية، ويُخصَّص كل طلب حسب الوظيفة المعلن عنها.</p><span className="card-rule" /></article><article className="capability-card dark-card"><span className="capability-index">A/02</span><Languages size={27} strokeWidth={1.6} /><h3>مطابقة السيرة الذاتية</h3><p>إبراز الوظائف الأكثر ملاءمة أولاً، بحيث يتماشى جهدك مع ملفك الفعلي.</p><span className="card-rule" /></article><article className="capability-card accent-card"><span className="capability-index">A/03</span><Clock3 size={27} strokeWidth={1.6} /><h3>أتمتة العمليات</h3><p>المتابعات، وإعادة الإرسال، والتحقق من التسليم، كلها تساعد في الحفاظ على وتيرة نشاط التقديم.</p><span className="card-rule" /></article></div></div></div>
-        </section>
-
         <section id="how" className="workflow-section section-ink">
           <div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>02 / كيف يعمل</RailLabel><span className="rail-rule" /><p>ثلاث خطوات. بلا تقديم يدوي.</p></aside><div className="workflow-main"><div className="section-kicker inverse"><Sparkles size={15} /> واضح بالتصميم</div><h2>ضع بحثك <i>في نظام.</i></h2><p className="section-summary inverse-summary">ابدأ بما لديك بالفعل. ثم دع المحرك يحوّله إلى روتين تقديم منتظم.</p><div className="process-list"><article className="process-item"><div className="process-number">01</div><div className="process-content"><h3>ارفع سيرتك الذاتية</h3><p>أضف ملف PDF أو DOC أو DOCX أو TXT. مهاراتك وخبراتك ومسارك المهني تصبح نقطة الانطلاق.</p></div><FileText size={24} strokeWidth={1.4} /></article><article className="process-item"><div className="process-number">02</div><div className="process-content"><h3>حدّد الوظائف المستهدفة</h3><p>راجع أفضل مسارات الوظائف المتوافقة معك من بين الإعلانات في السعودية، ووجّه البحث نحو خطوتك القادمة.</p></div><Globe2 size={24} strokeWidth={1.4} /></article><article className="process-item active-process"><div className="process-number">03</div><div className="process-content"><h3>المحرك يقدّم على مدار الساعة</h3><p>الطلبات، وخطابات التقديم المخصصة، والمنصات، ورسائل البريد الإلكتروني، والتحقق من التسليم، كلها تسير بينما تُكمل يومك.</p></div><Send size={24} strokeWidth={1.4} /></article></div></div></div>
+        </section>
+
+        <section id="product" className="video-explainer section-paper" aria-labelledby="arabic-video-explainer-heading">
+          <div className="page-frame video-explainer-inner">
+            <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
+            <h2 id="arabic-video-explainer-heading">30 ثانية فقط. <i>وهذا يكفي لفهمها.</i></h2>
+            {ARABIC_EXPLAINER_VIDEO_SRC ? (
+              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA">
+                <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
+              </video>
+            ) : (
+              <div className="video-placeholder" role="img" aria-label="مساحة انتظار لفيديو توضيحي لخدمة AutoApply SA">
+                <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
+                <span>جارٍ تحميل الفيديو — من إعداد AutoApply SA</span>
+              </div>
+            )}
+            <p>هذا ما يعمل بينما تتابع يومك.</p>
+          </div>
         </section>
 
         <section id="upload" className="upload-section section-paper">
@@ -229,10 +245,6 @@ export default function ArabicHome() {
         <section className="campaign-preview section-ink">
           <div className="page-frame campaign-preview-grid"><div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> دراسة حالة العملية</div><h2>ملخص واحد. <i>إيقاع تقديم أوضح.</i></h2><p className="section-summary inverse-summary">مسار الحملة / مثال توضيحي — البحث عن وظيفة في السعودية.</p><div className="campaign-switcher" role="tablist" aria-label="مراحل معاينة الحملة">{campaignStages.map((stage, index) => <button key={stage.label} className={campaignStage === index ? "active" : ""} role="tab" aria-selected={campaignStage === index} aria-controls="arabic-campaign-preview-status" onClick={() => setCampaignStage(index)}><span>0{index + 1}</span>{stage.label}</button>)}</div><Link href="/ar/enquire" className="text-button light-text">ابدأ ملخص حملتك <MoveLeft size={17} /></Link></div><div id="arabic-campaign-preview-status" className="campaign-dashboard" aria-label="معاينة حالة الحملة"><div className="dashboard-top"><span>الحملة السعودية / معاينة</span><b>{campaignStages[campaignStage].status}</b></div><div className="dashboard-spotlight"><span>0{campaignStage + 1}</span><div><b>{campaignStages[campaignStage].title}</b><p>{campaignStages[campaignStage].detail}</p></div></div>{campaignStages.map((stage, index) => <button className={`dashboard-progress ${index === campaignStage ? "active" : ""} ${index > campaignStage ? "quiet" : ""}`} key={stage.label} onClick={() => setCampaignStage(index)}><span>0{index + 1}</span><div><b>{stage.label}</b><small>{index < campaignStage ? "الخطوة جاهزة" : index === campaignStage ? "المعاينة الحالية" : "الخطوة التالية"}</small></div>{index < campaignStage ? <Check size={16} /> : index === campaignStage ? <Clock3 size={16} /> : <ArrowUpRight size={16} />}</button>)}</div></div>
         </section>
-
-        <section className="detail-section section-fog"><div className="page-frame detail-layout"><aside className="section-rail"><RailLabel>03 / ما تقدّمه الخدمة</RailLabel><span className="rail-rule" /><p>عمل واضح. لا وعود غامضة.</p></aside><div className="detail-content"><div><div className="section-kicker"><ScanSearch size={15} /> ما تقدّمه الخدمة</div><h2>الأجزاء المتحركة خلف <i>طلب تقديم مدروس.</i></h2></div><img className="flow-image" src="/manus-storage/autoapply-flow_6c03602a.jpg" alt="مساحة عمل توضّح عملية تقديم وظيفي منظمة" /><div className="detail-points"><article><span>01</span><p><b>فهم الإشارات.</b> تحليل سيرتك الذاتية، وتوفرك، ولغتك، والاتجاه المستهدف قبل اختيار أي وظيفة.</p></article><article><span>02</span><p><b>مطابقة واعية بالسياق.</b> التركيز على الوظائف التي يتوافق معها ملفك الشخصي فعلياً، بدلاً من التعامل مع كل وظيفة بالطريقة نفسها.</p></article><article><span>03</span><p><b>متابعة مستمرة.</b> تخصيص الطلبات وإرسالها ومتابعتها في المهام التشغيلية التي قد تُعيق البحث لو تُركت يدوياً.</p></article></div></div></div></section>
-
-        <section id="case-study" className="case-study-section section-paper"><div className="page-frame split-layout"><aside className="section-rail"><RailLabel>04 / دراسة حالة</RailLabel><span className="rail-rule" /><p>مثال توضيحي لعملية الخدمة</p></aside><div className="case-main"><div className="section-kicker"><FileText size={15} /> دراسة حالة العملية</div><h2>ملخص واحد. <i>إيقاع تقديم أوضح.</i></h2><p className="section-summary">هذا المثال التوضيحي يشرح كيف تنتقل الحملة من السيرة الذاتية الحالية للمرشح إلى سير عمل مستمر لتقديم الطلبات. إنه شرح للخدمة، وليس مراجعة عميل.</p><div className="case-ledger"><div className="case-heading"><span>مسار الحملة / مثال</span><span>البحث عن وظيفة في السعودية</span></div><article><span className="case-stage">01</span><div><b>ملخص المرشح</b><p>يتم تنظيم تفضيلات الوظيفة والخبرة واللغة والتوفر في ملخص حملة قابل للاستخدام.</p></div><span className="case-time">ابدأ</span></article><article><span className="case-stage">02</span><div><b>تحديد مسارات الوظائف</b><p>يتم ترتيب الوظائف ذات الصلة حسب الأولوية بحيث تركز الحملة على الوظائف المناسبة لهذا الملف الشخصي.</p></div><span className="case-time">مطابقة</span></article><article><span className="case-stage">03</span><div><b>تجهيز الطلبات</b><p>يحصل كل طلب على التخصيص اللازم قبل إرساله عبر البريد الإلكتروني أو المنصة.</p></div><span className="case-time">تقديم</span></article><article><span className="case-stage">04</span><div><b>استمرار المتابعة</b><p>التقارير، والتحقق من التسليم، والإجراءات اللاحقة تُبقي نشاط تقديم المرشح واضحاً وقابلاً للمتابعة.</p></div><span className="case-time">متابعة</span></article></div><Link href="/ar/enquire" className="text-button case-link">ابدأ ملخص حملتك <MoveLeft size={18} /></Link></div></div></section>
 
         <section id="pricing" className="pricing-section section-paper"><div className="page-frame split-layout"><aside className="section-rail"><RailLabel>05 / الأسعار</RailLabel><span className="rail-rule" /><p>باقات شهرية / ريال</p></aside><div className="pricing-main"><div className="pricing-heading"><div><div className="section-kicker"><Zap size={15} /> حدّد محركك</div><h2>حدّد الوتيرة المناسبة <i>لبحثك.</i></h2></div><p>باقات شهرية. الدفع عبر STC Pay أو الآيبان. إلغاء في أي وقت.</p></div><div className="plans-grid">{plans.map((plan) => <article className={`plan-card ${plan.featured ? "plan-featured" : ""}`} key={plan.name}>{plan.featured && <div className="plan-flag">الأكثر اختياراً</div>}<div className="plan-top"><span>{plan.name}</span><ArrowUpRight size={18} /></div><div className="price"><b>{plan.price}</b><span>ريال<br />/ شهرياً</span></div><p>{plan.descriptor}</p><ul>{plan.features.map((feature) => <li key={feature}><Check size={15} /> {feature}</li>)}</ul><Link href="/ar/enquire" className="plan-cta">اختر {plan.name} <MoveLeft size={17} /></Link></article>)}</div></div></div></section>
 
