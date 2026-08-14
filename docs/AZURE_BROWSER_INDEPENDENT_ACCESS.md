@@ -55,6 +55,8 @@ The repository now includes a manually dispatched `Azure read-only inventory` wo
 
 The current GitHub integration token cannot enumerate the repository's Actions secrets (`HTTP 403: Resource not accessible by integration`). Therefore, no existing Azure client, tenant, subscription, or deployment credential configuration is assumed. This does not expose, delete, or invalidate any secret; it only means the user must verify or add the required protected-environment values from a GitHub settings session with Actions-secret administration access.
 
+The isolated workspace was also checked for an attached Azure managed identity. Azure CLI could not obtain an Azure VM managed-identity response, so this workspace is not an Azure-hosted identity context. The only remaining supported credential paths are a completed device-code sign-in, an Entra service-principal credential supplied through an approved secret configuration, or a GitHub OIDC federated identity created in the user’s Azure tenant.
+
 ## What is already preserved, and what cannot yet be transferred
 
 | Asset or data class | Current preservation state | Azure transfer status |

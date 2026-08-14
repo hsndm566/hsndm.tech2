@@ -65,3 +65,15 @@
 ## Readiness determination
 
 **No Azure resource can be created safely yet.** The code, static build, asset paths, routing, scheduled job, and deployment contracts are preserved and documented. The remaining blockers are account-level facts: a working authenticated Azure control path, OAuth callback portability, database source metadata, DNS/asset ownership records, and a user-approved Azure region/budget. Once those are confirmed, the first action is a staging resource group only; it does not move data or traffic.
+
+## 7. Verified Railway migration-source context
+
+The existing Railway API connector was enabled for read-only inspection. Its project-scoped token verifies Railway project `233206dc-650b-48a9-a693-b427aa5beb98` and environment `75b74f6a-e9b7-4173-967f-cd28e3135a64`. The token does not authorize account-level `me` queries, so this worksheet treats it as a scoped project token. Railway’s available query schema exposes project, environment, service, deployment, domain, volume, variable-name, and log metadata for the next read-only inventory step. No Railway mutation, deployment, variable-value retrieval, or secret exposure occurred.
+
+The Railway project contains four services: `broastys`, `autoapply-sa`, `hsndm.tech`, and `kallas-site`. The AutoApply source service is `autoapply-sa` (`2b5b9da6-e667-47b4-baaa-3cc2afe0eda6`), with production instance `e80ab505-acaf-4e76-9edb-e20f14fa32c8`. Its visible runtime metadata reports the Railpack builder, disabled sleep behavior, and `ON_FAILURE` restart policy with a maximum of ten retries. Build/start commands and health-check values are unset in Railway metadata; the version-controlled `railway.toml` remains the authoritative declared build (`pnpm install --frozen-lockfile && pnpm build`), start (`pnpm start`), and health-check (`/health`) contract for Azure equivalence.
+
+The AutoApply Railway service exposes the generated HTTPS domain `autoapply-sa-production.up.railway.app` on target port `8080`; no Railway custom domain is attached directly to this service. The Azure migration must therefore preserve this URL as the backend fallback until the staged Azure API health, CORS, OAuth, and database checks pass.
+
+Railway’s project-token variable query returns an opaque environment-variable map rather than separate name-only fields. To avoid retrieving or exposing secret values, no variable map was queried. The Azure secret inventory must therefore be reconciled from the repository’s non-secret environment-name contract and an approved Railway-to-Azure secret migration procedure, never from chat logs or source control.
+
+A read-only request to `https://autoapply-sa-production.up.railway.app/health` returned HTTP 404 through the Railway edge. This means the generated Railway domain is not currently a validated health baseline for the codebase’s `/health` contract. The managed full-stack deployment remains the verified live API boundary; any Azure staging acceptance must test its own deployed endpoint rather than infer health behavior from this Railway service URL.

@@ -53,7 +53,7 @@ const plans = [
     name: "Pro",
     price: "149",
     descriptor: "For active multi-channel momentum.",
-    features: ["~90 applications", "Priority tailoring", "Julie copilot", "Daily report"],
+    features: ["~90 applications", "Priority tailoring", "Daily report"],
     featured: true,
   },
   {

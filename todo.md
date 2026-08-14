@@ -78,3 +78,16 @@
 - [x] Inspect and verify any pre-existing Azure deployment credential, contributor configuration, or local authenticated state available to this session.
 - [ ] Run a read-only Azure subscription validation through the first confirmed credential path before provisioning resources.
 - [ ] Obtain a working Azure authentication token through an authorized existing credential path so the read-only subscription validation can run.
+- [ ] Provision and verify the Azure staging foundation after authentication is confirmed.
+- [ ] Deploy and validate the complete Azure application runtime and supporting integrations.
+- [ ] Migrate approved data and media with integrity verification and recovery checkpoints.
+- [ ] Complete production Azure cutover and ongoing operations after staged acceptance.
+- [x] Inspect the local environment and project configuration for Azure service-principal variables or key references without exposing secret values.
+- [x] Remove the unsupported “Julie copilot” reference from public pricing copy and related regression coverage.
+- [ ] Validate and checkpoint the pricing-copy cleanup with deployment-ready build artifacts.
+- [x] Inspect for an existing Azure static, storage, or container-registry upload destination without exposing credentials.
+- [x] Build and verify a portable Azure deployment bundle containing approved source and generated artifacts only.
+- [ ] Save a verified checkpoint containing the pricing-copy cleanup, regression test, rebuilt production artifacts, and refreshed Azure deployment bundle checksum.
+- [ ] Upload the verified deployment bundle to a confirmed Azure destination without changing production traffic.
+- [x] Prepare a minimal secure Azure credential handoff template with only the required Entra values and known identifiers.
+- [x] Validate the user-supplied candidate Azure tenant ID through supported Microsoft identity metadata without exposing credentials.
