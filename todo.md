@@ -129,3 +129,6 @@
 - [x] Save and publish the verified bilingual homepage simplification checkpoint.
 - [x] Deploy the simplified bilingual homepage build to each intended live target and verify it matches checkpoint 652baa66.
 - [x] Record live deployment evidence for English and Arabic pages, including target, source checkpoint, and verification result.
+
+- [ ] Implement enhanced loading animations, connection-error states, access-link recovery, and interactive retry triggers on the private campaign dashboard.
+- [ ] Add automated test coverage verifying dashboard retry and error recovery behavior.
