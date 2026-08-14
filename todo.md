@@ -71,6 +71,7 @@
 - [x] Create a complete Azure migration inventory worksheet for the live API, OAuth callbacks, database write-primary, DNS, assets, and operational jobs without creating resources.
 - [x] Add explicit Azure backup verification evidence and recovery responsibility assignments to the steady-state operations documentation.
 - [ ] Verify a browser-independent Azure identity through device code or GitHub OIDC without modifying cloud resources.
+- [ ] Configure the required GitHub OIDC federated identity credential on the existing Entra application, then re-run the read-only inventory.
 - [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
 - [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
 - [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.

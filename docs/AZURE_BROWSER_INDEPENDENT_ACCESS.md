@@ -55,6 +55,16 @@ The repository now includes a manually dispatched `Azure read-only inventory` wo
 
 The current GitHub integration token cannot enumerate the repository's Actions secrets (`HTTP 403: Resource not accessible by integration`). Therefore, no existing Azure client, tenant, subscription, or deployment credential configuration is assumed. This does not expose, delete, or invalidate any secret; it only means the user must verify or add the required protected-environment values from a GitHub settings session with Actions-secret administration access.
 
+On 2026-08-14, the manually dispatched GitHub OIDC inventory workflow reached Microsoft Entra with the validated tenant `801585e2-0e6a-4322-a002-e7fc8457bab4` and application `6250b570-898d-4bc0-8f8b-910078d4c7c5`. The sign-in was rejected with `AADSTS70025`, confirming that the application has **no federated identity credential**. The required Entra application credential must use:
+
+| Field | Required value |
+| --- | --- |
+| Issuer | `https://token.actions.githubusercontent.com` |
+| Subject | `repo:hsndm566@302180874/hsndm.tech@1311282951:environment:azure-staging` |
+| Audience | `api://AzureADTokenExchange` |
+
+This is a short-lived GitHub OIDC trust, not a client secret. Once it is saved on the existing Entra application, the existing `Azure read-only inventory` workflow can validate the subscription without a browser login or a stored Azure password.
+
 The isolated workspace was also checked for an attached Azure managed identity. Azure CLI could not obtain an Azure VM managed-identity response, so this workspace is not an Azure-hosted identity context. The only remaining supported credential paths are a completed device-code sign-in, an Entra service-principal credential supplied through an approved secret configuration, or a GitHub OIDC federated identity created in the user’s Azure tenant.
 
 ## What is already preserved, and what cannot yet be transferred
