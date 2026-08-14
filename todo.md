@@ -75,13 +75,15 @@
 - [x] Inspect the uploaded video and the existing homepage background-video integration point.
 - [x] Publish the uploaded video as a managed static asset and integrate it as a muted, looping, non-interactive background.
 - [x] Verify desktop and mobile background-video behavior, silence, fallback behavior, tests, build, and publication.
-- [ ] Deploy the verified background-video release to each live target and confirm the managed video asset loads on the desktop English homepage.
+- [x] Deploy the verified background-video release to each live target and confirm the managed video asset loads on the desktop English homepage.
 - [ ] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
 - [x] Enable the managed silent looping hero video on supported mobile devices while retaining the reduced-motion fallback.
 - [ ] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
 - [x] Audit the existing See It Work video section, live GitHub Pages deployment, repository source, and Railway API integration against the attached production-finalization brief.
-- [ ] Verify the current live hsndm.tech GitHub Pages deployment against the production-finalization brief and record evidence for the See It Work section, homepage copy and flow, and video behavior.
-- [ ] Correct the GitHub Pages MP4 source because the relative managed-video path returns HTTP 404 on hsndm.tech.
+- [x] Verify the current live hsndm.tech GitHub Pages deployment against the production-finalization brief and record evidence for the See It Work section, homepage copy and flow, and video behavior.
+- [ ] Verify the live desktop English homepage on both hsndm.tech and the managed domain after the final MP4 republish, confirming the hero and See It Work videos render and remain silent and non-interactive.
+- [x] Record deployment evidence for the final GitHub Pages release, including commit SHA, live homepage copy and flow checks, See It Work verification, and MP4 asset response after publish.
+- [x] Correct the GitHub Pages MP4 source because the relative managed-video path returns HTTP 404 on hsndm.tech.
 - [x] Finalize the existing video-section experience using only approved managed media or an honest polished fallback, without changing protected design systems.
 - [x] Reconcile the requested homepage copy, engine labels, intake wording, and ordered page flow against the active English landing page without duplicating completed work.
 - [x] Implement a private token-based campaign dashboard route that reads only existing Railway campaign endpoints when their safe public integration contract is available.

@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, rm } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { relative, resolve } from "node:path";
 
@@ -39,40 +39,44 @@ async function collectFiles(directory) {
 const branch = ghApi([`repos/${repository}/git/ref/heads/main`]);
 await mkdir(resolve(buildRoot, "manus-storage"), { recursive: true });
 await copyFile(managedVideo, publishedVideo);
-const files = await collectFiles(buildRoot);
-const tree = [];
+try {
+  const files = await collectFiles(buildRoot);
+  const tree = [];
 
-for (const absolutePath of files) {
-  const buffer = await readFile(absolutePath);
-  const blob = ghApi(
-    [`repos/${repository}/git/blobs`, "--method", "POST", "--input", "-"],
-    { content: buffer.toString("base64"), encoding: "base64" },
+  for (const absolutePath of files) {
+    const buffer = await readFile(absolutePath);
+    const blob = ghApi(
+      [`repos/${repository}/git/blobs`, "--method", "POST", "--input", "-"],
+      { content: buffer.toString("base64"), encoding: "base64" },
+    );
+
+    tree.push({
+      path: relative(buildRoot, absolutePath).replaceAll("\\", "/"),
+      mode: "100644",
+      type: "blob",
+      sha: blob.sha,
+    });
+  }
+
+  const createdTree = ghApi(
+    [`repos/${repository}/git/trees`, "--method", "POST", "--input", "-"],
+    { base_tree: branch.object.sha, tree },
+  );
+  const commit = ghApi(
+    [`repos/${repository}/git/commits`, "--method", "POST", "--input", "-"],
+    {
+      message: "feat: publish verified AutoApply SA release assets",
+      tree: createdTree.sha,
+      parents: [branch.object.sha],
+    },
   );
 
-  tree.push({
-    path: relative(buildRoot, absolutePath).replaceAll("\\", "/"),
-    mode: "100644",
-    type: "blob",
-    sha: blob.sha,
-  });
+  ghApi(
+    [`repos/${repository}/git/refs/heads/main`, "--method", "PATCH", "--input", "-"],
+    { sha: commit.sha, force: false },
+  );
+
+  console.log(JSON.stringify({ repository, commit: commit.sha, files: files.length }, null, 2));
+} finally {
+  await rm(publishedVideo, { force: true });
 }
-
-const createdTree = ghApi(
-  [`repos/${repository}/git/trees`, "--method", "POST", "--input", "-"],
-  { base_tree: branch.object.sha, tree },
-);
-const commit = ghApi(
-  [`repos/${repository}/git/commits`, "--method", "POST", "--input", "-"],
-  {
-    message: "feat: publish verified AutoApply SA release assets",
-    tree: createdTree.sha,
-    parents: [branch.object.sha],
-  },
-);
-
-ghApi(
-  [`repos/${repository}/git/refs/heads/main`, "--method", "PATCH", "--input", "-"],
-  { sha: commit.sha, force: false },
-);
-
-console.log(JSON.stringify({ repository, commit: commit.sha, files: files.length }, null, 2));
