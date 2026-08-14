@@ -58,3 +58,14 @@
 - [x] Complete the source-level Arabic upload selector refactor and remove the remaining portal/CSS workaround.
 - [x] Prepare a zero-credit Azure migration inventory, staged cutover, and rollback plan for the full AutoApply SA stack.
 - [x] Provide a scoped Hermes MCP or local CLI generation prompt and connection contract for the user’s laptop.
+- [x] Create a verified zero-cost inventory of the live application, hosting, DNS, identity, database, assets, and operational dependencies required for Azure migration.
+- [x] Prepare reviewed, version-controlled Azure infrastructure and deployment definitions without creating resources.
+- [ ] Present the exact first Azure resource-creation action, expected service impact, and rollback point for explicit approval.
+- [ ] Provision and validate Azure staging services sequentially after approval, without changing production traffic.
+- [ ] Execute a controlled production data and DNS cutover only after staging acceptance and an approved maintenance window.
+- [ ] Document the steady-state Azure operating model, release synchronization process, backup verification, and recovery responsibilities.
+- [x] Diagnose the slow-browser Azure access path and document a browser-independent authentication alternative.
+- [x] Preserve a verified source, build, asset, and deployment release inventory without copying production data.
+- [x] Prepare a low-friction Azure CLI or GitHub Actions authentication handoff for a reliable device, without creating cloud resources.
+- [x] Create a complete version-controlled build and asset manifest for the verified release without copying production data.
+- [x] Create a complete Azure migration inventory worksheet for the live API, OAuth callbacks, database write-primary, DNS, assets, and operational jobs without creating resources.

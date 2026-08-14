@@ -34,9 +34,9 @@ It does not create a resource group, database, container app, registry, static w
 
 ## Current preparation state
 
-The active Azure for Students subscription is `5974c845-4443-4b80-a0cd-b83696573637`. The user account is an Owner and a single-tenant Entra application registration has been created. The application has **not** yet received its Contributor assignment because the portal role picker and Cloud Shell terminal have not completed reliably in the UBT environment. No runtime, data service, storage account, DNS record, or traffic change has been created.
+The active Azure for Students subscription is `5974c845-4443-4b80-a0cd-b83696573637`. A single-tenant Entra application registration exists and the deployment identity has been assigned the built-in **Contributor** role at subscription scope. No runtime, data service, storage account, DNS record, traffic change, deployment credential, or GitHub Azure secret has been created.
 
-When a working UBT-approved Azure session is available, assign that application the built-in **Contributor** role at the subscription scope, create its credential through the secret manager, and run the manually gated GitHub workflow only after reviewing the `what-if` output.
+Before the manually gated GitHub workflow can be used, create a deployment credential through the secret manager, define only the required GitHub environment variables and secrets, then review the `what-if` output. Do not perform those actions until the user has approved the specific first billable Azure resource.
 
 ## References
 
