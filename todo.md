@@ -29,9 +29,9 @@
 - [x] Wire searchable Saudi city and industry controls into the Arabic matching and campaign journey.
 - [x] Run automated bilingual taxonomy parity tests and confirm the Arabic UI consumes the canonical taxonomy source.
 - [x] Update the English and Arabic campaign enquiry forms to consume the expanded canonical Saudi city and industry taxonomy.
-- [ ] Replace the legacy limited Arabic upload preference controls with the canonical searchable city and industry selectors.
+- [x] Replace the legacy limited Arabic upload preference controls with the canonical searchable city and industry selectors.
 - [x] Add automated UI-level coverage for canonical Arabic labels and English/Arabic campaign taxonomy state.
-- [ ] Replace Arabic upload control markup in place rather than relying on a parallel selector or CSS hiding.
+- [x] Replace Arabic upload control markup in place rather than relying on a parallel selector or CSS hiding.
 - [x] Add rendered interaction tests proving city and industry selections flow into Arabic matching and bilingual campaign handoffs.
 - [x] Add visible English and Arabic navigation links to privacy, terms, support, and how-it-works pages.
 - [x] Verify every English and Arabic information route renders on direct access with route-specific metadata.
@@ -47,7 +47,7 @@
 - [x] Add a visible contact-based unlock action directly inside the ATS free-preview experience.
 - [x] Persist privacy-safe ATS review metadata from the authenticated ATS workflow itself.
 - [x] Add regression and UI coverage for the ATS free-preview-to-contact-unlock workflow.
-- [ ] Replace the legacy Arabic upload selector markup in place and remove the CSS-hide/portal workaround.
+- [x] Replace the legacy Arabic upload selector markup in place and remove the CSS-hide/portal workaround.
 - [x] Add real-selector rendered Arabic interaction coverage for canonical labels, matching state, and campaign handoff context.
 - [x] Add a rendered ArabicHome interaction test that proves selected canonical city and industry values update Arabic readiness or matching output.
 - [x] Assess Clerk, Neon, Hermes integration options, and current frontend-to-backend connection status without making stack changes.
@@ -55,3 +55,6 @@
 - [x] Document the required production backend dependency boundary and remaining independent-hosting gap without changing services.
 - [x] Create a target-by-target release reconciliation mapping each staged capability to the Manus full-stack deployment or static GitHub Pages mirror.
 - [x] Expand the release reconciliation to list every optimization stage and its runtime dependencies per deployment target.
+- [x] Complete the source-level Arabic upload selector refactor and remove the remaining portal/CSS workaround.
+- [x] Prepare a zero-credit Azure migration inventory, staged cutover, and rollback plan for the full AutoApply SA stack.
+- [x] Provide a scoped Hermes MCP or local CLI generation prompt and connection contract for the user’s laptop.

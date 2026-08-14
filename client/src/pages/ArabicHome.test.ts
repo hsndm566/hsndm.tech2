@@ -39,8 +39,9 @@ describe("Arabic readiness experience", () => {
 
   it("mounts the canonical Arabic market selector into the upload preference grid", () => {
     expect(source).toContain("ArabicMarketSelector");
+    expect(source).toContain('<div className="preferences-grid"><ArabicMarketSelector');
     const selectorSource = readFileSync(new URL("../components/ArabicMarketSelector.tsx", import.meta.url), "utf8");
-    expect(selectorSource).toContain('#upload .preferences-grid');
     expect(selectorSource).toContain("SearchableSaudiSelect");
+    expect(selectorSource).not.toContain("createPortal");
   });
 });
