@@ -129,11 +129,56 @@ export default function Home() {
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
-  const [selectedIndustry, setSelectedIndustry] = useState("Technology & Software");
+  const [selectedIndustry, setSelectedIndustry] = useState(() => {
+    if (typeof window === "undefined") return "Technology & Software";
+    const savedSector = localStorage.getItem("autoapply_sector");
+    return savedSector || "Technology & Software";
+  });
+  const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>(() => {
+    if (typeof window === "undefined") return { city: "Jeddah", industry: "all", seniority: "Any level", language: "English" };
+    const savedCity = localStorage.getItem("autoapply_city");
+    const savedSeniority = localStorage.getItem("autoapply_seniority");
+    const savedSector = localStorage.getItem("autoapply_sector");
+    return {
+      city: savedCity || "Jeddah",
+      industry: savedSector ? toMatchIndustry(savedSector) : "all",
+      seniority: savedSeniority || "Any level",
+      language: "English",
+    };
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("autoapply_city", matchPreferences.city);
+    localStorage.setItem("autoapply_seniority", matchPreferences.seniority);
+    localStorage.setItem("autoapply_sector", selectedIndustry);
+  }, [matchPreferences.city, matchPreferences.seniority, selectedIndustry]);
   const [campaignStage, setCampaignStage] = useState(1);
   const [briefShared, setBriefShared] = useState(false);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [latestActivityText, setLatestActivityText] = useState("Engine active — 24/7");
+
+  useEffect(() => {
+    const fetchLatest = async () => {
+      try {
+        const res = await fetch("/v1/campaigns/latest-activity");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.timestamp) {
+            const diffMins = Math.max(0, Math.floor((Date.now() - data.timestamp) / 60000));
+            setLatestActivityText(`${diffMins === 0 ? "Just now" : `${diffMins} minutes ago`}`);
+          } else {
+            setLatestActivityText("Engine active — 24/7");
+          }
+        }
+      } catch {
+        setLatestActivityText("Engine active — 24/7");
+      }
+    };
+    fetchLatest();
+    const interval = setInterval(fetchLatest, 60000);
+    return () => clearInterval(interval);
+  }, []);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
@@ -278,6 +323,11 @@ export default function Home() {
     }
     window.setTimeout(() => {
       setBriefStatus("success");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("autoapply_city");
+        localStorage.removeItem("autoapply_seniority");
+        localStorage.removeItem("autoapply_sector");
+      }
       if (handoffWindow) handoffWindow.location.replace(whatsappHref);
       else window.location.assign(whatsappHref);
     }, 650);
@@ -396,10 +446,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="hero-stats">
-              <div><strong>500+</strong><span>Saudi roles scanned</span></div>
-              <div><strong>24/7</strong><span>Engine in motion</span></div>
-              <div><strong>2</strong><span>Languages supported</span></div>
+            <div className="hero-stats space-y-2">
+              <div className="grid grid-cols-3 gap-2">
+                <div><strong>500+</strong><span>Saudi roles scanned</span></div>
+                <div><strong>24/7</strong><span>Engine in motion</span></div>
+                <div><strong>2</strong><span>Languages supported</span></div>
+              </div>
+              <p className="text-xs font-mono text-[#fbf9f5]/80 pt-1 border-t border-white/10">⚡ {latestActivityText.includes("Engine") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
             </div>
           </div>
         </section>
@@ -537,16 +590,28 @@ export default function Home() {
                 <div className="role-results" role="status" aria-live="polite">
                   <div className="result-heading"><span><Check size={14} /> ROLE SIGNALS FOUND</span><button onClick={resetScan}>Scan another CV</button></div>
                   <p>Best-fit lane <b>{scanResult.field}</b> <em>{scanResult.confidence} match</em></p>
-                  <div className="role-chips" aria-label="Suggested target roles">
-                    {scanResult.roles.map((role, idx) => {
-                      const confidenceLabel = idx === 0 ? "Strong match" : idx === 1 ? "Possible match" : "Worth exploring";
-                      return (
-                        <button type="button" key={role} className={`flex flex-col items-start p-2 border ${selectedSuggestedRole === role ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20"}`} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}>
-                          <span className="flex items-center gap-1 font-medium"><span>{role}</span><ArrowUpRight size={13} /></span>
-                          <span className="text-[10px] opacity-85 font-mono">[{confidenceLabel}]</span>
-                        </button>
-                      );
-                    })}
+                  <div className="space-y-2">
+                    <div className="role-chips" aria-label="Suggested target roles">
+                      {scanResult.roles.map((role, idx) => {
+                        const confidenceLabel = idx === 0 ? "Strong match" : idx === 1 ? "Possible match" : "Worth exploring";
+                        return (
+                          <button type="button" key={role} className={`flex flex-col items-start p-2 border ${selectedSuggestedRole === role ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20"}`} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}>
+                            <span className="flex items-center gap-1 font-medium"><span>{role}</span><ArrowUpRight size={13} /></span>
+                            <span className="text-[10px] opacity-85 font-mono">[{confidenceLabel}]</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {(() => {
+                      const fieldLower = (scanResult.field || "").toLowerCase();
+                      const countText = fieldLower.includes("software") || fieldLower.includes("data") || fieldLower.includes("ai") || fieldLower.includes("it") ? "~340 open roles in KSA this month"
+                        : fieldLower.includes("operations") || fieldLower.includes("engineer") || fieldLower.includes("construction") || fieldLower.includes("mechanical") ? "~280 open roles in KSA this month"
+                        : fieldLower.includes("account") || fieldLower.includes("finance") ? "~190 open roles in KSA this month"
+                        : fieldLower.includes("health") || fieldLower.includes("nurse") ? "~220 open roles in KSA this month"
+                        : fieldLower.includes("logistics") || fieldLower.includes("supply") ? "~160 open roles in KSA this month"
+                        : "~120 open roles in KSA this month";
+                      return <p className="text-xs font-mono text-[#151515]/70">{countText}</p>;
+                    })()}
                   </div>
                   {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>

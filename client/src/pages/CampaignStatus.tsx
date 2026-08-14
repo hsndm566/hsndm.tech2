@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { AlertCircle, ArrowLeft, Building2, Clock3, ExternalLink, FileCheck2, Loader2, Mail, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Building2, Clock3, Download, ExternalLink, FileCheck2, Loader2, Mail, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -138,6 +138,43 @@ function CampaignDataView({ payload }: { payload: CampaignDashboardPayload }) {
         <MetricCard icon={<Mail className="h-4 w-4" />} label="Emails sent" value={String(Math.max(0, Number(campaign.email_send_count) || 0))} detail="Counted only after SMTP acceptance evidence." />
         <MetricCard icon={<Clock3 className="h-4 w-4" />} label="Campaign started" value={formatCampaignTime(campaign.created_at)} detail="Times display in your device time zone." />
       </section>
+
+      {evidenceCount > 0 && (
+        <div className="flex justify-end">
+          <Button
+            onClick={async () => {
+              const { jsPDF } = await import("jspdf");
+              const doc = new jsPDF();
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(18);
+              doc.text("AutoApply SA — Your Active Campaign", 14, 20);
+              doc.setFont("helvetica", "normal");
+              doc.setFontSize(11);
+              doc.text(`Candidate: ${campaign.candidate_name || "Candidate"}`, 14, 30);
+              doc.text(`Target Roles: ${campaign.target_role || "Saudi Arabia campaign"}`, 14, 38);
+              doc.text(`Status: ${status.label}`, 14, 46);
+              doc.text(`Total Applications Submitted: ${evidenceCount}`, 14, 54);
+              doc.text("Verified Companies Applied To:", 14, 66);
+              let y = 74;
+              verifiedCompanies.forEach((app, index) => {
+                if (y > 270) {
+                  doc.addPage();
+                  y = 20;
+                }
+                doc.text(`${index + 1}. ${app.company} — ${app.title || "Application evidence"} (${formatCampaignTime(app.created_at)})`, 14, y);
+                y += 8;
+              });
+              y += 10;
+              doc.setFontSize(9);
+              doc.text("AutoApply SA branding · https://hsndm.tech", 14, y);
+              doc.save("autoapply-sa-campaign-summary.pdf");
+            }}
+            className="bg-[#151515] text-white hover:bg-[#333]"
+          >
+            <Download className="mr-2 h-4 w-4" /> Download your campaign summary
+          </Button>
+        </div>
+      )}
 
       <Card className="border-[#151515]/10 bg-[#fbf9f5] shadow-sm">
         <CardHeader>

@@ -23,8 +23,21 @@ const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
+import { useEffect } from "react";
+import { useLocation } from "wouter";
+
 function Router() {
-  // make sure to consider if you need authentication for certain routes
+  const [location, setLocation] = useLocation();
+  useEffect(() => {
+    if (typeof window !== "undefined" && location === "/") {
+      const hasVisited = sessionStorage.getItem("autoapply_lang_routed");
+      if (!hasVisited && navigator.language && navigator.language.startsWith("ar")) {
+        sessionStorage.setItem("autoapply_lang_routed", "true");
+        setLocation("/ar");
+      }
+    }
+  }, [location, setLocation]);
+
   return (
     <Switch>
       <Route path="/" component={Home} />

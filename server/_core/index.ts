@@ -59,6 +59,21 @@ async function startServer() {
   app.get("/health", (_req, res) => {
     res.status(200).json({ status: "ok", timestamp: Date.now() });
   });
+
+  app.get("/v1/campaigns/latest-activity", async (_req, res) => {
+    try {
+      const { getJobApplications } = await import("../db");
+      const apps = await getJobApplications();
+      const latest = apps[0];
+      if (latest && latest.createdAt) {
+        res.status(200).json({ timestamp: new Date(latest.createdAt).getTime() });
+        return;
+      }
+      res.status(200).json({ timestamp: null });
+    } catch {
+      res.status(200).json({ timestamp: null });
+    }
+  });
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerDataBackupRoutes(app);

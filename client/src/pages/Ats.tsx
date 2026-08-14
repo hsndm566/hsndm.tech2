@@ -64,5 +64,28 @@ export default function Ats() {
       <button type="button" onClick={() => setHelpfulness("no")} className="px-2 py-1 bg-white/10 hover:bg-white/25">No</button>
     </div>
   )}
-</div>{analyze.data.score < 70 && (<p className="text-sm bg-white/10 p-3 text-white">The Starter plan includes a full ATS optimization of your CV. <Link href="/pricing" className="underline font-medium text-[#e5482a]">View pricing plans →</Link></p>)}<p>{analyze.data.summary}</p><h3>Strengths</h3><ul>{analyze.data.strengths.map(item => <li key={item}>• {item}</li>)}</ul><h3>Priority improvements</h3><ul>{analyze.data.gaps.map(item => <li key={item}>• {item}</li>)}</ul><h3>Suggested bullets</h3><ul>{analyze.data.optimizedBullets.map(item => <li key={item}>• {item}</li>)}</ul><small>{analyze.data.disclaimer}</small><div className="space-y-3 border-t border-white/25 pt-4"><p className="text-sm text-white/80">Want a person to turn this preview into a targeted Saudi job-search plan? Request a human follow-up—share your CV only if you choose to do so in WhatsApp.</p><a href={humanReviewHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#e5482a] px-4 py-2.5 text-sm font-medium text-white"><MessageCircle size={16} />Request a human ATS follow-up</a>{isAuthenticated ? <button onClick={saveReviewMetadata} disabled={saveResumeMetadata.isPending || metadataSaved} className="ml-3 inline-flex items-center gap-2 border border-white/50 px-4 py-2.5 text-sm font-medium disabled:opacity-60"><Save size={16} />{metadataSaved ? "Private review note saved" : "Save private review note"}</button> : <Link href="/dashboard" className="ml-3 inline-block text-sm underline">Sign in to save a private review note</Link>}<p className="text-xs text-white/60">Saved metadata contains only the filename label and review note—not the document file or CV text.</p></div></section>}{analyze.error && <p role="alert">Unable to complete the review. Please try again.</p>}</div></main>;
+</div>{analyze.data.score < 70 && (<p className="text-sm bg-white/10 p-3 text-white">The Starter plan includes a full ATS optimization of your CV. <Link href="/pricing" className="underline font-medium text-[#e5482a]">View pricing plans →</Link></p>)}<p>{analyze.data.summary}</p><h3>Strengths</h3><ul>{analyze.data.strengths.map(item => <li key={item}>• {item}</li>)}</ul><h3>Priority improvements</h3><ul>{analyze.data.gaps.map(item => <li key={item}>• {item}</li>)}</ul><h3>Suggested bullets</h3><ul>{analyze.data.optimizedBullets.map(item => <li key={item}>• {item}</li>)}</ul><small>{analyze.data.disclaimer}</small><div className="space-y-3 border-t border-white/25 pt-4">
+  <div className="bg-white/10 p-4 border border-white/20 my-4">
+    {analyze.data.score < 70 ? (
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Fixed your CV? Check your new score →</p>
+        <label className="inline-block cursor-pointer bg-white text-[#151515] px-4 py-2 text-sm font-medium hover:bg-white/90">
+          <input className="sr-only" type="file" accept=".pdf,.docx,.txt" onChange={event => {
+            const f = event.target.files?.[0];
+            if (f) {
+              choose(f);
+            }
+          }} />
+          Upload revised CV & re-analyse
+        </label>
+      </div>
+    ) : (
+      <div className="space-y-2">
+        <p className="text-sm font-medium">You&apos;re ready. Start a campaign →</p>
+        <Link href="/#cv-intake" className="inline-block bg-[#e5482a] text-white px-4 py-2 text-sm font-medium">
+          Start a campaign on homepage
+        </Link>
+      </div>
+    )}
+  </div><p className="text-sm text-white/80">Want a person to turn this preview into a targeted Saudi job-search plan? Request a human follow-up—share your CV only if you choose to do so in WhatsApp.</p><a href={humanReviewHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#e5482a] px-4 py-2.5 text-sm font-medium text-white"><MessageCircle size={16} />Request a human ATS follow-up</a>{isAuthenticated ? <button onClick={saveReviewMetadata} disabled={saveResumeMetadata.isPending || metadataSaved} className="ml-3 inline-flex items-center gap-2 border border-white/50 px-4 py-2.5 text-sm font-medium disabled:opacity-60"><Save size={16} />{metadataSaved ? "Private review note saved" : "Save private review note"}</button> : <Link href="/dashboard" className="ml-3 inline-block text-sm underline">Sign in to save a private review note</Link>}<p className="text-xs text-white/60">Saved metadata contains only the filename label and review note—not the document file or CV text.</p></div></section>}{analyze.error && <p role="alert">Unable to complete the review. Please try again.</p>}</div></main>;
 }

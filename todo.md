@@ -126,3 +126,10 @@
 
 - [x] Add AI & Emerging Tech and Renewable Energy & CleanTech custom career track filters to careerTaxonomy.ts.
 - [x] Add a lightweight, non-blocking feedback prompt ("Were these results helpful?") after the ATS score display on the /ats page.
+
+- [x] Enhancement A: Role match application count (~[X] open roles in KSA this month) based on role category.
+- [x] Enhancement B: Arabic-first auto-detection based on navigator.language.
+- [x] Enhancement C: Live "last application sent" counter in hero section with 60s polling.
+- [x] Enhancement D: Sector filter persistence in localStorage (autoapply_sector, autoapply_city, autoapply_seniority) cleared on successful WhatsApp handoff.
+- [x] Enhancement E: ATS re-upload loop on /ats page (< 70 vs >= 70 states).
+- [x] Enhancement F: Downloadable client-side PDF campaign brief on campaign dashboard when evidence exists.
