@@ -1,4 +1,8 @@
-export type CareerField = { title: string; keywords: string[]; items: string[] };
+export type CareerField = {
+  title: string;
+  keywords: string[];
+  items: string[];
+};
 
 export const FIELD_MAP: CareerField[] = [
   { title: "Software & Engineering", keywords: ["software", "developer", "javascript", "python", "java", "react", "node", "backend", "frontend", "full stack", "programmer", "api", "database", "sql", "devops", "مطور", "برمجة"], items: ["Software Engineer", "Backend Developer", "Full Stack Developer"] },
@@ -25,12 +29,38 @@ export const INDUSTRY_SCOPES: Record<string, string[]> = {
   "engineering-construction": ["Civil & Construction", "Mechanical & Electrical"],
 };
 
-export function demoLists(cvText: string, industryScope = "all"): CareerField[] {
+export type UserProfileType = "Fresh Graduate" | "Experienced Hire" | "Career Switcher" | "Default";
+
+export function demoLists(cvText: string, industryScope = "all", userType: UserProfileType = "Default"): CareerField[] {
   const text = String(cvText || "").toLowerCase();
   if (text.length < 25) return [];
   const fields = INDUSTRY_SCOPES[industryScope] ? FIELD_MAP.filter((field) => INDUSTRY_SCOPES[industryScope].includes(field.title)) : FIELD_MAP;
-  const scored = fields.map((field) => ({ field, score: field.keywords.reduce((score, keyword) => score + (text.includes(keyword) ? 1 : 0), 0) })).filter(({ score }) => score > 0).sort((a, b) => b.score - a.score);
+
+  const scored = fields.map((field) => {
+    let score = field.keywords.reduce((acc, keyword) => acc + (text.includes(keyword) ? 1 : 0), 0);
+    if (userType === "Fresh Graduate") {
+      if (field.title.includes("Support") || field.title.includes("Customer") || field.title.includes("Data") || field.title.includes("IT")) {
+        score += 1;
+      }
+    } else if (userType === "Experienced Hire") {
+      if (field.title.includes("Operations") || field.title.includes("Project") || field.title.includes("Sales") || field.title.includes("Software")) {
+        score += 1;
+      }
+    } else if (userType === "Career Switcher") {
+      if (["Operations Management", "Customer Service", "Project Management", "Sales & Business Development"].includes(field.title)) {
+        score += 2;
+      }
+    }
+    return { field, score };
+  }).filter(({ score }) => score > 0).sort((a, b) => b.score - a.score);
+
   if (!scored.length) return [];
   const highestScore = scored[0].score;
-  return scored.filter(({ score }, index) => index === 0 || (score >= 2 && score >= highestScore * 0.6)).slice(0, 3).map(({ field }) => field);
+  return scored.filter(({ score }, index) => index === 0 || (score >= 2 && score >= highestScore * 0.5)).slice(0, 3).map(({ field }) => field);
+}
+
+export function getConfidenceLabel(index: number): "Strong match" | "Possible match" | "Worth exploring" {
+  if (index === 0) return "Strong match";
+  if (index === 1) return "Possible match";
+  return "Worth exploring";
 }

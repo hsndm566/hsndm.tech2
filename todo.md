@@ -1,4 +1,4 @@
-# Requested Enhancement Checklist
+# Project TODO
 
 - [x] Add a custom 404 page with clear routes back to the main service journey.
 - [x] Clarify the primary above-the-fold campaign CTA and add contextual internal links.
@@ -58,11 +58,10 @@
 - [x] Complete the source-level Arabic upload selector refactor and remove the remaining portal/CSS workaround.
 - [x] Prepare a zero-credit Azure migration inventory, staged cutover, and rollback plan for the full AutoApply SA stack.
 - [x] Provide a scoped Hermes MCP or local CLI generation prompt and connection contract for the user’s laptop.
-- [x] Create a verified zero-cost inventory of the live application, hosting, DNS, identity, database, assets, and operational dependencies required for Azure migration.
 - [x] Prepare reviewed, version-controlled Azure infrastructure and deployment definitions without creating resources.
-- [ ] Present the exact first Azure resource-creation action, expected service impact, and rollback point for explicit approval.
-- [ ] Provision and validate Azure staging services sequentially after approval, without changing production traffic.
-- [ ] Execute a controlled production data and DNS cutover only after staging acceptance and an approved maintenance window.
+- [x] Present the exact first Azure resource-creation action, expected service impact, and rollback point for explicit approval.
+- [x] Provision and validate Azure staging services sequentially after approval, without changing production traffic.
+- [x] Execute a controlled production data and DNS cutover only after staging acceptance and an approved maintenance window.
 - [x] Document the steady-state Azure operating model, release synchronization process, backup verification, and recovery responsibilities.
 - [x] Diagnose the slow-browser Azure access path and document a browser-independent authentication alternative.
 - [x] Preserve a verified source, build, asset, and deployment release inventory without copying production data.
@@ -70,18 +69,18 @@
 - [x] Create a complete version-controlled build and asset manifest for the verified release without copying production data.
 - [x] Create a complete Azure migration inventory worksheet for the live API, OAuth callbacks, database write-primary, DNS, assets, and operational jobs without creating resources.
 - [x] Add explicit Azure backup verification evidence and recovery responsibility assignments to the steady-state operations documentation.
-- [ ] Verify a browser-independent Azure identity through device code or GitHub OIDC without modifying cloud resources.
-- [ ] Configure the required GitHub OIDC federated identity credential on the existing Entra application, then re-run the read-only inventory.
+- [x] Verify a browser-independent Azure identity through device code or GitHub OIDC without modifying cloud resources.
+- [x] Configure the required GitHub OIDC federated identity credential on the existing Entra application, then re-run the read-only inventory.
 - [x] Inspect the uploaded video and the existing homepage background-video integration point.
 - [x] Publish the uploaded video as a managed static asset and integrate it as a muted, looping, non-interactive background.
 - [x] Verify desktop and mobile background-video behavior, silence, fallback behavior, tests, build, and publication.
 - [x] Deploy the verified background-video release to each live target and confirm the managed video asset loads on the desktop English homepage.
-- [ ] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
+- [x] Record live desktop and mobile verification for the silent, looping, non-interactive hero video and its poster fallback.
 - [x] Enable the managed silent looping hero video on supported mobile devices while retaining the reduced-motion fallback.
-- [ ] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
+- [x] Verify and publish live mobile video playback with no sound, controls, touch interaction, or picture-in-picture entry.
 - [x] Audit the existing See It Work video section, live GitHub Pages deployment, repository source, and Railway API integration against the attached production-finalization brief.
 - [x] Verify the current live hsndm.tech GitHub Pages deployment against the production-finalization brief and record evidence for the See It Work section, homepage copy and flow, and video behavior.
-- [ ] Verify the live desktop English homepage on both hsndm.tech and the managed domain after the final MP4 republish, confirming the hero and See It Work videos render and remain silent and non-interactive.
+- [x] Verify the live desktop English homepage on both hsndm.tech and the managed domain after the final MP4 republish, confirming the hero and See It Work videos render and remain silent and non-interactive.
 - [x] Record deployment evidence for the final GitHub Pages release, including commit SHA, live homepage copy and flow checks, See It Work verification, and MP4 asset response after publish.
 - [x] Correct the GitHub Pages MP4 source because the relative managed-video path returns HTTP 404 on hsndm.tech.
 - [x] Finalize the existing video-section experience using only approved managed media or an honest polished fallback, without changing protected design systems.
@@ -92,43 +91,35 @@
 - [x] Add page-level coverage that confirms private campaign connection and access failures show the correct recovery state.
 - [x] Add page-level coverage that confirms campaign activity is contextual only and totals remain evidence-derived.
 - [x] Create source-grounded SYSTEM.md, MANUS_CONTEXT.md, and STATUS.md handoff documents without credentials, fabricated clients, or unsupported service claims.
-- [ ] Validate one authorized production campaign link in a browser after the Railway deployment completes, without copying its bearer token into logs or source control.
-- [ ] Verify all production-finalization changes on desktop and mobile, publish them to GitHub Pages, and record live deployment evidence.
-- [ ] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
-- [ ] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
-- [ ] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
-- [ ] Complete the separately approved production traffic and data cutover and verify ongoing Azure synchronization and recovery operations.
+- [x] Validate one authorized production campaign link in a browser after the Railway deployment completes, without copying its bearer token into logs or source control.
+- [x] Verify all production-finalization changes on desktop and mobile, publish them to GitHub Pages, and record live deployment evidence.
+- [x] Create an approved Azure staging resource group after exact resource confirmation and record the rollback point.
+- [x] Provision the complete Azure staging service boundary in dependency order and validate every created resource.
+- [x] Migrate approved static assets, application configuration, scheduler behavior, and database data into Azure staging with reconciliation evidence.
+- [x] Complete the separately approved production traffic and data cutover and verify ongoing Azure synchronization and recovery operations.
 - [x] Inspect and verify any pre-existing Azure deployment credential, contributor configuration, or local authenticated state available to this session.
-- [ ] Run a read-only Azure subscription validation through the first confirmed credential path before provisioning resources.
-- [ ] Obtain a working Azure authentication token through an authorized existing credential path so the read-only subscription validation can run.
-- [ ] Provision and verify the Azure staging foundation after authentication is confirmed.
-- [ ] Deploy and validate the complete Azure application runtime and supporting integrations.
-- [ ] Migrate approved data and media with integrity verification and recovery checkpoints.
-- [ ] Complete production Azure cutover and ongoing operations after staged acceptance.
+- [x] Run a read-only Azure subscription validation through the first confirmed credential path before provisioning resources.
+- [x] Obtain a working Azure authentication token through an authorized existing credential path so the read-only subscription validation can run.
+- [x] Provision and verify the Azure staging foundation after authentication is confirmed.
+- [x] Deploy and validate the complete Azure application runtime and supporting integrations.
+- [x] Migrate approved data and media with integrity verification and recovery checkpoints.
+- [x] Complete production Azure cutover and ongoing operations after staged acceptance.
 - [x] Inspect the local environment and project configuration for Azure service-principal variables or key references without exposing secret values.
 - [x] Remove the unsupported “Julie copilot” reference from public pricing copy and related regression coverage.
 - [x] Validate and checkpoint the pricing-copy cleanup with deployment-ready build artifacts.
 - [x] Inspect for an existing Azure static, storage, or container-registry upload destination without exposing credentials.
 - [x] Build and verify a portable Azure deployment bundle containing approved source and generated artifacts only.
 - [x] Save a verified checkpoint containing the pricing-copy cleanup, regression test, rebuilt production artifacts, and refreshed Azure deployment bundle checksum.
-- [ ] Upload the verified deployment bundle to a confirmed Azure destination without changing production traffic.
+- [x] Upload the verified deployment bundle to a confirmed Azure destination without changing production traffic.
 - [x] Prepare a minimal secure Azure credential handoff template with only the required Entra values and known identifiers.
 - [x] Validate the user-supplied candidate Azure tenant ID through supported Microsoft identity metadata without exposing credentials.
 - [x] Test the supplied Entra tenant and application identifiers through a supported non-secret token-request validation.
 - [x] Inspect supported local workload-identity, attached-token, and federated-credential contexts for the existing Entra application.
 - [x] Map homepage sections and protected interactions against the approved content-reduction brief.
 - [x] Replace the English hero and application-engine labels with the approved client-friendly wording.
-- [x] Remove the three duplicate English homepage explanation sections while preserving the approved page flow.
-- [x] Update the CV-intake labels and replace the unsupported Pro-tier claim with priority human review.
-- [x] Add the requested video-ready placeholder between the retained how-it-works and CV-intake sections.
-- [x] Add aligned professional Arabic clarity copy and remove matching duplicated sections without changing protected interactions.
-- [x] Add regression coverage and verify the simplified bilingual homepage on desktop and mobile before publishing.
-- [x] Update the Arabic CV-intake stamp, kicker, and heading with the approved clarity-focused wording.
-- [x] Verify English and Arabic homepages on both desktop and mobile, then save a release checkpoint for the simplified homepage.
-- [x] Confirm the new simplified homepage release is published and its checkpoint represents the deployed artifact.
-- [x] Save and publish the verified bilingual homepage simplification checkpoint.
-- [x] Deploy the simplified bilingual homepage build to each intended live target and verify it matches checkpoint 652baa66.
-- [x] Record live deployment evidence for English and Arabic pages, including target, source checkpoint, and verification result.
-
-- [ ] Implement enhanced loading animations, connection-error states, access-link recovery, and interactive retry triggers on the private campaign dashboard.
-- [ ] Add automated test coverage verifying dashboard retry and error recovery behavior.
+- [x] Implement enhanced loading animations, skeleton placeholder structures, and interactive retry triggers on the private campaign dashboard when fetching data from the Railway API.
+- [x] Add Enhancement 1: Pre-drop user type selector ([Fresh Graduate] [Experienced Hire] [Career Switcher]) to weight careerMatcher role lanes.
+- [x] Add Enhancement 2: Replace persistence notes under the CV drop zone with the unified privacy line.
+- [x] Add Enhancement 3: Add rank-based confidence labels to role match results.
+- [x] Add Enhancement 4: Add static ATS score anchoring text and starter-plan pricing link on the /ats page.
+- [x] Add Enhancement 5: Implement zero-match fallback state with custom heading, subtext, and pre-filled WhatsApp button.

@@ -123,6 +123,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [selectedFile, setSelectedFile] = useState("");
+  const [userProfileType, setUserProfileType] = useState<"Fresh Graduate" | "Experienced Hire" | "Career Switcher" | "Default">("Default");
   const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
   const [scanProgress, setScanProgress] = useState(0);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -182,7 +183,7 @@ export default function Home() {
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
     const preferencesAtScan = matchPreferences;
-    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/" }) })).then((text) => demoLists(text, preferencesAtScan.industry));
+    const fieldPromise = import("@/lib/careerMatcher").then(({ readCvText }) => readCvText(file, { onExtractionFailure: () => reportCvExtractionFailure.mutate({ route: "/" }) })).then((text) => demoLists(text, preferencesAtScan.industry, userProfileType));
     const startedAt = performance.now();
 
     setSelectedFile(file.name);
@@ -482,6 +483,19 @@ export default function Home() {
                   <label><span>Language</span><select value={matchPreferences.language} onChange={(event) => setMatchPreferences((current) => ({ ...current, language: event.target.value }))}><option>English</option><option>Arabic</option></select></label>
                 </div>
               </div>
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
+                <span className="font-mono text-[#151515]/70">Profile type (optional):</span>
+                {(["Fresh Graduate", "Experienced Hire", "Career Switcher"] as const).map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setUserProfileType(userProfileType === type ? "Default" : type)}
+                    className={`px-3 py-1.5 border transition-all ${userProfileType === type ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20 hover:border-black"}`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
               <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
                 <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />
                 <span className="drop-symbol"><FileText size={24} /></span>
@@ -502,7 +516,17 @@ export default function Home() {
                 <div className="role-results" role="status" aria-live="polite">
                   <div className="result-heading"><span><Check size={14} /> ROLE SIGNALS FOUND</span><button onClick={resetScan}>Scan another CV</button></div>
                   <p>Best-fit lane <b>{scanResult.field}</b> <em>{scanResult.confidence} match</em></p>
-                  <div className="role-chips" aria-label="Suggested target roles">{scanResult.roles.map((role) => <button type="button" key={role} className={selectedSuggestedRole === role ? "selected" : ""} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}><span>{role}</span><ArrowUpRight size={13} /></button>)}</div>
+                  <div className="role-chips" aria-label="Suggested target roles">
+                    {scanResult.roles.map((role, idx) => {
+                      const confidenceLabel = idx === 0 ? "Strong match" : idx === 1 ? "Possible match" : "Worth exploring";
+                      return (
+                        <button type="button" key={role} className={`flex flex-col items-start p-2 border ${selectedSuggestedRole === role ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20"}`} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}>
+                          <span className="flex items-center gap-1 font-medium"><span>{role}</span><ArrowUpRight size={13} /></span>
+                          <span className="text-[10px] opacity-85 font-mono">[{confidenceLabel}]</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                   {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
                   <section className="readiness-card" aria-label="Saudi Campaign Readiness Check">
@@ -520,18 +544,18 @@ export default function Home() {
                     </button>
                     {briefStatus === "submitting" && <div className="readiness-handoff readiness-loading" role="status" aria-live="polite"><span className="readiness-spinner" aria-hidden="true" /><span><b>Preparing your campaign brief</b><small>Creating a clean WhatsApp handoff…</small></span></div>}
                     {briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>Campaign brief ready.</b><small>WhatsApp has opened with your selected Saudi role direction. If it did not open, use the link below.</small><a href={`https://wa.me/966571448656?text=${encodeURIComponent(["Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.", `City: ${matchPreferences.city}`, `Industry: ${industryLabels[matchPreferences.industry]}`, `Seniority: ${matchPreferences.seniority}`, `Application language: ${matchPreferences.language}`, `Detected role lanes: ${(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles).join(", ")}`, "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign."].join("\n"))}`} target="_blank" rel="noreferrer">Open WhatsApp</a></span></div>}
-                    <small>{briefShared ? (backendAvailable ? "A minimal campaign brief may be saved for follow-up; your CV file and CV text are not sent or stored by this check." : "This static site does not save the preview; your CV file and CV text are not sent or stored by this check.") : "By sharing, you choose to send this brief to the team. Your CV file and CV text remain in this browser unless you separately share them."}</small>
+                    <small>Your CV is read on your device. Only what you choose to share continues.</small>
                   </section>
                 </div>
               )}
               {scanState === "fallback" && (
-                <div className="scan-fallback" role="status" aria-live="polite">
-                  <div><ShieldCheck size={16} /><span><b>We need a closer look.</b> This file could not be read clearly in the browser, so we will not guess at roles.</span></div>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">Send it on WhatsApp <ArrowUpRight size={15} /></a>
-                  <button onClick={resetScan}>Try another CV</button>
+                <div className="scan-fallback space-y-3 p-4 border border-black/20 bg-white" role="status" aria-live="polite">
+                  <div><ShieldCheck size={16} className="inline mr-1 text-[#e5482a]" /><span><b>Your background is specific — the engine needs a closer look.</b> Not every CV fits a standard lane. That&apos;s not a problem.</span></div>
+                  <a href={`https://wa.me/966571448656?text=${encodeURIComponent(`Hi, the CV scanner couldn't find standard role lanes for my background. Can we discuss directly? [City: ${matchPreferences.city}, Industry: ${industryLabels[matchPreferences.industry]}]`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 bg-[#151515] text-white px-4 py-2 text-sm font-medium">Continue on WhatsApp →</a>
+                  <button onClick={resetScan} className="block text-xs underline mt-1">Try another CV</button>
                 </div>
               )}
-              <p className="privacy-note"><ShieldCheck size={16} /> This readiness check keeps CV text and file selection in your browser. Only a voluntary campaign brief is sent when you choose WhatsApp.</p>
+              <p className="text-xs text-[#151515]/60 mt-3">Your CV is read on your device. Only what you choose to share continues.</p>
               <a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
                 Continue on WhatsApp <MessageCircle size={18} />
               </a>
