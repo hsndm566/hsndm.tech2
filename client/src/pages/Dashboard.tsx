@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
@@ -55,6 +55,13 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "company" | "role">("newest");
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
+  const [isNewAppOpen, setIsNewAppOpen] = useState(false);
+  const [newCompany, setNewCompany] = useState("");
+  const [newRole, setNewRole] = useState("");
+  const [newCity, setNewCity] = useState("Jeddah");
+  const [newStatus, setNewStatus] = useState("applied");
+  const [newNotes, setNewNotes] = useState("");
+
   const [activitySeenAt, setActivitySeenAt] = useState<number>(() => {
     try {
       return Number(window.localStorage.getItem("autoapply_activity_seen_at") || 0);
@@ -92,6 +99,37 @@ export default function Dashboard() {
       toast.error("Failed to update profile");
     },
   });
+
+  const createAppMutation = trpc.campaign.applications.create.useMutation({
+    onSuccess: () => {
+      toast.success("New job application added successfully");
+      setIsNewAppOpen(false);
+      setNewCompany("");
+      setNewRole("");
+      setNewNotes("");
+      utils.campaign.applications.list.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to add application");
+    },
+  });
+
+  const handleCreateApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCompany.trim() || !newRole.trim()) {
+      toast.error("Please enter both company name and role title");
+      return;
+    }
+    createAppMutation.mutate({
+      candidateName: user?.name || "Candidate",
+      candidateEmail: user?.email || "",
+      companyName: newCompany.trim(),
+      roleTitle: newRole.trim(),
+      city: newCity,
+      status: newStatus as any,
+      notes: newNotes.trim() || undefined,
+    });
+  };
 
   const filteredApps = applications.filter((app) => {
     const matchesSearch = app.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) || app.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || app.roleTitle.toLowerCase().includes(searchQuery.toLowerCase()) || app.city.toLowerCase().includes(searchQuery.toLowerCase());
@@ -238,6 +276,87 @@ export default function Dashboard() {
           </Card>
         ) : (
           appsLoading || profileLoading ? <CandidateDashboardSkeleton /> : <>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">Application Tracking & Feed</h2>
+                <p className="text-sm text-[#151515]/70">Track automated submissions and manually added job entries across Saudi Arabia.</p>
+              </div>
+              <Dialog open={isNewAppOpen} onOpenChange={setIsNewAppOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2 shrink-0">
+                    <PlusCircle className="w-4 h-4" /> New Application
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-[#fbf9f5] border-[#151515]/20 max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Add New Job Application</DialogTitle>
+                    <DialogDescription>Manually track a target job submission or interview in your candidate portal.</DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleCreateApp} className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Company Name *</label>
+                      <Input
+                        required
+                        placeholder="e.g. Aramco, SABIC, STC"
+                        value={newCompany}
+                        onChange={(e) => setNewCompany(e.target.value)}
+                        className="bg-white border-[#151515]/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Role Title *</label>
+                      <Input
+                        required
+                        placeholder="e.g. Senior Software Engineer"
+                        value={newRole}
+                        onChange={(e) => setNewRole(e.target.value)}
+                        className="bg-white border-[#151515]/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Saudi City</label>
+                      <Select value={newCity} onValueChange={setNewCity}>
+                        <SelectTrigger className="bg-white border-[#151515]/20"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {saudiCities.map(c => (
+                            <SelectItem key={c.en} value={c.en}>{c.en}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Initial Status</label>
+                      <Select value={newStatus} onValueChange={setNewStatus}>
+                        <SelectTrigger className="bg-white border-[#151515]/20"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="queued">Queued</SelectItem>
+                          <SelectItem value="applied">Application sent</SelectItem>
+                          <SelectItem value="interview">Interview scheduled</SelectItem>
+                          <SelectItem value="offer">Offer received</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Notes / Follow-up</label>
+                      <Input
+                        placeholder="Optional note about this job entry"
+                        value={newNotes}
+                        onChange={(e) => setNewNotes(e.target.value)}
+                        className="bg-white border-[#151515]/20"
+                      />
+                    </div>
+                    <div className="pt-4 flex justify-end gap-3">
+                      <Button type="button" variant="outline" onClick={() => setIsNewAppOpen(false)}>Cancel</Button>
+                      <Button type="submit" disabled={createAppMutation.isPending} className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">
+                        {createAppMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                        Save Application
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">

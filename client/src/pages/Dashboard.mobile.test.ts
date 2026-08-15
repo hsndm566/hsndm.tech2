@@ -25,3 +25,9 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("Company name");
     expect(dashboardSource).toContain("Role title");
   });
+  it("includes a New Application button and form fields for manual job entries", () => {
+    expect(dashboardSource).toContain("New Application");
+    expect(dashboardSource).toContain("Add New Job Application");
+    expect(dashboardSource).toContain("companyName");
+    expect(dashboardSource).toContain("roleTitle");
+  });
