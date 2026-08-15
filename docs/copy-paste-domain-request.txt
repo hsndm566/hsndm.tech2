@@ -1,0 +1,7 @@
+I want to bind this existing custom domain to this managed project:
+
+dashboard.hsndm.tech
+
+Please show me the exact DNS record required to verify and bind this domain. I need the complete record type, host/name, and target/value only. Do not use a URL path such as `/dashboard`. I will send the record to my Cloudflare administrator to apply it.
+
+Do not change the public `hsndm.tech` domain, `www`, `clerk.hsndm.tech`, email records, or any other hostname.

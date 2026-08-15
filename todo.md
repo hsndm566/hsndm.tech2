@@ -38,3 +38,8 @@
 - [ ] Prepare a minimal Cloudflare dashboard-domain handoff for Hermes and validate its returned evidence
 - [x] Implement the next safe Stage 2 conversion-clarity and candidate-readiness improvements without external configuration changes
 - [x] Run regression, mobile visual, and production-build verification for the Stage 2 batch
+- [ ] Confirm the managed project's exact custom-domain target without guessing a DNS record
+- [ ] Provide Hermes with verified dashboard-domain target instructions and validate its DNS evidence
+- [ ] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
+- [x] Run final regression, type, and production-build verification for the requested release
+- [ ] Save the verified current project state to GitHub and the managed live deployment

@@ -68,3 +68,11 @@ Post-release external-domain recheck: `dashboard.hsndm.tech` resolves through Cl
 ## 2026-08-15 Stage 2 ATS readiness verification
 
 The updated `/ats` route was reviewed at desktop and 390px phone widths. The ATS upload control, target city/industry labels, target-role field, editable CV text area, minimum-text guidance, and disabled pre-analysis CTA all remained readable and vertically ordered without horizontal overflow. The new extraction-failure and retry messaging is covered by the ATS regression suite; the visual check intentionally did not upload a real CV or invoke the remote AI review.
+
+## Managed custom-domain target blocker
+
+The available project metadata confirms only the managed public hostname `hsndmstudio-lyaavagg.manus.space`; it does not provide an approved custom-domain verification record, CNAME target, or hostname-to-path routing target for `dashboard.hsndm.tech`. The managed domain page in the project interface must therefore supply the exact target before Cloudflare is changed. The recorded current Cloudflare dashboard CNAME remains the rollback point and must not be replaced by a guessed preview/share hostname.
+
+## 2026-08-15 Final release verification
+
+The final pre-release regression suite passed with 30 test files and 75 tests. TypeScript validation completed without errors, and `pnpm build` completed successfully. The build retains the existing non-blocking advisory that some optional document-processing and PDF-export chunks exceed the bundler's 500 kB recommendation; these features are already code-split and the advisory does not prevent deployment. English, Arabic RTL, and ATS review entry views were visually checked at 1280px desktop and 390px mobile widths. The managed hero and explainer MP4 routes remain configured through `/manus-storage/` and retain their existing browser-safe fallback behavior.
