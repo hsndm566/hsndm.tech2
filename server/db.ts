@@ -257,3 +257,38 @@ export async function updateSystemJobRun(taskUid: string, status: "succeeded" | 
     .set({ lastRunAt: new Date(), lastStatus: status })
     .where(eq(systemJobs.heartbeatTaskUid, taskUid));
 }
+
+export async function updateJobApplication(id: number, candidateOpenId: string, isAdmin: boolean, data: Partial<InsertJobApplication>): Promise<JobApplication | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [existing] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    if (!existing) return null;
+    if (!isAdmin && existing.candidateOpenId !== candidateOpenId) {
+      throw new Error("Unauthorized to update this application");
+    }
+    await db.update(jobApplications).set({ ...data, updatedAt: new Date() }).where(eq(jobApplications.id, id));
+    const [updated] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    return updated || null;
+  } catch (error) {
+    console.warn("[Database] Failed to update job application:", error);
+    throw error;
+  }
+}
+
+export async function deleteJobApplication(id: number, candidateOpenId: string, isAdmin: boolean): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  try {
+    const [existing] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    if (!existing) return false;
+    if (!isAdmin && existing.candidateOpenId !== candidateOpenId) {
+      throw new Error("Unauthorized to delete this application");
+    }
+    await db.delete(jobApplications).where(eq(jobApplications.id, id));
+    return true;
+  } catch (error) {
+    console.warn("[Database] Failed to delete job application:", error);
+    throw error;
+  }
+}
