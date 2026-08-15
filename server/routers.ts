@@ -109,9 +109,14 @@ export const appRouter = router({
         update: protectedProcedure
           .input(
             z.object({
-              targetCity: z.string().optional(),
-              targetIndustry: z.string().optional(),
-              salaryExpectation: z.string().optional(),
+              fullName: z.string().trim().max(120).optional(),
+              phone: z.string().trim().max(64).optional(),
+              preferredSeniority: z.enum(["Entry level", "Mid-level", "Senior", "Leadership"]).optional(),
+              preferredLanguage: z.enum(["English", "Arabic"]).optional(),
+              openToRemote: z.boolean().optional(),
+              targetCity: z.string().trim().max(64).optional(),
+              targetIndustry: z.string().trim().max(64).optional(),
+              salaryExpectation: z.string().trim().max(64).optional(),
               resumeFileName: z.string().max(255).optional(),
               resumeSummary: z.string().max(500).optional(),
               notifyWhatsApp: z.boolean().optional(),

@@ -16,6 +16,7 @@ import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
+import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,6 +57,8 @@ export default function Dashboard() {
     const matchesSearch = app.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) || app.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || app.roleTitle.toLowerCase().includes(searchQuery.toLowerCase()) || app.city.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch && (statusFilter === "all" || app.status === statusFilter);
   });
+
+  const recentActivity = buildRecentActivity(applications, profile);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -134,6 +137,7 @@ export default function Dashboard() {
               <Loader2 className="w-5 h-5 animate-spin text-[#151515]/50" />
             ) : dashboardAuthenticated ? (
               <div className="flex items-center gap-3">
+                <Link href="/dashboard/settings"><Button variant="outline" size="sm" className="gap-1.5" aria-label="Open profile settings"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Settings</span></Button></Link>
                 <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
                   <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user?.name || user?.email || "Candidate"}
                   {user?.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
@@ -152,7 +156,7 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-10 space-y-8">
-        {!isAuthenticated ? (
+        {!dashboardAuthenticated ? (
           <Card className="bg-[#fbf9f5] border-[#151515]/10 text-center py-20 max-w-2xl mx-auto shadow-sm">
             <CardContent className="space-y-6">
               <Briefcase className="w-16 h-16 mx-auto text-[#e5482a]" />
@@ -168,7 +172,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ) : (
-          <>
+          appsLoading || profileLoading ? <CandidateDashboardSkeleton /> : <>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
@@ -262,6 +266,40 @@ export default function Dashboard() {
               </Card>
             </div>
 
+            <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-xl">Recent activity</CardTitle>
+                    <CardDescription className="mt-1.5">Your latest application updates and campaign notifications.</CardDescription>
+                  </div>
+                  <Bell className="h-5 w-5 shrink-0 text-[#e5482a]" aria-hidden="true" />
+                </div>
+              </CardHeader>
+              <CardContent className="border-t border-[#151515]/10 pt-0">
+                {recentActivity.length === 0 ? (
+                  <div className="py-7 text-sm leading-6 text-[#151515]/60">No activity has been recorded yet. Your first application update will appear here.</div>
+                ) : (
+                  <ol className="divide-y divide-[#151515]/10">
+                    {recentActivity.map((activity) => (
+                      <li key={activity.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                        <div className="flex min-w-0 gap-3">
+                          <span className={`mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full ${activity.kind === "notification" ? "bg-[#151515]/8 text-[#151515]/65" : "bg-[#e5482a]/10 text-[#e5482a]"}`}>
+                            {activity.kind === "notification" ? <Bell className="h-3.5 w-3.5" aria-hidden="true" /> : <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />}
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-sm leading-6 text-[#151515]">{activity.message}</p>
+                            <p className="mt-0.5 truncate font-mono text-[10px] uppercase tracking-[0.1em] text-[#151515]/45">{activity.detail}</p>
+                          </div>
+                        </div>
+                        <time className="pl-10 font-mono text-[10px] leading-5 text-[#151515]/50 sm:pl-0">{formatActivityTime(activity.timestamp)}</time>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </CardContent>
+            </Card>
+
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="relative w-full md:w-96">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-[#151515]/40" />
@@ -288,11 +326,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {appsLoading ? (
-              <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-[#e5482a]" />
-              </div>
-            ) : filteredApps.length === 0 ? (
+            {filteredApps.length === 0 ? (
               <Card className="bg-[#fbf9f5] border-[#151515]/10 text-center py-16">
                 <CardContent className="space-y-4">
                   <Briefcase className="w-12 h-12 mx-auto text-[#151515]/30" />
@@ -394,4 +428,59 @@ export default function Dashboard() {
       </main>
     </div>
   );
+}
+
+type ActivityItem = {
+  id: string;
+  kind: "application" | "notification";
+  message: string;
+  detail: string;
+  timestamp: Date | string;
+};
+
+function buildRecentActivity(
+  applications: Array<{ id: number; companyName: string; roleTitle: string; city?: string | null; status: string; appliedAt: Date | string; updatedAt?: Date | string; notes?: string | null }>,
+  profile: { updatedAt?: Date | string | null } | null | undefined,
+): ActivityItem[] {
+  const statusMessages: Record<string, string> = {
+    queued: "Application queued for review",
+    applied: "Application sent",
+    interview: "Interview update received",
+    offer: "Offer update received",
+    skipped: "Application marked not proceeding",
+  };
+
+  const items: ActivityItem[] = applications.flatMap((application) => {
+    const base: ActivityItem = {
+      id: `application-${application.id}`,
+      kind: "application",
+      message: `${statusMessages[application.status] || "Application status updated"}: ${application.roleTitle}`,
+      detail: `${application.companyName} · ${application.city || "Saudi Arabia"}`,
+      timestamp: application.updatedAt || application.appliedAt,
+    };
+    if (!application.notes) return [base];
+    return [base, {
+      id: `notification-${application.id}`,
+      kind: "notification",
+      message: "Campaign manager note added",
+      detail: application.notes,
+      timestamp: application.updatedAt || application.appliedAt,
+    }];
+  });
+
+  if (profile?.updatedAt) {
+    items.push({
+      id: "profile-updated",
+      kind: "notification",
+      message: "Profile preferences updated",
+      detail: "Your next campaign will use the latest settings",
+      timestamp: profile.updatedAt,
+    });
+  }
+
+  return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 8);
+}
+
+function formatActivityTime(timestamp: Date | string) {
+  return new Date(timestamp).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
 }

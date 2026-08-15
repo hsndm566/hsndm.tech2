@@ -1,0 +1,1 @@
+ALTER TABLE `job_applications` ADD `updatedAt` timestamp DEFAULT (now()) NOT NULL ON UPDATE CURRENT_TIMESTAMP;

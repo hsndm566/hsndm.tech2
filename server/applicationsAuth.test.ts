@@ -91,6 +91,31 @@ describe("application access control and authentication", () => {
     }));
   });
 
+  it("accepts personal information and matching preferences only for the authenticated candidate", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await candidate.campaign.applications.profile.update({
+      fullName: "Hasan Adam",
+      phone: "+966 500000000",
+      preferredSeniority: "Senior",
+      preferredLanguage: "Arabic",
+      openToRemote: true,
+      targetCity: "Jeddah",
+      targetIndustry: "Artificial Intelligence",
+      notifyWhatsApp: false,
+    });
+
+    expect(mocks.updateCandidateProfile).toHaveBeenCalledWith("candidate-a", expect.objectContaining({
+      fullName: "Hasan Adam",
+      phone: "+966 500000000",
+      preferredSeniority: "Senior",
+      preferredLanguage: "Arabic",
+      openToRemote: true,
+      targetCity: "Jeddah",
+      targetIndustry: "Artificial Intelligence",
+      notifyWhatsApp: false,
+    }));
+  });
+
   it("rejects an oversized resume note rather than accepting CV text", async () => {
     const candidate = appRouter.createCaller(makeContext("candidate-a"));
     await expect(candidate.campaign.applications.profile.update({ resumeSummary: "x".repeat(501) })).rejects.toBeTruthy();

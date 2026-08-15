@@ -13,3 +13,6 @@
 - [x] Configure passwordless email authentication for client dashboard sessions.
 - [x] Bind and verify dashboard.hsndm.tech for private candidate access.
 - [ ] External setup required: point dashboard.hsndm.tech to the managed deployment and complete the Clerk custom-domain DNS verification for clerk.hsndm.tech before live passwordless sign-in can be tested.
+- [x] Implement candidate profile settings page and database persistence
+- [x] Replace dashboard spinner with skeleton loading UI during data fetch
+- [x] Build recent activity feed for application status updates and notifications

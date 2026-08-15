@@ -62,6 +62,7 @@ export const jobApplications = mysqlTable("job_applications", {
   notes: text("notes"),
   appliedAt: timestamp("appliedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type JobApplication = typeof jobApplications.$inferSelect;
@@ -85,6 +86,11 @@ export type InsertCampaignSignal = typeof campaignSignals.$inferInsert;
 export const candidateProfiles = mysqlTable("candidate_profiles", {
   id: int("id").autoincrement().primaryKey(),
   openId: varchar("openId", { length: 64 }).notNull().unique(),
+  fullName: varchar("fullName", { length: 120 }),
+  phone: varchar("phone", { length: 64 }),
+  preferredSeniority: varchar("preferredSeniority", { length: 32 }).default("Mid-level").notNull(),
+  preferredLanguage: varchar("preferredLanguage", { length: 16 }).default("English").notNull(),
+  openToRemote: boolean("openToRemote").default(false).notNull(),
   targetCity: varchar("targetCity", { length: 64 }).default("Jeddah").notNull(),
   targetIndustry: varchar("targetIndustry", { length: 64 }).default("Technology & Engineering").notNull(),
   salaryExpectation: varchar("salaryExpectation", { length: 64 }).default("15,000 - 25,000 SAR").notNull(),

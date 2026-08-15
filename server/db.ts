@@ -151,6 +151,11 @@ export async function getCandidateProfile(openId: string): Promise<CandidateProf
     // Default profile if none exists
     const defaultProfile: InsertCandidateProfile = {
       openId,
+      fullName: null,
+      phone: null,
+      preferredSeniority: "Mid-level",
+      preferredLanguage: "English",
+      openToRemote: false,
       targetCity: "Jeddah",
       targetIndustry: "Technology & Engineering",
       salaryExpectation: "15,000 - 25,000 SAR",

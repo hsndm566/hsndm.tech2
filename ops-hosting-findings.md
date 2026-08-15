@@ -24,4 +24,6 @@ The built production entry was smoke-tested on a clean port after confirming tha
 
 Browser verification on 2026-08-15: `https://dashboard.hsndm.tech` resolves to GitHub Pages and returns GitHub’s “Site not found” 404, so the subdomain is not yet bound to the managed dashboard deployment. The frontend now contains subdomain-aware dashboard routing, but DNS/host binding remains an external configuration step.
 
+Dashboard feature verification on 2026-08-15: desktop and 390px mobile captures were taken for `/dashboard` and `/dashboard/settings`. The settings route renders its responsive skeleton correctly while Clerk is unreachable in preview; the dashboard remains on the existing secure-auth loading screen until Clerk resolves, so authenticated dashboard cards/activity could not be visually exercised without a live Clerk session. TypeScript and the full test suite passed before capture.
+
 Preview verification after the Clerk integration: `/dashboard` loads the Clerk provider, and when the custom Clerk domain is unreachable it now displays a visible “Sign-in is temporarily unavailable” card with a retry button rather than an endless blank spinner. The browser console identifies the remaining external blocker as `clerk.hsndm.tech` not serving Clerk JS.

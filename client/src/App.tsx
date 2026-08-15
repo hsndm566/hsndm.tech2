@@ -18,6 +18,7 @@ const ArabicThankYou = lazy(() => import("@/pages/ArabicThankYou"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
 const CampaignStatus = lazy(() => import("@/pages/CampaignStatus"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const ProfileSettings = lazy(() => import("@/pages/ProfileSettings"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
@@ -31,7 +32,7 @@ function Router() {
   const [location, setLocation] = useLocation();
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isDashboardSubdomain() && location !== "/dashboard") {
+      if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
         setLocation("/dashboard");
         return;
       }
@@ -48,7 +49,10 @@ function Router() {
   return (
     <Switch>
       {isDashboardSubdomain() ? (
-        <Route path="/dashboard" component={Dashboard} />
+        <>
+          <Route path="/dashboard/settings" component={ProfileSettings} />
+          <Route path="/dashboard" component={Dashboard} />
+        </>
       ) : null}
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
@@ -56,6 +60,7 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
+      <Route path="/dashboard/settings" component={ProfileSettings} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
