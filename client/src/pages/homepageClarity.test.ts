@@ -74,6 +74,26 @@ describe("homepage clarity release", () => {
     expect(stylesSource()).not.toContain("سنوضح لك ما تستطيع فعله.");
   });
 
+  it("keeps the bright first-screen hero complete and readable around the full motion panel in both languages", () => {
+    const english = homeSource();
+    const arabic = arabicHomeSource();
+    const styles = stylesSource();
+
+    expect(english).toContain("<HeroMedia alt=");
+    expect(english).toContain("We apply to jobs for");
+    expect(english).toContain("Start your campaign");
+    expect(english).toContain("500+");
+    expect(arabic).toContain("<HeroMedia alt=");
+    expect(arabic).toContain("نتقدّم للوظائف");
+    expect(arabic).toContain("ابدأ حملتك");
+    expect(arabic).toContain("لغتان مدعومتان");
+    expect(styles).toContain(".hero { min-height: 610px");
+    expect(styles).toContain(".hero-media::after");
+    expect(styles).toContain("background: rgba(255,255,255,.72)");
+    expect(styles).toContain(".hero-content { height: 610px");
+    expect(styles).toContain("padding-top: calc(43vw + 20px)");
+  });
+
   it("keeps keyboard access and clear recovery paths for CV matching, video playback, and WhatsApp handoff", () => {
     const english = homeSource();
     const arabic = arabicHomeSource();

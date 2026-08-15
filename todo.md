@@ -80,3 +80,7 @@
 - [x] Add refined hover feedback to pricing cards and workflow steps without affecting keyboard or touch interactions
 - [x] Add an accessible English–Arabic transition that respects reduced-motion preferences
 - [x] Verify the new enquiry, interaction, and transition behavior with bilingual automated and visual checks
+- [x] Recompose the opening hero on a clean white surface so the full video and all primary first-screen content are visible
+- [x] Verify the bright hero’s readability and video framing on English and Arabic desktop and mobile pages
+- [x] Add source-level regression coverage for the white hero surface, full video framing, and first-screen content hierarchy
+- [x] Preserve explicit desktop and mobile English/Arabic hero evidence in the final verification record

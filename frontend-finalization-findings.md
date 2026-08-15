@@ -24,3 +24,5 @@ The user-approved reviewed Arabic copy has been imported into the structured Ara
 The completed source-backed Arabic import was rechecked across the full page at desktop and phone sizes. The revised copy preserves the existing hierarchy, pricing cards, campaign flow, testimonials, FAQs, Jeddah location section, and final CTA without layout regressions or horizontal clipping.
 
 The shared English and Arabic footer enquiry form, pricing-card feedback, workflow feedback, and language-toggle transition were verified on full-page desktop and 375px phone captures. The footer fields retain a single-column phone layout, the page hierarchy stays intact, and the Arabic RTL footer form is aligned with the surrounding content.
+
+The opening hero was recomposed to a bright white first-screen treatment. Desktop and 375px phone captures confirm that the full motion panel, complete English and Arabic headlines, supporting copy, primary campaign action, secondary system action, trust line, and visible operational status remain legible without the prior dark-grey background.
