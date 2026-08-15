@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, Calendar, Bell, CheckCircle2, Clock } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, Calendar, Bell, CheckCircle2, CheckCheck, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
@@ -67,6 +67,7 @@ export default function Dashboard() {
   });
 
   const recentActivity = buildRecentActivity(applications, profile);
+  const unreadActivityCount = recentActivity.filter((activity) => new Date(activity.timestamp).getTime() > activitySeenAt).length;
   const markActivitySeen = () => {
     const seenAt = Date.now();
     setActivitySeenAt(seenAt);
@@ -291,7 +292,13 @@ export default function Dashboard() {
                     <CardTitle className="text-xl">Recent activity</CardTitle>
                     <CardDescription className="mt-1.5">Your latest application updates and campaign notifications.</CardDescription>
                   </div>
-                  <Bell className="h-5 w-5 shrink-0 text-[#e5482a]" aria-hidden="true" />
+                  <div className="flex shrink-0 items-center gap-2">
+                    {unreadActivityCount > 0 && <span className="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-[#e5482a] sm:inline">{unreadActivityCount} unread</span>}
+                    <Button variant="ghost" size="sm" onClick={markActivitySeen} disabled={unreadActivityCount === 0} className="h-8 gap-1.5 px-2 text-xs text-[#151515]/65 hover:bg-[#151515]/5 hover:text-[#151515]" aria-label="Mark all activity as read">
+                      <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" /> <span className="hidden sm:inline">Mark all as read</span>
+                    </Button>
+                    <Bell className="h-5 w-5 text-[#e5482a]" aria-hidden="true" />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="border-t border-[#151515]/10 pt-0">

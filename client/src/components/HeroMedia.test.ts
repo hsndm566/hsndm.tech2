@@ -14,10 +14,12 @@ describe("HeroMedia", () => {
     expect(component).toContain('muted');
     expect(component).toContain('loop');
     expect(component).toContain('playsInline');
-    expect(component).toContain('pointer-events-none select-none');
+    expect(component).toContain('pointer-events-none');
     expect(component).toContain('aria-hidden="true"');
     expect(component).toContain('disablePictureInPicture');
-    expect(component).toContain('(prefers-reduced-motion: no-preference)');
+    expect(component).toContain('preload="auto"');
+    expect(component).toContain('onError={() => setVideoFailed(true)}');
+    expect(component).not.toContain('prefers-reduced-motion: no-preference');
     expect(component).not.toContain('min-width: 768px');
   });
 });

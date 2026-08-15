@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { SignInButton, useAuth as useClerkAuth, useUser as useClerkUser } from "@clerk/clerk-react";
 import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
@@ -42,6 +42,34 @@ const defaultDraft: ProfileDraft = {
   notifyEmail: true,
 };
 
+type ProfileSource = {
+  fullName?: string | null;
+  phone?: string | null;
+  preferredSeniority?: string | null;
+  preferredLanguage?: string | null;
+  openToRemote?: boolean | null;
+  targetCity?: string | null;
+  targetIndustry?: string | null;
+  salaryExpectation?: string | null;
+  notifyWhatsApp?: boolean | null;
+  notifyEmail?: boolean | null;
+};
+
+function draftFromProfile(profile: ProfileSource | null | undefined): ProfileDraft {
+  return {
+    fullName: profile?.fullName ?? "",
+    phone: profile?.phone ?? "",
+    preferredSeniority: (profile?.preferredSeniority as ProfileDraft["preferredSeniority"]) || defaultDraft.preferredSeniority,
+    preferredLanguage: (profile?.preferredLanguage as ProfileDraft["preferredLanguage"]) || defaultDraft.preferredLanguage,
+    openToRemote: profile?.openToRemote ?? defaultDraft.openToRemote,
+    targetCity: profile?.targetCity || defaultDraft.targetCity,
+    targetIndustry: profile?.targetIndustry || defaultDraft.targetIndustry,
+    salaryExpectation: profile?.salaryExpectation || defaultDraft.salaryExpectation,
+    notifyWhatsApp: profile?.notifyWhatsApp ?? defaultDraft.notifyWhatsApp,
+    notifyEmail: profile?.notifyEmail ?? defaultDraft.notifyEmail,
+  };
+}
+
 function SettingsSkeleton() {
   return (
     <div className="space-y-6" aria-busy="true" aria-label="Loading profile settings">
@@ -68,6 +96,7 @@ export default function ProfileSettings() {
   const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
   const [draft, setDraft] = useState<ProfileDraft>(defaultDraft);
+  const previousDraftRef = useRef<ProfileDraft | null>(null);
 
   useEffect(() => {
     if (!clerkDashboardEnabled || clerkAuth.isLoaded) return;
@@ -80,25 +109,26 @@ export default function ProfileSettings() {
   const updateProfileMutation = trpc.campaign.applications.profile.update.useMutation({
     onSuccess: async () => {
       await utils.campaign.applications.profile.get.invalidate();
-      toast.success("Save Changes successful", { description: "Your candidate preferences are now updated." });
+      const previousDraft = previousDraftRef.current;
+      previousDraftRef.current = null;
+      toast.success("Save Changes successful", {
+        description: "Your candidate preferences are now updated.",
+        action: previousDraft ? {
+          label: "Undo",
+          onClick: () => {
+            setDraft(previousDraft);
+            previousDraftRef.current = null;
+            updateProfileMutation.mutate(previousDraft);
+          },
+        } : undefined,
+      });
     },
     onError: () => toast.error("We could not save your profile settings. Please try again."),
   });
 
   useEffect(() => {
     if (!profile) return;
-    setDraft({
-      fullName: profile.fullName ?? "",
-      phone: profile.phone ?? "",
-      preferredSeniority: (profile.preferredSeniority as ProfileDraft["preferredSeniority"]) || "Mid-level",
-      preferredLanguage: (profile.preferredLanguage as ProfileDraft["preferredLanguage"]) || "English",
-      openToRemote: profile.openToRemote ?? false,
-      targetCity: profile.targetCity || "Jeddah",
-      targetIndustry: profile.targetIndustry || "Technology & Engineering",
-      salaryExpectation: profile.salaryExpectation || "15,000 - 25,000 SAR",
-      notifyWhatsApp: profile.notifyWhatsApp ?? true,
-      notifyEmail: profile.notifyEmail ?? true,
-    });
+    setDraft(draftFromProfile(profile));
   }, [profile]);
 
   const setField = <K extends keyof ProfileDraft>(field: K, value: ProfileDraft[K]) => setDraft((current) => ({ ...current, [field]: value }));
@@ -157,7 +187,7 @@ export default function ProfileSettings() {
         <div className="flex items-start gap-3"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#151515] text-[#fbf9f5]"><Settings2 className="h-5 w-5" /></div><div><h1 className="text-2xl font-bold tracking-tight md:text-3xl">Personalise your campaign</h1><p className="mt-1 max-w-2xl text-sm leading-6 text-[#151515]/65">Keep your contact details and Saudi Arabia job preferences current so every campaign is aligned with what you want next.</p></div></div>
 
         {profileLoading ? <SettingsSkeleton /> : (
-          <form onSubmit={(event) => { event.preventDefault(); updateProfileMutation.mutate(draft); }} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <form onSubmit={(event) => { event.preventDefault(); previousDraftRef.current = draftFromProfile(profile); updateProfileMutation.mutate(draft); }} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
             <Card className="border-[#151515]/10 bg-[#fbf9f5] shadow-sm"><CardHeader><CardTitle>Personal information</CardTitle><CardDescription>These details help the team identify your campaign and contact you when something needs your attention.</CardDescription></CardHeader><CardContent className="space-y-5">
               <div className="space-y-2"><label htmlFor="full-name" className="text-sm font-medium">Full name</label><Input id="full-name" value={draft.fullName} onChange={(event) => setField("fullName", event.target.value)} maxLength={120} placeholder="Your name" /></div>
               <div className="space-y-2"><label htmlFor="phone" className="text-sm font-medium">Phone number</label><Input id="phone" type="tel" value={draft.phone} onChange={(event) => setField("phone", event.target.value)} maxLength={64} placeholder="+966 5X XXX XXXX" /><p className="text-xs leading-5 text-[#151515]/55">Use a Saudi or international format that can receive WhatsApp updates.</p></div>

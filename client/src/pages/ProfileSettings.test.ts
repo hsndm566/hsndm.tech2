@@ -9,5 +9,7 @@ describe("candidate profile settings feedback", () => {
     expect(settingsSource).toContain("Save Changes");
     expect(settingsSource).toContain("Save Changes successful");
     expect(settingsSource).toContain("Your candidate preferences are now updated.");
+    expect(settingsSource).toContain('label: "Undo"');
+    expect(settingsSource).toContain("previousDraftRef.current");
   });
 });

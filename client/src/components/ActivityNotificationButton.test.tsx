@@ -6,7 +6,7 @@ import { ActivityNotificationButton } from "./ActivityNotificationButton";
 
 describe("ActivityNotificationButton candidate journey", () => {
   afterEach(() => cleanup());
-  it("shows new activity, clears it after opening, and scrolls to the feed", () => {
+  it("shows new activity, clears it after opening, and scrolls to the feed", async () => {
     const onSeen = vi.fn();
     const scrollIntoView = vi.fn();
     const feed = document.createElement("section");
@@ -25,13 +25,16 @@ describe("ActivityNotificationButton candidate journey", () => {
     const button = screen.getByRole("button", { name: "View 1 new activity updates" });
     expect(button.textContent).toContain("1");
 
-    fireEvent.click(button);
+    fireEvent.pointerDown(button, { button: 0 });
+    const previewItem = await screen.findByRole("menuitem", { name: /Activity update/i });
+    expect(previewItem).toBeTruthy();
+    fireEvent.click(screen.getByRole("menuitem", { name: /View full activity feed/i }));
 
     expect(onSeen).toHaveBeenCalledTimes(1);
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
   });
 
-  it("keeps the control quiet when activity has already been seen", () => {
+  it("keeps the control quiet when activity has already been seen", async () => {
     render(
       <ActivityNotificationButton
         activities={[{ timestamp: "2026-08-15T04:00:00.000Z" }]}
@@ -41,6 +44,8 @@ describe("ActivityNotificationButton candidate journey", () => {
     );
 
     expect(screen.getByRole("button", { name: "View recent activity" })).toBeTruthy();
+    fireEvent.pointerDown(screen.getByRole("button", { name: "View recent activity" }), { button: 0 });
+    expect(await screen.findByText("Up to date")).toBeTruthy();
     expect(screen.queryByLabelText("1 new updates")).toBeNull();
   });
 });

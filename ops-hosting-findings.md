@@ -33,3 +33,14 @@ Clerk scope regression check on 2026-08-15: the public preview home page at `/?f
 Candidate notification usability simulation on 2026-08-15: the intended flow is direct and discoverable once authenticated—header control is labeled `Activity`, includes an accessible unread-count label, and jumps directly to the `Recent activity` feed while persisting the seen timestamp locally. In the current preview, My Browser navigation to `/dashboard` timed out at the browser extension layer and the independent screenshot showed the expected Clerk loading state, so an authenticated click-through could not be completed until the external Clerk custom domain is live. The remaining usability risk is authentication availability, not the notification control itself.
 
 
+## 2026-08-15 video and notification release verification
+
+- Managed hero MP4 `/manus-storage/gemini_generated_video_EA567831_5f93d04f.mp4` returned HTTP 206 with `content-type: video/mp4` and range bytes from the preview storage route.
+- Managed explainer MP4 `/manus-storage/gemini_generated_video_DCF37916_a9fca67a.mp4` returned HTTP 206 with `content-type: video/mp4` and range bytes from the preview storage route.
+- Desktop screenshots of `/` and `/ar` show the approved dark hero media surface and readable hero content with the active campaign CTA.
+- Phone screenshots at 390x844 of `/` and `/ar` show the hero media surface, navigation, CTA, stats, and sticky/mobile campaign action without horizontal overflow.
+- HeroMedia now renders the managed video without the prior `prefers-reduced-motion` gate, uses muted looping inline playback, and falls back to a dark branded surface on media error. English and Arabic explainer videos use the same explicit error fallback.
+- Dashboard preview authentication remains externally blocked by Clerk DNS; public homepage verification is independent and passed.
+
+Subdomain recommendation: keep `dashboard.hsndm.tech` as the single candidate-facing subdomain. Do not add separate API, auth, or media subdomains now; the managed deployment already serves the frontend/backend boundary and storage redirects, while extra subdomains would add DNS, CORS, cookie, and Clerk verification complexity without improving the current candidate flow. Add another subdomain only for a genuinely separate product or independently hosted service.
+

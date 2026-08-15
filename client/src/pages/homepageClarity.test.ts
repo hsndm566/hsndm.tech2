@@ -33,6 +33,9 @@ describe("homepage clarity release", () => {
     expect(source).toContain("autoPlay loop muted playsInline disablePictureInPicture");
     expect(source).toContain('controlsList="nodownload noplaybackrate"');
     expect(source).toContain("Powered by AutoApply SA.");
+    expect(source).toContain("EXPLAINER_VIDEO_URL");
+    expect(source).toContain("explainerVideoFailed");
+    expect(source).toContain("onError={() => setExplainerVideoFailed(true)}");
     expect(source).toContain("autoPlay loop muted playsInline");
     expect(source).toContain("Priority human review");
     expect(source).not.toContain("Julie copilot");
@@ -61,6 +64,8 @@ describe("homepage clarity release", () => {
     expect(source).toContain("نتقدّم للوظائف");
     expect(source).toContain("سيرتك الذاتية جاهزة");
     expect(source).toContain("arabic-video-explainer-heading");
+    expect(source).toContain("arabicExplainerVideoFailed");
+    expect(source).toContain("onError={() => setArabicExplainerVideoFailed(true)}");
     expect(source).not.toContain("البنية التحتية للتقديم");
     expect(source).not.toContain("ما تقدّمه الخدمة");
     expect(source).not.toContain("هذا المثال التوضيحي يشرح كيف تنتقل الحملة");

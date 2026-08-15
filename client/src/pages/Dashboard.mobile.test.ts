@@ -14,5 +14,7 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("ActivityNotificationButton");
     expect(dashboardSource).toContain('id="recent-activity"');
     expect(dashboardSource).toContain("autoapply_activity_seen_at");
+    expect(dashboardSource).toContain("Mark all as read");
+    expect(dashboardSource).toContain("unreadActivityCount");
   });
 });

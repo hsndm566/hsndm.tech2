@@ -158,6 +158,7 @@ export default function Home() {
   const [briefShared, setBriefShared] = useState(false);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [latestActivityText, setLatestActivityText] = useState("Engine active — 24/7");
+  const [explainerVideoFailed, setExplainerVideoFailed] = useState(false);
 
   useEffect(() => {
     const fetchLatest = async () => {
@@ -522,13 +523,13 @@ export default function Home() {
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
             <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
-            {EXPLAINER_VIDEO_SRC ? (
-              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="AutoApply SA walkthrough video">
+            {EXPLAINER_VIDEO_SRC && !explainerVideoFailed ? (
+              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="auto" aria-label="AutoApply SA walkthrough video" onError={() => setExplainerVideoFailed(true)}>
                 <source src={EXPLAINER_VIDEO_SRC} type="video/mp4" />
                 Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
               </video>
             ) : (
-              <div className="video-placeholder" role="img" aria-label="Video loading placeholder for an AutoApply SA walkthrough">
+              <div className="video-placeholder" role="img" aria-label="AutoApply SA walkthrough video unavailable; service steps remain available">
                 <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
                 <span>Powered by AutoApply SA</span>
               </div>

@@ -20,3 +20,8 @@
 - [x] Add dashboard activity notification badge for new feed updates
 - [x] Add profile settings Save Changes success toast feedback
 - [x] Simulate candidate notification discovery and usability on desktop and mobile
+- [x] Add notification preview dropdown for latest activity updates
+- [x] Add Mark all as read control to recent activity feed
+- [x] Add undo action to profile Save Changes toast
+- [x] Diagnose and fix homepage video rendering with phone-safe fallback
+- [x] Assess whether additional subdomains are useful for the current architecture

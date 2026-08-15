@@ -109,6 +109,7 @@ export default function ArabicHome() {
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "Arabic" });
   const [selectedArabicIndustry, setSelectedArabicIndustry] = useState("Technology & Software");
+  const [arabicExplainerVideoFailed, setArabicExplainerVideoFailed] = useState(false);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
@@ -232,14 +233,14 @@ export default function ArabicHome() {
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
             <h2 id="arabic-video-explainer-heading">30 ثانية فقط. <i>وهذا يكفي لفهمها.</i></h2>
-            {ARABIC_EXPLAINER_VIDEO_SRC ? (
-              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA">
+            {ARABIC_EXPLAINER_VIDEO_SRC && !arabicExplainerVideoFailed ? (
+              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="auto" aria-label="فيديو توضيحي لخدمة AutoApply SA" onError={() => setArabicExplainerVideoFailed(true)}>
                 <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
               </video>
             ) : (
-              <div className="video-placeholder" role="img" aria-label="مساحة انتظار لفيديو توضيحي لخدمة AutoApply SA">
+              <div className="video-placeholder" role="img" aria-label="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة">
                 <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
-                <span>جارٍ تحميل الفيديو — من إعداد AutoApply SA</span>
+                <span>Powered by AutoApply SA</span>
               </div>
             )}
             <p>هذا ما يعمل بينما تتابع يومك.</p>
