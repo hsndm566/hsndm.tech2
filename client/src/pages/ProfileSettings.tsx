@@ -80,7 +80,7 @@ export default function ProfileSettings() {
   const updateProfileMutation = trpc.campaign.applications.profile.update.useMutation({
     onSuccess: async () => {
       await utils.campaign.applications.profile.get.invalidate();
-      toast.success("Profile settings saved");
+      toast.success("Save Changes successful", { description: "Your candidate preferences are now updated." });
     },
     onError: () => toast.error("We could not save your profile settings. Please try again."),
   });
@@ -175,7 +175,7 @@ export default function ProfileSettings() {
               <div className="flex items-center justify-between gap-4"><span className="text-sm font-medium">Email status summaries</span><Switch checked={draft.notifyEmail} onCheckedChange={(value) => setField("notifyEmail", value)} /></div>
             </CardContent></Card>
 
-            <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs leading-5 text-[#151515]/55">Changes apply to your next campaign. You can return here at any time.</p><Button type="submit" disabled={updateProfileMutation.isPending} className="gap-2 bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">{updateProfileMutation.isPending ? "Saving…" : <><Save className="h-4 w-4" /> Save settings</>}</Button></div>
+            <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs leading-5 text-[#151515]/55">Changes apply to your next campaign. You can return here at any time.</p><Button type="submit" disabled={updateProfileMutation.isPending} className="gap-2 bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">{updateProfileMutation.isPending ? "Saving…" : <><Save className="h-4 w-4" /> Save Changes</>}</Button></div>
           </form>
         )}
       </main>

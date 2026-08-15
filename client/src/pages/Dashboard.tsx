@@ -17,11 +17,19 @@ import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
+import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
+  const [activitySeenAt, setActivitySeenAt] = useState<number>(() => {
+    try {
+      return Number(window.localStorage.getItem("autoapply_activity_seen_at") || 0);
+    } catch {
+      return 0;
+    }
+  });
   const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
   const clerkAuth = useClerkAuth();
   const clerkDashboardEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
@@ -59,6 +67,15 @@ export default function Dashboard() {
   });
 
   const recentActivity = buildRecentActivity(applications, profile);
+  const markActivitySeen = () => {
+    const seenAt = Date.now();
+    setActivitySeenAt(seenAt);
+    try {
+      window.localStorage.setItem("autoapply_activity_seen_at", String(seenAt));
+    } catch {
+      // Local storage may be unavailable in private browsing; the in-memory state still works.
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -137,6 +154,7 @@ export default function Dashboard() {
               <Loader2 className="w-5 h-5 animate-spin text-[#151515]/50" />
             ) : dashboardAuthenticated ? (
               <div className="flex items-center gap-3">
+                <ActivityNotificationButton activities={recentActivity} seenAt={activitySeenAt} onSeen={markActivitySeen} />
                 <Link href="/dashboard/settings"><Button variant="outline" size="sm" className="gap-1.5" aria-label="Open profile settings"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Settings</span></Button></Link>
                 <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
                   <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user?.name || user?.email || "Candidate"}
@@ -266,7 +284,7 @@ export default function Dashboard() {
               </Card>
             </div>
 
-            <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
+            <Card id="recent-activity" className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm scroll-mt-28">
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>

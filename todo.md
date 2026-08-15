@@ -17,3 +17,6 @@
 - [x] Replace dashboard spinner with skeleton loading UI during data fetch
 - [x] Build recent activity feed for application status updates and notifications
 - [x] Fix Clerk JS timeout error on public home page without affecting dashboard authentication
+- [x] Add dashboard activity notification badge for new feed updates
+- [x] Add profile settings Save Changes success toast feedback
+- [x] Simulate candidate notification discovery and usability on desktop and mobile

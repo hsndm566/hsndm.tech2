@@ -9,4 +9,10 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("flex flex-col gap-3 md:flex-row");
     expect(dashboardSource).toContain("min-w-0 truncate text-base");
   });
+
+  it("exposes an accessible activity notification badge and target anchor", () => {
+    expect(dashboardSource).toContain("ActivityNotificationButton");
+    expect(dashboardSource).toContain('id="recent-activity"');
+    expect(dashboardSource).toContain("autoapply_activity_seen_at");
+  });
 });
