@@ -62,3 +62,9 @@ Cloudflare dashboard access check on 2026-08-15: navigation reached `dash.cloudf
 Desktop and 390px phone-width captures of both `/` and `/ar` were reviewed after adding skip navigation, keyboard focus coverage for select/input controls, visible focus treatment for the CV drop zone, resilient English WhatsApp-popup recovery, and accessible video fallback semantics. The English and Arabic pages retained their established hierarchy, bilingual type treatment, responsive price cards, sticky mobile campaign action, and CV matcher layout without horizontal overflow in the captures.
 
 The updated `/enquire` and `/ar/enquire` routes were also reviewed at desktop and 390px widths. Both retain readable headings, labeled controls, Saudi city and industry selectors, optional local file selection, and full-width WhatsApp CTAs without horizontal overflow. Their popup-block recovery is present in source and regression tests for both languages; browser automation did not submit the real form, so no message was sent externally.
+
+Post-release external-domain recheck: `dashboard.hsndm.tech` resolves through Cloudflare but still returns HTTP 404 at its root, while the managed dashboard route returns HTTP 200. `clerk.hsndm.tech` continues to return HTTP 200. This confirms the remaining issue is dashboard-host routing/binding rather than the managed application or Clerk custom domain.
+
+## 2026-08-15 Stage 2 ATS readiness verification
+
+The updated `/ats` route was reviewed at desktop and 390px phone widths. The ATS upload control, target city/industry labels, target-role field, editable CV text area, minimum-text guidance, and disabled pre-analysis CTA all remained readable and vertically ordered without horizontal overflow. The new extraction-failure and retry messaging is covered by the ATS regression suite; the visual check intentionally did not upload a real CV or invoke the remote AI review.

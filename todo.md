@@ -35,3 +35,6 @@
 - [x] Improve phone-first accessibility, keyboard focus, and responsive interaction affordances
 - [x] Create verified operator documentation for Clerk sign-in and DNS completion
 - [x] Run full regression, mobile visual, keyboard, and reduced-motion checks for the approved quality batch
+- [ ] Prepare a minimal Cloudflare dashboard-domain handoff for Hermes and validate its returned evidence
+- [x] Implement the next safe Stage 2 conversion-clarity and candidate-readiness improvements without external configuration changes
+- [x] Run regression, mobile visual, and production-build verification for the Stage 2 batch

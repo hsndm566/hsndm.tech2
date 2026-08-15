@@ -47,6 +47,17 @@ describe("ATS page local upload", () => {
 
     await waitFor(() => expect(mocks.reportCvExtractionFailure).toHaveBeenCalledWith({ route: "/ats" }));
     expect(mocks.reportCvExtractionFailure).toHaveBeenCalledTimes(1);
+    expect(container.textContent).toContain("We could not read enough text from this file.");
+  });
+
+  it("explains the local-text minimum before analysis and labels the matching selectors", async () => {
+    const { default: Ats } = await import("./Ats");
+    const { getByText, getAllByText, getAllByTestId } = render(<Ats />);
+
+    expect(getByText("Add at least 120 readable CV characters to run the preview.")).toBeTruthy();
+    expect(getAllByText("Target Saudi city").length).toBeGreaterThan(0);
+    expect(getAllByText("Target industry").length).toBeGreaterThan(0);
+    expect(getAllByTestId("saudi-select").length).toBeGreaterThanOrEqual(2);
   });
 
   it("offers a contact-only human follow-up and saves bounded metadata for signed-in candidates", async () => {
