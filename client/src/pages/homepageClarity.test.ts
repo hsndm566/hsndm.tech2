@@ -72,4 +72,21 @@ describe("homepage clarity release", () => {
     expect(stylesSource()).toContain("جرّبها الآن — تستغرق 60 ثانية");
     expect(stylesSource()).toContain("أضف سيرتك الذاتية. سنوضح لك ما تستطيع فعله.");
   });
+
+  it("keeps keyboard access and clear recovery paths for CV matching, video playback, and WhatsApp handoff", () => {
+    const english = homeSource();
+    const arabic = arabicHomeSource();
+    const styles = stylesSource();
+
+    expect(english).toContain('className="skip-link" href="#upload"');
+    expect(arabic).toContain('className="skip-link" href="#upload"');
+    expect(english).toContain("handoffBlocked");
+    expect(english).toContain("WhatsApp was blocked by this browser.");
+    expect(english).toContain('aria-describedby="cv-privacy-note"');
+    expect(english).toContain('role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable');
+    expect(arabic).toContain('role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح');
+    expect(styles).toContain("select:focus-visible");
+    expect(styles).toContain(".drop-zone:focus-within");
+    expect(styles).toContain(".skip-link:focus");
+  });
 });

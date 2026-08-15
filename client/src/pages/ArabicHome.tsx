@@ -189,6 +189,7 @@ export default function ArabicHome() {
 
   return (
     <div className="site-shell" lang="ar" dir="rtl">
+      <a className="skip-link" href="#upload">انتقل إلى مطابقة السيرة الذاتية</a>
       <header className="topbar" aria-label="التنقل الرئيسي">
         <Link className="brand" href="/ar" aria-label="الصفحة الرئيسية AutoApply SA">
           <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
@@ -238,7 +239,7 @@ export default function ArabicHome() {
                 <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
               </video>
             ) : (
-              <div className="video-placeholder" role="img" aria-label="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة">
+              <div className="video-placeholder" role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة">
                 <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
                 <span>Powered by AutoApply SA</span>
               </div>

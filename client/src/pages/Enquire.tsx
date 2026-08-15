@@ -23,6 +23,8 @@ export default function Enquire() {
   const [fileName, setFileName] = useState("");
   const [isHandingOff, setIsHandingOff] = useState(false);
   const [handoffStep, setHandoffStep] = useState(0);
+  const [handoffBlocked, setHandoffBlocked] = useState(false);
+  const [handoffHref, setHandoffHref] = useState("");
   const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
   const handoffSteps = [["Reviewing your campaign brief", "Checking the essentials for your handoff."], ["Preparing your WhatsApp message", "Adding your selected campaign direction."], ["Opening WhatsApp", "Your chat will be ready in a moment."]] as const;
 
@@ -46,18 +48,21 @@ export default function Enquire() {
       `Target industry: ${industry}`,
       fileName ? `CV selected: ${fileName} — I will attach it in this chat.` : "CV: I will share it in this chat.",
     ].join("\n");
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
     if (handoffWindow) handoffWindow.opener = null;
     else reportBlockedHandoff.mutate({ route: "/enquire" });
+    setHandoffBlocked(!handoffWindow);
+    setHandoffHref(whatsappUrl);
     setHandoffStep(0);
     setIsHandingOff(true);
     window.setTimeout(() => setHandoffStep(1), 520);
     window.setTimeout(() => setHandoffStep(2), 1040);
     window.setTimeout(() => {
-      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-      if (handoffWindow) handoffWindow.location.replace(whatsappUrl);
-      else window.location.assign(whatsappUrl);
-      setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+      if (handoffWindow) {
+        handoffWindow.location.replace(whatsappUrl);
+        setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+      }
     }, 1750);
   };
 
@@ -112,7 +117,7 @@ export default function Enquire() {
             <div className="form-protection"><Check size={15} /> On submit, a prefilled WhatsApp message opens so you can send your campaign brief and attach your CV directly.</div>
             <button className="button button-accent" type="submit" disabled={isHandingOff}>{isHandingOff ? <>Preparing your chat <Loader2 className="handoff-inline-spinner" size={17} /></> : <>Continue to WhatsApp <ArrowRight size={18} /></>}</button>
             <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
-            {isHandingOff && <div className="whatsapp-handoff" role="status" aria-live="polite"><Loader2 size={25} className="handoff-spinner" /><div><b>{handoffSteps[handoffStep][0]}</b><span>{handoffSteps[handoffStep][1]}</span></div><div className="handoff-steps" aria-label="WhatsApp handoff progress">{handoffSteps.map((step, index) => <span className={index <= handoffStep ? "active" : ""} key={step[0]}><i>{index < handoffStep ? "✓" : `0${index + 1}`}</i><small>{step[0]}</small></span>)}</div></div>}
+            {isHandingOff && <div className="whatsapp-handoff" role="status" aria-live="polite"><Loader2 size={25} className="handoff-spinner" /><div><b>{handoffBlocked ? "Your browser blocked the WhatsApp window." : handoffSteps[handoffStep][0]}</b><span>{handoffBlocked ? "Your campaign brief is still ready. Use the secure manual link below to open WhatsApp." : handoffSteps[handoffStep][1]}</span>{handoffBlocked && handoffHref && <a href={handoffHref} target="_blank" rel="noreferrer" className="form-back">Open WhatsApp manually</a>}</div><div className="handoff-steps" aria-label="WhatsApp handoff progress">{handoffSteps.map((step, index) => <span className={index <= handoffStep ? "active" : ""} key={step[0]}><i>{index < handoffStep ? "✓" : `0${index + 1}`}</i><small>{step[0]}</small></span>)}</div></div>}
           </form>
         </div>
       </section>

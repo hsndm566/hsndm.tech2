@@ -157,6 +157,7 @@ export default function Home() {
   const [campaignStage, setCampaignStage] = useState(1);
   const [briefShared, setBriefShared] = useState(false);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [handoffBlocked, setHandoffBlocked] = useState(false);
   const [latestActivityText, setLatestActivityText] = useState("Engine active — 24/7");
   const [explainerVideoFailed, setExplainerVideoFailed] = useState(false);
 
@@ -301,6 +302,7 @@ export default function Home() {
     setSelectedSuggestedRole(null);
     setBriefShared(false);
     setBriefStatus("idle");
+    setHandoffBlocked(false);
     setScanState("idle");
   };
 
@@ -327,6 +329,7 @@ export default function Home() {
     const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
     if (handoffWindow) handoffWindow.opener = null;
     else reportBlockedHandoff.mutate({ route: "/" });
+    setHandoffBlocked(!handoffWindow);
     setBriefStatus("submitting");
     setBriefShared(true);
     if (backendAvailable) {
@@ -350,7 +353,6 @@ export default function Home() {
         localStorage.removeItem("autoapply_sector");
       }
       if (handoffWindow) handoffWindow.location.replace(whatsappHref);
-      else window.location.assign(whatsappHref);
     }, 650);
   };
 
@@ -362,6 +364,7 @@ export default function Home() {
 
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#upload">Skip to CV matcher</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
           <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
@@ -529,7 +532,7 @@ export default function Home() {
                 Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
               </video>
             ) : (
-              <div className="video-placeholder" role="img" aria-label="AutoApply SA walkthrough video unavailable; service steps remain available">
+              <div className="video-placeholder" role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable; service steps remain available">
                 <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
                 <span>Powered by AutoApply SA</span>
               </div>
@@ -570,6 +573,7 @@ export default function Home() {
                       key={type}
                       type="button"
                       onClick={() => setUserProfileType(userProfileType === type ? "Default" : type)}
+                      aria-pressed={userProfileType === type}
                       className={`px-3 py-1.5 border transition-all ${userProfileType === type ? "bg-[#151515] text-white border-[#151515]" : "bg-white text-[#151515] border-black/20 hover:border-black"}`}
                     >
                       {type}
@@ -585,6 +589,7 @@ export default function Home() {
                     <button
                       key={sector.label}
                       type="button"
+                      aria-pressed={selectedIndustry === sector.industryVal}
                       onClick={() => {
                         setSelectedIndustry(sector.industryVal);
                         setMatchPreferences((current) => ({ ...current, industry: sector.scopeVal }));
@@ -596,8 +601,8 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""} ${scanState === "scanning" ? "is-scanning-laser" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
-                <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />
+              <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""} ${scanState === "scanning" ? "is-scanning-laser" : ""}`} aria-busy={scanState === "scanning"} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
+                <input type="file" accept=".pdf,.doc,.docx,.txt" aria-describedby="cv-privacy-note" onChange={onFileChange} />
                 <span className="drop-symbol"><FileText size={24} /></span>
                 <span className="drop-copy">
                   <b>{selectedFile || "Choose or drop your CV"}</b>
@@ -675,7 +680,7 @@ export default function Home() {
                       {briefStatus === "submitting" ? "Preparing your brief…" : "Send this brief to Hasan"} <MessageCircle size={16} />
                     </button>
                     {briefStatus === "submitting" && <div className="readiness-handoff readiness-loading" role="status" aria-live="polite"><span className="readiness-spinner" aria-hidden="true" /><span><b>Preparing your campaign brief</b><small>Creating a clean WhatsApp handoff…</small></span></div>}
-                    {briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>Campaign brief ready.</b><small>WhatsApp has opened with your selected Saudi role direction. If it did not open, use the link below.</small><a href={`https://wa.me/966571448656?text=${encodeURIComponent(["Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.", `City: ${matchPreferences.city}`, `Industry: ${industryLabels[matchPreferences.industry]}`, `Seniority: ${matchPreferences.seniority}`, `Application language: ${matchPreferences.language}`, `Detected role lanes: ${(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles).join(", ")}`, "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign."].join("\n"))}`} target="_blank" rel="noreferrer">Open WhatsApp</a></span></div>}
+                    {briefStatus === "success" && <div className="readiness-handoff readiness-success" role="status" aria-live="polite"><Check size={17} aria-hidden="true" /><span><b>{handoffBlocked ? "WhatsApp was blocked by this browser." : "Campaign brief ready."}</b><small>{handoffBlocked ? "Your details are still on this page. Use the secure link below to open the prepared WhatsApp message." : "WhatsApp has opened with your selected Saudi role direction. If it did not open, use the link below."}</small><a href={`https://wa.me/966571448656?text=${encodeURIComponent(["Hi AutoApply SA — I completed the Saudi Campaign Readiness Check.", `City: ${matchPreferences.city}`, `Industry: ${industryLabels[matchPreferences.industry]}`, `Seniority: ${matchPreferences.seniority}`, `Application language: ${matchPreferences.language}`, `Detected role lanes: ${(selectedSuggestedRole ? [selectedSuggestedRole] : scanResult.roles).join(", ")}`, "I understand this is a preview only and no applications have been sent. I would like to discuss a campaign."].join("\n"))}`} target="_blank" rel="noreferrer">Open WhatsApp</a></span></div>}
                     <small>Your CV is read on your device. The AI receives extracted text only for this one-time skill summary; no CV file or text is stored.</small>
                   </section>
                 </div>
@@ -687,7 +692,7 @@ export default function Home() {
                   <button onClick={resetScan} className="block text-xs underline mt-1">Try another CV</button>
                 </div>
               )}
-              <p className="text-xs text-[#151515]/60 mt-3">Your CV is read on your device. Only what you choose to share continues.</p>
+              <p id="cv-privacy-note" className="text-xs text-[#151515]/60 mt-3">Your CV is read on your device. Only what you choose to share continues.</p>
               <a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
                 Continue on WhatsApp <MessageCircle size={18} />
               </a>

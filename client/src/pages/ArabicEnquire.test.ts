@@ -30,4 +30,12 @@ describe("bilingual enquiry handoff", () => {
     expect(englishSource).toContain('reportBlockedHandoff.mutate({ route: "/enquire" })');
     expect(arabicSource).toContain('reportBlockedHandoff.mutate({ route: "/ar/enquire" })');
   });
+
+  it("offers an explicit manual recovery path when a browser blocks the WhatsApp popup", () => {
+    expect(englishSource).toContain("handoffBlocked");
+    expect(englishSource).toContain("Open WhatsApp manually");
+    expect(arabicSource).toContain("handoffBlocked");
+    expect(arabicSource).toContain("فتح WhatsApp يدوياً");
+    expect(arabicSource).toContain('className="skip-link" href="#campaign-brief"');
+  });
 });

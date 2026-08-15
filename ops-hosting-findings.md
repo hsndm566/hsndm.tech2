@@ -44,3 +44,21 @@ Candidate notification usability simulation on 2026-08-15: the intended flow is 
 
 Subdomain recommendation: keep `dashboard.hsndm.tech` as the single candidate-facing subdomain. Do not add separate API, auth, or media subdomains now; the managed deployment already serves the frontend/backend boundary and storage redirects, while extra subdomains would add DNS, CORS, cookie, and Clerk verification complexity without improving the current candidate flow. Add another subdomain only for a genuinely separate product or independently hosted service.
 
+
+## 2026-08-15 Clerk custom-domain recheck
+
+`clerk.hsndm.tech` now resolves through Cloudflare to Clerk infrastructure, returns HTTP 200 JSON at the root, and serves the Clerk browser JavaScript successfully after one expected HTTP 307 version redirect followed by HTTP 200 with `content-type: application/javascript` and a 237,761-byte payload. The previous custom-domain DNS failure is resolved at the DNS/asset-serving layer. A direct authenticated browser navigation timed out at the browser-extension layer, while the independent dashboard preview capture showed the expected Clerk-dependent loading/skeleton state; this does not invalidate the successful DNS and script checks, but a real email magic-link sign-in still needs one end-to-end browser test.
+
+
+## 2026-08-15 production continuation check
+
+The managed production homepage `https://hsndmstudio-lyaavagg.manus.space/` returns HTTP 200. Both production video paths return the expected managed-storage HTTP 307 redirect to CloudFront, and following the redirect with a byte-range request returns HTTP 206, `content-type: video/mp4`, and 1,024 streamed bytes for both the EA567831 hero asset and the DCF37916 explainer asset. This is the expected range-serving behavior for mobile playback. `https://dashboard.hsndm.tech` still returns the GitHub Pages HTTP 404, while `https://clerk.hsndm.tech` remains healthy.
+
+
+Cloudflare dashboard access check on 2026-08-15: navigation reached `dash.cloudflare.com` and exposed the Cloudflare dashboard shell, but the follow-up page inspection timed out in the connected browser extension before account authentication or zone controls could be confirmed. No DNS mutation was performed.
+
+## 2026-08-15 recovery and accessibility batch verification
+
+Desktop and 390px phone-width captures of both `/` and `/ar` were reviewed after adding skip navigation, keyboard focus coverage for select/input controls, visible focus treatment for the CV drop zone, resilient English WhatsApp-popup recovery, and accessible video fallback semantics. The English and Arabic pages retained their established hierarchy, bilingual type treatment, responsive price cards, sticky mobile campaign action, and CV matcher layout without horizontal overflow in the captures.
+
+The updated `/enquire` and `/ar/enquire` routes were also reviewed at desktop and 390px widths. Both retain readable headings, labeled controls, Saudi city and industry selectors, optional local file selection, and full-width WhatsApp CTAs without horizontal overflow. Their popup-block recovery is present in source and regression tests for both languages; browser automation did not submit the real form, so no message was sent externally.

@@ -25,3 +25,13 @@
 - [x] Add undo action to profile Save Changes toast
 - [x] Diagnose and fix homepage video rendering with phone-safe fallback
 - [x] Assess whether additional subdomains are useful for the current architecture
+- [ ] Inspect Cloudflare zone and existing DNS records for hsndm.tech
+- [ ] Bind dashboard.hsndm.tech and clerk.hsndm.tech using verified Cloudflare targets
+- [ ] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
+- [ ] Test the full Clerk magic-link login flow in the browser
+- [ ] Bind dashboard.hsndm.tech to the managed production deployment
+- [ ] Publish the latest project state and verify the production homepage video on mobile
+- [x] Audit and improve bilingual recovery states for public conversion flows
+- [x] Improve phone-first accessibility, keyboard focus, and responsive interaction affordances
+- [x] Create verified operator documentation for Clerk sign-in and DNS completion
+- [x] Run full regression, mobile visual, keyboard, and reduced-motion checks for the approved quality batch
