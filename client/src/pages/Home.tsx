@@ -411,7 +411,7 @@ export default function Home() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
-          <HeroMedia poster="/manus-storage/autoapply-hero-operations_ad007abc.jpg" alt="Professional reviewing a job application at a laptop" />
+          <HeroMedia alt="Professional reviewing a job application at a laptop" />
           <div className="hero-overlay" />
           <div className="hero-structure" aria-hidden="true">
             <span className="hero-grid-line one" />

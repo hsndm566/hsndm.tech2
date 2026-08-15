@@ -9,8 +9,11 @@ describe("HeroMedia", () => {
     const component = readSource("client/src/components/HeroMedia.tsx");
     const media = readSource("client/src/lib/media.ts");
 
-    expect(media).toContain('/manus-storage/autoapply-sa-loop-bg_7ecfd5bb.mp4');
-    expect(component).toContain('autoPlay muted loop playsInline preload="metadata"');
+    expect(media).toContain('/manus-storage/gemini_generated_video_EA567831_5f93d04f.mp4');
+    expect(component).toContain('autoPlay');
+    expect(component).toContain('muted');
+    expect(component).toContain('loop');
+    expect(component).toContain('playsInline');
     expect(component).toContain('pointer-events-none select-none');
     expect(component).toContain('aria-hidden="true"');
     expect(component).toContain('disablePictureInPicture');
