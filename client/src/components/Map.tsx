@@ -76,7 +76,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -92,21 +92,44 @@ const FORGE_BASE_URL =
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
-function loadMapScript(language = "en", region = "SA") {
-  return new Promise(resolve => {
+let mapsScriptPromise: Promise<void> | null = null;
+let mapsScriptUrl = "";
+
+export function buildMapsScriptUrl(language = "en", region = "SA") {
+  return `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&language=${language}&region=${region}`;
+}
+
+export function getMapFallbackMessage(language = "en") {
+  return language.toLowerCase().startsWith("ar")
+    ? "تعذر تحميل خريطة جدة حالياً. استخدم رابط الاتجاهات لفتحها في خرائط Google."
+    : "The Jeddah map is temporarily unavailable. Use Get directions to open Google Maps.";
+}
+
+function loadMapScript(language = "en", region = "SA"): Promise<void> {
+  if (window.google?.maps?.Map) return Promise.resolve();
+
+  const scriptUrl = buildMapsScriptUrl(language, region);
+  if (mapsScriptPromise && mapsScriptUrl === scriptUrl) return mapsScriptPromise;
+
+  mapsScriptUrl = scriptUrl;
+  mapsScriptPromise = new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&language=${language}&region=${region}`;
+    script.src = scriptUrl;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
+      script.remove();
+      if (window.google?.maps?.Map) resolve();
+      else reject(new Error("Google Maps loaded without a usable map API"));
     };
     script.onerror = () => {
-      console.error("Failed to load Google Maps script");
+      script.remove();
+      reject(new Error("Failed to load Google Maps script"));
     };
     document.head.appendChild(script);
   });
+
+  return mapsScriptPromise;
 }
 
 interface MapViewProps {
@@ -128,24 +151,29 @@ export function MapView({
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const [mapError, setMapError] = useState(false);
 
   const init = usePersistFn(async () => {
-    await loadMapScript(language, region);
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
+    try {
+      await loadMapScript(language, region);
+      if (!mapContainer.current || !window.google?.maps?.Map) {
+        throw new Error("Map container or Google Maps API is unavailable");
+      }
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: initialZoom,
+        center: initialCenter,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: true,
+        mapId: "DEMO_MAP_ID",
+      });
+      if (onMapReady) {
+        onMapReady(map.current);
+      }
+    } catch (error) {
+      console.error("Google Maps initialization failed", error);
+      setMapError(true);
     }
   });
 
@@ -154,6 +182,18 @@ export function MapView({
   }, [init]);
 
   return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
+    <div
+      ref={mapContainer}
+      dir={language.toLowerCase().startsWith("ar") ? "rtl" : "ltr"}
+      className={cn("relative w-full h-[500px]", className)}
+      role={mapError ? "status" : undefined}
+      aria-live={mapError ? "polite" : undefined}
+    >
+      {mapError && (
+        <div className="absolute inset-0 grid place-items-center bg-[#151515] px-6 text-center text-sm text-white/80">
+          {getMapFallbackMessage(language)}
+        </div>
+      )}
+    </div>
   );
 }

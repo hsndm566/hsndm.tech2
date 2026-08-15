@@ -158,3 +158,15 @@
 - [x] Implement friendly error state UI displaying "AI skills unavailable" when transient model request fails during extraction.
 - [x] Enhance extracted skills display with interactive tooltips explaining skill alignment with selected Saudi role.
 - [x] Audit dual-video integration so both hero background loop and second explainer video render as distinct optimized sections in English and Arabic.
+
+- [ ] Choose one primary backend between Render and Railway and document GitHub-to-host synchronization.
+- [ ] Configure a deterministic uptime strategy using provider health checks or an external HTTP monitor instead of a browser wake-up job.
+- [ ] Clarify Azure workload-identity inputs and decide whether Azure migration remains necessary.
+
+# System Audit & Bilingual User Simulation Checklist
+
+- [x] Phase 1: Audit routing, tRPC endpoints, client state, localization strings, and media assets.
+- [x] Phase 2: Simulate English user journey (CV drop, local scan, adrenaline progress, AI skill extraction with tooltip/error states, WhatsApp enquiry handoff, map, mobile CTA).
+- [x] Phase 3: Simulate Arabic user journey (RTL navigation, Arabic CV drop, local scan, Arabic AI skill extraction, WhatsApp prefill, localized map, mobile CTA).
+- [x] Phase 4: Fix any isolated bugs found during simulation while preserving privacy and architecture.
+- [x] Phase 5: Run tests, type checks, build, visual verification, and publish the verified release.

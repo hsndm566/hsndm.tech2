@@ -196,12 +196,12 @@ export default function ArabicHome() {
         <nav className="desktop-nav" aria-label="روابط الصفحة">
           <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة</a>
         </nav>
-        <Link href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></Link>
+        <a href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></a>
       </header>
 
       <main id="top">
         <section className="hero" aria-labelledby="arabic-hero-heading">
-          <HeroMedia poster="/manus-storage/autoapply-hero-operations_ad007abc.jpg" alt="محترف يراجع طلبات توظيف عبر جهاز محمول" />
+          <HeroMedia alt="محترف يراجع طلبات توظيف عبر جهاز محمول" />
           <div className="hero-overlay" />
           <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
           <div className="hero-content page-frame" dir="ltr">

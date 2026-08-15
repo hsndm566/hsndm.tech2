@@ -62,22 +62,22 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
       <header className="border-b border-[#151515]/10 bg-[#fbf9f5] sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto w-full px-4 md:px-6 min-h-20 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex w-full min-w-0 items-center gap-2 md:gap-4">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <ArrowLeft className="w-4 h-4" /> Back to Home
+              <Button variant="ghost" size="sm" className="shrink-0 gap-2 px-2 md:px-3">
+                <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Back to Home</span><span className="sm:hidden">Home</span>
               </Button>
             </Link>
-            <div className="h-6 w-px bg-[#151515]/10" />
-            <h1 className="text-xl font-bold tracking-tight">Candidate Portal & Application Hub</h1>
+            <div className="h-6 w-px shrink-0 bg-[#151515]/10" />
+            <h1 className="min-w-0 truncate text-base font-bold tracking-tight md:text-xl">Candidate Portal & Application Hub</h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-end">
             {authLoading ? (
               <Loader2 className="w-5 h-5 animate-spin text-[#151515]/50" />
             ) : isAuthenticated && user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
+                <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
                   <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user.name || user.email || "Candidate"}
                   {user.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
                 </span>

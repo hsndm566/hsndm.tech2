@@ -377,7 +377,7 @@ export default function Home() {
         </nav>
 
         <div className="nav-actions">
-          <Link className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></Link>
+          <a className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></a>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"
@@ -523,7 +523,7 @@ export default function Home() {
             <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
             <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
             {EXPLAINER_VIDEO_SRC ? (
-              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" poster="/manus-storage/autoapply-hero-operations_ad007abc.jpg" aria-label="AutoApply SA walkthrough video">
+              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="AutoApply SA walkthrough video">
                 <source src={EXPLAINER_VIDEO_SRC} type="video/mp4" />
                 Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
               </video>
