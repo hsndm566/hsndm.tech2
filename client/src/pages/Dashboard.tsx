@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
+import { SignInButton, useAuth as useClerkAuth } from "@clerk/clerk-react";
+import { isDashboardSubdomain } from "@/lib/subdomain";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,14 +21,25 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
-  const { user, isAuthenticated, logout, loading: authLoading } = useAuth();
-  
+  const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
+  const clerkAuth = useClerkAuth();
+  const clerkDashboardEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
+  const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
+  const dashboardAuthLoading = clerkDashboardEnabled ? !clerkAuth.isLoaded : authLoading;
+  const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
+
+  useEffect(() => {
+    if (!clerkDashboardEnabled || clerkAuth.isLoaded) return;
+    const timeoutId = window.setTimeout(() => setClerkLoadTimedOut(true), 8000);
+    return () => window.clearTimeout(timeoutId);
+  }, [clerkDashboardEnabled, clerkAuth.isLoaded]);
+
   const utils = trpc.useUtils();
   const { data: applications = [], isLoading: appsLoading } = trpc.campaign.applications.list.useQuery(undefined, {
-    enabled: isAuthenticated,
+    enabled: dashboardAuthenticated,
   });
   const { data: profile, isLoading: profileLoading } = trpc.campaign.applications.profile.get.useQuery(undefined, {
-    enabled: isAuthenticated,
+    enabled: dashboardAuthenticated,
   });
 
   const updateProfileMutation = trpc.campaign.applications.profile.update.useMutation({
@@ -59,6 +72,50 @@ export default function Dashboard() {
     }
   };
 
+  if (clerkDashboardEnabled && !clerkAuth.isLoaded && !clerkLoadTimedOut) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6" aria-busy="true">
+        <Loader2 className="h-7 w-7 animate-spin text-[#e5482a]" aria-label="Loading secure sign-in" />
+      </main>
+    );
+  }
+
+  if (clerkDashboardEnabled && clerkLoadTimedOut && !clerkAuth.isLoaded) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
+        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+          <CardHeader>
+            <CardTitle>Sign-in is temporarily unavailable</CardTitle>
+            <CardDescription>The secure email sign-in service did not respond. Please try again shortly.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>
+              Try again
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
+
+  if (clerkDashboardEnabled && !clerkAuth.isSignedIn) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
+        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+          <CardHeader>
+            <CardTitle>Private candidate dashboard</CardTitle>
+            <CardDescription>Use your email to receive a secure passwordless sign-in link.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SignInButton mode="modal" fallbackRedirectUrl="/dashboard">
+              <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">Email me a sign-in link</Button>
+            </SignInButton>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
       <header className="border-b border-[#151515]/10 bg-[#fbf9f5] sticky top-0 z-30">
@@ -73,15 +130,15 @@ export default function Dashboard() {
             <h1 className="min-w-0 truncate text-base font-bold tracking-tight md:text-xl">Candidate Portal & Application Hub</h1>
           </div>
           <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-end">
-            {authLoading ? (
+            {dashboardAuthLoading ? (
               <Loader2 className="w-5 h-5 animate-spin text-[#151515]/50" />
-            ) : isAuthenticated && user ? (
+            ) : dashboardAuthenticated ? (
               <div className="flex items-center gap-3">
                 <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
-                  <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user.name || user.email || "Candidate"}
-                  {user.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
+                  <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user?.name || user?.email || "Candidate"}
+                  {user?.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
                 </span>
-                <Button variant="outline" size="sm" onClick={() => logout()} className="gap-1.5">
+                <Button variant="outline" size="sm" onClick={() => clerkDashboardEnabled ? clerkAuth.signOut() : logout()} className="gap-1.5">
                   <LogOut className="w-4 h-4" /> Sign Out
                 </Button>
               </div>

@@ -3,10 +3,13 @@ import { COOKIE_NAME, UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
+import { useEffect } from "react";
 import superjson from "superjson";
+import { ClerkProvider, useAuth as useClerkAuth } from "@clerk/clerk-react";
 import App from "./App";
 import { startLogin } from "./const";
 import { installErrorTelemetry } from "./lib/errorTelemetry";
+import { getClerkToken, setClerkTokenGetter } from "./lib/clerkToken";
 import "./index.css";
 
 installErrorTelemetry();
@@ -44,7 +47,10 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: `${import.meta.env.VITE_API_BASE_URL || ""}/api/trpc`,
       transformer: superjson,
-      headers() {
+      async headers() {
+        const clerkToken = await getClerkToken();
+        if (clerkToken) return { Authorization: `Bearer ${clerkToken}` };
+
         // Preview auto-login fallback: when the browser blocks iframe cookies
         // (Safari ITP / private browsing / WebView), the runtime mirrors the
         // session into sessionStorage so we can forward it as a Bearer token.
@@ -74,10 +80,34 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+function ClerkTokenBridge() {
+  const { getToken } = useClerkAuth();
+
+  useEffect(() => {
+    setClerkTokenGetter(() => getToken());
+    return () => setClerkTokenGetter(null);
+  }, [getToken]);
+
+  return null;
+}
+
+const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+
+function RootApp() {
+  return clerkPublishableKey ? (
+    <ClerkProvider publishableKey={clerkPublishableKey}>
+      <ClerkTokenBridge />
+      <App />
+    </ClerkProvider>
+  ) : (
+    <App />
+  );
+}
+
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <RootApp />
     </QueryClientProvider>
   </trpc.Provider>
 );
