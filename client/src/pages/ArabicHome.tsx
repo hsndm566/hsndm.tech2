@@ -29,6 +29,8 @@ import { HERO_VIDEO_URL, EXPLAINER_VIDEO_URL } from "@/lib/media";
 import { trpc } from "@/lib/trpc";
 import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
+import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
+import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
 import { Link } from "wouter";
 
 const MapView = lazy(async () => {
@@ -225,7 +227,7 @@ export default function ArabicHome() {
         <nav className="desktop-nav" aria-label="روابط الصفحة">
           <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
         </nav>
-        <a href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></a>
+        <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></LanguageTransitionLink>
       </header>
 
       <main id="top">
@@ -301,7 +303,7 @@ export default function ArabicHome() {
       </main>
 
       <div className="mobile-campaign-cta"><Link href="/ar/enquire"><span><StatusDot /> ابدأ حملة جديدة</span><b>ابدأ الآن <ArrowUpRight size={17} /></b></Link></div>
-      <footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:hasan@hsndm.tech">hasan@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer>
+      <footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:hasan@hsndm.tech">hasan@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer>
     </div>
   );
 }

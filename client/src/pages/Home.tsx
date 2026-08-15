@@ -10,6 +10,8 @@ import { HERO_VIDEO_URL } from "@/lib/media";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
+import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
+import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
 import { saudiCities, saudiIndustries, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import {
   ArrowDownRight,
@@ -381,7 +383,7 @@ export default function Home() {
         </nav>
 
         <div className="nav-actions">
-          <a className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></a>
+          <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></LanguageTransitionLink>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"
@@ -830,6 +832,7 @@ export default function Home() {
           <p>Your 24/7 job application engine.<br />Jeddah built. Saudi focused.</p>
           <a className="footer-email" href="mailto:hasan@hsndm.tech">hasan@hsndm.tech <ArrowUpRight size={16} /></a>
         </div>
+        <div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="en" /></div>
         <div className="page-frame footer-bottom">
           <span>© 2026 AUTOAPPLY SA</span>
           <div><Link href="/how-it-works">How it works</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div>

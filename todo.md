@@ -76,3 +76,7 @@
 - [x] Import the user-approved Arabic revision and run bilingual regression and layout verification
 - [x] Replace current Arabic landing-page copy with the user-approved reviewed Arabic source
 - [x] Validate the reviewed Arabic page on desktop and mobile before publication
+- [x] Add an accessible footer enquiry form with validated WhatsApp handoff in English and Arabic
+- [x] Add refined hover feedback to pricing cards and workflow steps without affecting keyboard or touch interactions
+- [x] Add an accessible English–Arabic transition that respects reduced-motion preferences
+- [x] Verify the new enquiry, interaction, and transition behavior with bilingual automated and visual checks
