@@ -40,7 +40,7 @@
 - [x] Run regression, mobile visual, and production-build verification for the Stage 2 batch
 - [ ] Confirm the managed project's exact custom-domain target without guessing a DNS record
 - [ ] Provide Hermes with verified dashboard-domain target instructions and validate its DNS evidence
-- [ ] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
+- [x] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
 - [x] Run final regression, type, and production-build verification for the requested release
 - [x] Save the verified current project state to GitHub and the managed live deployment
 - [ ] Confirm the final verified commit is present on both configured Git remotes
