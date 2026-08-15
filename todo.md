@@ -60,3 +60,13 @@
 - [ ] Audit and correct only the root, dashboard, and API DNS records for hsndm.tech using Cloudflare, then verify service routing
 - [ ] Diagnose Cloudflare API token delivery and validation after the newly supplied credential update
 - [x] Add cache-busted hero and explainer video references, rebuild, and verify them through www.hsndm.tech
+- [x] Correct the opening hero video's crop, transparency, and contrast without changing the public conversion flow
+- [x] Repair Arabic RTL spacing, alignment, and copy-level redundancy or typographic defects while preserving the approved content
+- [x] Verify both website videos render, loop, and remain legible on desktop and phone-sized viewports
+- [x] Perform a final multi-area frontend quality sweep covering accessibility, responsive layout, routes, media, and bilingual UI
+- [x] Run regression tests, type checks, and production build for the verified frontend release
+- [x] Consolidate dashboard mobile regression assertions under their intended test suite
+- [x] Complete the remaining Arabic copy pass, including the concise CV privacy line and final terminology checks
+- [ ] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
+- [ ] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
+- [ ] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override

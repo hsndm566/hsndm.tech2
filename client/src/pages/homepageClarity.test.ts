@@ -69,8 +69,9 @@ describe("homepage clarity release", () => {
     expect(source).not.toContain("البنية التحتية للتقديم");
     expect(source).not.toContain("ما تقدّمه الخدمة");
     expect(source).not.toContain("هذا المثال التوضيحي يشرح كيف تنتقل الحملة");
-    expect(stylesSource()).toContain("جرّبها الآن — تستغرق 60 ثانية");
-    expect(stylesSource()).toContain("أضف سيرتك الذاتية. سنوضح لك ما تستطيع فعله.");
+    expect(source).toContain("استلام السيرة الذاتية");
+    expect(source).toContain("أضف سيرتك الذاتية.");
+    expect(stylesSource()).not.toContain("سنوضح لك ما تستطيع فعله.");
   });
 
   it("keeps keyboard access and clear recovery paths for CV matching, video playback, and WhatsApp handoff", () => {

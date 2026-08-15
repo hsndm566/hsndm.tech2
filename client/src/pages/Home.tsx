@@ -416,7 +416,6 @@ export default function Home() {
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
           <HeroMedia alt="Professional reviewing a job application at a laptop" />
-          <div className="hero-overlay" />
           <div className="hero-structure" aria-hidden="true">
             <span className="hero-grid-line one" />
             <span className="hero-grid-line two" />
@@ -434,7 +433,7 @@ export default function Home() {
                 AutoApply SA submits tailored job applications to Saudi companies on your behalf — by email and portal — while you focus on everything else.
               </p>
               <div className="hero-actions">
-                <Link className="button button-paper" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
+                <Link className="button button-ink" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
                   See the system <MoveRight size={18} />
                 </button>
@@ -527,7 +526,7 @@ export default function Home() {
             <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
             <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
             {EXPLAINER_VIDEO_SRC && !explainerVideoFailed ? (
-              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="auto" aria-label="AutoApply SA walkthrough video" onError={() => setExplainerVideoFailed(true)}>
+              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="AutoApply SA walkthrough video" onError={() => setExplainerVideoFailed(true)}>
                 <source src={EXPLAINER_VIDEO_SRC} type="video/mp4" />
                 Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
               </video>

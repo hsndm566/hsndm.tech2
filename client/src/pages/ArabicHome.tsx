@@ -204,14 +204,13 @@ export default function ArabicHome() {
       <main id="top">
         <section className="hero" aria-labelledby="arabic-hero-heading">
           <HeroMedia alt="محترف يراجع طلبات توظيف عبر جهاز محمول" />
-          <div className="hero-overlay" />
           <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
-          <div className="hero-content page-frame" dir="ltr">
+          <div className="hero-content page-frame" dir="rtl">
             <div className="hero-lead" dir="rtl">
               <div className="eyebrow light"><StatusDot /> محرك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
               <h1 id="arabic-hero-heading">نتقدّم للوظائف <br />نيابةً عنك.<br /><i>كل يوم.</i></h1>
-              <p>يتولى AutoApply SA إرسال طلبات توظيف مخصصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تركز أنت على ما يهمك.</p>
-              <div className="hero-actions"><Link className="button button-paper" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
+              <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تركز أنت على ما يهمك.</p>
+              <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال / شهرياً <b /> بدون بطاقة لبدء المحادثة</div>
               <div className="hero-trust-row"><span><ShieldCheck size={14} /> ابدأ بملخص موجز</span><span><Clock3 size={14} /> سنتواصل خلال يوم عمل واحد</span></div>
             </div>
@@ -235,7 +234,7 @@ export default function ArabicHome() {
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
             <h2 id="arabic-video-explainer-heading">30 ثانية فقط. <i>وهذا يكفي لفهمها.</i></h2>
             {ARABIC_EXPLAINER_VIDEO_SRC && !arabicExplainerVideoFailed ? (
-              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="auto" aria-label="فيديو توضيحي لخدمة AutoApply SA" onError={() => setArabicExplainerVideoFailed(true)}>
+              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA" onError={() => setArabicExplainerVideoFailed(true)}>
                 <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
               </video>
             ) : (
