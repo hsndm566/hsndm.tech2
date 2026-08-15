@@ -48,3 +48,4 @@
 - [x] Confirm the linked user GitHub remote contains the final release checkpoint commit
 - [ ] Push the validated static release package to the user-requested hsndm.tech GitHub Pages repository once its connected account has write permission
 - [x] Preserve the existing www.hsndm.tech CNAME and current media assets in the validated static release package
+- [x] Diagnose and attempt automated repair of the GitHub integration write-permission gap for hsndm566/hsndm.tech

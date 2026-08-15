@@ -23,6 +23,8 @@ The target repository's current remote `main` commit is `e6c544e7db3b39bb3a82be4
 
 > `Permission to hsndm566/hsndm.tech.git denied to manus-connector[bot].`
 
+The automated connector diagnosis confirmed that the active GitHub App installation is repository-scoped and currently authorizes **only** `hsndm566/hsndm.tech2`. The requested `hsndm566/hsndm.tech` repository is not included in the installation's selected-repository list. This scope is controlled by the repository owner in GitHub; the connector cannot grant itself access or alter the installation selection programmatically.
+
 The target repository has not changed, and no domain, CNAME, DNS, Clerk, or billing configuration was modified. The currently connected repository `hsndm566/hsndm.tech2` has write access and contains the verified managed-project release.
 
 ## Safe completion requirement
