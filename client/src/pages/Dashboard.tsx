@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
@@ -9,19 +9,51 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, Calendar, Bell, CheckCircle2, CheckCheck, Clock } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
 import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
 
+function buildRecentActivity(applications: any[], profile: any) {
+  const items: Array<{ id: string; title: string; description: string; timestamp: string; type: "status" | "note" | "profile" }> = [];
+  for (const app of applications) {
+    items.push({
+      id: `app-applied-${app.id}`,
+      title: `${app.roleTitle} at ${app.companyName}`,
+      description: `Application submitted for ${app.city}, Saudi Arabia`,
+      timestamp: app.appliedAt || new Date().toISOString(),
+      type: "status",
+    });
+    if (app.updatedAt && app.updatedAt !== app.appliedAt) {
+      items.push({
+        id: `app-updated-${app.id}`,
+        title: `Status updated: ${app.roleTitle}`,
+        description: `Current milestone: ${app.status.toUpperCase()}`,
+        timestamp: app.updatedAt,
+        type: "status",
+      });
+    }
+  }
+  if (profile?.updatedAt) {
+    items.push({
+      id: `profile-update-${profile.updatedAt}`,
+      title: "Profile preferences saved",
+      description: `Target city: ${profile.targetCity || "Jeddah"}, Industry: ${profile.targetIndustry || "General"}`,
+      timestamp: profile.updatedAt,
+      type: "profile",
+    });
+  }
+  return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+}
+
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "company" | "role">("newest");
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const [activitySeenAt, setActivitySeenAt] = useState<number>(() => {
     try {
@@ -58,12 +90,26 @@ export default function Dashboard() {
     },
     onError: () => {
       toast.error("Failed to update profile");
-    }
+    },
   });
 
   const filteredApps = applications.filter((app) => {
     const matchesSearch = app.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) || app.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || app.roleTitle.toLowerCase().includes(searchQuery.toLowerCase()) || app.city.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch && (statusFilter === "all" || app.status === statusFilter);
+  }).sort((a, b) => {
+    if (sortBy === "newest") {
+      return new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime();
+    }
+    if (sortBy === "oldest") {
+      return new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime();
+    }
+    if (sortBy === "company") {
+      return a.companyName.localeCompare(b.companyName);
+    }
+    if (sortBy === "role") {
+      return a.roleTitle.localeCompare(b.roleTitle);
+    }
+    return 0;
   });
 
   const recentActivity = buildRecentActivity(applications, profile);
@@ -166,17 +212,17 @@ export default function Dashboard() {
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => startLogin()} className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2">
-                <LogIn className="w-4 h-4" /> Candidate Sign In
+              <Button onClick={() => startLogin()} size="sm" className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2">
+                <LogIn className="w-4 h-4" /> Sign In
               </Button>
             )}
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-10 space-y-8">
-        {!dashboardAuthenticated ? (
-          <Card className="bg-[#fbf9f5] border-[#151515]/10 text-center py-20 max-w-2xl mx-auto shadow-sm">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-8">
+        {!dashboardAuthenticated && !dashboardAuthLoading ? (
+          <Card className="bg-[#fbf9f5] border-[#151515]/10 text-center py-16">
             <CardContent className="space-y-6">
               <Briefcase className="w-16 h-16 mx-auto text-[#e5482a]" />
               <div className="space-y-2">
@@ -247,36 +293,6 @@ export default function Dashboard() {
                             <label className="text-sm font-medium">ATS follow-up note</label>
                             <Input maxLength={500} defaultValue={profile?.resumeSummary || ""} placeholder="For example: Asked for a human review of finance roles in Riyadh." onBlur={(event) => updateProfileMutation.mutate({ resumeSummary: event.target.value })} />
                           </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Salary Expectation</label>
-                            <Select 
-                              defaultValue={profile?.salaryExpectation || "15,000 - 25,000 SAR"}
-                              onValueChange={(val) => updateProfileMutation.mutate({ salaryExpectation: val })}
-                            >
-                              <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="10,000 - 15,000 SAR">10,000 - 15,000 SAR</SelectItem>
-                                <SelectItem value="15,000 - 25,000 SAR">15,000 - 25,000 SAR</SelectItem>
-                                <SelectItem value="25,000 - 40,000 SAR">25,000 - 40,000 SAR</SelectItem>
-                                <SelectItem value="40,000+ SAR">40,000+ SAR</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="flex items-center justify-between pt-2">
-                            <span className="text-sm font-medium">WhatsApp Status Alerts</span>
-                            <Switch 
-                              defaultChecked={profile?.notifyWhatsApp ?? true}
-                              onCheckedChange={(checked) => updateProfileMutation.mutate({ notifyWhatsApp: checked })}
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium">Email Status Summaries</span>
-                            <Switch 
-                              defaultChecked={profile?.notifyEmail ?? true}
-                              onCheckedChange={(checked) => updateProfileMutation.mutate({ notifyEmail: checked })}
-                            />
-                          </div>
-                          <Link href="/enquire" className="inline-flex w-full items-center justify-center rounded-md bg-[#151515] px-4 py-2.5 text-sm font-medium text-[#fbf9f5] transition-colors hover:bg-[#e5482a]">Request a human ATS follow-up</Link>
                         </div>
                       )}
                     </DialogContent>
@@ -285,48 +301,51 @@ export default function Dashboard() {
               </Card>
             </div>
 
-            <Card id="recent-activity" className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm scroll-mt-28">
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <CardTitle className="text-xl">Recent activity</CardTitle>
-                    <CardDescription className="mt-1.5">Your latest application updates and campaign notifications.</CardDescription>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    {unreadActivityCount > 0 && <span className="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-[#e5482a] sm:inline">{unreadActivityCount} unread</span>}
-                    <Button variant="ghost" size="sm" onClick={markActivitySeen} disabled={unreadActivityCount === 0} className="h-8 gap-1.5 px-2 text-xs text-[#151515]/65 hover:bg-[#151515]/5 hover:text-[#151515]" aria-label="Mark all activity as read">
-                      <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" /> <span className="hidden sm:inline">Mark all as read</span>
-                    </Button>
-                    <Bell className="h-5 w-5 text-[#e5482a]" aria-hidden="true" />
-                  </div>
+            {/* Recent Activity Feed Card */}
+            <Card id="recent-activity" className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm scroll-mt-24">
+              <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-[#151515]/10">
+                <div>
+                  <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-[#e5482a]" /> Recent Activity & Notification Log
+                  </CardTitle>
+                  <CardDescription>Live application updates, manager notes, and profile timestamps.</CardDescription>
                 </div>
+                {recentActivity.length > 0 && (
+                  <Button variant="ghost" size="sm" onClick={markActivitySeen} className="text-xs text-[#151515]/70 hover:text-[#151515]">
+                    Mark all as read
+                  </Button>
+                )}
               </CardHeader>
-              <CardContent className="border-t border-[#151515]/10 pt-0">
+              <CardContent className="pt-6">
                 {recentActivity.length === 0 ? (
-                  <div className="py-7 text-sm leading-6 text-[#151515]/60">No activity has been recorded yet. Your first application update will appear here.</div>
+                  <p className="text-sm text-[#151515]/60 text-center py-6">No recent activity recorded yet.</p>
                 ) : (
-                  <ol className="divide-y divide-[#151515]/10">
-                    {recentActivity.map((activity) => (
-                      <li key={activity.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
-                        <div className="flex min-w-0 gap-3">
-                          <span className={`mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full ${activity.kind === "notification" ? "bg-[#151515]/8 text-[#151515]/65" : "bg-[#e5482a]/10 text-[#e5482a]"}`}>
-                            {activity.kind === "notification" ? <Bell className="h-3.5 w-3.5" aria-hidden="true" /> : <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />}
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-sm leading-6 text-[#151515]">{activity.message}</p>
-                            <p className="mt-0.5 truncate font-mono text-[10px] uppercase tracking-[0.1em] text-[#151515]/45">{activity.detail}</p>
+                  <ol className="relative border-l border-[#151515]/10 ml-3 space-y-6">
+                    {recentActivity.slice(0, 5).map((item) => {
+                      const isUnread = new Date(item.timestamp).getTime() > activitySeenAt;
+                      return (
+                        <li key={item.id} className="pl-6 relative">
+                          <span className={`absolute -left-1.5 top-1.5 w-3 h-3 rounded-full border-2 border-[#fbf9f5] ${isUnread ? 'bg-[#e5482a]' : 'bg-[#151515]/40'}`} />
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h4 className="text-sm font-semibold flex items-center gap-2">
+                              {item.title}
+                              {isUnread && <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-[#e5482a]/10 text-[#e5482a]">New</span>}
+                            </h4>
+                            <span className="text-xs font-mono text-[#151515]/60 flex items-center gap-1">
+                              <Clock className="w-3 h-3" /> {new Date(item.timestamp).toLocaleString()}
+                            </span>
                           </div>
-                        </div>
-                        <time className="pl-10 font-mono text-[10px] leading-5 text-[#151515]/50 sm:pl-0">{formatActivityTime(activity.timestamp)}</time>
-                      </li>
-                    ))}
+                          <p className="text-xs text-[#151515]/70 mt-1">{item.description}</p>
+                        </li>
+                      );
+                    })}
                   </ol>
                 )}
               </CardContent>
             </Card>
 
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="relative w-full md:w-96">
+            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+              <div className="relative w-full lg:w-80">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-[#151515]/40" />
                 <Input
                   placeholder="Search by company or role..."
@@ -335,17 +354,31 @@ export default function Dashboard() {
                   className="pl-9 bg-[#fbf9f5] border-[#151515]/20"
                 />
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-52 bg-[#fbf9f5] border-[#151515]/20"><SelectValue placeholder="Filter status" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All statuses</SelectItem>
-                  <SelectItem value="queued">Queued</SelectItem>
-                  <SelectItem value="applied">Application sent</SelectItem>
-                  <SelectItem value="interview">Interview</SelectItem>
-                  <SelectItem value="offer">Offer</SelectItem>
-                  <SelectItem value="skipped">Not proceeding</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-48 bg-[#fbf9f5] border-[#151515]/20"><SelectValue placeholder="Filter status" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All statuses</SelectItem>
+                    <SelectItem value="queued">Queued</SelectItem>
+                    <SelectItem value="applied">Application sent</SelectItem>
+                    <SelectItem value="interview">Interview</SelectItem>
+                    <SelectItem value="offer">Offer</SelectItem>
+                    <SelectItem value="skipped">Not proceeding</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
+                  <SelectTrigger className="w-full sm:w-48 bg-[#fbf9f5] border-[#151515]/20 gap-2">
+                    <ArrowUpDown className="w-3.5 h-3.5 text-[#151515]/50" />
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">Newest first</SelectItem>
+                    <SelectItem value="oldest">Oldest first</SelectItem>
+                    <SelectItem value="company">Company name</SelectItem>
+                    <SelectItem value="role">Role title</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="text-sm text-[#151515]/60 flex items-center gap-3">
                 <span>Showing {filteredApps.length} applications</span>
               </div>
@@ -418,32 +451,34 @@ export default function Dashboard() {
                 </DialogHeader>
                 {selectedApp && (
                   <div className="space-y-6 py-4">
-                    <div className="space-y-4 border-l-2 border-[#151515]/20 pl-4 ml-2">
-                      <div className="relative">
-                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-emerald-600 ring-4 ring-[#fbf9f5]" />
-                        <h4 className="text-sm font-semibold">CV Signal Intake & Matching</h4>
-                        <p className="text-xs text-[#151515]/60">Matched against verified Saudi Arabia active hiring roles.</p>
-                        <span className="text-[10px] font-mono text-[#151515]/40">{new Date(selectedApp.appliedAt).toLocaleString()}</span>
-                      </div>
-                      <div className="relative">
-                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-emerald-600 ring-4 ring-[#fbf9f5]" />
-                        <h4 className="text-sm font-semibold">Application Transmitted via {selectedApp.channel}</h4>
-                        <p className="text-xs text-[#151515]/60">Successfully delivered to employer portal / hiring manager.</p>
-                      </div>
-                      <div className="relative">
-                        <div className={`absolute -left-[21px] top-1 w-3 h-3 rounded-full ${selectedApp.status === 'interview' || selectedApp.status === 'offer' ? 'bg-emerald-600' : 'bg-zinc-400'} ring-4 ring-[#fbf9f5]` } />
-                        <h4 className="text-sm font-semibold">Hiring Manager Review & Response</h4>
-                        <p className="text-xs text-[#151515]/60">
-                          {selectedApp.status === 'interview' ? 'Interview scheduled by recruiter.' : selectedApp.status === 'offer' ? 'Official offer received!' : 'Awaiting recruiter feedback (typically 3-5 business days).'}
-                        </p>
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#151515]/60">Submission Milestones</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-[#151515]/10">
+                          <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                          <div className="flex-1">
+                            <p className="font-medium">Application Dispatched</p>
+                            <p className="text-xs text-[#151515]/60">{new Date(selectedApp.appliedAt).toLocaleString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-[#151515]/10">
+                          <span className={`w-2 h-2 rounded-full ${selectedApp.status === 'interview' || selectedApp.status === 'offer' ? 'bg-emerald-600' : 'bg-amber-500'}`} />
+                          <div className="flex-1">
+                            <p className="font-medium">Status: {selectedApp.status.toUpperCase()}</p>
+                            <p className="text-xs text-[#151515]/60">Last updated by hiring manager</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     {selectedApp.notes && (
-                      <div className="bg-[#f3f0e9] p-4 rounded-lg text-xs space-y-1">
-                        <strong className="text-[#151515]">Campaign Manager Notes:</strong>
-                        <p className="text-[#151515]/80">{selectedApp.notes}</p>
+                      <div className="space-y-2">
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[#151515]/60">Manager Note</h4>
+                        <p className="text-sm bg-white p-3 rounded-lg border border-[#151515]/10 text-[#151515]/80">{selectedApp.notes}</p>
                       </div>
                     )}
+                    <div className="pt-2 flex justify-end">
+                      <Button variant="outline" onClick={() => setSelectedApp(null)}>Close</Button>
+                    </div>
                   </div>
                 )}
               </DialogContent>
@@ -453,59 +488,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
-
-type ActivityItem = {
-  id: string;
-  kind: "application" | "notification";
-  message: string;
-  detail: string;
-  timestamp: Date | string;
-};
-
-function buildRecentActivity(
-  applications: Array<{ id: number; companyName: string; roleTitle: string; city?: string | null; status: string; appliedAt: Date | string; updatedAt?: Date | string; notes?: string | null }>,
-  profile: { updatedAt?: Date | string | null } | null | undefined,
-): ActivityItem[] {
-  const statusMessages: Record<string, string> = {
-    queued: "Application queued for review",
-    applied: "Application sent",
-    interview: "Interview update received",
-    offer: "Offer update received",
-    skipped: "Application marked not proceeding",
-  };
-
-  const items: ActivityItem[] = applications.flatMap((application) => {
-    const base: ActivityItem = {
-      id: `application-${application.id}`,
-      kind: "application",
-      message: `${statusMessages[application.status] || "Application status updated"}: ${application.roleTitle}`,
-      detail: `${application.companyName} · ${application.city || "Saudi Arabia"}`,
-      timestamp: application.updatedAt || application.appliedAt,
-    };
-    if (!application.notes) return [base];
-    return [base, {
-      id: `notification-${application.id}`,
-      kind: "notification",
-      message: "Campaign manager note added",
-      detail: application.notes,
-      timestamp: application.updatedAt || application.appliedAt,
-    }];
-  });
-
-  if (profile?.updatedAt) {
-    items.push({
-      id: "profile-updated",
-      kind: "notification",
-      message: "Profile preferences updated",
-      detail: "Your next campaign will use the latest settings",
-      timestamp: profile.updatedAt,
-    });
-  }
-
-  return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 8);
-}
-
-function formatActivityTime(timestamp: Date | string) {
-  return new Date(timestamp).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
 }

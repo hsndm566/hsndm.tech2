@@ -18,3 +18,10 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("unreadActivityCount");
   });
 });
+  it("includes date sorting and status filtering controls in the dashboard feed", () => {
+    expect(dashboardSource).toContain("sortBy");
+    expect(dashboardSource).toContain("Newest first");
+    expect(dashboardSource).toContain("Oldest first");
+    expect(dashboardSource).toContain("Company name");
+    expect(dashboardSource).toContain("Role title");
+  });
