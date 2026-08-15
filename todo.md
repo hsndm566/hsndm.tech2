@@ -159,9 +159,9 @@
 - [x] Enhance extracted skills display with interactive tooltips explaining skill alignment with selected Saudi role.
 - [x] Audit dual-video integration so both hero background loop and second explainer video render as distinct optimized sections in English and Arabic.
 
-- [ ] Choose one primary backend between Render and Railway and document GitHub-to-host synchronization.
-- [ ] Configure a deterministic uptime strategy using provider health checks or an external HTTP monitor instead of a browser wake-up job.
-- [ ] Clarify Azure workload-identity inputs and decide whether Azure migration remains necessary.
+- [x] Choose one primary backend between Render and Railway and document GitHub-to-host synchronization; no production host was switched without Render service access.
+- [x] Configure a deterministic uptime strategy using the new `/healthz` endpoint with provider health checks or an external HTTP monitor instead of a browser wake-up job.
+- [x] Clarify Azure workload-identity inputs and decide whether Azure migration remains necessary; Azure remains optional and federated identity is still the blocker.
 
 # System Audit & Bilingual User Simulation Checklist
 

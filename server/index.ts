@@ -2,13 +2,18 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createHealthPayload } from "./health";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function startServer() {
+  async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  app.get("/healthz", (_req, res) => {
+    res.status(200).json(createHealthPayload());
+  });
 
   // Serve static files from dist/public in production
   const staticPath =

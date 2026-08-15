@@ -9,6 +9,7 @@ import { appRouter } from "../routers";
 import { registerDataBackupRoutes } from "../dataBackup";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { createHealthPayload } from "../health";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -58,6 +59,10 @@ async function startServer() {
 
   app.get("/health", (_req, res) => {
     res.status(200).json({ status: "ok", timestamp: Date.now() });
+  });
+
+  app.get("/healthz", (_req, res) => {
+    res.status(200).json(createHealthPayload());
   });
 
   app.get("/v1/campaigns/latest-activity", async (_req, res) => {

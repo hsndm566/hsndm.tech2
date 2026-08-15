@@ -13,3 +13,11 @@ Sources reviewed:
 - https://docs.railway.com/deployments
 - https://learn.microsoft.com/en-us/graph/api/resources/federatedidentitycredentials-overview?view=graph-rest-1.0
 - https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity?view=azure-devops
+
+## Final operational decision
+
+The application now exposes `GET /healthz`, returning a small JSON payload with `status`, `service`, `timestamp`, and `uptime`. Render or Railway can use this deterministic endpoint for native health checks and restart decisions; a Chrome tab or AI schedule is unnecessary.
+
+The current session still has no Render API connector or service identifiers, so no claim is made that Render and Railway are synchronized. GitHub remains the code source of truth, while the user must designate exactly one production backend before configuring auto-deploy. Azure remains optional; the missing federated-identity configuration is still the only blocking migration input identified in this project.
+
+The built production entry was smoke-tested on a clean port after confirming that `dist/index.js` is generated from `server/_core/index.ts`. `GET /healthz` returned HTTP 200 JSON with `status: "healthy"`, `service: "AutoApply SA"`, a timestamp, and process uptime. The initial smoke attempt hit a stale process and was discarded; the clean-port verification is the authoritative result.
