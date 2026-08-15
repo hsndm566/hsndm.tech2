@@ -46,3 +46,5 @@
 - [ ] Confirm the final verified commit is present on both configured Git remotes
 - [x] Verify the managed production hostname serves the final release after the checkpoint
 - [x] Confirm the linked user GitHub remote contains the final release checkpoint commit
+- [ ] Push the validated static release package to the user-requested hsndm.tech GitHub Pages repository once its connected account has write permission
+- [x] Preserve the existing www.hsndm.tech CNAME and current media assets in the validated static release package
