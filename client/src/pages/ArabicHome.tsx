@@ -44,22 +44,33 @@ const ARABIC_EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL;
 const plans = [
   { name: "الباقة الأساسية", price: "99", descriptor: "مسار بداية مركّز.", features: ["حوالي 40 طلب تقديم", "تقديم عبر البريد الإلكتروني والمنصات", "تقرير أسبوعي"] },
   { name: "الباقة الاحترافية", price: "149", descriptor: "لزخم نشط عبر قنوات متعددة.", features: ["حوالي 90 طلب تقديم", "تخصيص ذو أولوية", "مراجعة بشرية بأولوية", "تقرير يومي"], featured: true },
-  { name: "باقة المؤسس", price: "249", descriptor: "استهداف عالي الدقة لخطوة مفصلية في مسارك المهني.", features: ["حوالي 150 طلب تقديم", "استهداف متعدد الوظائف", "تأهيل شامل ومخصص"] },
+  { name: "باقة المؤسس", price: "249", descriptor: "استهداف عالي الدقة لخطوة مفصلية في مسارك المهني.", features: ["حوالي 150 طلب تقديم", "استهداف متعدد الوظائف", "تأهيل شامل ومخصّص"] },
 ];
 
 const campaignStages = [
   { label: "ملخص المرشح", title: "تنظيم الإشارات", detail: "يتم تنظيم تفضيلات الوظيفة والخبرة واللغة والتوفر في ملخص حملة قابل للاستخدام.", status: "الملخص جاهز" },
-  { label: "مسارات الوظائف", title: "تحديد الاتجاه", detail: "يتم ترتيب الوظائف ذات الصلة حسب الأولوية بحيث تركز الحملة على الوظائف المناسبة لهذا الملف الشخصي.", status: "المطابقة جاهزة" },
+  { label: "مسارات الوظائف", title: "تحديد الاتجاه", detail: "تُرتَّب الوظائف ذات الصلة حسب الأولوية بحيث تركّز الحملة على الوظائف المناسبة لهذا الملف الشخصي.", status: "المطابقة جاهزة" },
   { label: "استمرار المتابعة", title: "إبقاء الوتيرة واضحة", detail: "التقارير، والتحقق من التسليم، والإجراءات اللاحقة تُبقي نشاط تقديم المرشح واضحاً وقابلاً للمتابعة.", status: "الحملة نشطة" },
 ];
 
 const faqs = [
   { question: "هل بيانات سيرتي الذاتية خاصة؟", answer: "تُستخدم سيرتك الذاتية لمطابقة الطلبات وتخصيصها. يمكنك طلب حذفها في أي وقت، ولا تُباع كمنتج منفصل." },
-  { question: "هل تتقدمون فعلياً لشركات حقيقية؟", answer: "صُممت الخدمة للوظائف الفعلية والمتاحة في السعودية، باستخدام البريد الإلكتروني والتقديم المباشر عبر المنصات، مع التحقق من صحة عناوين البريد الإلكتروني المستخدَمة." },
+  { question: "هل تتقدّمون فعلياً لشركات حقيقية؟", answer: "صُمِّمت الخدمة للوظائف الفعلية والمتاحة في السعودية، باستخدام البريد الإلكتروني والتقديم المباشر عبر المنصات، مع التحقق من صحة عناوين البريد الإلكتروني المستخدَمة." },
   { question: "ما اللغات المدعومة؟", answer: "تدعم الخدمة حالياً اللغتين العربية والإنجليزية للباحثين عن عمل في جميع أنحاء السعودية." },
   { question: "كيف أدفع؟", answer: "يمكن ترتيب الباقات الشهرية عبر STC Pay أو التحويل البنكي (الآيبان). يمكنك سؤال الفريق عن تفاصيل الدفع الحالية عند بدء حملتك." },
   { question: "متى أتوقع الرد؟", answer: "يراجع الفريق طلبات الحملة أولاً بأول. للحصول على أسرع رد مباشر، استخدم WhatsApp بعد إرسال ملخصك؛ وإذا لم تسمع رداً خلال يوم عمل واحد، أرسل متابعة قصيرة تتضمن اسمك والوظيفة المستهدفة." },
 ];
+
+const reviewedArabicCopy: Record<string, string> = {
+  "تُطبّق محلياً": "تُطبَّق محلياً",
+  "يبقي هذا الفحص نص السيرة واختيار الملف داخل متصفحك. لا يُرسل سوى ملخص حملة اختياري عند اختيار WhatsApp.": "تُقرأ سيرتك على جهازك، ولا يبقى خارج هذه الصفحة سوى ما تختار مشاركته.",
+  "حدّد محركك": "حدّد محرّكك",
+  "ثلاث مراجعات مشاركة مباشرة من عملاء AutoApply SA.": "ثلاث مراجعات مُشارَكة مباشرة من عملاء AutoApply SA.",
+  "“بصفتي ممرضة أعمل في جدة، طابقتني الخدمة مع وظائف في المستشفيات وأرسلت الطلبات نيابةً عني. وفّرت عليّ التقديم في ساعات متأخرة من الليل.”": "«بصفتي ممرضة أعمل في جدة، طابقتني الخدمة مع وظائف في المستشفيات وأرسلت الطلبات نيابةً عني. وفّرت عليّ التقديم في ساعات متأخرة من الليل.»",
+  "“قدّمت سيرتي مع أوتوأبلاي السعودية وطلعت لي وظائف تطابق تخصصي في المحاسبة. الخدمة مرتبة والرد سريع على واتساب.”": "«قدّمت سيرتي مع أوتوأبلاي السعودية، وطلعت لي وظائف تطابق تخصصي في المحاسبة. الخدمة مرتّبة والرد سريع على واتساب.»",
+  "مُركّز على السعودية.": "مُركَّز على السعودية.",
+  "تأهيل شامل ومخصص": "تأهيل شامل ومخصّص",
+};
 
 const industryLabels = {
   all: "جميع المجالات",
@@ -123,7 +134,7 @@ export default function ArabicHome() {
 
   useEffect(() => {
     applyPageSeo({
-      title: "أوتوأبلاي السعودية | محرّك التقديم الوظيفي",
+      title: "أوتوأبلاي السعودية | محرّك التقديم للوظائف",
       description: "AutoApply SA يبحث عن الوظائف في السعودية، ويُخصّص طلبات التقديم، ويرسلها عبر البريد الإلكتروني والمنصات بناءً على سيرتك الذاتية ولغتك المفضلة.",
       path: "/ar",
     });
@@ -132,6 +143,22 @@ export default function ArabicHome() {
   useEffect(() => () => {
     if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
   }, []);
+
+  useEffect(() => {
+    const root = document.querySelector<HTMLElement>(".site-shell[lang='ar']");
+    if (!root) return;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes: Text[] = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode as Text);
+
+    for (const node of nodes) {
+      const sourceText = node.nodeValue?.trim();
+      if (!sourceText) continue;
+      const reviewedText = reviewedArabicCopy[sourceText];
+      if (reviewedText) node.nodeValue = node.nodeValue?.replace(sourceText, reviewedText) ?? reviewedText;
+    }
+  }, [activeFaq, briefStatus, campaignStage, scanState, selectedFile]);
 
   const roleLabel = (role: string) => roleTranslations[role] || role;
   const cityLabel = (city: string) => saudiCities.find(option => option.en === city)?.ar || city;
@@ -196,7 +223,7 @@ export default function ArabicHome() {
           <span>AutoApply <em>SA</em></span>
         </Link>
         <nav className="desktop-nav" aria-label="روابط الصفحة">
-          <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة</a>
+          <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
         </nav>
         <a href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></a>
       </header>
@@ -207,32 +234,32 @@ export default function ArabicHome() {
           <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
           <div className="hero-content page-frame" dir="rtl">
             <div className="hero-lead" dir="rtl">
-              <div className="eyebrow light"><StatusDot /> محرك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
+              <div className="eyebrow light"><StatusDot /> محرّك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
               <h1 id="arabic-hero-heading">نتقدّم للوظائف <br />نيابةً عنك.<br /><i>كل يوم.</i></h1>
-              <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تركز أنت على ما يهمك.</p>
+              <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصّصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تتفرّغ أنت لما يهمّك.</p>
               <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
-              <div className="hero-note">ابتداءً من 99 ريال / شهرياً <b /> بدون بطاقة لبدء المحادثة</div>
+              <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
               <div className="hero-trust-row"><span><ShieldCheck size={14} /> ابدأ بملخص موجز</span><span><Clock3 size={14} /> سنتواصل خلال يوم عمل واحد</span></div>
             </div>
             <div className="hero-ledger" dir="rtl" aria-label="حالة محرك التقديم">
-              <div className="ledger-topline"><span>محرك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
+              <div className="ledger-topline"><span>محرّك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
               <div className="ledger-route"><div><StatusDot /> تمت قراءة السيرة الذاتية</div><span /><div><StatusDot /> جارٍ مطابقة الوظائف</div><span /><div><StatusDot tone="quiet" /> جارٍ التقديم</div></div>
               <div className="ledger-record"><span className="record-number">03</span><div><b>جاهز للتقديم</b><small>تمت مطابقة المهارات والخبرة واللغة</small></div><ArrowUpRight size={16} /></div>
               <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> سيرتك الذاتية جاهزة</div><div><StatusDot /> جارٍ مطابقة الوظائف</div></div>
             </div>
-            <div className="hero-stats" dir="rtl"><div><strong>500+</strong><span>وظيفة سعودية تم فحصها</span></div><div><strong>24/7</strong><span>محرك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div>
+            <div className="hero-stats" dir="rtl"><div><strong>500+</strong><span>وظيفة سعودية تمت مراجعتها</span></div><div><strong>24/7</strong><span>محرّك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div>
 	          </div>
 	        </section>
 
 
         <section id="how" className="workflow-section section-ink">
-          <div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>02 / كيف يعمل</RailLabel><span className="rail-rule" /><p>ثلاث خطوات. بلا تقديم يدوي.</p></aside><div className="workflow-main"><div className="section-kicker inverse"><Sparkles size={15} /> واضح بالتصميم</div><h2>ضع بحثك <i>في نظام.</i></h2><p className="section-summary inverse-summary">ابدأ بما لديك بالفعل. ثم دع المحرك يحوّله إلى روتين تقديم منتظم.</p><div className="process-list"><article className="process-item"><div className="process-number">01</div><div className="process-content"><h3>ارفع سيرتك الذاتية</h3><p>أضف ملف PDF أو DOC أو DOCX أو TXT. مهاراتك وخبراتك ومسارك المهني تصبح نقطة الانطلاق.</p></div><FileText size={24} strokeWidth={1.4} /></article><article className="process-item"><div className="process-number">02</div><div className="process-content"><h3>حدّد الوظائف المستهدفة</h3><p>راجع أفضل مسارات الوظائف المتوافقة معك من بين الإعلانات في السعودية، ووجّه البحث نحو خطوتك القادمة.</p></div><Globe2 size={24} strokeWidth={1.4} /></article><article className="process-item active-process"><div className="process-number">03</div><div className="process-content"><h3>المحرك يقدّم على مدار الساعة</h3><p>الطلبات، وخطابات التقديم المخصصة، والمنصات، ورسائل البريد الإلكتروني، والتحقق من التسليم، كلها تسير بينما تُكمل يومك.</p></div><Send size={24} strokeWidth={1.4} /></article></div></div></div>
+          <div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>02 / كيف يعمل</RailLabel><span className="rail-rule" /><p>ثلاث خطوات. بلا تقديم يدوي.</p></aside><div className="workflow-main"><div className="section-kicker inverse"><Sparkles size={15} /> واضح بالتصميم</div><h2>ضع بحثك <i>في نظام واضح.</i></h2><p className="section-summary inverse-summary">ابدأ بما لديك بالفعل، ثم دع المحرّك يحوّله إلى روتين تقديم منتظم.</p><div className="process-list"><article className="process-item"><div className="process-number">01</div><div className="process-content"><h3>ارفع سيرتك الذاتية</h3><p>أضف ملف PDF أو DOC أو DOCX أو TXT. مهاراتك وخبراتك ومسارك المهني تصبح نقطة الانطلاق.</p></div><FileText size={24} strokeWidth={1.4} /></article><article className="process-item"><div className="process-number">02</div><div className="process-content"><h3>حدّد الوظائف المستهدفة</h3><p>راجع أفضل مسارات الوظائف المتوافقة معك من بين الإعلانات المتاحة في السعودية، ووجّه البحث نحو خطوتك القادمة.</p></div><Globe2 size={24} strokeWidth={1.4} /></article><article className="process-item active-process"><div className="process-number">03</div><div className="process-content"><h3>المحرّك يقدّم على مدار الساعة</h3><p>الطلبات، وخطابات التقديم المخصّصة، والمنصات، ورسائل البريد الإلكتروني، والتحقق من التسليم — كل ذلك يسير بينما تُكمل يومك.</p></div><Send size={24} strokeWidth={1.4} /></article></div></div></div>
         </section>
 
         <section id="product" className="video-explainer section-paper" aria-labelledby="arabic-video-explainer-heading">
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
-            <h2 id="arabic-video-explainer-heading">30 ثانية فقط. <i>وهذا يكفي لفهمها.</i></h2>
+            <h2 id="arabic-video-explainer-heading">30 ثانية فقط، <i>وهذا يكفي لفهمها.</i></h2>
             {ARABIC_EXPLAINER_VIDEO_SRC && !arabicExplainerVideoFailed ? (
               <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA" onError={() => setArabicExplainerVideoFailed(true)}>
                 <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />

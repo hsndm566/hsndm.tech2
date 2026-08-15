@@ -18,3 +18,7 @@ The Arabic browser session reports both MP4 assets with `readyState: 4`, no medi
 The full-page Arabic reviews at phone and desktop sizes show a consistent RTL hierarchy from the hero through the upload flow, pricing, FAQ, map, and final campaign CTA. The update removes the former CSS replacement copy that could diverge from source text, applies an RTL-specific hero surface and logical anchoring, and uses an isolated Latin brand token in the Arabic lead paragraph to prevent bidirectional ordering artifacts.
 
 The release verification completed successfully with 31 passing test files and 78 passing tests, a clean TypeScript check, and a successful production build. Recent runtime logs confirm the live-activity request returns HTTP 200. The only observed network message was a non-blocking Google Maps CSP capability probe, which does not affect the site interface, media playback, or campaign flow.
+
+The user-approved reviewed Arabic copy has been imported into the structured Arabic page content. Desktop and 375px phone screenshots confirm that the revised headings, navigation label, service description, and operational labels render in RTL without clipping or overlap, while the English route remains visually unchanged.
+
+The completed source-backed Arabic import was rechecked across the full page at desktop and phone sizes. The revised copy preserves the existing hierarchy, pricing cards, campaign flow, testimonials, FAQs, Jeddah location section, and final CTA without layout regressions or horizontal clipping.

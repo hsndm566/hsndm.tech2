@@ -227,8 +227,6 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   text-transform: none;
 }
 .site-shell[lang="ar"] .hero h1 i, .site-shell[lang="ar"] h2 i { font-family: inherit; letter-spacing: normal; }
-.site-shell[lang="ar"] .privacy-note { font-size: 0; }
-.site-shell[lang="ar"] .privacy-note::after { content: "تُقرأ سيرتك على جهازك، ولا يستمر خارج هذه الصفحة إلا ما تختار مشاركته."; font-size: 10px; line-height: 1.7; }
 .site-shell[lang="ar"] .hero-content { direction: rtl; }
 .site-shell[lang="ar"] .hero-lead { margin-left: 0; margin-right: -20px; text-align: right; background: linear-gradient(270deg, rgba(245,242,235,.92) 0%, rgba(245,242,235,.77) 78%, rgba(245,242,235,0) 100%); }
 .site-shell[lang="ar"] .hero-ledger { right: auto; left: 1px; }

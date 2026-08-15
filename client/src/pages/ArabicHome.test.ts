@@ -19,6 +19,19 @@ describe("Arabic readiness experience", () => {
     expect(source).toContain("toMatchIndustry");
   });
 
+  it("keeps the user-approved reviewed Arabic copy in the primary public sections", () => {
+    expect(source).toContain("محرّك التقديم للوظائف");
+    expect(source).toContain("الأسئلة الشائعة");
+    expect(source).toContain("ضع بحثك <i>في نظام واضح.</i>");
+    expect(source).toContain("الإعلانات المتاحة في السعودية");
+    expect(source).toContain("تمت مراجعتها");
+    expect(source).toContain("تُرتَّب الوظائف ذات الصلة حسب الأولوية");
+    expect(source).toContain("reviewedArabicCopy");
+    expect(source).toContain("ولا يبقى خارج هذه الصفحة سوى ما تختار مشاركته");
+    expect(source).toContain("ثلاث مراجعات مُشارَكة مباشرة من عملاء AutoApply SA.");
+    expect(styles).not.toContain(".privacy-note::after");
+  });
+
   it("uses scoped Arabic typography with normal script spacing and readable leading", () => {
     expect(styles).toContain('.site-shell[lang="ar"]');
     expect(styles).toContain('"Noto Sans Arabic"');

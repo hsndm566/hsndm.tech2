@@ -70,3 +70,9 @@
 - [ ] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
 - [ ] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
 - [ ] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
+- [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
+- [ ] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
+- [ ] Route api.hsndm.tech and dashboard.hsndm.tech only after their exact provider targets are verified
+- [x] Import the user-approved Arabic revision and run bilingual regression and layout verification
+- [x] Replace current Arabic landing-page copy with the user-approved reviewed Arabic source
+- [x] Validate the reviewed Arabic page on desktop and mobile before publication
