@@ -25,21 +25,31 @@ const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { isDashboardSubdomain } from "@/lib/subdomain";
 
 function Router() {
   const [location, setLocation] = useLocation();
   useEffect(() => {
-    if (typeof window !== "undefined" && location === "/") {
-      const hasVisited = sessionStorage.getItem("autoapply_lang_routed");
-      if (!hasVisited && navigator.language && navigator.language.startsWith("ar")) {
-        sessionStorage.setItem("autoapply_lang_routed", "true");
-        setLocation("/ar");
+    if (typeof window !== "undefined") {
+      if (isDashboardSubdomain() && location !== "/dashboard") {
+        setLocation("/dashboard");
+        return;
+      }
+      if (location === "/") {
+        const hasVisited = sessionStorage.getItem("autoapply_lang_routed");
+        if (!hasVisited && navigator.language && navigator.language.startsWith("ar")) {
+          sessionStorage.setItem("autoapply_lang_routed", "true");
+          setLocation("/ar");
+        }
       }
     }
   }, [location, setLocation]);
 
   return (
     <Switch>
+      {isDashboardSubdomain() ? (
+        <Route path="/dashboard" component={Dashboard} />
+      ) : null}
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
       <Route path="/ar/enquire" component={ArabicEnquire} />
