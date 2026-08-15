@@ -16,3 +16,4 @@
 - [x] Implement candidate profile settings page and database persistence
 - [x] Replace dashboard spinner with skeleton loading UI during data fetch
 - [x] Build recent activity feed for application status updates and notifications
+- [x] Fix Clerk JS timeout error on public home page without affecting dashboard authentication

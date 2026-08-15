@@ -4,7 +4,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, type ReactNode } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -24,9 +24,33 @@ const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
-import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { ClerkProvider, useAuth as useClerkAuth } from "@clerk/clerk-react";
+import { setClerkTokenGetter } from "@/lib/clerkToken";
 import { isDashboardSubdomain } from "@/lib/subdomain";
+
+const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+
+function ClerkTokenBridge() {
+  const { getToken } = useClerkAuth();
+
+  useEffect(() => {
+    setClerkTokenGetter(() => getToken());
+    return () => setClerkTokenGetter(null);
+  }, [getToken]);
+
+  return null;
+}
+
+function ClerkProtectedRoute({ children }: { children: ReactNode }) {
+  if (!clerkPublishableKey) return <>{children}</>;
+  return (
+    <ClerkProvider publishableKey={clerkPublishableKey}>
+      <ClerkTokenBridge />
+      {children}
+    </ClerkProvider>
+  );
+}
 
 function Router() {
   const [location, setLocation] = useLocation();
@@ -50,8 +74,8 @@ function Router() {
     <Switch>
       {isDashboardSubdomain() ? (
         <>
-          <Route path="/dashboard/settings" component={ProfileSettings} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/dashboard/settings" component={() => <ClerkProtectedRoute><ProfileSettings /></ClerkProtectedRoute>} />
+          <Route path="/dashboard" component={() => <ClerkProtectedRoute><Dashboard /></ClerkProtectedRoute>} />
         </>
       ) : null}
       <Route path="/" component={Home} />
@@ -60,8 +84,8 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
-      <Route path="/dashboard/settings" component={ProfileSettings} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard/settings" component={() => <ClerkProtectedRoute><ProfileSettings /></ClerkProtectedRoute>} />
+      <Route path="/dashboard" component={() => <ClerkProtectedRoute><Dashboard /></ClerkProtectedRoute>} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
       <Route path="/pricing" component={() => <PricingPage />} />
