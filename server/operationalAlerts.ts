@@ -11,7 +11,7 @@ function compactReason(error: unknown) {
 }
 
 /** Sends owner-only operational context without candidate content, CV text, or contact details. */
-export async function notifyOperationalFailure(workflow: "ATS analysis" | "campaign readiness" | "application creation", error: unknown) {
+export async function notifyOperationalFailure(workflow: "ATS analysis" | "campaign readiness" | "application creation" | "application update" | "application deletion", error: unknown) {
   await notifyOwner({
     title: `AutoApply SA workflow alert: ${workflow}`,
     content: `The ${workflow} workflow failed at ${new Date().toISOString()}. Reason: ${compactReason(error)}. No candidate CV text or contact details are included in this alert.`,

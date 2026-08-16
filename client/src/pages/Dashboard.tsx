@@ -11,7 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock, PlusCircle } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock, PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
@@ -61,6 +62,13 @@ export default function Dashboard() {
   const [newCity, setNewCity] = useState("Jeddah");
   const [newStatus, setNewStatus] = useState("applied");
   const [newNotes, setNewNotes] = useState("");
+  const [editingApp, setEditingApp] = useState<any | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
+  const [editCompany, setEditCompany] = useState("");
+  const [editRole, setEditRole] = useState("");
+  const [editCity, setEditCity] = useState("Jeddah");
+  const [editStatus, setEditStatus] = useState("applied");
+  const [editNotes, setEditNotes] = useState("");
 
   const [activitySeenAt, setActivitySeenAt] = useState<number>(() => {
     try {
@@ -114,6 +122,44 @@ export default function Dashboard() {
     },
   });
 
+  const updateAppMutation = trpc.campaign.applications.update.useMutation({
+    onMutate: async (input) => {
+      await utils.campaign.applications.list.cancel();
+      const previous = utils.campaign.applications.list.getData();
+      utils.campaign.applications.list.setData(undefined, (current) => current?.map((application) =>
+        application.id === input.id ? { ...application, ...input, updatedAt: new Date() } : application
+      ));
+      return { previous };
+    },
+    onSuccess: () => {
+      toast.success("Application updated successfully");
+      setEditingApp(null);
+    },
+    onError: (error, _input, context) => {
+      utils.campaign.applications.list.setData(undefined, context?.previous);
+      toast.error(error.message || "Unable to update this application");
+    },
+    onSettled: () => utils.campaign.applications.list.invalidate(),
+  });
+
+  const deleteAppMutation = trpc.campaign.applications.delete.useMutation({
+    onMutate: async ({ id }) => {
+      await utils.campaign.applications.list.cancel();
+      const previous = utils.campaign.applications.list.getData();
+      utils.campaign.applications.list.setData(undefined, (current) => current?.filter((application) => application.id !== id));
+      return { previous };
+    },
+    onSuccess: () => {
+      toast.success("Application deleted");
+      setDeleteTarget(null);
+    },
+    onError: (error, _input, context) => {
+      utils.campaign.applications.list.setData(undefined, context?.previous);
+      toast.error(error.message || "Unable to delete this application");
+    },
+    onSettled: () => utils.campaign.applications.list.invalidate(),
+  });
+
   const handleCreateApp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCompany.trim() || !newRole.trim()) {
@@ -129,6 +175,37 @@ export default function Dashboard() {
       status: newStatus as any,
       notes: newNotes.trim() || undefined,
     });
+  };
+
+  const openEditDialog = (application: any) => {
+    setEditingApp(application);
+    setEditCompany(application.companyName || "");
+    setEditRole(application.roleTitle || "");
+    setEditCity(application.city || "Jeddah");
+    setEditStatus(application.status || "applied");
+    setEditNotes(application.notes || "");
+    setSelectedApp(null);
+  };
+
+  const handleEditApp = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!editingApp || !editCompany.trim() || !editRole.trim()) {
+      toast.error("Please enter both company name and role title");
+      return;
+    }
+    updateAppMutation.mutate({
+      id: editingApp.id,
+      companyName: editCompany.trim(),
+      roleTitle: editRole.trim(),
+      city: editCity,
+      status: editStatus as "queued" | "applied" | "interview" | "offer" | "skipped",
+      notes: editNotes.trim() || null,
+    });
+  };
+
+  const openDeleteDialog = (application: any) => {
+    setDeleteTarget(application);
+    setSelectedApp(null);
   };
 
   const filteredApps = applications.filter((app) => {
@@ -357,6 +434,74 @@ export default function Dashboard() {
               </Dialog>
             </div>
 
+            <Dialog open={!!editingApp} onOpenChange={(open) => !open && setEditingApp(null)}>
+              <DialogContent className="bg-[#fbf9f5] border-[#151515]/20 max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Edit Job Application</DialogTitle>
+                  <DialogDescription>Update the status, details, or follow-up note for this job entry.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleEditApp} className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="edit-company">Company Name *</label>
+                    <Input id="edit-company" required value={editCompany} onChange={(event) => setEditCompany(event.target.value)} className="bg-white border-[#151515]/20" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="edit-role">Role Title *</label>
+                    <Input id="edit-role" required value={editRole} onChange={(event) => setEditRole(event.target.value)} className="bg-white border-[#151515]/20" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Saudi City</label>
+                    <Select value={editCity} onValueChange={setEditCity}>
+                      <SelectTrigger className="bg-white border-[#151515]/20"><SelectValue /></SelectTrigger>
+                      <SelectContent>{saudiCities.map((city) => <SelectItem key={city.en} value={city.en}>{city.en}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Application Status</label>
+                    <Select value={editStatus} onValueChange={setEditStatus}>
+                      <SelectTrigger className="bg-white border-[#151515]/20"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="queued">Queued</SelectItem>
+                        <SelectItem value="applied">Application sent</SelectItem>
+                        <SelectItem value="interview">Interview scheduled</SelectItem>
+                        <SelectItem value="offer">Offer received</SelectItem>
+                        <SelectItem value="skipped">Not proceeding</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="edit-notes">Notes / Follow-up</label>
+                    <Input id="edit-notes" value={editNotes} onChange={(event) => setEditNotes(event.target.value)} placeholder="Optional note about this job entry" className="bg-white border-[#151515]/20" />
+                  </div>
+                  <div className="pt-4 flex justify-end gap-3">
+                    <Button type="button" variant="outline" onClick={() => setEditingApp(null)}>Cancel</Button>
+                    <Button type="submit" disabled={updateAppMutation.isPending} className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">
+                      {updateAppMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                      Save changes
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+              <AlertDialogContent className="bg-[#fbf9f5] border-[#151515]/20">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this application?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This removes the {deleteTarget?.roleTitle} entry at {deleteTarget?.companyName} from your dashboard. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={deleteAppMutation.isPending}>Keep application</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => deleteTarget && deleteAppMutation.mutate({ id: deleteTarget.id })} disabled={deleteAppMutation.isPending} className="bg-red-700 text-white hover:bg-red-800">
+                    {deleteAppMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                    Delete application
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
@@ -547,6 +692,14 @@ export default function Dashboard() {
                         <span>Click to view interactive timeline</span>
                         <span>→</span>
                       </div>
+                      <div className="flex items-center gap-2 pt-1" onClick={(event) => event.stopPropagation()}>
+                        <Button type="button" size="sm" variant="outline" className="flex-1 gap-1.5 border-[#151515]/20" onClick={() => openEditDialog(app)} aria-label={`Edit ${app.roleTitle} at ${app.companyName}`}>
+                          <Pencil className="w-3.5 h-3.5" /> Edit
+                        </Button>
+                        <Button type="button" size="sm" variant="outline" className="border-red-700/30 text-red-700 hover:bg-red-50 hover:text-red-800" onClick={() => openDeleteDialog(app)} aria-label={`Delete ${app.roleTitle} at ${app.companyName}`}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -595,7 +748,9 @@ export default function Dashboard() {
                         <p className="text-sm bg-white p-3 rounded-lg border border-[#151515]/10 text-[#151515]/80">{selectedApp.notes}</p>
                       </div>
                     )}
-                    <div className="pt-2 flex justify-end">
+                    <div className="pt-2 flex flex-wrap justify-end gap-2">
+                      <Button variant="outline" onClick={() => openEditDialog(selectedApp)} className="gap-1.5"><Pencil className="w-4 h-4" /> Edit</Button>
+                      <Button variant="outline" onClick={() => openDeleteDialog(selectedApp)} className="gap-1.5 border-red-700/30 text-red-700 hover:bg-red-50 hover:text-red-800"><Trash2 className="w-4 h-4" /> Delete</Button>
                       <Button variant="outline" onClick={() => setSelectedApp(null)}>Close</Button>
                     </div>
                   </div>

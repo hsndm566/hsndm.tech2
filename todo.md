@@ -16,6 +16,7 @@
 - [x] Implement candidate profile settings page and database persistence
 - [x] Replace dashboard spinner with skeleton loading UI during data fetch
 - [x] Build recent activity feed for application status updates and notifications
+- [x] Add candidate-owned job application edit and delete controls with protected backend mutations, optimistic updates, and regression coverage
 - [x] Fix Clerk JS timeout error on public home page without affecting dashboard authentication
 - [x] Add dashboard activity notification badge for new feed updates
 - [x] Add profile settings Save Changes success toast feedback
@@ -69,7 +70,7 @@
 - [x] Complete the remaining Arabic copy pass, including the concise CV privacy line and final terminology checks
 - [ ] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
 - [ ] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
-- [ ] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
+- [x] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
 - [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
 - [x] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
 - [ ] Route api.hsndm.tech and dashboard.hsndm.tech only after their exact provider targets are verified

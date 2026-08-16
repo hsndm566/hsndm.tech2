@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { createCampaignReadiness, getJobApplications, insertJobApplication, getCandidateProfile, updateCandidateProfile } from "./db";
+import { createCampaignReadiness, getJobApplications, insertJobApplication, getCandidateProfile, updateCandidateProfile, updateJobApplication, deleteJobApplication } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -101,6 +101,37 @@ export const appRouter = router({
             if (!created) throw new Error("application record was not persisted");
             return { success: true, created } as const;
           } catch (error) { await notifyOperationalFailure("application creation", error); throw error; }
+        }),
+      update: protectedProcedure
+        .input(
+          z.object({
+            id: z.number().int().positive(),
+            companyName: z.string().trim().min(2).max(255).optional(),
+            roleTitle: z.string().trim().min(2).max(255).optional(),
+            city: z.string().trim().min(2).max(120).optional(),
+            status: z.enum(["queued", "applied", "interview", "offer", "skipped"]).optional(),
+            notes: z.string().trim().max(2000).nullable().optional(),
+          }).refine(
+            ({ companyName, roleTitle, city, status, notes }) => [companyName, roleTitle, city, status, notes].some(value => value !== undefined),
+            "Provide at least one application field to update."
+          )
+        )
+        .mutation(async ({ input, ctx }) => {
+          const { id, ...changes } = input;
+          try {
+            const updated = await updateJobApplication(id, ctx.user.openId, ctx.user.role === "admin", changes);
+            if (!updated) throw new Error("Application not found or no longer available.");
+            return { success: true, updated } as const;
+          } catch (error) { await notifyOperationalFailure("application update", error); throw error; }
+        }),
+      delete: protectedProcedure
+        .input(z.object({ id: z.number().int().positive() }))
+        .mutation(async ({ input, ctx }) => {
+          try {
+            const deleted = await deleteJobApplication(input.id, ctx.user.openId, ctx.user.role === "admin");
+            if (!deleted) throw new Error("Application not found or no longer available.");
+            return { success: true } as const;
+          } catch (error) { await notifyOperationalFailure("application deletion", error); throw error; }
         }),
       profile: router({
         get: protectedProcedure.query(async ({ ctx }) => {

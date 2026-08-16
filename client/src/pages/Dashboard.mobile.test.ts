@@ -30,4 +30,12 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("companyName");
     expect(dashboardSource).toContain("roleTitle");
   });
+
+  it("provides concise edit and deliberate deletion controls for every application entry", () => {
+    expect(dashboardSource).toContain("Edit Job Application");
+    expect(dashboardSource).toContain("Delete this application?");
+    expect(dashboardSource).toContain("updateAppMutation");
+    expect(dashboardSource).toContain("deleteAppMutation");
+    expect(dashboardSource).toContain("onClick={(event) => event.stopPropagation()}");
+  });
 });

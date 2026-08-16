@@ -6,6 +6,8 @@ const mocks = vi.hoisted(() => ({
   getCandidateProfile: vi.fn(),
   getJobApplications: vi.fn(),
   insertJobApplication: vi.fn(),
+  updateJobApplication: vi.fn(),
+  deleteJobApplication: vi.fn(),
   updateCandidateProfile: vi.fn(),
 }));
 
@@ -38,6 +40,8 @@ function makeContext(openId: string | null, role: "user" | "admin" = "user"): Tr
 describe("application access control and authentication", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.updateJobApplication.mockResolvedValue({ id: 101, candidateOpenId: "candidate-a", companyName: "A Co", roleTitle: "Analyst", city: "Jeddah", status: "interview", notes: "Interview confirmed" });
+    mocks.deleteJobApplication.mockResolvedValue(true);
     mocks.getJobApplications.mockImplementation(async (openId?: string) => {
       if (openId === "candidate-a") return [{ id: 101, candidateOpenId: "candidate-a", companyName: "A Co" }];
       if (openId === "candidate-b") return [{ id: 202, candidateOpenId: "candidate-b", companyName: "B Co" }];
@@ -119,5 +123,36 @@ describe("application access control and authentication", () => {
   it("rejects an oversized resume note rather than accepting CV text", async () => {
     const candidate = appRouter.createCaller(makeContext("candidate-a"));
     await expect(candidate.campaign.applications.profile.update({ resumeSummary: "x".repeat(501) })).rejects.toBeTruthy();
+  });
+
+  it("updates only the selected application through the authenticated candidate ownership boundary", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    const result = await candidate.campaign.applications.update({
+      id: 101,
+      status: "interview",
+      notes: "Interview confirmed",
+    });
+
+    expect(result).toMatchObject({ success: true, updated: { id: 101, status: "interview" } });
+    expect(mocks.updateJobApplication).toHaveBeenCalledWith(101, "candidate-a", false, {
+      status: "interview",
+      notes: "Interview confirmed",
+    });
+  });
+
+  it("passes administrative scope explicitly for operational application changes", async () => {
+    const admin = appRouter.createCaller(makeContext("owner", "admin"));
+    await admin.campaign.applications.update({ id: 202, city: "Riyadh" });
+
+    expect(mocks.updateJobApplication).toHaveBeenCalledWith(202, "owner", true, { city: "Riyadh" });
+  });
+
+  it("deletes an application only through the protected candidate procedure", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.applications.delete({ id: 101 })).resolves.toEqual({ success: true });
+    expect(mocks.deleteJobApplication).toHaveBeenCalledWith(101, "candidate-a", false);
+
+    const anonymous = appRouter.createCaller(makeContext(null));
+    await expect(anonymous.campaign.applications.delete({ id: 101 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 });
