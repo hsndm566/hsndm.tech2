@@ -124,3 +124,8 @@
 - [x] Run a runtime reduced-motion verification proving the anime.js layer leaves hero text and interactions visible and stable
 - [x] Reinitialize anime.js motion safely after client-side route and language changes
 - [x] Refactor dense Arabic CV intake and readiness markup into maintainable sub-components without changing behavior
+- [x] Verify Render identifier tea-d9v4c83jgndc73akurl0: no Render connector is configured and unauthenticated API access returns HTTP 401
+- [ ] Obtain a Render API key or authenticated Render connector before inspecting or modifying service tea-d9v4c83jgndc73akurl0
+- [ ] Configure the supplied Clerk production credentials through secure project settings and verify reliable public and dashboard authentication behavior
+- [x] Prevent Clerk from initializing on unmanaged preview origins and eliminate their Clerk origin-invalid requests
+- [ ] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname

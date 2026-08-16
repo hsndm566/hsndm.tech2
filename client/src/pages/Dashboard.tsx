@@ -3,8 +3,9 @@ import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
-import { SignInButton, useAuth as useClerkAuth } from "@clerk/clerk-react";
+import { SignInButton } from "@clerk/clerk-react";
 import { isDashboardSubdomain } from "@/lib/subdomain";
+import { useClerkSession } from "@/components/ClerkSessionBoundary";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -78,8 +79,8 @@ export default function Dashboard() {
     }
   });
   const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
-  const clerkAuth = useClerkAuth();
-  const clerkDashboardEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
+  const clerkAuth = useClerkSession();
+  const clerkDashboardEnabled = clerkAuth.enabled && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
   const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
   const dashboardAuthLoading = clerkDashboardEnabled ? !clerkAuth.isLoaded : authLoading;
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);

@@ -4,7 +4,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense, useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -26,38 +26,22 @@ const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
 import { useLocation } from "wouter";
-import { ClerkProvider, useAuth as useClerkAuth } from "@clerk/clerk-react";
-import { setClerkTokenGetter } from "@/lib/clerkToken";
 import { isDashboardSubdomain } from "@/lib/subdomain";
+import { canUseClerkOnCurrentOrigin } from "@/lib/clerkOrigin";
+import { ClerkSessionBoundary } from "@/components/ClerkSessionBoundary";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { AnimeEnhancements } from "@/components/AnimeEnhancements";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
-function ClerkTokenBridge() {
-  const { getToken } = useClerkAuth();
-
-  useEffect(() => {
-    setClerkTokenGetter(() => getToken());
-    return () => setClerkTokenGetter(null);
-  }, [getToken]);
-
-  return null;
-}
-
-function ClerkProtectedRoute({ children }: { children: ReactNode }) {
-  if (!clerkPublishableKey) return <>{children}</>;
-  return (
-    <ClerkProvider publishableKey={clerkPublishableKey}>
-      <ClerkTokenBridge />
-      {children}
-    </ClerkProvider>
-  );
+function ClerkProtectedRoute({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
 
 function Router() {
   const [location, setLocation] = useLocation();
+  const clerkEnabled = Boolean(clerkPublishableKey) && canUseClerkOnCurrentOrigin() && (isDashboardSubdomain() || location.startsWith("/dashboard"));
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
@@ -76,7 +60,8 @@ function Router() {
   }, [location, setLocation]);
 
   return (
-    <>
+    <ClerkSessionBoundary enabled={clerkEnabled} publishableKey={clerkPublishableKey}>
+      <>
       <AnimeEnhancements routeKey={location} />
       <Switch>
       {isDashboardSubdomain() ? (
@@ -112,7 +97,8 @@ function Router() {
       <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
-    </>
+      </>
+    </ClerkSessionBoundary>
   );
 }
 

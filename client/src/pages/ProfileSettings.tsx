@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { SignInButton, useAuth as useClerkAuth, useUser as useClerkUser } from "@clerk/clerk-react";
+import { SignInButton } from "@clerk/clerk-react";
 import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
+import { useClerkSession } from "@/components/ClerkSessionBoundary";
 import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { isDashboardSubdomain } from "@/lib/subdomain";
@@ -90,9 +91,9 @@ function SettingsSkeleton() {
 
 export default function ProfileSettings() {
   const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
-  const clerkAuth = useClerkAuth();
-  const { user: clerkUser } = useClerkUser();
-  const clerkDashboardEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) && (isDashboardSubdomain() || window.location.pathname.startsWith("/dashboard"));
+  const clerkAuth = useClerkSession();
+  const clerkUser = clerkAuth.user;
+  const clerkDashboardEnabled = clerkAuth.enabled && (isDashboardSubdomain() || window.location.pathname.startsWith("/dashboard"));
   const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
   const [draft, setDraft] = useState<ProfileDraft>(defaultDraft);
