@@ -76,7 +76,9 @@ function Router() {
   }, [location, setLocation]);
 
   return (
-    <Switch>
+    <>
+      <AnimeEnhancements routeKey={location} />
+      <Switch>
       {isDashboardSubdomain() ? (
         <>
           <Route path="/dashboard/settings" component={() => <ClerkProtectedRoute><ProfileSettings /></ClerkProtectedRoute>} />
@@ -108,8 +110,9 @@ function Router() {
       <Route path="/ar/privacy" component={() => <InformationPage kind="privacy" language="ar" />} />
       <Route path="/ar/terms" component={() => <InformationPage kind="terms" language="ar" />} />
       <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
@@ -121,7 +124,6 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
-          <AnimeEnhancements />
           <Suspense fallback={<main className="min-h-screen bg-[#f3f0e9]" aria-busy="true" />}>
             <Router />
           </Suspense>

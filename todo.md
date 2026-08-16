@@ -122,3 +122,4 @@
 - [x] Add CDN-loaded anime.js hero, card, section, and button motion without changing content, layout, video behavior, or responsive functionality
 - [x] Verify the anime.js enhancement with automated, reduced-motion, desktop, and phone checks before publication
 - [x] Run a runtime reduced-motion verification proving the anime.js layer leaves hero text and interactions visible and stable
+- [x] Reinitialize anime.js motion safely after client-side route and language changes

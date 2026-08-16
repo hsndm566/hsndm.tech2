@@ -11,7 +11,7 @@ describe("Anime.js motion enhancement", () => {
   it("loads the official CDN runtime and mounts one shared controller", () => {
     expect(htmlSource).toContain("https://cdn.jsdelivr.net/npm/animejs@4.3.6/dist/bundles/anime.umd.min.js");
     expect(htmlSource).toContain("data-animejs-cdn");
-    expect(appSource).toContain("AnimeEnhancements");
+    expect(appSource).toContain("<AnimeEnhancements routeKey={location} />");
   });
 
   it("keeps the motion opt-in, reduced-motion-safe, and intersection-observer based", () => {
@@ -21,6 +21,7 @@ describe("Anime.js motion enhancement", () => {
     expect(controllerSource).toContain("data-anime-hero-word");
     expect(controllerSource).toContain("pointerenter");
     expect(controllerSource).toContain("pointerdown");
+    expect(controllerSource).toContain("[routeKey]");
   });
 
   it("marks both localized hero headlines for word-level animation without changing their copy", () => {

@@ -19,7 +19,7 @@ const cardSelector = ".site-shell .capability-card, .site-shell .plan-card, .sit
  * and only transforms existing DOM elements. Reduced-motion users retain the
  * original static site with no opacity or transform changes.
  */
-export function AnimeEnhancements() {
+export function AnimeEnhancements({ routeKey }: { routeKey: string }) {
   useEffect(() => {
     const root = document.documentElement;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -138,7 +138,7 @@ export function AnimeEnhancements() {
       cleanup();
       delete root.dataset.animeMotion;
     };
-  }, []);
+  }, [routeKey]);
 
   return null;
 }
