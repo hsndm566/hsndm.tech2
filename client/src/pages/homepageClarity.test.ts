@@ -10,7 +10,7 @@ describe("homepage clarity release", () => {
   it("states the service plainly and keeps the approved campaign CTA paths", () => {
     const source = homeSource();
 
-    expect(source).toContain("We apply to jobs for you.");
+    ["We", "apply", "jobs", "you."].forEach(word => expect(source).toContain(`>${word}</span>`));
     expect(source).toContain("AutoApply SA submits tailored job applications to Saudi companies on your behalf");
     expect(source).toContain('href="/enquire"');
     expect(source).toContain("https://wa.me/966571448656");
@@ -61,7 +61,7 @@ describe("homepage clarity release", () => {
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
     const source = arabicHomeSource();
 
-    expect(source).toContain("نتقدّم للوظائف");
+    ["نتقدّم", "للوظائف"].forEach(word => expect(source).toContain(`>${word}</span>`));
     expect(source).toContain("سيرتك الذاتية جاهزة");
     expect(source).toContain("arabic-video-explainer-heading");
     expect(source).toContain("arabicExplainerVideoFailed");
@@ -80,11 +80,11 @@ describe("homepage clarity release", () => {
     const styles = stylesSource();
 
     expect(english).toContain("<HeroMedia alt=");
-    expect(english).toContain("We apply to jobs for");
+    ["We", "apply", "jobs", "for"].forEach(word => expect(english).toContain(`>${word}</span>`));
     expect(english).toContain("Start your campaign");
     expect(english).toContain("500+");
     expect(arabic).toContain("<HeroMedia alt=");
-    expect(arabic).toContain("نتقدّم للوظائف");
+    ["نتقدّم", "للوظائف"].forEach(word => expect(arabic).toContain(`>${word}</span>`));
     expect(arabic).toContain("ابدأ حملتك");
     expect(arabic).toContain("لغتان مدعومتان");
     expect(styles).toContain(".hero { min-height: 610px");

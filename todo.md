@@ -119,3 +119,6 @@
 - [ ] Complete Railway browser authentication inside the current interface and verify the static-service source migration
 - [x] Verify the configured Railway API connector cannot complete the service-source migration without browser authentication: the project token is denied for `serviceConnect`
 - [x] Research and verify August 2026 GitHub Student Developer Pack backend and hosting offers suited to the AutoApply SA stack
+- [x] Add CDN-loaded anime.js hero, card, section, and button motion without changing content, layout, video behavior, or responsive functionality
+- [x] Verify the anime.js enhancement with automated, reduced-motion, desktop, and phone checks before publication
+- [x] Run a runtime reduced-motion verification proving the anime.js layer leaves hero text and interactions visible and stable

@@ -31,6 +31,7 @@ import { setClerkTokenGetter } from "@/lib/clerkToken";
 import { isDashboardSubdomain } from "@/lib/subdomain";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
+import { AnimeEnhancements } from "@/components/AnimeEnhancements";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -120,6 +121,7 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
+          <AnimeEnhancements />
           <Suspense fallback={<main className="min-h-screen bg-[#f3f0e9]" aria-busy="true" />}>
             <Router />
           </Suspense>

@@ -427,9 +427,9 @@ export default function Home() {
             <div className="hero-lead">
               <div className="eyebrow light"><StatusDot /> 24/7 job engine <span /> Jeddah, Saudi Arabia</div>
               <h1 id="hero-heading">
-                We apply to jobs for you.<br />
-                Every day.<br />
-                Automatically.
+                <span data-anime-hero-word>We</span>{" "}<span data-anime-hero-word>apply</span>{" "}<span data-anime-hero-word>to</span>{" "}<span data-anime-hero-word>jobs</span>{" "}<span data-anime-hero-word>for</span>{" "}<span data-anime-hero-word>you.</span><br />
+                <span data-anime-hero-word>Every</span>{" "}<span data-anime-hero-word>day.</span><br />
+                <span data-anime-hero-word>Automatically.</span>
               </h1>
               <p>
                 AutoApply SA submits tailored job applications to Saudi companies on your behalf — by email and portal — while you focus on everything else.

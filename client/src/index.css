@@ -120,6 +120,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .status-dot.quiet { background: currentColor; box-shadow: none; }
 .hero h1, h2 { font-family: "Space Grotesk", sans-serif; font-weight: 600; letter-spacing: -.075em; }
 .hero h1 { margin: 17px 0 16px; font-size: clamp(46px, 4.7vw, 68px); line-height: .94; }
+[data-anime-hero-word] { display: inline-block; will-change: transform, opacity; }
 h1 i, h2 i { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.08em; }
 .hero-lead > p { color: rgba(21,21,21,.8); width: min(540px, 100%); margin: 0; font-size: 15px; line-height: 1.65; }
 .hero-actions { display: flex; gap: 19px; align-items: center; margin-top: 20px; }
@@ -212,6 +213,7 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 @media (prefers-reduced-motion: reduce) { .footer-enquiry-success-icon, .footer-enquiry-success-icon svg { animation: none; } }
 @media (prefers-reduced-motion: no-preference) { html[data-locale-transition="out"] .site-shell { opacity: 0; transform: translateY(7px); transition: opacity .18s cubic-bezier(.23,1,.32,1), transform .18s cubic-bezier(.23,1,.32,1); } .language-toggle { transition: transform .18s cubic-bezier(.23,1,.32,1), color .18s ease; } .language-toggle:hover { color: var(--signal); transform: translateY(-1px); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (hover: hover) { .site-shell :is(.capability-card, .plan-card, .review-card, .process-item) { will-change: transform, box-shadow; } }
 
 @media (max-width: 960px) {
   .desktop-nav, .language-link, .nav-actions .button { display: none; }.mobile-menu-button { display: block; }.mobile-nav { position: absolute; top: 75px; left: 0; right: 0; padding: 13px 20px 22px; display: grid; color: var(--paper); background: var(--ink); border-top: 1px solid rgba(245,242,235,.2); box-shadow: 0 15px 30px rgba(0,0,0,.18); }.mobile-nav button, .mobile-nav a { padding: 14px 0; display: flex; align-items: center; gap: 12px; border: 0; border-bottom: 1px solid rgba(245,242,235,.16); background: none; color: var(--paper); text-align: left; font-family: "Space Grotesk", sans-serif; font-size: 18px; letter-spacing: -.04em; }.mobile-nav button span { color: var(--signal); font-family: "DM Mono", monospace; font-size: 9px; }.mobile-nav svg { margin-left: auto; color: var(--signal); }

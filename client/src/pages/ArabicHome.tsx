@@ -237,7 +237,7 @@ export default function ArabicHome() {
           <div className="hero-content page-frame" dir="rtl">
             <div className="hero-lead" dir="rtl">
               <div className="eyebrow light"><StatusDot /> محرّك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
-              <h1 id="arabic-hero-heading">نتقدّم للوظائف <br />نيابةً عنك.<br /><i>كل يوم.</i></h1>
+              <h1 id="arabic-hero-heading"><span data-anime-hero-word>نتقدّم</span>{" "}<span data-anime-hero-word>للوظائف</span> <br /><span data-anime-hero-word>نيابةً</span>{" "}<span data-anime-hero-word>عنك.</span><br /><i><span data-anime-hero-word>كل</span>{" "}<span data-anime-hero-word>يوم.</span></i></h1>
               <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصّصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تتفرّغ أنت لما يهمّك.</p>
               <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
