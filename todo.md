@@ -44,7 +44,7 @@
 - [x] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
 - [x] Run final regression, type, and production-build verification for the requested release
 - [x] Save the verified current project state to GitHub and the managed live deployment
-- [ ] Confirm the final verified commit is present on both configured Git remotes
+- [ ] Directly verify the live managed origin and linked GitHub remote heads for the final checkpoint, rather than relying only on local tracking references
 - [x] Verify the managed production hostname serves the final release after the checkpoint
 - [x] Confirm the linked user GitHub remote contains the final release checkpoint commit
 - [x] Push the validated static release package to the user-requested hsndm.tech GitHub Pages repository once its connected account has write permission
@@ -69,7 +69,7 @@
 - [x] Consolidate dashboard mobile regression assertions under their intended test suite
 - [x] Complete the remaining Arabic copy pass, including the concise CV privacy line and final terminology checks
 - [ ] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
-- [ ] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
+- [x] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
 - [x] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
 - [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
 - [x] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
