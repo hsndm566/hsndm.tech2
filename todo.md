@@ -84,3 +84,10 @@
 - [x] Verify the bright hero’s readability and video framing on English and Arabic desktop and mobile pages
 - [x] Add source-level regression coverage for the white hero surface, full video framing, and first-screen content hierarchy
 - [x] Preserve explicit desktop and mobile English/Arabic hero evidence in the final verification record
+- [x] Add an animated accessible success checkmark and bilingual thank-you message after footer enquiry submission
+- [x] Verify the footer success state, WhatsApp handoff, reduced-motion behavior, and responsive presentation
+- [x] Publish the verified footer success-state update
+- [x] Add an explicit reduced-motion regression assertion for the footer success animation fallback
+- [x] Capture and record post-submission desktop English and Arabic footer-success verification
+- [x] Publish the verified footer success-state update
+

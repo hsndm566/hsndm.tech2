@@ -17,6 +17,7 @@ const copy = {
     preparing: "Preparing chat…",
     note: "Your details stay in this browser until you choose to send the prepared WhatsApp message.",
     ready: "Your enquiry is ready. WhatsApp should open in a new tab.",
+    thankYou: "Thank you — your enquiry is ready to send.",
     fallback: "WhatsApp did not open? Use this secure link.",
     fallbackAction: "Open WhatsApp",
     whatsappMessage: (name: string, email: string, message: string) => [
@@ -39,6 +40,7 @@ const copy = {
     preparing: "جارٍ تجهيز المحادثة…",
     note: "تبقى بياناتك في هذا المتصفح حتى تختار إرسال رسالة WhatsApp المُعدّة.",
     ready: "استفسارك جاهز. من المفترض أن يُفتح WhatsApp في علامة تبويب جديدة.",
+    thankYou: "شكراً لك — أصبح استفسارك جاهزاً للإرسال.",
     fallback: "لم يُفتح WhatsApp؟ استخدم هذا الرابط الآمن.",
     fallbackAction: "فتح WhatsApp",
     whatsappMessage: (name: string, email: string, message: string) => [
@@ -85,7 +87,16 @@ export function FooterEnquiryForm({ locale }: FooterEnquiryFormProps) {
         <label className="footer-enquiry-message"><span>{text.message}</span><textarea required rows={2} value={message} onChange={(event) => setMessage(event.target.value)} placeholder={text.messagePlaceholder} /></label>
       </div>
       <div className="footer-enquiry-actions"><button className="footer-enquiry-submit" type="submit" disabled={status === "preparing"}>{status === "preparing" ? text.preparing : <>{text.submit} <ArrowUpRight size={15} /></>}</button><small><Check size={13} /> {text.note}</small></div>
-      {status === "ready" && <p className="footer-enquiry-status" role="status"><MessageCircle size={15} /> {text.ready}</p>}
+      {status === "ready" && (
+        <p className="footer-enquiry-status footer-enquiry-success" role="status" aria-live="polite">
+          <span className="footer-enquiry-success-icon" aria-hidden="true"><Check size={17} strokeWidth={2.4} /></span>
+          <span>
+            <strong>{text.thankYou}</strong>
+            <small>{text.ready}</small>
+          </span>
+          <MessageCircle size={15} aria-hidden="true" />
+        </p>
+      )}
       {status === "blocked" && handoffHref && <p className="footer-enquiry-status" role="status"><span>{text.fallback}</span><a href={handoffHref} target="_blank" rel="noreferrer">{text.fallbackAction} <ArrowUpRight size={13} /></a></p>}
     </form>
   );

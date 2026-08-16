@@ -26,3 +26,13 @@ The completed source-backed Arabic import was rechecked across the full page at 
 The shared English and Arabic footer enquiry form, pricing-card feedback, workflow feedback, and language-toggle transition were verified on full-page desktop and 375px phone captures. The footer fields retain a single-column phone layout, the page hierarchy stays intact, and the Arabic RTL footer form is aligned with the surrounding content.
 
 The opening hero was recomposed to a bright white first-screen treatment. Desktop and 375px phone captures confirm that the full motion panel, complete English and Arabic headlines, supporting copy, primary campaign action, secondary system action, trust line, and visible operational status remain legible without the prior dark-grey background.
+
+## Footer enquiry success state — 2026-08-16
+
+The footer enquiry form now renders a localized thank-you message after the prepared WhatsApp handoff enters the ready state. The success state includes a compact animated checkmark, a secondary readiness message, and an accessible `role="status"` live region. The existing popup-blocked recovery link remains unchanged.
+
+Automated verification covers English and Arabic handoffs, the success checkmark marker, the localized thank-you copy, the prepared WhatsApp URL, and the explicit `prefers-reduced-motion` CSS fallback that disables both success animations. The full Vitest suite, TypeScript check, and production build passed.
+
+Desktop full-page captures were taken for `/` and `/ar` at 1280×720, and phone full-page captures were taken for both routes at 375×812. Both language versions retain the footer form’s responsive structure and readable hierarchy. The post-submit success content is protected by interaction tests because static full-page captures do not submit forms.
+
+The build still reports the existing non-blocking large-chunk advisory for the PDF/DOCX tooling bundles. No new frontend or form runtime error was introduced by this change.
