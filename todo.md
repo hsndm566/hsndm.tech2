@@ -164,3 +164,4 @@
 - [x] Repair and verify the Railway chatbot deployment with hsndm.tech CORS and a persisted web lead
 - [x] Add and verify an electric-blue AutoApply SA chat widget only after the backend passes live integration checks
 - [x] Replace the failing Railway Railpack build path with a minimal Python Dockerfile and validate the chatbot deployment from source
+- [x] Verify and publish the AutoApply SA chat widget to the active public hsndm.tech frontend while preserving the current GitHub Pages deployment contract
