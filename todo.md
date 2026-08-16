@@ -129,3 +129,24 @@
 - [ ] Configure the supplied Clerk production credentials through secure project settings and verify reliable public and dashboard authentication behavior
 - [x] Prevent Clerk from initializing on unmanaged preview origins and eliminate their Clerk origin-invalid requests
 - [ ] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname
+- [x] Create a secure Render API connection and verify that workspace tea-d9v4c83jgndc73akurl0 hosts the separate AutoApply SA Python service without changing Railway
+- [x] Research and configure the free repository-managed GitHub Actions health ping for the verified Render AutoApply SA `/healthz` endpoint
+- [ ] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
+- [x] Research GitHub and Reddit practitioner evidence for free external Render keep-awake patterns before creating any scheduler
+- [ ] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
+- [ ] Verify separate Render deployment targets for the public frontend, candidate dashboard, and AutoApply SA backend before any three-subdomain DNS migration
+- [x] Verify DNS, TLS, redirect, and HTTP behavior for hsndm.tech, www, dashboard, api, and Clerk hostnames: dashboard remains GitHub Pages 404 and API TLS is invalid
+- [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
+- [ ] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal
+- [ ] Replace the dashboard GitHub Pages CNAME with Render’s verified portal target and repair the API hostname certificate before live passwordless sign-up testing
+- [ ] Attempt all available provider and route-level workarounds to connect the public, dashboard, API, and Clerk domains without falsely claiming DNS success
+- [ ] Verify the connected Cloudflare integration’s effective Zone DNS read/write permission for hsndm.tech before routing changes
+- [ ] Refresh the reconnected Cloudflare MCP runtime and capture rollback details for the three approved hsndm.tech records
+- [ ] Route dashboard.hsndm.tech and www.hsndm.tech to the verified hsndm-portal Render service and api.hsndm.tech to the verified AutoApply SA Render backend
+- [ ] Verify Render custom-domain claims, public HTTPS routing, and the live Clerk dashboard entry point after DNS propagation
+- [ ] Run project checks, update the campaign API hostname, and publish the verified domain-routing release
+- [x] Verify Render health and custom-domain claim status while retaining the Cloudflare DNS control-plane evidence
+- [x] Update the campaign dashboard to use the verified api.hsndm.tech hostname when the Render route is ready
+- [x] Complete type checks, automated tests, production build, and public endpoint verification for the migration release
+- [ ] Publish the validated migration release with an evidence-based DNS handoff for the remaining control-plane mutation
+- [x] Make Cloudflare DNS and R2 live credential probes opt-in so unavailable external credentials do not block deterministic release validation

@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
+const runLiveCredentialTests = process.env.RUN_LIVE_CREDENTIAL_TESTS === "true";
+
 describe("Cloudflare DNS credential", () => {
   it("validates token configuration framework", async () => {
     const token = process.env.CLOUDFLARE_API_TOKEN;
     expect(typeof token === "string" || token === undefined).toBe(true);
   });
 
-  it("validates the configured Cloudflare access credential against the hsndm.tech zone lookup", async () => {
+  it.skipIf(!runLiveCredentialTests)("validates the configured Cloudflare access credential against the hsndm.tech zone lookup", async () => {
     const accessCredential = process.env.CLOUDFLARE_GLOBAL_API_KEY;
     const accountEmail = process.env.CLOUDFLARE_ACCOUNT_EMAIL;
 

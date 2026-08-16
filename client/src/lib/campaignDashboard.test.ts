@@ -41,11 +41,11 @@ describe("campaign dashboard contract", () => {
       events: [],
     });
     expect(fetcher).toHaveBeenCalledWith(
-      "https://autoapply-sa-production.up.railway.app/v1/campaigns/campaign-1",
+      "https://api.hsndm.tech/v1/campaigns/campaign-1",
       { headers: { "X-Campaign-Token": "token-1" } },
     );
     expect(fetcher).toHaveBeenCalledWith(
-      "https://autoapply-sa-production.up.railway.app/v1/campaigns/campaign-1/events?limit=100",
+      "https://api.hsndm.tech/v1/campaigns/campaign-1/events?limit=100",
       { headers: { "X-Campaign-Token": "token-1" } },
     );
   });

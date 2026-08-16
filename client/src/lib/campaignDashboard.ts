@@ -1,4 +1,8 @@
-export const RAILWAY_CAMPAIGN_API_BASE = "https://autoapply-sa-production.up.railway.app";
+/**
+ * Public campaign API origin. DNS routes this hostname to the isolated AutoApply SA
+ * Render backend so candidate links never expose an infrastructure-provider URL.
+ */
+export const CAMPAIGN_API_BASE = "https://api.hsndm.tech";
 
 export type CampaignSummary = {
   id: string;
@@ -89,7 +93,7 @@ async function readJson<T>(response: Response): Promise<T> {
 }
 
 export async function fetchCampaignDashboard(link: CampaignLink, fetcher: typeof fetch = fetch): Promise<CampaignDashboardPayload> {
-  const path = `${RAILWAY_CAMPAIGN_API_BASE}/v1/campaigns/${encodeURIComponent(link.campaignId)}`;
+  const path = `${CAMPAIGN_API_BASE}/v1/campaigns/${encodeURIComponent(link.campaignId)}`;
   const headers = { "X-Campaign-Token": link.accessToken };
 
   let summaryResponse: Response;
