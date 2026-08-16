@@ -118,3 +118,4 @@
 - [x] Verify the reported Railway hsndm.tech2 source connection: it remains unchanged, so ATS/API cannot be tested from Railway
 - [ ] Complete Railway browser authentication inside the current interface and verify the static-service source migration
 - [x] Verify the configured Railway API connector cannot complete the service-source migration without browser authentication: the project token is denied for `serviceConnect`
+- [x] Research and verify August 2026 GitHub Student Developer Pack backend and hosting offers suited to the AutoApply SA stack
