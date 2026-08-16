@@ -151,4 +151,4 @@
 - [ ] Publish the validated migration release with an evidence-based DNS handoff for the remaining control-plane mutation
 - [x] Make Cloudflare DNS and R2 live credential probes opt-in so unavailable external credentials do not block deterministic release validation
 - [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
-- [ ] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
+- [x] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
