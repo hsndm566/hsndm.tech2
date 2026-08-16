@@ -104,3 +104,9 @@
 - [x] Inspect zone ID for hsndm.tech using authenticated token (zone ID found: f5249271f49ed2d34cb62a00d2ad078a; DNS record inspection returned HTTP 403 due to token permissions)
 - [ ] Create or update CNAME record for dashboard.hsndm.tech pointing to managed deployment or Vercel/Railway target
 - [ ] Create or update CNAME record for api.hsndm.tech pointing to Railway backend (autoapply-sa-production.up.railway.app)
+- [ ] Consolidate the public, dashboard, API, and Clerk subdomain routes into one verified AutoApply SA architecture without disrupting the live site
+- [ ] Connect verified dashboard and Clerk routes before applying the Railway API DNS route
+- [ ] Validate the user-supplied Cloudflare administrator credential and inspect live hsndm.tech DNS records
+- [ ] Validate the newly supplied Cloudflare access credential against hsndm.tech zone and DNS permissions
+- [ ] Validate the supplied Cloudflare R2 storage credential and endpoint without using it for DNS changes
+- [ ] Troubleshoot all supplied Cloudflare, R2, Railway, GitHub Pages, and browser-session paths before concluding the compact routing work
