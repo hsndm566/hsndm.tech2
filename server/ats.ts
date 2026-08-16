@@ -13,5 +13,12 @@ export async function analyzeAts(input: z.infer<typeof atsInput>) {
   });
   const content = response.choices[0]?.message?.content;
   if (typeof content !== "string") throw new Error("ATS analysis returned no structured text");
-  return atsOutput.parse(JSON.parse(content));
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    const cleaned = content.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/, "").trim();
+    parsed = JSON.parse(cleaned);
+  }
+  return atsOutput.parse(parsed);
 }

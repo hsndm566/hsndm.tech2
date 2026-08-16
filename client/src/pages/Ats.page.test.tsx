@@ -71,4 +71,37 @@ describe("ATS page local upload", () => {
     fireEvent.click(getByRole("button", { name: /save private review note/i }));
     expect(mocks.saveResumeMetadata).toHaveBeenCalledWith(expect.objectContaining({ resumeSummary: expect.stringContaining("74/100") }), expect.any(Object));
   });
+
+  it("handles ATS analysis execution and allows users to retry after an error", async () => {
+    const mutateMock = vi.fn();
+    let isPendingState = false;
+    let errorState: Error | null = null;
+
+    vi.mocked(await import("@/lib/trpc")).trpc.campaign.ats.analyze.useMutation = () => ({
+      data: mocks.analysis,
+      error: errorState,
+      isPending: isPendingState,
+      mutate: mutateMock,
+    } as any);
+
+    const { default: Ats } = await import("./Ats");
+    const { getByRole, getByPlaceholderText, rerender, container } = render(<Ats />);
+
+    const textarea = container.querySelector("textarea") as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: "A".repeat(130) } });
+    await waitFor(() => expect(container.querySelector("button")?.getAttribute("disabled")).toBeNull());
+
+    const runButton = container.querySelector("button.bg-\\[\\#151515\\]") as HTMLButtonElement;
+    expect(runButton.getAttribute("disabled")).toBeNull();
+    fireEvent.click(runButton);
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+
+    // Simulate mutation error state
+    errorState = new Error("Failed");
+    rerender(<Ats />);
+    expect(container.querySelector("[role=\"alert\"]")).toBeTruthy();
+    const tryAgainButton = getByRole("button", { name: /try again/i });
+    fireEvent.click(tryAgainButton);
+    expect(mutateMock).toHaveBeenCalledTimes(2);
+  });
 });

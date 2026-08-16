@@ -110,3 +110,4 @@
 - [ ] Validate the newly supplied Cloudflare access credential against hsndm.tech zone and DNS permissions
 - [ ] Validate the supplied Cloudflare R2 storage credential and endpoint without using it for DNS changes
 - [ ] Troubleshoot all supplied Cloudflare, R2, Railway, GitHub Pages, and browser-session paths before concluding the compact routing work
+- [x] Diagnose and fix ATS review flow uploading, parsing, analysis, and error recovery states
