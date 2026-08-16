@@ -123,3 +123,4 @@
 - [x] Verify the anime.js enhancement with automated, reduced-motion, desktop, and phone checks before publication
 - [x] Run a runtime reduced-motion verification proving the anime.js layer leaves hero text and interactions visible and stable
 - [x] Reinitialize anime.js motion safely after client-side route and language changes
+- [x] Refactor dense Arabic CV intake and readiness markup into maintainable sub-components without changing behavior

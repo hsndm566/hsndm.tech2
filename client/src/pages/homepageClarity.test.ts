@@ -3,7 +3,8 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const homeSource = () => readFileSync(resolve(process.cwd(), "client/src/pages/Home.tsx"), "utf8");
-const arabicHomeSource = () => readFileSync(resolve(process.cwd(), "client/src/pages/ArabicHome.tsx"), "utf8");
+  const arabicHomeSource = () => readFileSync(resolve(process.cwd(), "client/src/pages/ArabicHome.tsx"), "utf8");
+  const arabicIntakeSource = () => readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicIntakeSection.tsx"), "utf8") + readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicScanProgress.tsx"), "utf8") + readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicMatchedResults.tsx"), "utf8");
 const stylesSource = () => readFileSync(resolve(process.cwd(), "client/src/index.css"), "utf8");
 
 describe("homepage clarity release", () => {
@@ -51,11 +52,11 @@ describe("homepage clarity release", () => {
     expect(english).toContain("AI skills currently unavailable");
     expect(english).toContain("Hover skill chips to see alignment");
 
-    expect(arabic).toContain("الفحص محلياً");
-    expect(arabic).toContain("extractSkillsMutation");
-    expect(arabic).toContain("المهارات الأساسية المستخرجة بالذكاء الاصطناعي");
-    expect(arabic).toContain("المهارات الذكية غير متوفرة حالياً");
-    expect(arabic).toContain("مرّر مؤشر الماوس فوق المهارات");
+    const intake = arabicIntakeSource();
+    expect(intake).toContain("الفحص محلياً");
+    expect(intake).toContain("المهارات الأساسية المستخرجة بالذكاء الاصطناعي");
+    expect(intake).toContain("المهارات الذكية غير متوفرة حالياً");
+    expect(intake).toContain("مرّر مؤشر الماوس فوق المهارات");
   });
 
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
@@ -69,8 +70,9 @@ describe("homepage clarity release", () => {
     expect(source).not.toContain("البنية التحتية للتقديم");
     expect(source).not.toContain("ما تقدّمه الخدمة");
     expect(source).not.toContain("هذا المثال التوضيحي يشرح كيف تنتقل الحملة");
-    expect(source).toContain("استلام السيرة الذاتية");
-    expect(source).toContain("أضف سيرتك الذاتية.");
+    const intake = arabicIntakeSource();
+    expect(intake).toContain("استلام السيرة الذاتية");
+    expect(intake).toContain("أضف سيرتك الذاتية.");
     expect(stylesSource()).not.toContain("سنوضح لك ما تستطيع فعله.");
   });
 
