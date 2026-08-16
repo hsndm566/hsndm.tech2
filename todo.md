@@ -59,7 +59,7 @@
 - [x] Verify www.hsndm.tech serves the updated release and both configured video paths respond successfully
 - [x] Diagnose and resolve the GitHub connector propagation failure before publishing the preserved hsndm.tech release
 - [ ] Audit and correct only the root, dashboard, and API DNS records for hsndm.tech using Cloudflare, then verify service routing
-- [ ] Diagnose Cloudflare API token delivery and validation after the newly supplied credential update
+- [x] Diagnose Cloudflare API token delivery and validation after the newly supplied credential update
 - [x] Add cache-busted hero and explainer video references, rebuild, and verify them through www.hsndm.tech
 - [x] Correct the opening hero video's crop, transparency, and contrast without changing the public conversion flow
 - [x] Repair Arabic RTL spacing, alignment, and copy-level redundancy or typographic defects while preserving the approved content
