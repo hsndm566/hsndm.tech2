@@ -42,4 +42,24 @@ describe("ArabicHome canonical taxonomy flow", () => {
       expect(container.textContent).toContain("المالية والمصارف");
     });
   });
+
+  it("preserves the Arabic intake, local scan, readiness, and privacy landmarks", async () => {
+    const { default: ArabicHome } = await import("./ArabicHome");
+    const { container } = render(<ArabicHome />);
+
+    expect(container.querySelector(".arabic-canonical-preference")).not.toBeNull();
+    expect(container.querySelector(".drop-zone")).not.toBeNull();
+    expect(container.querySelector(".privacy-note")).not.toBeNull();
+
+    const upload = container.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(upload, { target: { files: [new File(["cv"], "cv.txt", { type: "text/plain" })] } });
+    await waitFor(() => expect(mocks.callbacks.length).toBeGreaterThan(0));
+    mocks.callbacks.at(-1)!(999_999);
+
+    await waitFor(() => {
+      expect(container.querySelector(".role-results")).not.toBeNull();
+      expect(container.querySelector(".readiness-card")).not.toBeNull();
+      expect(container.textContent).toContain("أرسل هذا الملخص إلى حسن");
+    });
+  });
 });
