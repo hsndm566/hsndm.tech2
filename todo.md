@@ -12,7 +12,7 @@
 
 - [x] Configure passwordless email authentication for client dashboard sessions.
 - [x] Bind and verify dashboard.hsndm.tech for private candidate access.
-- [ ] External setup required: point dashboard.hsndm.tech to the managed deployment and complete the Clerk custom-domain DNS verification for clerk.hsndm.tech before live passwordless sign-in can be tested.
+- [ ] External setup required: point dashboard.hsndm.tech to the managed deployment and complete the Clerk custom-domain DNS verification for clerk.hsndm.tech before live passwordless sign-in can be tested
 - [x] Implement candidate profile settings page and database persistence
 - [x] Replace dashboard spinner with skeleton loading UI during data fetch
 - [x] Build recent activity feed for application status updates and notifications
@@ -71,7 +71,7 @@
 - [ ] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
 - [ ] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
 - [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
-- [ ] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
+- [x] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
 - [ ] Route api.hsndm.tech and dashboard.hsndm.tech only after their exact provider targets are verified
 - [x] Import the user-approved Arabic revision and run bilingual regression and layout verification
 - [x] Replace current Arabic landing-page copy with the user-approved reviewed Arabic source
@@ -90,4 +90,12 @@
 - [x] Add an explicit reduced-motion regression assertion for the footer success animation fallback
 - [x] Capture and record post-submission desktop English and Arabic footer-success verification
 - [x] Publish the verified footer success-state update
-
+- [ ] Verify the exact provider targets and credential path for root, api, dashboard, clerk, apply, and content subdomains without guessing DNS records
+- [x] Add English and Arabic legal pages as working drafts for Privacy Policy and Terms & Conditions, pending qualified legal review
+- [x] Add a consent-aware cookie banner that gates optional analytics until an affirmative choice
+- [x] Add llms.txt, sitemap coverage, JSON-LD, page-specific sharing metadata, and security-header configuration where compatible
+- [x] Add a persistent WhatsApp Business contact entry point and a Saudi payment-gateway placeholder that does not process payments
+- [x] Add a non-fabricated Saudi-context case-study framework without inventing customer reviews or results
+- [ ] Create minimal real subdomain landing content only after DNS targets are verified
+- [x] Extend each approved addition with equal-depth Arabic content, proper RTL behavior, and locale-preserving navigation
+- [x] Run staged mobile, accessibility, bilingual, and production verification without altering existing public conversion flows

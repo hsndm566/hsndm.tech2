@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ callbacks: [] as FrameRequestCallback[] }));
 
-vi.mock("wouter", () => ({ Link: ({ children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a {...props}>{children}</a> }));
+vi.mock("wouter", () => ({ Link: ({ children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a {...props}>{children}</a>, useLocation: () => ["/ar", vi.fn()] }));
 vi.mock("@/components/HeroMedia", () => ({ default: () => <div /> }));
 vi.mock("@/components/Map", () => ({ MapView: () => <div /> }));
 vi.mock("@/lib/seo", () => ({ applyPageSeo: vi.fn() }));

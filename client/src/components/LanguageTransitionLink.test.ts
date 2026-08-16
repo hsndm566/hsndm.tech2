@@ -7,7 +7,8 @@ describe("LanguageTransitionLink", () => {
   it("uses a short navigation transition while respecting reduced-motion settings", () => {
     expect(source).toContain("prefers-reduced-motion: reduce");
     expect(source).toContain('document.documentElement.dataset.localeTransition = "out"');
-    expect(source).toContain("window.location.assign(href)");
+    expect(source).toContain("window.location.assign(targetHref || href)");
+    expect(source).toContain("autoapply_preferred_locale");
     expect(source).toContain("event.metaKey || event.ctrlKey");
   });
 });

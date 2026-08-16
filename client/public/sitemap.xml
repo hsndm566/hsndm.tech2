@@ -6,13 +6,17 @@
   <url><loc>https://hsndm.tech/ar/enquire</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hsndm.tech/ats</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hsndm.tech/pricing</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://hsndm.tech/services</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://hsndm.tech/ar/pricing</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://hsndm.tech/ar/services</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://hsndm.tech/how-it-works</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://hsndm.tech/support</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://hsndm.tech/case-studies</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://hsndm.tech/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://hsndm.tech/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://hsndm.tech/ar/how-it-works</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://hsndm.tech/ar/support</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://hsndm.tech/ar/case-studies</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://hsndm.tech/ar/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://hsndm.tech/ar/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

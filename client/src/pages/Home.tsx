@@ -383,7 +383,7 @@ export default function Home() {
         </nav>
 
         <div className="nav-actions">
-          <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>EN</span><span>AR</span></LanguageTransitionLink>
+          <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>English</span><span>العربية</span></LanguageTransitionLink>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"

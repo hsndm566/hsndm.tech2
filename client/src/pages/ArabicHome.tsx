@@ -227,7 +227,7 @@ export default function ArabicHome() {
         <nav className="desktop-nav" aria-label="روابط الصفحة">
           <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
         </nav>
-        <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>EN</span><span>AR</span></LanguageTransitionLink>
+        <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>English</span><span>العربية</span></LanguageTransitionLink>
       </header>
 
       <main id="top">

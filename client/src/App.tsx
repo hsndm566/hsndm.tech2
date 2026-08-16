@@ -24,10 +24,13 @@ const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
+const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
 import { useLocation } from "wouter";
 import { ClerkProvider, useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { setClerkTokenGetter } from "@/lib/clerkToken";
 import { isDashboardSubdomain } from "@/lib/subdomain";
+import { CookieConsent } from "@/components/CookieConsent";
+import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -62,7 +65,8 @@ function Router() {
       }
       if (location === "/") {
         const hasVisited = sessionStorage.getItem("autoapply_lang_routed");
-        if (!hasVisited && navigator.language && navigator.language.startsWith("ar")) {
+        const preferredLocale = document.cookie.split("; ").find((entry) => entry.startsWith("autoapply_preferred_locale="))?.split("=")[1];
+        if (!hasVisited && (preferredLocale === "ar" || (!preferredLocale && navigator.language && navigator.language.startsWith("ar")))) {
           sessionStorage.setItem("autoapply_lang_routed", "true");
           setLocation("/ar");
         }
@@ -89,13 +93,17 @@ function Router() {
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
       <Route path="/pricing" component={() => <PricingPage />} />
+      <Route path="/services" component={() => <ServicesPage />} />
       <Route path="/ar/pricing" component={() => <PricingPage language="ar" />} />
+      <Route path="/ar/services" component={() => <ServicesPage language="ar" />} />
       <Route path="/how-it-works" component={() => <InformationPage kind="how" />} />
       <Route path="/support" component={() => <InformationPage kind="support" />} />
+      <Route path="/case-studies" component={() => <InformationPage kind="case" />} />
       <Route path="/privacy" component={() => <InformationPage kind="privacy" />} />
       <Route path="/terms" component={() => <InformationPage kind="terms" />} />
       <Route path="/ar/how-it-works" component={() => <InformationPage kind="how" language="ar" />} />
       <Route path="/ar/support" component={() => <InformationPage kind="support" language="ar" />} />
+      <Route path="/ar/case-studies" component={() => <InformationPage kind="case" language="ar" />} />
       <Route path="/ar/privacy" component={() => <InformationPage kind="privacy" language="ar" />} />
       <Route path="/ar/terms" component={() => <InformationPage kind="terms" language="ar" />} />
       <Route path="/404" component={NotFound} />
@@ -110,6 +118,8 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster richColors position="top-right" />
+          <CookieConsent />
+          <WhatsAppBusinessCta />
           <Suspense fallback={<main className="min-h-screen bg-[#f3f0e9]" aria-busy="true" />}>
             <Router />
           </Suspense>

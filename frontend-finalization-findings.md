@@ -36,3 +36,15 @@ Automated verification covers English and Arabic handoffs, the success checkmark
 Desktop full-page captures were taken for `/` and `/ar` at 1280×720, and phone full-page captures were taken for both routes at 375×812. Both language versions retain the footer form’s responsive structure and readable hierarchy. The post-submit success content is protected by interaction tests because static full-page captures do not submit forms.
 
 The build still reports the existing non-blocking large-chunk advisory for the PDF/DOCX tooling bundles. No new frontend or form runtime error was introduced by this change.
+
+## Additive trust, discovery, and services pass — 2026-08-16
+
+The public site now includes bilingual working-draft Privacy Policy and Terms & Conditions pages. The privacy content describes collection purpose, minimisation, retention, safeguards, data-subject requests, and optional analytics; the terms distinguish preview guidance from an agreed campaign and state that pricing, cancellation, and any refund position must be set in the relevant written agreement before paid work begins. Both pages visibly identify themselves as drafts requiring qualified Saudi legal review.
+
+Optional analytics is no longer loaded from the initial HTML document. A compact consent notice gives the visitor an affirmative opt-in or a necessary-only choice, persists that decision in a first-party preference cookie, and provides a localized privacy-policy link and settings reset. The English and Arabic interaction tests verify that analytics remains absent until a choice permits it and that Arabic visitors receive an RTL privacy path.
+
+The technical discovery layer now includes `llms.txt`, updated bilingual sitemap entries, route-specific static sharing metadata, and Organization/Service/Person JSON-LD. Production-only baseline security headers cover content type, referrer policy, clickjacking protection, permissions policy, CSP, and HTTPS HSTS; development CSP remains relaxed so Vite refresh behavior is not impaired.
+
+The site also includes a persistent WhatsApp Business entry point, a clearly inactive Saudi payment-path placeholder, a two-track bilingual Services overview, and a KAIA Terminal 1 case-study route. The case-study figures are explicitly marked as owner-supplied and not a guaranteed or repeatable outcome. Desktop and 375px mobile captures confirm readable English and Arabic layout for the new services, case-study, pricing, privacy, and terms pages. The complete deterministic test suite, TypeScript check, and production build passed after these additions.
+
+The Railway backend health endpoint remains available. DNS routing for `api.hsndm.tech`, `dashboard.hsndm.tech`, and the proposed future subdomains was not modified because the injected Cloudflare credential continues to return HTTP 401 during read-only token verification; no DNS target was guessed or changed.

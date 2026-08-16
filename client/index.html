@@ -23,11 +23,38 @@
     <meta name="twitter:title" content="AutoApply SA | Your 24/7 AI Job Engine" />
     <meta name="twitter:description" content="A focused application engine for job seekers pursuing roles across Saudi Arabia." />
     <meta name="twitter:image" content="https://hsndm.tech/manus-storage/autoapply-hero-operations_ad007abc.jpg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "AutoApply SA",
+            "url": "https://hsndm.tech/",
+            "email": "hasan@hsndm.tech",
+            "areaServed": { "@type": "Country", "name": "Saudi Arabia" },
+            "address": { "@type": "PostalAddress", "addressLocality": "Jeddah", "addressCountry": "SA" }
+          },
+          {
+            "@type": "Service",
+            "name": "AutoApply SA job-application support",
+            "provider": { "@type": "Organization", "name": "AutoApply SA" },
+            "areaServed": { "@type": "Country", "name": "Saudi Arabia" },
+            "description": "Saudi-focused CV matching, application-campaign support, and candidate application tracking."
+          },
+          {
+            "@type": "Person",
+            "name": "Hasan Adam",
+            "jobTitle": "Industrial Engineer and Automation Strategist",
+            "address": { "@type": "PostalAddress", "addressLocality": "Jeddah", "addressCountry": "SA" }
+          }
+        ]
+      }
+    </script>
     <title>AutoApply SA | AI Job Application Engine for Saudi Arabia</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script defer src="%VITE_ANALYTICS_ENDPOINT%/umami" data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 </html>

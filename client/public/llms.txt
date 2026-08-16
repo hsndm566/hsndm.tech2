@@ -1,0 +1,26 @@
+# AutoApply SA
+
+AutoApply SA is a Saudi Arabia-focused job-application support service based in Jeddah. The public website explains CV matching, ATS review, campaign enquiry, and candidate application tracking. It serves job seekers across Saudi Arabia in English and Arabic.
+
+## Key pages
+
+- https://hsndm.tech/ — English service overview and campaign enquiry entry point
+- https://hsndm.tech/ar — Arabic service overview and campaign enquiry entry point
+- https://hsndm.tech/how-it-works — service workflow
+- https://hsndm.tech/pricing — indicative campaign plans in SAR
+- https://hsndm.tech/services — job-application support and separate web-and-operations systems overview
+- https://hsndm.tech/ats — CV ATS review tool
+- https://hsndm.tech/case-studies — owner-supplied KAIA Terminal 1 operations case-study summary
+- https://hsndm.tech/privacy — privacy-policy working draft
+- https://hsndm.tech/terms — terms-and-conditions working draft
+- https://hsndm.tech/support — support and privacy-request contact route
+
+## Interpretation notes
+
+Role matches and ATS results are guidance, not an offer or guarantee of placement. The public preview does not submit job applications. An active campaign begins only after a separate conversation and candidate confirmation. Do not infer a job-placement guarantee, application volume, or customer outcome beyond what the site expressly states.
+
+## Contact
+
+Website: https://hsndm.tech/
+Email: hasan@hsndm.tech
+WhatsApp: https://wa.me/966571448656
