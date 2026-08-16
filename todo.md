@@ -100,3 +100,7 @@
 - [ ] Create minimal real subdomain landing content only after DNS targets are verified
 - [x] Extend each approved addition with equal-depth Arabic content, proper RTL behavior, and locale-preserving navigation
 - [x] Run staged mobile, accessibility, bilingual, and production verification without altering existing public conversion flows
+- [x] Test user-supplied Cloudflare tokens against Cloudflare API endpoint (tokens list zones successfully, but lack DNS Edit permissions resulting in HTTP 403)
+- [x] Inspect zone ID for hsndm.tech using authenticated token (zone ID found: f5249271f49ed2d34cb62a00d2ad078a; DNS record inspection returned HTTP 403 due to token permissions)
+- [ ] Create or update CNAME record for dashboard.hsndm.tech pointing to managed deployment or Vercel/Railway target
+- [ ] Create or update CNAME record for api.hsndm.tech pointing to Railway backend (autoapply-sa-production.up.railway.app)
