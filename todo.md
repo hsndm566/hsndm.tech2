@@ -111,3 +111,10 @@
 - [ ] Validate the supplied Cloudflare R2 storage credential and endpoint without using it for DNS changes
 - [ ] Troubleshoot all supplied Cloudflare, R2, Railway, GitHub Pages, and browser-session paths before concluding the compact routing work
 - [x] Diagnose and fix ATS review flow uploading, parsing, analysis, and error recovery states
+- [ ] Verify and repair Railway API health routing, frontend API configuration, and dashboard hostname delivery end to end
+- [ ] Provision an isolated Railway service from hsndm566/hsndm.tech2 for the tRPC dashboard and ATS API contract, without altering the existing automation service
+- [ ] Repoint unused Railway static service (d6c650aa-f752-4efa-a6fc-03ecc442858d) to hsndm566/hsndm.tech2
+- [ ] Verify health and tRPC endpoint responses on the new full-stack Railway deployment
+- [x] Verify the reported Railway hsndm.tech2 source connection: it remains unchanged, so ATS/API cannot be tested from Railway
+- [ ] Complete Railway browser authentication inside the current interface and verify the static-service source migration
+- [x] Verify the configured Railway API connector cannot complete the service-source migration without browser authentication: the project token is denied for `serviceConnect`

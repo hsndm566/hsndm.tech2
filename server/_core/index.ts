@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
-import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
@@ -10,25 +9,6 @@ import { registerDataBackupRoutes } from "../dataBackup";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { createHealthPayload } from "../health";
-
-function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
-    const server = net.createServer();
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-    server.on("error", () => resolve(false));
-  });
-}
-
-async function findAvailablePort(startPort: number = 3000): Promise<number> {
-  for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
-  }
-  throw new Error(`No available port found starting from ${startPort}`);
-}
 
 async function startServer() {
   const app = express();
@@ -57,6 +37,7 @@ async function startServer() {
     const allowedOrigins = [
       "https://hsndm.tech",
       "https://www.hsndm.tech",
+      "https://dashboard.hsndm.tech",
     ];
     if (origin && (allowedOrigins.includes(origin) || origin.endsWith(".manus.space") || origin.endsWith(".manus.computer") || origin.startsWith("http://localhost:"))) {
       res.setHeader("Access-Control-Allow-Origin", origin);
@@ -111,11 +92,12 @@ async function startServer() {
     serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
-
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+  // Managed platforms such as Railway route traffic only to their assigned
+  // PORT. Do not probe alternate ports in production or the router will see
+  // an unhealthy deployment even when this process starts successfully.
+  const port = Number.parseInt(process.env.PORT || "3000", 10);
+  if (!Number.isFinite(port) || port <= 0) {
+    throw new Error("PORT must be a positive integer");
   }
 
   server.listen(port, () => {
