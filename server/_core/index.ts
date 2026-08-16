@@ -8,7 +8,7 @@ import { appRouter } from "../routers";
 import { registerDataBackupRoutes } from "../dataBackup";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { createHealthPayload } from "../health";
+import { createDatabaseHealthPayload, createHealthPayload } from "../health";
 
 async function startServer() {
   const app = express();
@@ -58,6 +58,14 @@ async function startServer() {
 
   app.get("/healthz", (_req, res) => {
     res.status(200).json(createHealthPayload());
+  });
+
+  // Database readiness is a separate probe so the ordinary liveness endpoint
+  // remains lightweight and no application records are ever exposed.
+  app.get("/healthz/db", async (_req, res) => {
+    const { checkDatabaseConnection } = await import("../db");
+    const connected = await checkDatabaseConnection();
+    res.status(connected ? 200 : 503).json(createDatabaseHealthPayload(connected));
   });
 
   app.get("/v1/campaigns/latest-activity", async (_req, res) => {

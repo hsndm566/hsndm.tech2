@@ -133,7 +133,7 @@
 - [x] Research and configure the free repository-managed GitHub Actions health ping for the verified Render AutoApply SA `/healthz` endpoint
 - [ ] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
 - [x] Research GitHub and Reddit practitioner evidence for free external Render keep-awake patterns before creating any scheduler
-- [ ] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
+- [x] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
 - [ ] Verify separate Render deployment targets for the public frontend, candidate dashboard, and AutoApply SA backend before any three-subdomain DNS migration
 - [x] Verify DNS, TLS, redirect, and HTTP behavior for hsndm.tech, www, dashboard, api, and Clerk hostnames: dashboard remains GitHub Pages 404 and API TLS is invalid
 - [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
@@ -150,3 +150,5 @@
 - [x] Complete type checks, automated tests, production build, and public endpoint verification for the migration release
 - [ ] Publish the validated migration release with an evidence-based DNS handoff for the remaining control-plane mutation
 - [x] Make Cloudflare DNS and R2 live credential probes opt-in so unavailable external credentials do not block deterministic release validation
+- [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
+- [ ] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete

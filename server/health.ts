@@ -5,11 +5,25 @@ export type HealthPayload = {
   uptime: number;
 };
 
+export type DatabaseHealthPayload = {
+  status: "healthy" | "unhealthy";
+  dependency: "database";
+  timestamp: number;
+};
+
 export function createHealthPayload(now = Date.now(), uptime = process.uptime()): HealthPayload {
   return {
     status: "healthy",
     service: "AutoApply SA",
     timestamp: now,
     uptime,
+  };
+}
+
+export function createDatabaseHealthPayload(connected: boolean, now = Date.now()): DatabaseHealthPayload {
+  return {
+    status: connected ? "healthy" : "unhealthy",
+    dependency: "database",
+    timestamp: now,
   };
 }

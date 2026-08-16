@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   backupSnapshots,
@@ -30,6 +30,20 @@ export async function getDb() {
     }
   }
   return _db;
+}
+
+/** Performs a minimal query without returning or logging application data. */
+export async function checkDatabaseConnection(): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    await db.execute(sql`SELECT 1`);
+    return true;
+  } catch (error) {
+    console.warn("[Database] Readiness probe failed:", error);
+    return false;
+  }
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
