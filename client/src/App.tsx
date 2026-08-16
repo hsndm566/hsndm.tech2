@@ -32,6 +32,7 @@ import { ClerkSessionBoundary } from "@/components/ClerkSessionBoundary";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { AnimeEnhancements } from "@/components/AnimeEnhancements";
+import { AutoApplyChatWidget } from "@/components/AutoApplyChatWidget";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -97,6 +98,7 @@ function Router() {
       <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
+      {!isDashboardSubdomain() && !location.startsWith("/dashboard") ? <AutoApplyChatWidget /> : null}
       </>
     </ClerkSessionBoundary>
   );

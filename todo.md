@@ -152,3 +152,15 @@
 - [x] Make Cloudflare DNS and R2 live credential probes opt-in so unavailable external credentials do not block deterministic release validation
 - [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
 - [x] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
+- [x] Provide Hermes with the verified three-record Cloudflare DNS repair handoff and require complete before-and-after evidence
+- [ ] Independently verify Hermes’s reported DNS changes against Cloudflare resolution, Render custom-domain claims, HTTPS endpoints, and Clerk dashboard access
+- [x] Validate the supplied Railway web-chat endpoint and required allowed-origin configuration for hsndm.tech
+- [x] Evaluate the existing chat component and implement an AutoApply SA branded bilingual mobile-first chat widget
+- [x] Add focused chat-widget tests covering safe reply rendering, session persistence, loading, and error states
+- [x] Verify chat widget keyboard access and phone layout, then publish the validated integration
+- [x] Restore the Railway chatbot deployment and reconfigure its active tenant from Perfect Smile Clinic to AutoApply SA before exposing it to visitors
+- [x] Capture the chatbot repository and Railway deployment rollback state before replacing the Perfect Smile Clinic tenant configuration
+- [x] Reconfigure chatbot identity, FAQs, intake, lead capture, bilingual replies, and human handoff for AutoApply SA
+- [x] Repair and verify the Railway chatbot deployment with hsndm.tech CORS and a persisted web lead
+- [x] Add and verify an electric-blue AutoApply SA chat widget only after the backend passes live integration checks
+- [x] Replace the failing Railway Railpack build path with a minimal Python Dockerfile and validate the chatbot deployment from source
