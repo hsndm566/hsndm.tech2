@@ -51,13 +51,13 @@
 - [x] Preserve the existing www.hsndm.tech CNAME and current media assets in the validated static release package
 - [x] Diagnose and attempt automated repair of the GitHub integration write-permission gap for hsndm566/hsndm.tech
 - [x] Retry publication of the validated release to hsndm566/hsndm.tech and verify the target commit
-- [ ] Verify refreshed GitHub App access, publish to hsndm566/hsndm.tech, and validate www.hsndm.tech with its hero and explainer media
-- [ ] Recheck the newly authorized all-repository GitHub connector scope and complete the requested hsndm.tech release push
-- [ ] Retest the refreshed GitHub authorization and publish hsndm.tech when the connector scope is active
-- [ ] Recheck the GitHub App installation scope until hsndm566/hsndm.tech has active push access
+- [x] Verify refreshed GitHub App access, publish to hsndm566/hsndm.tech, and validate www.hsndm.tech with its hero and explainer media
+- [x] Recheck the newly authorized all-repository GitHub connector scope and complete the requested hsndm.tech release push
+- [x] Retest the refreshed GitHub authorization and publish hsndm.tech when the connector scope is active
+- [x] Recheck the GitHub App installation scope until hsndm566/hsndm.tech has active push access
 - [x] Push the validated static release commit to hsndm566/hsndm.tech and verify remote main matches the staged release
 - [x] Verify www.hsndm.tech serves the updated release and both configured video paths respond successfully
-- [ ] Diagnose and resolve the GitHub connector propagation failure before publishing the preserved hsndm.tech release
+- [x] Diagnose and resolve the GitHub connector propagation failure before publishing the preserved hsndm.tech release
 - [ ] Audit and correct only the root, dashboard, and API DNS records for hsndm.tech using Cloudflare, then verify service routing
 - [ ] Diagnose Cloudflare API token delivery and validation after the newly supplied credential update
 - [x] Add cache-busted hero and explainer video references, rebuild, and verify them through www.hsndm.tech
