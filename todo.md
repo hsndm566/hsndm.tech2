@@ -182,3 +182,4 @@
 - [x] Replace the incorrect public contact email with apply@hsndm.tech across the footer and all user-facing contact surfaces, then verify the deployed result
 - [ ] Retry the live Clerk dashboard flow with apply@hsndm.tech after confirming the existing supplied Clerk credentials remain configured
 - [x] Verify the live Clerk dashboard email-entry experience with apply@hsndm.tech without requesting a magic link or creating an account
+- [x] Repair the bilingual audit so extracted Arabic intake and readiness components are assessed as part of the public parity check
