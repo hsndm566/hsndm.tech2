@@ -131,7 +131,7 @@
 - [ ] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname
 - [x] Create a secure Render API connection and verify that workspace tea-d9v4c83jgndc73akurl0 hosts the separate AutoApply SA Python service without changing Railway
 - [x] Research and configure the free repository-managed GitHub Actions health ping for the verified Render AutoApply SA `/healthz` endpoint
-- [ ] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
+- [x] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
 - [x] Research GitHub and Reddit practitioner evidence for free external Render keep-awake patterns before creating any scheduler
 - [x] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
 - [ ] Verify separate Render deployment targets for the public frontend, candidate dashboard, and AutoApply SA backend before any three-subdomain DNS migration

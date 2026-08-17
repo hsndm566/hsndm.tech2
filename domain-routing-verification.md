@@ -59,3 +59,7 @@ The remaining migration control-plane work was resolved directly through the ref
 Read-only Render API inspection confirms two distinct active web services: `hsndm-portal` (`srv-da12uke1egvs739s2jhg`) for the public site and candidate dashboard, and `autoapply-sa` (`srv-d9vm7ck9v7es73b6k78g`) for the separate automation backend. The portal serves the `www` and `dashboard` user experiences, while `api.hsndm.tech` reaches the separate backend only through its scoped Cloudflare edge route. No backend service configuration, deployment trigger, or Railway service was changed during this check.
 
 The remaining unverified authentication boundary is intentional: the Clerk entry form is live, but a real magic-link request and completed candidate session require explicit approval to send a sign-in email and access to that mailbox.
+
+## 2026-08-17 Railway read-only inventory
+
+The configured Railway project token was verified as project-scoped to the production environment and used only for read-only metadata inspection. The production inventory contains the existing `hsndm.tech`, `saudi-whatsapp-chatbot`, `autoapply-sa`, and `kallas-site` services. None were redeployed, repointed, restarted, or otherwise modified. This preserves the established Railway chatbot and automation workloads while the public portal remains on the separate Render service.
