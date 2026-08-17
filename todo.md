@@ -31,7 +31,7 @@
 - [ ] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
 - [ ] Test the full Clerk magic-link login flow in the browser
 - [x] Bind dashboard.hsndm.tech to the managed production deployment
-- [ ] Publish the latest project state and verify the production homepage video on mobile
+- [x] Publish the latest project state and verify the production homepage video on mobile
 - [x] Audit and improve bilingual recovery states for public conversion flows
 - [x] Improve phone-first accessibility, keyboard focus, and responsive interaction affordances
 - [x] Create verified operator documentation for Clerk sign-in and DNS completion
