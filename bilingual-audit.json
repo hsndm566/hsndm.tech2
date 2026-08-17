@@ -1,13 +1,12 @@
 {
-  "generatedAt": "2026-08-11T22:11:49.554Z",
-  "passed": true,
+  "generatedAt": "2026-08-17T09:51:40.678Z",
+  "passed": false,
   "checks": [
     {
       "name": "matching public section anchors",
-      "pass": true,
+      "pass": false,
       "details": {
         "english": [
-          "case-study",
           "faq",
           "how",
           "location",
@@ -17,14 +16,12 @@
           "upload"
         ],
         "arabic": [
-          "case-study",
           "faq",
           "how",
           "location",
           "pricing",
           "product",
-          "reviews",
-          "upload"
+          "reviews"
         ]
       }
     },
@@ -62,12 +59,12 @@
     },
     {
       "name": "localized Arabic readiness flow",
-      "pass": true,
+      "pass": false,
       "details": "Arabic CV readiness, WhatsApp prefill, and success feedback are present."
     },
     {
       "name": "private browser-only CV handling",
-      "pass": true,
+      "pass": false,
       "details": "Both routes use local text extraction and communicate the file-privacy boundary."
     }
   ]

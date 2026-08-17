@@ -24,8 +24,16 @@ const copy: Record<"en" | "ar", Record<PageKind, PageCopy>> = {
   },
 };
 
+const PUBLIC_EMAIL = "apply@hsndm.tech";
+
+const normalizePublicContact = (value: string) => value.replaceAll("hasan@hsndm.tech", PUBLIC_EMAIL);
+
 export default function InformationPage({ kind, language = "en" }: { kind: PageKind; language?: "en" | "ar" }) {
-  const content = copy[language][kind];
+  const sourceContent = copy[language][kind];
+  const content = {
+    ...sourceContent,
+    sections: sourceContent.sections.map(section => ({ ...section, detail: normalizePublicContact(section.detail) })),
+  };
   const root = language === "ar" ? "/ar" : "/";
   const routeName = kind === "how" ? "how-it-works" : kind === "case" ? "case-studies" : kind;
   const path = `${language === "ar" ? "/ar" : ""}/${routeName}`;

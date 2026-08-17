@@ -179,3 +179,5 @@
 - [x] Audit the mixed Cloudflare proxy states on the hsndm.tech GitHub Pages A records and normalize them only if live reliability evidence warrants a safe change
 - [x] Reproduce and repair the live ATS checker failure on hsndm.tech, including its upload-to-analysis request path and public recovery state
 - [x] Reproduce and repair the AutoApply SA public chat bubble failure, including the browser-to-Railway endpoint contract and mobile behavior
+- [ ] Replace the incorrect public contact email with apply@hsndm.tech across the footer and all user-facing contact surfaces, then verify the deployed result
+- [ ] Retry the live Clerk dashboard flow with apply@hsndm.tech after confirming the existing supplied Clerk credentials remain configured

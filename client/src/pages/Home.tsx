@@ -830,7 +830,7 @@ export default function Home() {
             <span>AutoApply <em>SA</em></span>
           </a>
           <p>Your 24/7 job application engine.<br />Jeddah built. Saudi focused.</p>
-          <a className="footer-email" href="mailto:hasan@hsndm.tech">hasan@hsndm.tech <ArrowUpRight size={16} /></a>
+          <a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a>
         </div>
         <div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="en" /></div>
         <div className="page-frame footer-bottom">

@@ -11,7 +11,7 @@ const [english, arabic] = await Promise.all([readFile(paths.english, "utf8"), re
 const sectionIds = (source) => [...source.matchAll(/<section id="([^"]+)"/g)].map((match) => match[1]).sort();
 const prices = (source) => [...source.matchAll(/price: "(\d+)"/g)].map((match) => match[1]).sort((a, b) => Number(a) - Number(b));
 const legacyTerms = /\b(Gulf|UAE|Dubai|Kuwait|Qatar|Bahrain|Oman)\b|three languages|3 languages/i;
-const publicValues = ["966571448656", "hasan@hsndm.tech", "Jeddah", "Riyadh", "Dammam", "Makkah", "Madinah"];
+const publicValues = ["966571448656", "apply@hsndm.tech", "Jeddah", "Riyadh", "Dammam", "Makkah", "Madinah"];
 const containsAll = (source, values) => values.filter((value) => !source.includes(value));
 
 const checks = [
