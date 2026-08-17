@@ -41,3 +41,15 @@ Final verification returned HTTP 204 with the required origin, methods, headers,
 Cloudflare lists the four documented GitHub Pages A-record addresses for `hsndm.tech`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, and `185.199.111.153`. Repeated public requests resolved through Cloudflare and returned HTTP 200, while direct tests of each configured address completed the expected redirect to the working `www.hsndm.tech` frontend.
 
 GitHub’s official Pages guidance confirms that those four addresses are the supported apex A-record set and recommends configuring the `www` variant alongside the apex for HTTPS sites. Because the existing live root consistently redirects to the verified `www` frontend and the current address set matches GitHub’s required values, no DNS mutation was warranted merely to make the mixed Cloudflare proxy flags uniform. [GitHub Pages custom-domain guidance](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+
+## Current DNS restore baseline
+
+The following exact Cloudflare records were captured after the direct routing repair. They are the current restore baseline for any future routing change.
+
+| Hostname | Record ID | Type | Target | Proxied | TTL |
+| --- | --- | --- | --- | --- | --- |
+| `www.hsndm.tech` | `0fc06e92d4a7ed382169fd222e918593` | CNAME | `hsndm-portal.onrender.com` | No | Auto (`1`) |
+| `dashboard.hsndm.tech` | `c9c3c61b80cc04e30b8dd7b458108976` | CNAME | `hsndm-portal.onrender.com` | No | Auto (`1`) |
+| `api.hsndm.tech` | `4554ad3a8bd8aca94739c216f6d6a396` | CNAME | `autoapply-sa.onrender.com` | Yes | Auto (`1`) |
+
+The remaining migration control-plane work was resolved directly through the refreshed Cloudflare connection. Therefore no DNS handoff remains pending.

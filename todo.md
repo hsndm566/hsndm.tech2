@@ -58,7 +58,7 @@
 - [x] Push the validated static release commit to hsndm566/hsndm.tech and verify remote main matches the staged release
 - [x] Verify www.hsndm.tech serves the updated release and both configured video paths respond successfully
 - [x] Diagnose and resolve the GitHub connector propagation failure before publishing the preserved hsndm.tech release
-- [ ] Audit and correct only the root, dashboard, and API DNS records for hsndm.tech using Cloudflare, then verify service routing
+- [x] Audit and correct only the root, dashboard, and API DNS records for hsndm.tech using Cloudflare, then verify service routing
 - [x] Diagnose Cloudflare API token delivery and validation after the newly supplied credential update
 - [x] Add cache-busted hero and explainer video references, rebuild, and verify them through www.hsndm.tech
 - [x] Correct the opening hero video's crop, transparency, and contrast without changing the public conversion flow
@@ -73,7 +73,7 @@
 - [x] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
 - [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
 - [x] Inspect the configured Railway, Cloudflare, Clerk, and managed-deployment targets without modifying DNS
-- [ ] Route api.hsndm.tech and dashboard.hsndm.tech only after their exact provider targets are verified
+- [x] Route api.hsndm.tech and dashboard.hsndm.tech only after their exact provider targets are verified
 - [x] Import the user-approved Arabic revision and run bilingual regression and layout verification
 - [x] Replace current Arabic landing-page copy with the user-approved reviewed Arabic source
 - [x] Validate the reviewed Arabic page on desktop and mobile before publication
@@ -102,7 +102,7 @@
 - [x] Run staged mobile, accessibility, bilingual, and production verification without altering existing public conversion flows
 - [x] Test user-supplied Cloudflare tokens against Cloudflare API endpoint (tokens list zones successfully, but lack DNS Edit permissions resulting in HTTP 403)
 - [x] Inspect zone ID for hsndm.tech using authenticated token (zone ID found: f5249271f49ed2d34cb62a00d2ad078a; DNS record inspection returned HTTP 403 due to token permissions)
-- [ ] Create or update CNAME record for dashboard.hsndm.tech pointing to managed deployment or Vercel/Railway target
+- [x] Create or update CNAME record for dashboard.hsndm.tech pointing to managed deployment or Vercel/Railway target
 - [ ] Create or update CNAME record for api.hsndm.tech pointing to Railway backend (autoapply-sa-production.up.railway.app)
 - [ ] Consolidate the public, dashboard, API, and Clerk subdomain routes into one verified AutoApply SA architecture without disrupting the live site
 - [ ] Connect verified dashboard and Clerk routes before applying the Railway API DNS route
@@ -139,16 +139,16 @@
 - [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
 - [ ] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal
 - [x] Replace the dashboard GitHub Pages CNAME with Render’s verified portal target and repair the API hostname certificate before live passwordless sign-up testing
-- [ ] Attempt all available provider and route-level workarounds to connect the public, dashboard, API, and Clerk domains without falsely claiming DNS success
-- [ ] Verify the connected Cloudflare integration’s effective Zone DNS read/write permission for hsndm.tech before routing changes
-- [ ] Refresh the reconnected Cloudflare MCP runtime and capture rollback details for the three approved hsndm.tech records
+- [x] Attempt all available provider and route-level workarounds to connect the public, dashboard, API, and Clerk domains without falsely claiming DNS success
+- [x] Verify the connected Cloudflare integration’s effective Zone DNS read/write permission for hsndm.tech before routing changes
+- [x] Refresh the reconnected Cloudflare MCP runtime and capture explicit rollback entries for www.hsndm.tech, dashboard.hsndm.tech, and api.hsndm.tech, including record ID, type, target, proxy state, and TTL
 - [x] Route dashboard.hsndm.tech and www.hsndm.tech to the verified hsndm-portal Render service and api.hsndm.tech to the verified AutoApply SA Render backend
 - [x] Verify Render custom-domain claims, public HTTPS routing, and the live Clerk dashboard entry point after DNS propagation
-- [ ] Run project checks, update the campaign API hostname, and publish the verified domain-routing release
+- [x] Run project checks, update the campaign API hostname, and publish the verified domain-routing release
 - [x] Verify Render health and custom-domain claim status while retaining the Cloudflare DNS control-plane evidence
 - [x] Update the campaign dashboard to use the verified api.hsndm.tech hostname when the Render route is ready
 - [x] Complete type checks, automated tests, production build, and public endpoint verification for the migration release
-- [ ] Publish the validated migration release with an evidence-based DNS handoff for the remaining control-plane mutation
+- [x] Replace the obsolete DNS-handoff record with evidence that direct Cloudflare control resolved the prior control-plane mutation and no handoff remains
 - [x] Make Cloudflare DNS and R2 live credential probes opt-in so unavailable external credentials do not block deterministic release validation
 - [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
 - [x] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
