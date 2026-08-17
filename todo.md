@@ -167,3 +167,4 @@
 - [x] Verify and publish the AutoApply SA chat widget to the active public hsndm.tech frontend while preserving the current GitHub Pages deployment contract
 - [x] Restart and inspect the local development service after prior hot-reload and database-connection warnings, confirming the current project state is clean
 - [x] Fix the observed Google Maps script load failure and verify the localized English and Arabic map experience with a resilient fallback
+- [ ] Resolve the Render custom-domain limit for api.hsndm.tech or select a no-cost verified API-routing alternative; Render rejected the third custom-domain claim because the workspace has no payment method
