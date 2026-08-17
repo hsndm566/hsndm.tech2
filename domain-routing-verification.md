@@ -23,3 +23,9 @@ The source checkout and `user_github` `main` both resolve to `84f3cd12511c221be3
 The refreshed Cloudflare connection was used to preserve the existing `api.hsndm.tech` CNAME target (`autoapply-sa.onrender.com`) while enabling Cloudflare proxying. An isolated `hsndm-api-edge-proxy` Worker now owns only the `api.hsndm.tech/*` route and forwards requests to the verified AutoApply SA Render backend, retaining request path, query parameters, and request headers while removing the upstream `Host` header.
 
 Live verification confirms `https://api.hsndm.tech/healthz` returns HTTP 200 with `X-API-Edge: hsndm` and the AutoApply SA backend health payload. The protected `https://api.hsndm.tech/v1/campaigns/latest-activity` route returns HTTP 403 from the backend with the same edge marker, demonstrating that authorization semantics were preserved rather than bypassed.
+
+## 2026-08-17 authoritative hostname review
+
+Cloudflare now reports exactly one CNAME for each delegated hostname: `www.hsndm.tech` and `dashboard.hsndm.tech` are DNS-only CNAMEs to `hsndm-portal.onrender.com`, while `api.hsndm.tech` is a proxied CNAME to `autoapply-sa.onrender.com` with the isolated Worker route attached. Live checks returned HTTP 200 from the public frontend, dashboard health, database readiness, and API health respectively. The API response includes `X-API-Edge: hsndm`, proving it does not resolve to the public frontend or dashboard service.
+
+The root `hsndm.tech` remains live and returns HTTP 200 from its GitHub Pages address set. Its four GitHub Pages A records have mixed Cloudflare proxy flags, so that existing root configuration was deliberately left unchanged to avoid disrupting a working public apex while the requested `www`, dashboard, and API routes were validated.

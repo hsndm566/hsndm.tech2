@@ -138,12 +138,12 @@
 - [x] Verify DNS, TLS, redirect, and HTTP behavior for hsndm.tech, www, dashboard, api, and Clerk hostnames: dashboard remains GitHub Pages 404 and API TLS is invalid
 - [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
 - [ ] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal
-- [ ] Replace the dashboard GitHub Pages CNAME with Render’s verified portal target and repair the API hostname certificate before live passwordless sign-up testing
+- [x] Replace the dashboard GitHub Pages CNAME with Render’s verified portal target and repair the API hostname certificate before live passwordless sign-up testing
 - [ ] Attempt all available provider and route-level workarounds to connect the public, dashboard, API, and Clerk domains without falsely claiming DNS success
 - [ ] Verify the connected Cloudflare integration’s effective Zone DNS read/write permission for hsndm.tech before routing changes
 - [ ] Refresh the reconnected Cloudflare MCP runtime and capture rollback details for the three approved hsndm.tech records
-- [ ] Route dashboard.hsndm.tech and www.hsndm.tech to the verified hsndm-portal Render service and api.hsndm.tech to the verified AutoApply SA Render backend
-- [ ] Verify Render custom-domain claims, public HTTPS routing, and the live Clerk dashboard entry point after DNS propagation
+- [x] Route dashboard.hsndm.tech and www.hsndm.tech to the verified hsndm-portal Render service and api.hsndm.tech to the verified AutoApply SA Render backend
+- [x] Verify Render custom-domain claims, public HTTPS routing, and the live Clerk dashboard entry point after DNS propagation
 - [ ] Run project checks, update the campaign API hostname, and publish the verified domain-routing release
 - [x] Verify Render health and custom-domain claim status while retaining the Cloudflare DNS control-plane evidence
 - [x] Update the campaign dashboard to use the verified api.hsndm.tech hostname when the Render route is ready
@@ -153,7 +153,7 @@
 - [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
 - [x] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
 - [x] Provide Hermes with the verified three-record Cloudflare DNS repair handoff and require complete before-and-after evidence
-- [ ] Independently verify Hermes’s reported DNS changes against Cloudflare resolution, Render custom-domain claims, HTTPS endpoints, and Clerk dashboard access
+- [ ] Independently verify Hermes’s reported DNS changes against Cloudflare resolution, Render custom-domain claims, HTTPS endpoints, and Clerk dashboard access if Hermes later provides before-and-after evidence
 - [x] Validate the supplied Railway web-chat endpoint and required allowed-origin configuration for hsndm.tech
 - [x] Evaluate the existing chat component and implement an AutoApply SA branded bilingual mobile-first chat widget
 - [x] Add focused chat-widget tests covering safe reply rendering, session persistence, loading, and error states
