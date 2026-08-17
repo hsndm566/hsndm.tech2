@@ -75,3 +75,7 @@ HTTPS checks returned `200` for the public homepage, dashboard health, and Clerk
 The edge worker previously forwarded `HEAD /healthz` to the upstream automation service, which does not implement that method and returned `501`. The worker now handles only `HEAD /healthz` at the edge by checking the same upstream `GET /healthz` status while returning an empty response body. All other routes and methods retain their existing forwarding behavior.
 
 Post-deployment verification returned `200` with the `X-API-Edge: hsndm` marker for both `HEAD` and `GET` health requests. The approved-origin campaign preflight remained `204` with the expected CORS policy, and a protected campaign request with an invalid token remained `403`, confirming that the repair did not bypass authorization.
+
+## 2026-08-17 Clerk dashboard entry recheck
+
+A fresh browser visit to `https://dashboard.hsndm.tech/dashboard` completed successfully and rendered the candidate dashboard boundary with the passwordless “Email me a sign-in link” action. No email identifier was entered and no Clerk request was submitted. This verifies that the dashboard portal and its Clerk-aware entry surface load on the configured custom hostname, while Clerk-side domain activation and the real magic-link session are retained as separate, user-controlled checks.
