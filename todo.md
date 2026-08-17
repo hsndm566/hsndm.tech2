@@ -173,4 +173,4 @@
 - [x] Strengthen Pro pricing-card hierarchy and CSS-only button/CV-drop-zone interaction feedback without changing pricing or colors
 - [x] Add a subtle native live-status pulse to the application-engine panel without changing its copy or layout
 - [x] Add visual-polish regression coverage and validate English and Arabic public pages at a 375px mobile viewport
-- [ ] Diagnose and repair live hero and explainer video delivery failures on www.hsndm.tech, then reverify desktop and 375px mobile playback in English and Arabic
+- [x] Diagnose and repair live hero and explainer video delivery failures on www.hsndm.tech, then reverify desktop and 375px mobile playback in English and Arabic
