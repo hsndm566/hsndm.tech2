@@ -9,7 +9,8 @@ describe("HeroMedia", () => {
     const component = readSource("client/src/components/HeroMedia.tsx");
     const media = readSource("client/src/lib/media.ts");
 
-    expect(media).toContain('/manus-storage/gemini_generated_video_EA567831_5f93d04f.mp4');
+    expect(media).toContain('/manus-storage/autoapply-hero_3e1b06d0.mp4');
+    expect(media).toContain('/manus-storage/autoapply-explainer_0911e97f.mp4');
     expect(component).toContain('autoPlay');
     expect(component).toContain('muted');
     expect(component).toContain('loop');
