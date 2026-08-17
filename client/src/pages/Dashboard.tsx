@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock, PlusCircle, Pencil, Trash2 } from "lucide-react";
+import { Loader2, ArrowLeft, Search, Building2, MapPin, Briefcase, LogIn, LogOut, ShieldCheck, User, Settings, ArrowUpDown, Calendar, Clock, PlusCircle, Pencil, Trash2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
@@ -93,10 +93,10 @@ export default function Dashboard() {
   }, [clerkDashboardEnabled, clerkAuth.isLoaded]);
 
   const utils = trpc.useUtils();
-  const { data: applications = [], isLoading: appsLoading } = trpc.campaign.applications.list.useQuery(undefined, {
+  const { data: applications = [], isLoading: appsLoading, isError: appsError } = trpc.campaign.applications.list.useQuery(undefined, {
     enabled: dashboardAuthenticated,
   });
-  const { data: profile, isLoading: profileLoading } = trpc.campaign.applications.profile.get.useQuery(undefined, {
+  const { data: profile, isLoading: profileLoading, isError: profileError } = trpc.campaign.applications.profile.get.useQuery(undefined, {
     enabled: dashboardAuthenticated,
   });
 
@@ -294,6 +294,25 @@ export default function Dashboard() {
             <SignInButton mode="modal" fallbackRedirectUrl="/dashboard">
               <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">Email me a sign-in link</Button>
             </SignInButton>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
+
+  if (dashboardAuthenticated && (appsError || profileError)) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
+        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+          <CardHeader>
+            <TriangleAlert className="mb-2 h-6 w-6 text-[#e5482a]" aria-hidden="true" />
+            <CardTitle>We could not load your campaign data</CardTitle>
+            <CardDescription>Your data has not been changed. Please try again before relying on the activity shown here.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>
+              Try again
+            </Button>
           </CardContent>
         </Card>
       </main>

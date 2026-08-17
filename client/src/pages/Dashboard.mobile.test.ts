@@ -38,4 +38,11 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("deleteAppMutation");
     expect(dashboardSource).toContain("onClick={(event) => event.stopPropagation()}");
   });
+
+  it("renders a data-error recovery state before considering an authenticated dashboard empty", () => {
+    expect(dashboardSource).toContain("isError: appsError");
+    expect(dashboardSource).toContain("isError: profileError");
+    expect(dashboardSource).toContain("We could not load your campaign data");
+    expect(dashboardSource.indexOf("We could not load your campaign data")).toBeLessThan(dashboardSource.indexOf("applications.length === 0"));
+  });
 });

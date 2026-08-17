@@ -6,7 +6,10 @@ import { createFirstLoginDashboardViewModel } from "@/lib/firstLoginDashboardMod
 import { FirstLoginDashboard } from "./FirstLoginDashboard";
 
 describe("FirstLoginDashboard", () => {
-  afterEach(() => cleanup());
+  afterEach(() => {
+    cleanup();
+    window.localStorage.clear();
+  });
 
   it("uses the signed-in identity without hard-coding a customer", () => {
     render(<FirstLoginDashboard identity={{ fullName: "Aisha Saud", email: "aisha@example.com" }} />);
@@ -51,5 +54,16 @@ describe("FirstLoginDashboard", () => {
     expect(screen.getByRole("complementary", { name: "Dashboard navigation" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
     expect(screen.getByRole("button", { name: "Open navigation" }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("switches the first-login workspace to persisted Arabic RTL copy without changing the signed-in identity", () => {
+    render(<FirstLoginDashboard identity={{ fullName: "Aisha Saud", email: "aisha@example.com" }} />);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Switch dashboard language" })[0]);
+
+    expect(screen.getByText("لنجهّز حملة التوظيف الخاصة بك في السعودية.")).toBeTruthy();
+    expect(screen.getByText("سعداء برؤيتك، Aisha.")).toBeTruthy();
+    expect(document.querySelector('[lang="ar"]')?.getAttribute("dir")).toBe("rtl");
+    expect(window.localStorage.getItem("autoapply_dashboard_locale")).toBe("ar");
   });
 });

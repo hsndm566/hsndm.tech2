@@ -205,5 +205,8 @@
 - [x] Audit the authenticated dashboard for runtime, route, candidate-data, and visual-system issues before publishing
 - [x] Align the first-login dashboard palette and typography with the established bright AutoApply SA site system
 - [x] Verify authenticated candidates receive only their own application and profile data through existing protected dashboard queries
-- [ ] Run complete automated, desktop, mobile, and live-domain dashboard verification, then publish the tested release
+- [x] Run complete automated, desktop, mobile, and live-domain dashboard verification, then publish the tested release
 - [x] Locate the referenced `dashboard_first_login_white_orange_personalized.html` design source; it was supplied as the HTML attachment `pasted_content_3.txt`
+- [x] Compare Claude’s enhanced dashboard source with the current authenticated dashboard and identify compatible improvements without importing static mock data or CDN runtime dependencies
+- [x] Integrate the approved enhanced dashboard visual, responsive, and bilingual usability improvements while retaining the existing protected React data flow
+- [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local release verification; live release verification follows publication
