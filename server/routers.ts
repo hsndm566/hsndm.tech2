@@ -6,6 +6,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { analyzeAts, atsInput } from "./ats";
 import { invokeLLM } from "./_core/llm";
+import { invokeGroqJson, isGroqConfigured } from "./groq";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyClientCvExtractionFailure, notifyClientWorkflowFallback, notifyOperationalFailure } from "./operationalAlerts";
 
@@ -46,16 +47,28 @@ export const appRouter = router({
       }),
       extractSkills: publicProcedure.input(z.object({ cvText: z.string().min(50).max(12000), language: z.enum(["English", "Arabic"]).default("English") })).mutation(async ({ input }) => {
         try {
-          const res = await invokeLLM({
-            model: "gpt-5-mini",
-            max_tokens: 400,
-            response_format: { type: "json_schema", json_schema: { name: "skills_result", strict: true, schema: { type: "object", properties: { keySkills: { type: "array", items: { type: "string" }, maxItems: 6 }, topDomain: { type: "string" } }, required: ["keySkills", "topDomain"], additionalProperties: false } } },
-            messages: [
-              { role: "system", content: `Extract up to 6 explicit professional skills and one broad professional domain from the supplied CV text. Use only evidence in the text. Do not infer credentials, employers, seniority, or outcomes. Return JSON only. Write the skill labels and domain in ${input.language === "Arabic" ? "Arabic" : "English"}.` },
-              { role: "user", content: input.cvText }
-            ],
-          });
-          const content = res.choices[0]?.message?.content;
+          const messages = [
+            { role: "system" as const, content: `Extract up to 6 explicit professional skills and one broad professional domain from the supplied CV text. Use only evidence in the text. Do not infer credentials, employers, seniority, or outcomes. Return JSON only. Write the skill labels and domain in ${input.language === "Arabic" ? "Arabic" : "English"}.` },
+            { role: "user" as const, content: input.cvText }
+          ];
+          let content: string | undefined;
+          if (isGroqConfigured()) {
+            try {
+              content = await invokeGroqJson({ messages, maxCompletionTokens: 400 });
+            } catch {
+              // Retain the established provider as a graceful recovery path.
+            }
+          }
+          if (!content) {
+            const res = await invokeLLM({
+              model: "gpt-5-mini",
+              max_tokens: 400,
+              response_format: { type: "json_schema", json_schema: { name: "skills_result", strict: true, schema: { type: "object", properties: { keySkills: { type: "array", items: { type: "string" }, maxItems: 6 }, topDomain: { type: "string" } }, required: ["keySkills", "topDomain"], additionalProperties: false } } },
+              messages,
+            });
+            const fallbackContent = res.choices[0]?.message?.content;
+            if (typeof fallbackContent === "string") content = fallbackContent;
+          }
           if (typeof content !== "string") return emptySkillsResult;
           return keySkillsOutputSchema.parse(JSON.parse(content));
         } catch {

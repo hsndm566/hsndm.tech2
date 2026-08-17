@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { analyzeAts } from "./ats";
 import { invokeLLM } from "./_core/llm";
+import { invokeGroqJson, isGroqConfigured } from "./groq";
 
 vi.mock("./_core/llm", () => ({
   invokeLLM: vi.fn(async () => ({
@@ -19,6 +20,11 @@ vi.mock("./_core/llm", () => ({
       },
     ],
   })),
+}));
+
+vi.mock("./groq", () => ({
+  isGroqConfigured: vi.fn(() => false),
+  invokeGroqJson: vi.fn(),
 }));
 
 describe("ATS backend analysis", () => {
@@ -40,5 +46,22 @@ describe("ATS backend analysis", () => {
         optimizedBullets: { maxItems: 5 },
       },
     });
+  });
+
+  it("uses Groq when configured and preserves the fallback provider for resilience", async () => {
+    vi.mocked(isGroqConfigured).mockReturnValue(true);
+    vi.mocked(invokeGroqJson).mockResolvedValue(JSON.stringify({
+      score: 76,
+      summary: "Groq review completed.",
+      strengths: ["Relevant analysis skills"],
+      gaps: ["Add quantified outcomes"],
+      optimizedBullets: ["Analysed operational data with SQL."],
+      disclaimer: "Guidance only.",
+    }));
+
+    const result = await analyzeAts({ cvText: "B".repeat(130), targetRole: "Analyst" });
+
+    expect(result.score).toBe(76);
+    expect(invokeGroqJson).toHaveBeenCalledWith(expect.objectContaining({ maxCompletionTokens: 1000 }));
   });
 });

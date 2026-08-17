@@ -209,4 +209,10 @@
 - [x] Locate the referenced `dashboard_first_login_white_orange_personalized.html` design source; it was supplied as the HTML attachment `pasted_content_3.txt`
 - [x] Compare Claude’s enhanced dashboard source with the current authenticated dashboard and identify compatible improvements without importing static mock data or CDN runtime dependencies
 - [x] Integrate the approved enhanced dashboard visual, responsive, and bilingual usability improvements while retaining the existing protected React data flow
-- [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local release verification; live release verification follows publication
+- [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local and live release verification
+- [x] Audit live ATS and chatbot health, including authenticated model configuration readiness, without exposing or duplicating secrets; the live ATS analysis passes, while chatbot Groq is configured but falls back at inference time
+- [ ] Verify whether Groq is configured and responding for the chatbot; repair the confirmed deprecated-model issue and deploy when Railway repository access permits
+- [ ] Re-test ATS and chatbot error recovery with non-customer inputs and publish only verified fixes
+- [ ] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
+- [x] Configure and directly validate the portal’s server-side Groq credential with the Groq models API and a minimal JSON completion without exposing the credential
+- [x] Push the chatbot source repair for Groq’s supported `openai/gpt-oss-20b` model and adequate JSON-completion budget; Railway deployment remains externally blocked
