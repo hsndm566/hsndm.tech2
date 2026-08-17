@@ -165,3 +165,5 @@
 - [x] Add and verify an electric-blue AutoApply SA chat widget only after the backend passes live integration checks
 - [x] Replace the failing Railway Railpack build path with a minimal Python Dockerfile and validate the chatbot deployment from source
 - [x] Verify and publish the AutoApply SA chat widget to the active public hsndm.tech frontend while preserving the current GitHub Pages deployment contract
+- [x] Restart and inspect the local development service after prior hot-reload and database-connection warnings, confirming the current project state is clean
+- [x] Fix the observed Google Maps script load failure and verify the localized English and Arabic map experience with a resilient fallback

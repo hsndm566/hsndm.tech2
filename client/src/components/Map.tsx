@@ -96,13 +96,22 @@ let mapsScriptPromise: Promise<void> | null = null;
 let mapsScriptUrl = "";
 
 export function buildMapsScriptUrl(language = "en", region = "SA") {
-  return `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&language=${language}&region=${region}`;
+  return `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&loading=async&libraries=marker,places,geocoding,geometry&language=${language}&region=${region}`;
 }
 
 export function getMapFallbackMessage(language = "en") {
   return language.toLowerCase().startsWith("ar")
     ? "تعذر تحميل خريطة جدة حالياً. استخدم رابط الاتجاهات لفتحها في خرائط Google."
     : "The Jeddah map is temporarily unavailable. Use Get directions to open Google Maps.";
+}
+
+export function getJeddahDirectionsUrl() {
+  return "https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia";
+}
+
+function resetMapsScriptLoader() {
+  mapsScriptPromise = null;
+  mapsScriptUrl = "";
 }
 
 function loadMapScript(language = "en", region = "SA"): Promise<void> {
@@ -116,14 +125,21 @@ function loadMapScript(language = "en", region = "SA"): Promise<void> {
     const script = document.createElement("script");
     script.src = scriptUrl;
     script.async = true;
+    // The supported Maps proxy authorizes the active application origin. CORS mode
+    // ensures browsers attach that Origin header instead of receiving a 403 response.
     script.crossOrigin = "anonymous";
+    script.dataset.mapsProxyUrl = scriptUrl;
     script.onload = () => {
       script.remove();
       if (window.google?.maps?.Map) resolve();
-      else reject(new Error("Google Maps loaded without a usable map API"));
+      else {
+        resetMapsScriptLoader();
+        reject(new Error("Google Maps loaded without a usable map API"));
+      }
     };
     script.onerror = () => {
       script.remove();
+      resetMapsScriptLoader();
       reject(new Error("Failed to load Google Maps script"));
     };
     document.head.appendChild(script);
@@ -155,6 +171,7 @@ export function MapView({
 
   const init = usePersistFn(async () => {
     try {
+      setMapError(false);
       await loadMapScript(language, region);
       if (!mapContainer.current || !window.google?.maps?.Map) {
         throw new Error("Map container or Google Maps API is unavailable");
@@ -166,13 +183,12 @@ export function MapView({
         fullscreenControl: true,
         zoomControl: true,
         streetViewControl: true,
-        mapId: "DEMO_MAP_ID",
       });
       if (onMapReady) {
         onMapReady(map.current);
       }
     } catch (error) {
-      console.error("Google Maps initialization failed", error);
+      console.warn("Google Maps is unavailable; showing the directions fallback", error);
       setMapError(true);
     }
   });
@@ -180,6 +196,11 @@ export function MapView({
   useEffect(() => {
     init();
   }, [init]);
+
+  const retryMap = () => {
+    resetMapsScriptLoader();
+    void init();
+  };
 
   return (
     <div
@@ -190,8 +211,27 @@ export function MapView({
       aria-live={mapError ? "polite" : undefined}
     >
       {mapError && (
-        <div className="absolute inset-0 grid place-items-center bg-[#151515] px-6 text-center text-sm text-white/80">
-          {getMapFallbackMessage(language)}
+        <div className="absolute inset-0 grid place-items-center bg-slate-50 px-6 text-center text-sm text-slate-700">
+          <div className="max-w-sm space-y-3">
+            <p>{getMapFallbackMessage(language)}</p>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={retryMap}
+                className="rounded-lg bg-[#2563eb] px-3 py-2 font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+              >
+                {language.toLowerCase().startsWith("ar") ? "إعادة المحاولة" : "Try again"}
+              </button>
+              <a
+                href={getJeddahDirectionsUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 font-semibold text-slate-700 transition-colors hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+              >
+                {language.toLowerCase().startsWith("ar") ? "فتح الاتجاهات" : "Get directions"}
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </div>
