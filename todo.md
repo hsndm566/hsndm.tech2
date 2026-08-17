@@ -216,6 +216,6 @@
 - [x] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
 - [x] Inspect the supplied hero clip and current media configuration without changing the existing explainer video
 - [x] Upload the supplied clip to managed static storage and replace only the first landing-page hero video source
-- [x] Verify muted inline looping, rapid loading, framing, and visibility for the new hero on desktop and 375px mobile before publishing
+- [x] Verify muted inline looping, rapid loading, framing, and visibility for the new hero on desktop and 375px mobile, then confirm the live production bundle references it while retaining the explainer video
 - [x] Configure and directly validate the portal’s server-side Groq credential with the Groq models API and a minimal JSON completion without exposing the credential
 - [x] Push the chatbot source repair for Groq’s supported `openai/gpt-oss-20b` model and adequate JSON-completion budget; Railway deployment remains externally blocked
