@@ -167,10 +167,11 @@
 - [x] Verify and publish the AutoApply SA chat widget to the active public hsndm.tech frontend while preserving the current GitHub Pages deployment contract
 - [x] Restart and inspect the local development service after prior hot-reload and database-connection warnings, confirming the current project state is clean
 - [x] Fix the observed Google Maps script load failure and verify the localized English and Arabic map experience with a resilient fallback
-- [ ] Resolve the Render custom-domain limit for api.hsndm.tech or select a no-cost verified API-routing alternative; Render rejected the third custom-domain claim because the workspace has no payment method
+- [x] Resolve the Render custom-domain limit for api.hsndm.tech or select a no-cost verified API-routing alternative; Render rejected the third custom-domain claim because the workspace has no payment method
 - [x] Add subtle native 300ms fade-up scroll reveals for public section headings and cards, respecting reduced-motion preferences
 - [x] Normalize public-section spacing rhythm and connected black-section treatment without changing layout structure or copy
 - [x] Strengthen Pro pricing-card hierarchy and CSS-only button/CV-drop-zone interaction feedback without changing pricing or colors
 - [x] Add a subtle native live-status pulse to the application-engine panel without changing its copy or layout
 - [x] Add visual-polish regression coverage and validate English and Arabic public pages at a 375px mobile viewport
 - [x] Diagnose and repair live hero and explainer video delivery failures on www.hsndm.tech, then reverify desktop and 375px mobile playback in English and Arabic
+- [x] Retry Cloudflare DNS and Worker access after the user refreshed connectors, then create and verify a no-cost api.hsndm.tech edge route if authorized

@@ -17,3 +17,9 @@ Render now reports `hsndm.tech`, `www.hsndm.tech`, and `dashboard.hsndm.tech` as
 Selecting **“Email me a sign-in link”** on the live dashboard opens the configured Clerk sign-in modal with an email-address field and a continuation control. A real email-link request was not sent because no candidate email address was provided after the modal opened.
 
 The source checkout and `user_github` `main` both resolve to `84f3cd12511c221be3193389122aa4dbaae89534`. After Render completed the matching deployment, the managed project origin, `www.hsndm.tech`, dashboard health, and database-readiness endpoints each returned HTTP 200. The public and managed frontend HTML no longer reference the removed external animation runtime.
+
+## 2026-08-17 no-cost API edge route
+
+The refreshed Cloudflare connection was used to preserve the existing `api.hsndm.tech` CNAME target (`autoapply-sa.onrender.com`) while enabling Cloudflare proxying. An isolated `hsndm-api-edge-proxy` Worker now owns only the `api.hsndm.tech/*` route and forwards requests to the verified AutoApply SA Render backend, retaining request path, query parameters, and request headers while removing the upstream `Host` header.
+
+Live verification confirms `https://api.hsndm.tech/healthz` returns HTTP 200 with `X-API-Edge: hsndm` and the AutoApply SA backend health payload. The protected `https://api.hsndm.tech/v1/campaigns/latest-activity` route returns HTTP 403 from the backend with the same edge marker, demonstrating that authorization semantics were preserved rather than bypassed.
