@@ -69,3 +69,9 @@ The configured Railway project token was verified as project-scoped to the produ
 The Cloudflare DNS inventory confirms that `www.hsndm.tech` and `dashboard.hsndm.tech` each have one DNS-only CNAME to `hsndm-portal.onrender.com`. `api.hsndm.tech` has one proxied CNAME to `autoapply-sa.onrender.com`, with the scoped edge route still in place. `clerk.hsndm.tech` has one proxied CNAME to `frontend-api.clerk.services`. No records exist for `apply.hsndm.tech` or `content.hsndm.tech`, so neither is being represented as a live service endpoint.
 
 HTTPS checks returned `200` for the public homepage, dashboard health, and Clerk hostname. The API health route returns `200` with the expected edge marker for a normal `GET` request; its `HEAD` response is `501`, so monitoring must use `GET` rather than header-only probes. No DNS or service mutation was performed during this audit.
+
+## 2026-08-17 API health-method compatibility repair
+
+The edge worker previously forwarded `HEAD /healthz` to the upstream automation service, which does not implement that method and returned `501`. The worker now handles only `HEAD /healthz` at the edge by checking the same upstream `GET /healthz` status while returning an empty response body. All other routes and methods retain their existing forwarding behavior.
+
+Post-deployment verification returned `200` with the `X-API-Edge: hsndm` marker for both `HEAD` and `GET` health requests. The approved-origin campaign preflight remained `204` with the expected CORS policy, and a protected campaign request with an invalid token remained `403`, confirming that the repair did not bypass authorization.
