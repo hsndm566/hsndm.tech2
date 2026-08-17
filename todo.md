@@ -68,7 +68,7 @@
 - [x] Run regression tests, type checks, and production build for the verified frontend release
 - [x] Consolidate dashboard mobile regression assertions under their intended test suite
 - [x] Complete the remaining Arabic copy pass, including the concise CV privacy line and final terminology checks
-- [ ] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
+- [x] Refactor the dense Arabic CV intake and readiness markup into maintainable blocks without changing its behavior
 - [x] Re-verify RTL spacing across the Arabic hero, intake, readiness, pricing, FAQ, and footer on desktop and mobile
 - [x] Replace the legacy Arabic CV privacy sentence directly in the dense source markup and remove the CSS-only presentation override
 - [x] Export every current Arabic visitor-facing string and provide a Claude-ready linguistic review prompt
