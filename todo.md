@@ -184,3 +184,5 @@
 - [x] Verify the live Clerk dashboard email-entry experience with apply@hsndm.tech without requesting a magic link or creating an account
 - [x] Repair the bilingual audit so extracted Arabic intake and readiness components are assessed as part of the public parity check
 - [x] Remove unverified public testimonial content and retain a bilingual non-testimonial service-information section
+- [ ] Wait for Render to deploy the newest checkpoint, then verify the active production commit matches the current project source
+- [x] Re-run the live mobile homepage video verification after the newest Render deployment is active
