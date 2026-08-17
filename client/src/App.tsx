@@ -31,7 +31,7 @@ import { canUseClerkOnCurrentOrigin } from "@/lib/clerkOrigin";
 import { ClerkSessionBoundary } from "@/components/ClerkSessionBoundary";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
-import { AnimeEnhancements } from "@/components/AnimeEnhancements";
+import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
 import { AutoApplyChatWidget } from "@/components/AutoApplyChatWidget";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
@@ -63,7 +63,7 @@ function Router() {
   return (
     <ClerkSessionBoundary enabled={clerkEnabled} publishableKey={clerkPublishableKey}>
       <>
-      <AnimeEnhancements routeKey={location} />
+      <NativeVisualEnhancements routeKey={location} />
       <Switch>
       {isDashboardSubdomain() ? (
         <>

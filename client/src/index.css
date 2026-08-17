@@ -337,3 +337,44 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .footer-enquiry-actions { grid-template-columns: 1fr; }
   .footer-enquiry-status { grid-column: auto; margin: 0; flex-wrap: wrap; }
 }
+
+/* Native visual refinement: a shared, quiet cadence across the existing system. */
+:root { --section-space: 120px; --section-space-mobile: 76px; --polish-ease: cubic-bezier(.23, 1, .32, 1); }
+.site-shell :is(.split-layout, .detail-layout) { padding-block: var(--section-space); }
+.site-shell .section-ink { box-shadow: inset 0 1px 0 rgba(245,242,235,.14), inset 0 -1px 0 rgba(245,242,235,.14); }
+.site-shell .campaign-preview { box-shadow: inset 0 1px 0 rgba(245,242,235,.14), inset 0 -1px 0 rgba(245,242,235,.14); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .has-native-motion .site-shell .reveal-target,
+  .has-native-motion .site-shell :is(main > section:not(.hero) h2, .capability-card, .process-item, .campaign-dashboard, .plan-card, .review-card, .faq-item, .map-frame) {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 300ms var(--polish-ease), transform 300ms var(--polish-ease);
+  }
+  .has-native-motion .site-shell :is(.is-visible, .is-visible *) { opacity: revert-layer; }
+  .has-native-motion .site-shell .is-visible { opacity: 1; transform: translateY(0); }
+}
+
+.site-shell :is(.button, .text-button, .plan-cta, .drop-zone, .campaign-switcher button, .dashboard-progress) {
+  transition: transform 160ms var(--polish-ease), color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+.site-shell :is(.button, .text-button, .plan-cta, .drop-zone, .campaign-switcher button, .dashboard-progress):active { transform: scale(.98); }
+.site-shell .drop-zone:active { transform: scale(.99); }
+@media (hover: hover) {
+  .site-shell .drop-zone:hover { transform: translateY(-1px); box-shadow: 0 7px 0 rgba(21,21,21,.12); }
+  .site-shell .plan-featured:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(21,21,21,.2), 0 0 0 1px rgba(229,72,42,.58); }
+}
+.site-shell .plan-featured { box-shadow: 0 10px 24px rgba(21,21,21,.16), 0 0 0 1px rgba(229,72,42,.42); }
+.site-shell .plan-featured:focus-within { border-color: var(--signal); box-shadow: 0 16px 30px rgba(21,21,21,.2), 0 0 0 2px rgba(229,72,42,.58); }
+
+.ledger-topline span:last-child { display: inline-flex; align-items: center; gap: 5px; }
+.ledger-topline span:last-child::before { width: 5px; height: 5px; border-radius: 999px; content: ""; background: currentColor; box-shadow: 0 0 0 3px rgba(229,72,42,.12); }
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-topline span:last-child::before { animation: live-status-breathe 1.8s ease-in-out infinite; }
+}
+@keyframes live-status-breathe { 0%, 100% { opacity: .55; transform: scale(.82); } 50% { opacity: 1; transform: scale(1); } }
+
+@media (max-width: 680px) {
+  .site-shell :is(.split-layout, .detail-layout) { padding-block: var(--section-space-mobile); }
+  .site-shell .plan-featured { box-shadow: 0 8px 20px rgba(21,21,21,.15), 0 0 0 1px rgba(229,72,42,.42); }
+}
