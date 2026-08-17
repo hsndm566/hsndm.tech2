@@ -12,6 +12,10 @@ The authenticated Railway project page simultaneously displayed an active Railwa
 
 Wait until Railway reports the GitHub incident as resolved, then retry deployment of the same commit. If `repository forbidden` persists after the incident resolves, restore the Railway GitHub App's access to the private repository `hsndm566/saudi-whatsapp-ai-chatbot` in the Railway project settings and retry. Do not change the `autoapply-sa` Railway or Render automation services.
 
+### Current retry gate
+
+At 16:46 UTC on 17 August 2026, Railway’s status page still reported **Partial Outage** for GitHub Auto-Deploys and stated that GitHub had identified an elevated-error-rate issue and was working on a fix. Retrying the dedicated chatbot deployment while that incident remains active would not distinguish an application problem from a platform-side source-fetch failure, so no new deploy trigger was issued.
+
 ## Related Production Check
 
 An unauthenticated navigation to `https://dashboard.hsndm.tech` returned the expected AutoApply SA page title. The browser session then reset to a blank page before the sign-in control could be inspected, so this check does not establish an authentication session and does not replace the planned explicit passwordless-flow test.

@@ -211,7 +211,7 @@
 - [x] Integrate the approved enhanced dashboard visual, responsive, and bilingual usability improvements while retaining the existing protected React data flow
 - [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local and live release verification
 - [x] Audit live ATS and chatbot health, including authenticated model configuration readiness, without exposing or duplicating secrets; the live ATS analysis passes, while chatbot Groq is configured but falls back at inference time
-- [ ] Verify whether Groq is configured and responding for the chatbot; repair the confirmed deprecated-model issue and deploy when Railway repository access permits
+- [ ] Verify whether Groq is configured and responding for the chatbot; the source repair is pushed, but deployment remains gated by Railway’s active GitHub Auto-Deploy partial outage and repository access recovery
 - [ ] Re-test chatbot error recovery with a non-customer input after Railway deploys the pushed Groq repair; the portal ATS path is live and returns its validated structured response
 - [x] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
 - [x] Inspect the supplied hero clip and current media configuration without changing the existing explainer video
