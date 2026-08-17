@@ -79,3 +79,19 @@ Post-deployment verification returned `200` with the `X-API-Edge: hsndm` marker 
 ## 2026-08-17 Clerk dashboard entry recheck
 
 A fresh browser visit to `https://dashboard.hsndm.tech/dashboard` completed successfully and rendered the candidate dashboard boundary with the passwordless “Email me a sign-in link” action. No email identifier was entered and no Clerk request was submitted. This verifies that the dashboard portal and its Clerk-aware entry surface load on the configured custom hostname, while Clerk-side domain activation and the real magic-link session are retained as separate, user-controlled checks.
+
+## 2026-08-17 authorized Clerk account-creation attempt
+
+After explicit user authorization, the dashboard sign-in flow confirmed that `apply@hsndm.tech` did not yet have a Clerk account and offered the registered sign-up flow. The account form accepted the user-provided compliant credentials and the browser submitted the request. The Clerk control remained in its processing state without showing a completion or email-verification screen during the subsequent wait; no password or credential value is recorded here.
+
+A browser-console check reported no client-side error. A further wait left the control in the same processing state, so the account request cannot yet be treated as completed or as an email-dispatch confirmation.
+
+Resource inspection confirmed the configured custom Clerk host loaded its environment, client, and UI bundles successfully. It observed the sign-in endpoint request that produced the initial no-account response but no subsequent sign-up endpoint request. The sign-up control is currently disabled with Clerk’s loading state, indicating the stalled flow is client-side pending rather than a confirmed account-creation or verification-email result.
+
+A controlled dashboard refresh cleared the stale loading state and restored the ordinary passwordless entry control. No additional account request or email dispatch occurred during the refresh itself.
+
+One controlled fresh sign-up retry using the same user-authorized form data reproduced the same loading-only outcome. It did not advance to an email-verification screen or establish a session, so the account must still be treated as uncreated and no magic-link dispatch can be confirmed.
+
+A final authorized retry was prepared with temporary browser instrumentation that records only Clerk request method, endpoint path, and response status. It does not record request bodies or credentials.
+
+The final instrumented submission reproduced the loading-only UI state. The instrumentation recorded no Clerk request at all, and the Clerk client reported no sign-up object and no active session. After three controlled attempts, further retries were stopped to avoid duplicating account actions. This localizes the unresolved issue to the Clerk sign-up flow before an account-creation request is transmitted; it is not a failed email dispatch, because no dispatch was reached.

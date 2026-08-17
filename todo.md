@@ -188,4 +188,6 @@
 - [x] Re-run the live mobile homepage video verification after the newest Render deployment is active
 - [ ] Complete Clerk-side custom-domain verification for clerk.hsndm.tech and capture activation evidence
 - [ ] Establish and document a full browser passwordless session on dashboard.hsndm.tech after explicit approval to send a magic link
+- [ ] Submit the user-authorized Clerk magic-link request for apply@hsndm.tech and capture the dispatch confirmation without opening the mailbox link
+- [ ] Resolve the Clerk sign-up flow that stalls before emitting any account-creation request, then repeat the user-authorized passwordless dispatch once
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics
