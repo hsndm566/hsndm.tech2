@@ -29,3 +29,9 @@ Live verification confirms `https://api.hsndm.tech/healthz` returns HTTP 200 wit
 Cloudflare now reports exactly one CNAME for each delegated hostname: `www.hsndm.tech` and `dashboard.hsndm.tech` are DNS-only CNAMEs to `hsndm-portal.onrender.com`, while `api.hsndm.tech` is a proxied CNAME to `autoapply-sa.onrender.com` with the isolated Worker route attached. Live checks returned HTTP 200 from the public frontend, dashboard health, database readiness, and API health respectively. The API response includes `X-API-Edge: hsndm`, proving it does not resolve to the public frontend or dashboard service.
 
 The root `hsndm.tech` remains live and returns HTTP 200 from its GitHub Pages address set. Its four GitHub Pages A records have mixed Cloudflare proxy flags, so that existing root configuration was deliberately left unchanged to avoid disrupting a working public apex while the requested `www`, dashboard, and API routes were validated.
+
+## 2026-08-17 campaign-client CORS correction
+
+The first live browser-equivalent preflight to the edge route returned HTTP 204 but omitted the `Access-Control-Allow-*` headers required for the campaign client’s `X-Campaign-Token` request. The isolated Worker was updated to answer `OPTIONS` locally and to append CORS headers only for `https://hsndm.tech`, `https://www.hsndm.tech`, and `https://dashboard.hsndm.tech`.
+
+Final verification returned HTTP 204 with the required origin, methods, headers, max-age, and `Vary: Origin` values for both public origins. An untrusted origin received no allow-origin header. A protected request from `www.hsndm.tech` retained both its allowed-origin header and the backend’s HTTP 403 response for an invalid campaign token, demonstrating that browser access was repaired without weakening campaign authorization.
