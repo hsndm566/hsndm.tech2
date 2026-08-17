@@ -14,9 +14,11 @@ const SESSION_STORAGE_KEY = "autoapply_sa_web_chat_session";
 const REQUEST_TIMEOUT_MS = 15_000;
 
 const SUGGESTIONS = [
-  "How does AutoApply SA work?",
-  "I want help applying for jobs",
-  "How do I send my CV?",
+  { label: "Start a campaign / ابدأ", message: "start", primary: true },
+  { label: "How it works / كيف نعمل", message: "how it works", primary: false },
+  { label: "Pricing / الأسعار", message: "pricing", primary: false },
+  { label: "Privacy / الخصوصية", message: "privacy", primary: false },
+  { label: "Cities / المدن", message: "cities", primary: false },
 ];
 
 function createSessionId() {
@@ -152,18 +154,22 @@ export function AutoApplyChatWidget() {
           <div className="flex-1 overflow-y-auto bg-slate-50 px-3 py-4">
             {messages.length === 0 ? (
               <div className="mx-auto flex min-h-full max-w-sm flex-col justify-center py-5">
-                <p className="text-center text-sm font-semibold text-slate-900">How can we help with your Saudi job search?</p>
-                <p className="mt-1 text-center text-sm leading-6 text-slate-600" dir="rtl">كيف يمكننا مساعدتك في رحلتك الوظيفية في السعودية؟</p>
+                <p className="text-center text-sm font-semibold text-slate-900">Start a Saudi job campaign or choose a question.</p>
+                <p className="mt-1 text-center text-sm leading-6 text-slate-600" dir="rtl">ابدأ حملة توظيف في السعودية أو اختر سؤالك.</p>
                 <div className="mt-5 flex flex-col gap-2" aria-label="Suggested chat questions">
                   {SUGGESTIONS.map((suggestion) => (
                     <button
-                      className="rounded-2xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60"
+                      className={
+                        suggestion.primary
+                          ? "rounded-2xl bg-[#2563eb] px-3 py-3 text-left text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                          : "rounded-2xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60"
+                      }
                       disabled={isLoading}
-                      key={suggestion}
-                      onClick={() => void sendMessage(suggestion)}
+                      key={suggestion.message}
+                      onClick={() => void sendMessage(suggestion.message)}
                       type="button"
                     >
-                      {suggestion}
+                      {suggestion.label}
                     </button>
                   ))}
                 </div>
@@ -198,7 +204,7 @@ export function AutoApplyChatWidget() {
 
           <footer className="border-t border-slate-200 bg-white px-3 py-3">
             <p className="mb-2 text-center text-[11px] leading-4 text-slate-500">
-              For a CV file, use the secure CV upload section. Chat accepts a short summary.
+              Start here, then use the secure CV intake for PDF or Word files. CV files are not retained in chat. / ابدأ هنا، ثم استخدم قسم رفع السيرة الآمن لملفات PDF أو Word. لا تُحفظ ملفات السيرة في الدردشة.
             </p>
             {error ? (
               <div className="mb-2 flex items-center justify-between gap-2 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700" role="status">

@@ -193,3 +193,8 @@
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics
+- [ ] Align the live Railway AutoApply SA chatbot with the supplied bilingual FAQ, campaign-intake, privacy, handoff, CORS, and persistent-log specification
+- [ ] Restore Railway GitHub repository authorization for the AutoApply SA chatbot service and deploy commit ea322fe without changing unrelated Railway services
+- [x] Align the public AutoApplyChatWidget starter prompts, quick actions, and service footer with the approved campaign-intake specification
+- [x] Add or update focused widget regression coverage for the approved bilingual campaign-intake prompts
+- [x] Run the full web test suite, type check, and production build for the widget-alignment release; live chatbot integration remains blocked by Railway repository authorization

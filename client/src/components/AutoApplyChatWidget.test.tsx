@@ -20,16 +20,29 @@ describe("AutoApplyChatWidget", () => {
     const { container } = render(<AutoApplyChatWidget />);
 
     fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
-    fireEvent.click(screen.getByRole("button", { name: "How does AutoApply SA work?" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start a campaign / ابدأ" }));
 
     await waitFor(() => expect(mockedFetch).toHaveBeenCalledTimes(1));
     const request = mockedFetch.mock.calls[0][1] as RequestInit;
     const payload = JSON.parse(String(request.body));
-    expect(payload.message).toBe("How does AutoApply SA work?");
+    expect(payload.message).toBe("start");
     expect(payload.session_id).toMatch(/^autoapply-/);
     expect(window.localStorage.getItem("autoapply_sa_web_chat_session")).toBe(payload.session_id);
     expect(screen.getByText("<img src=x onerror=alert(1)> Safe bilingual reply / رد آمن")).toBeTruthy();
     expect(container.querySelector('img[src="x"]')).toBeNull();
+  });
+
+  it("offers the approved bilingual campaign and FAQ quick actions", () => {
+    render(<AutoApplyChatWidget />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
+
+    expect(screen.getByRole("button", { name: "Start a campaign / ابدأ" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "How it works / كيف نعمل" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Pricing / الأسعار" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Privacy / الخصوصية" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Cities / المدن" })).toBeTruthy();
+    expect(screen.getByText(/CV files are not retained in chat/)).toBeTruthy();
   });
 
   it("shows a loading state and a user-safe recovery message when the endpoint is unavailable", async () => {
