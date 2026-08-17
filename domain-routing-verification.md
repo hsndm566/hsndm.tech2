@@ -95,3 +95,11 @@ One controlled fresh sign-up retry using the same user-authorized form data repr
 A final authorized retry was prepared with temporary browser instrumentation that records only Clerk request method, endpoint path, and response status. It does not record request bodies or credentials.
 
 The final instrumented submission reproduced the loading-only UI state. The instrumentation recorded no Clerk request at all, and the Clerk client reported no sign-up object and no active session. After three controlled attempts, further retries were stopped to avoid duplicating account actions. This localizes the unresolved issue to the Clerk sign-up flow before an account-creation request is transmitted; it is not a failed email dispatch, because no dispatch was reached.
+
+## 2026-08-17 production routing and cache-consistency review
+
+Cloudflare’s authoritative records map the apex `hsndm.tech` to the existing GitHub Pages address set, `www.hsndm.tech` and `dashboard.hsndm.tech` to the Render portal, `api.hsndm.tech` through the scoped proxied AutoApply backend route, and `clerk.hsndm.tech` to Clerk’s frontend API hostname. `apply.hsndm.tech` and `content.hsndm.tech` have no DNS records and therefore are not live public hostnames.
+
+Live checks showed the apex redirects with `301` to `https://www.hsndm.tech/`; the public and dashboard pages return `200` from the same Render application shell; the API health endpoint returns `200` with its `X-API-Edge: hsndm` marker; and the Clerk environment endpoint returns `200` with `Cache-Control: no-store`. Both the normal public request and an explicit no-cache request returned the same HTML digest and the same hashed public JavaScript asset. The public HTML uses `Cache-Control: public, max-age=0`, which requires revalidation rather than serving an unbounded stale document.
+
+Render reports commit `71ecc658` as the live portal deployment. The current source head differs only by non-runtime documentation/checklist work; the runtime diff between it and that live release is empty. A cache-busting browser visit loaded the current AutoApply SA public experience with the updated Campaign Clarity section and `apply@hsndm.tech`, confirming the visitor-facing page is not an older cached frontend.
