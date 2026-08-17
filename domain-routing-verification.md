@@ -53,3 +53,9 @@ The following exact Cloudflare records were captured after the direct routing re
 | `api.hsndm.tech` | `4554ad3a8bd8aca94739c216f6d6a396` | CNAME | `autoapply-sa.onrender.com` | Yes | Auto (`1`) |
 
 The remaining migration control-plane work was resolved directly through the refreshed Cloudflare connection. Therefore no DNS handoff remains pending.
+
+## 2026-08-17 Render service separation check
+
+Read-only Render API inspection confirms two distinct active web services: `hsndm-portal` (`srv-da12uke1egvs739s2jhg`) for the public site and candidate dashboard, and `autoapply-sa` (`srv-d9vm7ck9v7es73b6k78g`) for the separate automation backend. The portal serves the `www` and `dashboard` user experiences, while `api.hsndm.tech` reaches the separate backend only through its scoped Cloudflare edge route. No backend service configuration, deployment trigger, or Railway service was changed during this check.
+
+The remaining unverified authentication boundary is intentional: the Clerk entry form is live, but a real magic-link request and completed candidate session require explicit approval to send a sign-in email and access to that mailbox.
