@@ -111,3 +111,9 @@ The follow-up deployment inspection still reports `71ecc658` as the active porta
 Clerk’s production guidance cautions that a reverse-proxied Frontend API CNAME can prevent DNS validation, so the single `clerk.hsndm.tech` CNAME was briefly set to DNS-only and tested. Its endpoint remained reachable, but the live dashboard’s Clerk client timed out and displayed its existing unavailable-sign-in recovery state. The record was immediately restored to its prior proxied state using the same CNAME target, TTL, and record ID.
 
 After the rollback, the Clerk environment endpoint returned `200` with `Cache-Control: no-store`, and the dashboard again loaded its `Email me a sign-in link` entry control without any submitted identifier. This establishes that the proxy-mode experiment is not a viable repair for the pre-request sign-up stall. The remaining fault is provider-side or instance-flow configuration and must be resolved before another account-creation attempt.
+
+## 2026-08-17 Clerk custom-domain activation evidence
+
+A read-only Clerk Backend API query returned the production domain object for `hsndm.tech` with `frontend_api_url` set to `https://clerk.hsndm.tech` and `accounts_portal_url` set to `https://accounts.hsndm.tech`. The same object lists the required frontend API, accounts portal, email delivery, and two DKIM CNAME targets.
+
+The public `clerk.hsndm.tech` endpoint returns HTTPS `200` with a JSON content type. The email and DKIM hostnames resolve to the exact Clerk targets returned by the production domain object. The frontend API and accounts portal CNAMEs remain intentionally Cloudflare-proxied because the documented DNS-only experiment caused the live Clerk client to time out. This is activation evidence for the configured custom domain; it does not create a user session or replace the separate explicit magic-link completion test.
