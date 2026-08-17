@@ -177,5 +177,5 @@
 - [x] Retry Cloudflare DNS and Worker access after the user refreshed connectors, then create and verify a no-cost api.hsndm.tech edge route if authorized
 - [x] Add and verify narrowly scoped CORS preflight handling at the api.hsndm.tech edge proxy for the public campaign client’s X-Campaign-Token requests
 - [x] Audit the mixed Cloudflare proxy states on the hsndm.tech GitHub Pages A records and normalize them only if live reliability evidence warrants a safe change
-- [ ] Reproduce and repair the live ATS checker failure on hsndm.tech, including its upload-to-analysis request path and public recovery state
-- [ ] Reproduce and repair the AutoApply SA public chat bubble failure, including the browser-to-Railway endpoint contract and mobile behavior
+- [x] Reproduce and repair the live ATS checker failure on hsndm.tech, including its upload-to-analysis request path and public recovery state
+- [x] Reproduce and repair the AutoApply SA public chat bubble failure, including the browser-to-Railway endpoint contract and mobile behavior
