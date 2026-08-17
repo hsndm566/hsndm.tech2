@@ -16,7 +16,8 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
+          controls={false}
           aria-hidden="true"
           tabIndex={-1}
           disablePictureInPicture

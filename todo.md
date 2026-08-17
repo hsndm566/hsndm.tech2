@@ -219,3 +219,7 @@
 - [x] Verify muted inline looping, rapid loading, framing, and visibility for the new hero on desktop and 375px mobile, then confirm the live production bundle references it while retaining the explainer video
 - [x] Configure and directly validate the portal’s server-side Groq credential with the Groq models API and a minimal JSON completion without exposing the credential
 - [x] Push the chatbot source repair for Groq’s supported `openai/gpt-oss-20b` model and adequate JSON-completion budget; Railway deployment remains externally blocked
+- [x] Inspect the hero video’s current loop boundary, control behavior, and mobile delivery characteristics
+- [x] Create a compressed, muted, seamless-loop hero asset and enforce non-interactive background playback without visible controls
+- [x] Verify optimized hero playback and byte-range delivery at desktop and 375px mobile, then publish the replacement
+- [ ] Continue monitoring Railway’s GitHub Auto-Deploy outage before retrying the dedicated chatbot Groq deployment

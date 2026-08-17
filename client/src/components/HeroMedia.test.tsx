@@ -15,7 +15,8 @@ describe("HeroMedia", () => {
     expect(video?.hasAttribute("loop")).toBe(true);
     expect(video?.hasAttribute("playsinline")).toBe(true);
     expect(video?.muted).toBe(true);
-    expect(video?.getAttribute("preload")).toBe("metadata");
-    expect(source?.getAttribute("src")).toBe("/manus-storage/autoapply-hero-bright-loop_946dfd52.mp4");
+    expect(video?.getAttribute("preload")).toBe("auto");
+    expect(video?.hasAttribute("controls")).toBe(false);
+    expect(source?.getAttribute("src")).toBe("/manus-storage/autoapply-hero-seamless-mobile_1fdb8683.mp4");
   });
 });
