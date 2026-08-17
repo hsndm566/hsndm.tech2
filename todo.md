@@ -198,3 +198,12 @@
 - [x] Align the public AutoApplyChatWidget starter prompts, quick actions, and service footer with the approved campaign-intake specification
 - [x] Add or update focused widget regression coverage for the approved bilingual campaign-intake prompts
 - [x] Run the full web test suite, type check, and production build for the widget-alignment release; live chatbot integration remains blocked by Railway repository authorization
+- [x] Inspect the supplied first-login dashboard HTML and existing authenticated dashboard route without altering public landing pages
+- [x] Implement the approved first-login dashboard locally with Clerk-backed identity personalization and a truthful zero-data campaign view model
+- [x] Add focused dashboard regression coverage for authenticated identity, generic fallback, zero-state metrics, and proof-first labels
+- [x] Validate the local desktop and mobile dashboard without deploying or changing production configuration
+- [x] Audit the authenticated dashboard for runtime, route, candidate-data, and visual-system issues before publishing
+- [x] Align the first-login dashboard palette and typography with the established bright AutoApply SA site system
+- [x] Verify authenticated candidates receive only their own application and profile data through existing protected dashboard queries
+- [ ] Run complete automated, desktop, mobile, and live-domain dashboard verification, then publish the tested release
+- [x] Locate the referenced `dashboard_first_login_white_orange_personalized.html` design source; it was supplied as the HTML attachment `pasted_content_3.txt`

@@ -19,6 +19,7 @@ import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
 import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
+import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
 
 function buildRecentActivity(applications: any[], profile: any) {
   const items: Array<{ id: string; title: string; description: string; timestamp: string; type: "status" | "note" | "profile" }> = [];
@@ -296,6 +297,17 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </main>
+    );
+  }
+
+  if (dashboardAuthenticated && !appsLoading && !profileLoading && applications.length === 0) {
+    const fullName = clerkDashboardEnabled ? clerkAuth.user?.fullName : user?.name;
+    const email = clerkDashboardEnabled ? clerkAuth.user?.primaryEmailAddress?.emailAddress : user?.email;
+    return (
+      <FirstLoginDashboard
+        identity={{ fullName, email }}
+        onSignOut={() => { void (clerkDashboardEnabled ? clerkAuth.signOut() : logout()); }}
+      />
     );
   }
 
