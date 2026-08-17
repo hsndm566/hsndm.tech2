@@ -1,0 +1,26 @@
+.review-card h3 {
+  margin: 35px 0 12px;
+  color: var(--ink);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 17px;
+  line-height: 1.48;
+  letter-spacing: -.04em;
+}
+
+.review-card .review-detail {
+  margin: 0;
+  color: var(--muted-ink);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.arabic-review h3 {
+  font-family: "Noto Sans Arabic", "Tahoma", "Arial", sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: normal;
+}
+
+.site-shell[lang="ar"] .review-card .review-detail {
+  line-height: 2;
+}

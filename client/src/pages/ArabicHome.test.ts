@@ -30,7 +30,9 @@ describe("Arabic readiness experience", () => {
     expect(source).toContain("تُرتَّب الوظائف ذات الصلة حسب الأولوية");
     expect(source).toContain("reviewedArabicCopy");
     expect(source).toContain("ولا يبقى خارج هذه الصفحة سوى ما تختار مشاركته");
-    expect(source).toContain("ثلاث مراجعات مُشارَكة مباشرة من عملاء AutoApply SA.");
+    expect(source).toContain("وضوح الحملة");
+    expect(source).toContain("من دون وعود مصطنعة");
+    expect(source).not.toContain("ثلاث مراجعات مُشارَكة مباشرة من عملاء AutoApply SA.");
     expect(styles).not.toContain(".privacy-note::after");
   });
 

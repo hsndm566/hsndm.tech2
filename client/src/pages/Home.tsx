@@ -748,12 +748,12 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="reviews" className="reviews-pending section-fog">
-          <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> CLIENT PERSPECTIVES</div><h2>Real experiences,<br /><i>properly attributed.</i></h2></div><p><ShieldCheck size={16} /> Three reviews shared directly by AutoApply SA clients.</p></div>
+        <section id="reviews" className="reviews-pending section-fog" aria-labelledby="campaign-clarity-heading">
+          <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> CAMPAIGN CLARITY</div><h2 id="campaign-clarity-heading">Clear steps,<br /><i>no invented promises.</i></h2></div><p><ShieldCheck size={16} /> Your direction, confirmation, and follow-up remain visible.</p></div>
           <div className="page-frame review-cards">
-            <article className="review-card"><span className="review-index">01 / JEDDAH</span><blockquote>“Working in Jeddah as a nurse, the service matched me to hospital roles and emailed them for me. Saved me the late-night applying.”</blockquote><footer><b>Ana</b><span>Nurse · Jeddah</span></footer></article>
-            <article className="review-card arabic-review" lang="ar" dir="rtl"><span className="review-index">02 / الرياض</span><blockquote>“قدّمت سيرتي مع أوتوأبلاي السعودية وطلعت لي وظائف تطابق تخصصي في المحاسبة. الخدمة مرتبة والرد سريع على واتساب.”</blockquote><footer><b>سلطان</b><span>محاسب · الرياض</span></footer></article>
-            <article className="review-card"><span className="review-index">03 / DAMMAM</span><blockquote>“I uploaded my CV and got matched to IT support roles within the same day. The team followed up on WhatsApp like they said. Still interviewing, but the applications actually went out.”</blockquote><footer><b>Fahad</b><span>IT Support · Dammam</span></footer></article>
+            <article className="review-card"><span className="review-index">01 / YOUR DIRECTION</span><h3>Start with the brief.</h3><p className="review-detail">Choose the Saudi city, industry, seniority, and language that make the search relevant to you.</p></article>
+            <article className="review-card"><span className="review-index">02 / YOUR CONFIRMATION</span><h3>Review before anything moves.</h3><p className="review-detail">The readiness preview helps you discuss a campaign through WhatsApp. It does not submit an application from this page.</p></article>
+            <article className="review-card"><span className="review-index">03 / YOUR VIEW</span><h3>Keep the campaign visible.</h3><p className="review-detail">For an agreed campaign, the candidate dashboard is designed to keep your application activity and status updates in one place.</p></article>
           </div>
         </section>
 

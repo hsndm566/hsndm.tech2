@@ -11,6 +11,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import "./updates.css";
 import "./saudi-experience.css";
+import "./public-content-policy.css";
 
 const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
 const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
