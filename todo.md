@@ -212,7 +212,10 @@
 - [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local and live release verification
 - [x] Audit live ATS and chatbot health, including authenticated model configuration readiness, without exposing or duplicating secrets; the live ATS analysis passes, while chatbot Groq is configured but falls back at inference time
 - [ ] Verify whether Groq is configured and responding for the chatbot; repair the confirmed deprecated-model issue and deploy when Railway repository access permits
-- [ ] Re-test ATS and chatbot error recovery with non-customer inputs and publish only verified fixes
-- [ ] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
+- [ ] Re-test chatbot error recovery with a non-customer input after Railway deploys the pushed Groq repair; the portal ATS path is live and returns its validated structured response
+- [x] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
+- [x] Inspect the supplied hero clip and current media configuration without changing the existing explainer video
+- [x] Upload the supplied clip to managed static storage and replace only the first landing-page hero video source
+- [x] Verify muted inline looping, rapid loading, framing, and visibility for the new hero on desktop and 375px mobile before publishing
 - [x] Configure and directly validate the portal’s server-side Groq credential with the Groq models API and a minimal JSON completion without exposing the credential
 - [x] Push the chatbot source repair for Groq’s supported `openai/gpt-oss-20b` model and adequate JSON-completion budget; Railway deployment remains externally blocked

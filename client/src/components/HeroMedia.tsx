@@ -1,5 +1,5 @@
 /** Render the approved hero motion with a light, unobtrusive fallback if autoplay is unavailable. */
-import { useState } from "react";
+import React, { useState } from "react";
 import { HERO_VIDEO_URL } from "@/lib/media";
 
 type HeroMediaProps = { poster?: string; alt: string };

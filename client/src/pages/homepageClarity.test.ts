@@ -91,7 +91,8 @@ describe("homepage clarity release", () => {
     expect(arabic).toContain("لغتان مدعومتان");
     expect(styles).toContain(".hero { min-height: 610px");
     expect(styles).toContain(".hero-media::after");
-    expect(styles).toContain("background: rgba(255,255,255,.72)");
+    expect(styles).toContain("background: linear-gradient(90deg, rgba(255,255,255,.28)");
+    expect(styles).toContain("filter: saturate(.94) contrast(1.18) brightness(.96)");
     expect(styles).toContain(".hero-content { height: 610px");
     expect(styles).toContain("padding-top: calc(43vw + 20px)");
   });
