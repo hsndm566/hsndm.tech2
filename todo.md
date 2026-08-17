@@ -26,11 +26,11 @@
 - [x] Add undo action to profile Save Changes toast
 - [x] Diagnose and fix homepage video rendering with phone-safe fallback
 - [x] Assess whether additional subdomains are useful for the current architecture
-- [ ] Inspect Cloudflare zone and existing DNS records for hsndm.tech
+- [x] Inspect Cloudflare zone and existing DNS records for hsndm.tech
 - [ ] Bind dashboard.hsndm.tech and clerk.hsndm.tech using verified Cloudflare targets
 - [ ] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
 - [ ] Test the full Clerk magic-link login flow in the browser
-- [ ] Bind dashboard.hsndm.tech to the managed production deployment
+- [x] Bind dashboard.hsndm.tech to the managed production deployment
 - [ ] Publish the latest project state and verify the production homepage video on mobile
 - [x] Audit and improve bilingual recovery states for public conversion flows
 - [x] Improve phone-first accessibility, keyboard focus, and responsive interaction affordances
@@ -39,7 +39,7 @@
 - [ ] Prepare a minimal Cloudflare dashboard-domain handoff for Hermes and validate its returned evidence
 - [x] Implement the next safe Stage 2 conversion-clarity and candidate-readiness improvements without external configuration changes
 - [x] Run regression, mobile visual, and production-build verification for the Stage 2 batch
-- [ ] Confirm the managed project's exact custom-domain target without guessing a DNS record
+- [x] Confirm the managed project's exact custom-domain target without guessing a DNS record
 - [ ] Provide Hermes with verified dashboard-domain target instructions and validate its DNS evidence
 - [x] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
 - [x] Run final regression, type, and production-build verification for the requested release
@@ -91,7 +91,7 @@
 - [x] Add an explicit reduced-motion regression assertion for the footer success animation fallback
 - [x] Capture and record post-submission desktop English and Arabic footer-success verification
 - [x] Publish the verified footer success-state update
-- [ ] Verify the exact provider targets and credential path for root, api, dashboard, clerk, apply, and content subdomains without guessing DNS records
+- [x] Verify the exact provider targets and credential path for root, api, dashboard, clerk, apply, and content subdomains without guessing DNS records
 - [x] Add English and Arabic legal pages as working drafts for Privacy Policy and Terms & Conditions, pending qualified legal review
 - [x] Add a consent-aware cookie banner that gates optional analytics until an affirmative choice
 - [x] Add llms.txt, sitemap coverage, JSON-LD, page-specific sharing metadata, and security-header configuration where compatible
@@ -186,3 +186,5 @@
 - [x] Remove unverified public testimonial content and retain a bilingual non-testimonial service-information section
 - [ ] Wait for Render to deploy the newest checkpoint, then verify the active production commit matches the current project source
 - [x] Re-run the live mobile homepage video verification after the newest Render deployment is active
+- [ ] Complete Clerk-side custom-domain verification for clerk.hsndm.tech and capture activation evidence
+- [ ] Establish and document a full browser passwordless session on dashboard.hsndm.tech after explicit approval to send a magic link

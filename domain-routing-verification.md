@@ -63,3 +63,9 @@ The remaining unverified authentication boundary is intentional: the Clerk entry
 ## 2026-08-17 Railway read-only inventory
 
 The configured Railway project token was verified as project-scoped to the production environment and used only for read-only metadata inspection. The production inventory contains the existing `hsndm.tech`, `saudi-whatsapp-chatbot`, `autoapply-sa`, and `kallas-site` services. None were redeployed, repointed, restarted, or otherwise modified. This preserves the established Railway chatbot and automation workloads while the public portal remains on the separate Render service.
+
+## 2026-08-17 authoritative DNS and HTTPS target recheck
+
+The Cloudflare DNS inventory confirms that `www.hsndm.tech` and `dashboard.hsndm.tech` each have one DNS-only CNAME to `hsndm-portal.onrender.com`. `api.hsndm.tech` has one proxied CNAME to `autoapply-sa.onrender.com`, with the scoped edge route still in place. `clerk.hsndm.tech` has one proxied CNAME to `frontend-api.clerk.services`. No records exist for `apply.hsndm.tech` or `content.hsndm.tech`, so neither is being represented as a live service endpoint.
+
+HTTPS checks returned `200` for the public homepage, dashboard health, and Clerk hostname. The API health route returns `200` with the expected edge marker for a normal `GET` request; its `HEAD` response is `501`, so monitoring must use `GET` rather than header-only probes. No DNS or service mutation was performed during this audit.
