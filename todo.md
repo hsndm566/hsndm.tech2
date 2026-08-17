@@ -190,5 +190,6 @@
 - [ ] Establish and document a full browser passwordless session on dashboard.hsndm.tech after explicit approval to send a magic link
 - [ ] Submit the user-authorized Clerk magic-link request for apply@hsndm.tech and capture the dispatch confirmation without opening the mailbox link
 - [ ] Resolve the Clerk sign-up flow that stalls before emitting any account-creation request, then repeat the user-authorized passwordless dispatch once
+- [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics

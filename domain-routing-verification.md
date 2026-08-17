@@ -105,3 +105,9 @@ Live checks showed the apex redirects with `301` to `https://www.hsndm.tech/`; t
 Render reports commit `71ecc658` as the live portal deployment. The current source head differs only by non-runtime documentation/checklist work; the runtime diff between it and that live release is empty. A cache-busting browser visit loaded the current AutoApply SA public experience with the updated Campaign Clarity section and `apply@hsndm.tech`, confirming the visitor-facing page is not an older cached frontend.
 
 The follow-up deployment inspection still reports `71ecc658` as the active portal build. Later checkpoints are documentation and checklist evidence only, with no runtime public-code change to deploy. A second explicit `Cache-Control: no-cache` request returned the same `200` status, `public, max-age=0` revalidation policy, ETag, and public HTML digest as the prior review. The live visitor-facing release therefore remains current even though a documentation-only checkpoint is newer in source control.
+
+## 2026-08-17 Clerk DNS-only experiment and rollback
+
+Clerk’s production guidance cautions that a reverse-proxied Frontend API CNAME can prevent DNS validation, so the single `clerk.hsndm.tech` CNAME was briefly set to DNS-only and tested. Its endpoint remained reachable, but the live dashboard’s Clerk client timed out and displayed its existing unavailable-sign-in recovery state. The record was immediately restored to its prior proxied state using the same CNAME target, TTL, and record ID.
+
+After the rollback, the Clerk environment endpoint returned `200` with `Cache-Control: no-store`, and the dashboard again loaded its `Email me a sign-in link` entry control without any submitted identifier. This establishes that the proxy-mode experiment is not a viable repair for the pre-request sign-up stall. The remaining fault is provider-side or instance-flow configuration and must be resolved before another account-creation attempt.
