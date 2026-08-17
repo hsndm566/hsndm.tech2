@@ -16,6 +16,12 @@ Wait until Railway reports the GitHub incident as resolved, then retry deploymen
 
 At 16:46 UTC on 17 August 2026, Railway’s status page still reported **Partial Outage** for GitHub Auto-Deploys and stated that GitHub had identified an elevated-error-rate issue and was working on a fix. Retrying the dedicated chatbot deployment while that incident remains active would not distinguish an application problem from a platform-side source-fetch failure, so no new deploy trigger was issued.
 
+## Recovery verification
+
+After GitHub reported mitigation, an explicit deployment of commit `9c9f56efdf005cb8899225e4f2bf934b99699a7e` (**Allow Groq classifier completion budget**) completed with Railway status `SUCCESS`. The live health endpoint reports `status: ok`, `groq: true`, and persistent logging enabled.
+
+Non-personal live probes from the approved `https://www.hsndm.tech` origin confirmed that the chatbot returns its bilingual FAQ/intake response without classifier fallback, supports `start` and `ابدأ` with the bilingual name-step prompt, and returns the approved bilingual pricing handoff after a greeting. The `/web-chat` preflight returns `204` with the approved origin and `POST, OPTIONS` methods. No customer data was submitted during verification.
+
 ## Related Production Check
 
 An unauthenticated navigation to `https://dashboard.hsndm.tech` returned the expected AutoApply SA page title. The browser session then reset to a blank page before the sign-in control could be inspected, so this check does not establish an authentication session and does not replace the planned explicit passwordless-flow test.

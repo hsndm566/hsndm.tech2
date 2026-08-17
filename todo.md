@@ -193,8 +193,8 @@
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics
-- [ ] Align the live Railway AutoApply SA chatbot with the supplied bilingual FAQ, campaign-intake, privacy, handoff, CORS, and persistent-log specification
-- [ ] Restore Railway GitHub repository authorization for the AutoApply SA chatbot service and deploy commit ea322fe without changing unrelated Railway services
+- [x] Align the live Railway AutoApply SA chatbot with the supplied bilingual FAQ, campaign-intake, privacy, handoff, CORS, and persistent-log specification
+- [x] Restore Railway source access and deploy the chatbot source chain containing the campaign-intake and Groq repairs without changing unrelated Railway services
 - [x] Align the public AutoApplyChatWidget starter prompts, quick actions, and service footer with the approved campaign-intake specification
 - [x] Add or update focused widget regression coverage for the approved bilingual campaign-intake prompts
 - [x] Run the full web test suite, type check, and production build for the widget-alignment release; live chatbot integration remains blocked by Railway repository authorization
@@ -211,8 +211,8 @@
 - [x] Integrate the approved enhanced dashboard visual, responsive, and bilingual usability improvements while retaining the existing protected React data flow
 - [x] Add regression coverage for newly integrated enhanced-dashboard behavior and run full local and live release verification
 - [x] Audit live ATS and chatbot health, including authenticated model configuration readiness, without exposing or duplicating secrets; the live ATS analysis passes, while chatbot Groq is configured but falls back at inference time
-- [ ] Verify whether Groq is configured and responding for the chatbot; the source repair is pushed, but deployment remains gated by Railway’s active GitHub Auto-Deploy partial outage and repository access recovery
-- [ ] Re-test chatbot error recovery with a non-customer input after Railway deploys the pushed Groq repair; the portal ATS path is live and returns its validated structured response
+- [x] Verify Groq is configured and responding for the chatbot; the deployed classifier returns the approved bilingual FAQ response without fallback and accepts the campaign-intake trigger
+- [x] Re-test chatbot non-customer message handling after deploying the Groq repair; the portal ATS path remains live and returns its validated structured response
 - [x] Prepare a concise Nano Banana hero-video prompt for a bright, clearly visible AutoApply SA replacement clip; do not alter the current video until the user supplies the generated asset
 - [x] Inspect the supplied hero clip and current media configuration without changing the existing explainer video
 - [x] Upload the supplied clip to managed static storage and replace only the first landing-page hero video source
@@ -221,5 +221,5 @@
 - [x] Push the chatbot source repair for Groq’s supported `openai/gpt-oss-20b` model and adequate JSON-completion budget; Railway deployment remains externally blocked
 - [x] Inspect the hero video’s current loop boundary, control behavior, and mobile delivery characteristics
 - [x] Create a compressed, muted, seamless-loop hero asset and enforce non-interactive background playback without visible controls
-- [x] Verify optimized hero playback and byte-range delivery at desktop and 375px mobile, then publish the replacement
-- [ ] Continue monitoring Railway’s GitHub Auto-Deploy outage before retrying the dedicated chatbot Groq deployment
+- [x] Verify optimized hero playback and byte-range delivery at desktop and 375px mobile, then confirm the live Render bundle references the replacement
+- [x] Continue monitoring Railway’s GitHub Auto-Deploy outage, then deploy and verify the dedicated chatbot Groq repair after upstream mitigation
