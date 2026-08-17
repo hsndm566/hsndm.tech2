@@ -176,3 +176,4 @@
 - [x] Diagnose and repair live hero and explainer video delivery failures on www.hsndm.tech, then reverify desktop and 375px mobile playback in English and Arabic
 - [x] Retry Cloudflare DNS and Worker access after the user refreshed connectors, then create and verify a no-cost api.hsndm.tech edge route if authorized
 - [x] Add and verify narrowly scoped CORS preflight handling at the api.hsndm.tech edge proxy for the public campaign client’s X-Campaign-Token requests
+- [x] Audit the mixed Cloudflare proxy states on the hsndm.tech GitHub Pages A records and normalize them only if live reliability evidence warrants a safe change

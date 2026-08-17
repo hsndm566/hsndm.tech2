@@ -35,3 +35,9 @@ The root `hsndm.tech` remains live and returns HTTP 200 from its GitHub Pages ad
 The first live browser-equivalent preflight to the edge route returned HTTP 204 but omitted the `Access-Control-Allow-*` headers required for the campaign client’s `X-Campaign-Token` request. The isolated Worker was updated to answer `OPTIONS` locally and to append CORS headers only for `https://hsndm.tech`, `https://www.hsndm.tech`, and `https://dashboard.hsndm.tech`.
 
 Final verification returned HTTP 204 with the required origin, methods, headers, max-age, and `Vary: Origin` values for both public origins. An untrusted origin received no allow-origin header. A protected request from `www.hsndm.tech` retained both its allowed-origin header and the backend’s HTTP 403 response for an invalid campaign token, demonstrating that browser access was repaired without weakening campaign authorization.
+
+## 2026-08-17 apex record audit
+
+Cloudflare lists the four documented GitHub Pages A-record addresses for `hsndm.tech`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, and `185.199.111.153`. Repeated public requests resolved through Cloudflare and returned HTTP 200, while direct tests of each configured address completed the expected redirect to the working `www.hsndm.tech` frontend.
+
+GitHub’s official Pages guidance confirms that those four addresses are the supported apex A-record set and recommends configuring the `www` variant alongside the apex for HTTPS sites. Because the existing live root consistently redirects to the verified `www` frontend and the current address set matches GitHub’s required values, no DNS mutation was warranted merely to make the mixed Cloudflare proxy flags uniform. [GitHub Pages custom-domain guidance](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
