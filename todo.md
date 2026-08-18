@@ -307,3 +307,6 @@
 - [x] Verify keyboard-only navigation, focus order, landmark labeling, and reduced-motion behavior on primary routes
 - [x] Verify image and video delivery includes resilient browser-compatible fallback behavior across desktop and mobile
 - [x] Add regression coverage for every newly reproduced defect and re-run all existing coverage
+- [x] Add an accessible, reduced-motion-aware bot typing indicator to the AutoApply SA chat widget while replies are pending
+- [x] Add bilingual quick-reply buttons for the approved common AutoApply SA visitor queries and intake entry points
+- [x] Add widget interaction regressions, validate mobile and desktop behavior, and publish the verified chat enhancement

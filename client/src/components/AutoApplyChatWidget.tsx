@@ -1,4 +1,4 @@
-import { Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { MessageCircle, Send, Sparkles, X } from "lucide-react";
 import React, { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 type ChatRole = "assistant" | "visitor";
@@ -20,6 +20,59 @@ const SUGGESTIONS = [
   { label: "Privacy / الخصوصية", message: "privacy", primary: false },
   { label: "Cities / المدن", message: "cities", primary: false },
 ];
+
+type QuickRepliesProps = {
+  compact?: boolean;
+  disabled: boolean;
+  onSelect: (message: string) => void;
+};
+
+function QuickReplies({ compact = false, disabled, onSelect }: QuickRepliesProps) {
+  return (
+    <div aria-label="Quick chat replies" className={compact ? "mt-4 border-t border-slate-200 pt-3" : "mt-5"} role="group">
+      {compact ? <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-slate-500">Quick replies / ردود سريعة</p> : null}
+      <div className={compact ? "flex flex-wrap gap-2" : "flex flex-col gap-2"}>
+        {SUGGESTIONS.map((suggestion) => (
+          <button
+            className={
+              compact
+                ? suggestion.primary
+                  ? "rounded-full bg-[#2563eb] px-3 py-1.5 text-left text-xs font-bold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[.97]"
+                  : "rounded-full border border-blue-100 bg-white px-3 py-1.5 text-left text-xs font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60 active:scale-[.97]"
+                : suggestion.primary
+                  ? "rounded-2xl bg-[#2563eb] px-3 py-3 text-left text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                  : "rounded-2xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60"
+            }
+            disabled={disabled}
+            key={suggestion.message}
+            onClick={() => onSelect(suggestion.message)}
+            type="button"
+          >
+            {suggestion.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TypingIndicator() {
+  return (
+    <div aria-label="AutoApply SA is typing" className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-600 shadow-sm" role="status">
+      <span aria-hidden="true" className="flex items-center gap-1">
+        {[0, 1, 2].map((index) => (
+          <span
+            className="size-1.5 rounded-full bg-[#2563eb] motion-safe:animate-[pulse_1s_cubic-bezier(0.4,0,0.6,1)_infinite] motion-reduce:opacity-100"
+            data-testid="chat-typing-dot"
+            key={index}
+            style={{ animationDelay: `${index * 140}ms` }}
+          />
+        ))}
+      </span>
+      <span>Typing… / جاري الكتابة…</span>
+    </div>
+  );
+}
 
 function createSessionId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -171,23 +224,7 @@ export function AutoApplyChatWidget() {
               <div className="mx-auto flex min-h-full max-w-sm flex-col justify-center py-5">
                 <p className="text-center text-sm font-semibold text-slate-900">Start a Saudi job campaign or choose a question.</p>
                 <p className="mt-1 text-center text-sm leading-6 text-slate-600" dir="rtl">ابدأ حملة توظيف في السعودية أو اختر سؤالك.</p>
-                <div className="mt-5 flex flex-col gap-2" aria-label="Suggested chat questions">
-                  {SUGGESTIONS.map((suggestion) => (
-                    <button
-                      className={
-                        suggestion.primary
-                          ? "rounded-2xl bg-[#2563eb] px-3 py-3 text-left text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                          : "rounded-2xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60"
-                      }
-                      disabled={isLoading}
-                      key={suggestion.message}
-                      onClick={() => void sendMessage(suggestion.message)}
-                      type="button"
-                    >
-                      {suggestion.label}
-                    </button>
-                  ))}
-                </div>
+                <QuickReplies disabled={isLoading} onSelect={(message) => void sendMessage(message)} />
               </div>
             ) : (
               <div className="space-y-3" aria-live="polite">
@@ -204,14 +241,8 @@ export function AutoApplyChatWidget() {
                     </p>
                   </div>
                 ))}
-                {isLoading ? (
-                  <div className="flex justify-start" aria-label="AutoApply SA is replying">
-                    <div className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-600 shadow-sm">
-                      <Loader2 className="size-4 animate-spin text-[#2563eb]" />
-                      <span>Thinking… / جاري الرد…</span>
-                    </div>
-                  </div>
-                ) : null}
+                <QuickReplies compact disabled={isLoading} onSelect={(message) => void sendMessage(message)} />
+                {isLoading ? <div className="flex justify-start"><TypingIndicator /></div> : null}
                 <div ref={messagesEndRef} />
               </div>
             )}

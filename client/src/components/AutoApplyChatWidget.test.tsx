@@ -45,6 +45,23 @@ describe("AutoApplyChatWidget", () => {
     expect(screen.getByText(/CV files are not retained in chat/)).toBeTruthy();
   });
 
+  it("keeps bilingual quick replies available after a response so visitors can continue common queries", async () => {
+    mockedFetch.mockResolvedValue({ ok: true, json: async () => ({ reply: "Campaign guidance / إرشادات الحملة" }) });
+    vi.stubGlobal("fetch", mockedFetch);
+    render(<AutoApplyChatWidget />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start a campaign / ابدأ" }));
+
+    await screen.findByText("Campaign guidance / إرشادات الحملة");
+    expect(screen.getByRole("group", { name: "Quick chat replies" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Pricing / الأسعار" }));
+    await waitFor(() => expect(mockedFetch).toHaveBeenCalledTimes(2));
+    const request = mockedFetch.mock.calls[1][1] as RequestInit;
+    expect(JSON.parse(String(request.body)).message).toBe("pricing");
+  });
+
   it("shows a loading state and a user-safe recovery message when the endpoint is unavailable", async () => {
     let rejectRequest: (reason?: unknown) => void = () => undefined;
     mockedFetch.mockImplementation(() => new Promise((_, reject) => { rejectRequest = reject; }));
@@ -54,10 +71,13 @@ describe("AutoApplyChatWidget", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
     fireEvent.change(screen.getByLabelText("Message AutoApply SA"), { target: { value: "Help me apply" } });
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
-    expect(screen.getByLabelText("AutoApply SA is replying")).toBeTruthy();
+    const typingIndicator = screen.getByRole("status", { name: "AutoApply SA is typing" });
+    expect(typingIndicator.textContent).toContain("Typing");
+    expect(screen.getAllByTestId("chat-typing-dot")).toHaveLength(3);
+    expect(screen.getAllByTestId("chat-typing-dot")[0]?.className).toContain("motion-safe:animate");
 
     rejectRequest(new Error("network unavailable"));
-    expect((await screen.findByRole("status")).textContent).toContain("Chat is temporarily unavailable");
+    expect((await screen.findByText(/Chat is temporarily unavailable/)).textContent).toContain("Chat is temporarily unavailable");
     expect(screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")).toContain("wa.me/966571448656");
   });
 
