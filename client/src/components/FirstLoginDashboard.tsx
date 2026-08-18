@@ -15,6 +15,7 @@ import {
 import { firstLoginDashboardCopy, type FirstLoginCopy, type FirstLoginLocale } from "@/lib/firstLoginDashboardCopy";
 import { createFirstLoginDashboardViewModel, type DashboardIdentity } from "@/lib/firstLoginDashboardModel";
 import { CampaignStartApprovalChecklist, type CampaignApprovalDraft } from "@/components/CampaignStartApprovalChecklist";
+import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -178,6 +179,10 @@ export function FirstLoginDashboard({ identity, onSignOut, profileDefaults, appr
               isPending={approvalPending}
               onConfirm={onConfirmCampaignApproval}
             />
+
+            <div className="mt-7">
+              <CampaignPlanSummary approval={approval} profile={profileDefaults} />
+            </div>
 
             <section aria-label="Campaign launch details" className="mt-7 grid gap-7 xl:grid-cols-[1.55fr_1fr]">
               <LaunchChecklist completed={checklist.completed} copy={copy} isArabic={isArabic} total={checklist.total} />

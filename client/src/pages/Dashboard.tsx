@@ -21,6 +21,7 @@ import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkele
 import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
 import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
 import { CampaignEvidenceGuide } from "@/components/CampaignEvidenceGuide";
+import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 
 function evidenceLabel(type: "portal_confirmation" | "email_accepted" | "employer_confirmation") {
@@ -643,6 +644,8 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            <CampaignPlanSummary approval={campaignApproval} profile={profile} />
 
             {/* Evidence guide and campaign launch status */}
             <CampaignEvidenceGuide
