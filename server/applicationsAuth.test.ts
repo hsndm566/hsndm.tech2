@@ -4,7 +4,8 @@ import type { TrpcContext } from "./_core/context";
 const mocks = vi.hoisted(() => ({
   createCampaignReadiness: vi.fn(),
   getCandidateProfile: vi.fn(),
-  getJobApplications: vi.fn(),
+  getAllJobApplications: vi.fn(),
+  getCandidateJobApplications: vi.fn(),
   insertJobApplication: vi.fn(),
   updateJobApplication: vi.fn(),
   deleteJobApplication: vi.fn(),
@@ -43,14 +44,15 @@ describe("application access control and authentication", () => {
     mocks.updateJobApplication.mockResolvedValue({ id: 101, candidateOpenId: "candidate-a", companyName: "A Co", roleTitle: "Analyst", city: "Jeddah", status: "interview", notes: "Interview confirmed" });
     mocks.deleteJobApplication.mockResolvedValue(true);
     mocks.updateCandidateProfile.mockImplementation(async (openId: string) => ({ id: 1, openId }));
-    mocks.getJobApplications.mockImplementation(async (openId?: string) => {
+    mocks.getCandidateJobApplications.mockImplementation(async (openId: string) => {
       if (openId === "candidate-a") return [{ id: 101, candidateOpenId: "candidate-a", companyName: "A Co" }];
       if (openId === "candidate-b") return [{ id: 202, candidateOpenId: "candidate-b", companyName: "B Co" }];
-      return [
+      return [];
+    });
+    mocks.getAllJobApplications.mockResolvedValue([
         { id: 101, candidateOpenId: "candidate-a", companyName: "A Co" },
         { id: 202, candidateOpenId: "candidate-b", companyName: "B Co" },
-      ];
-    });
+    ]);
   });
 
   it("keeps two candidate feeds isolated through the real applications router", async () => {
@@ -66,8 +68,9 @@ describe("application access control and authentication", () => {
     expect(bApplications).toEqual([{ id: 202, candidateOpenId: "candidate-b", companyName: "B Co" }]);
     expect(aApplications).not.toContainEqual(expect.objectContaining({ candidateOpenId: "candidate-b" }));
     expect(bApplications).not.toContainEqual(expect.objectContaining({ candidateOpenId: "candidate-a" }));
-    expect(mocks.getJobApplications).toHaveBeenCalledWith("candidate-a");
-    expect(mocks.getJobApplications).toHaveBeenCalledWith("candidate-b");
+    expect(mocks.getCandidateJobApplications).toHaveBeenCalledWith("candidate-a");
+    expect(mocks.getCandidateJobApplications).toHaveBeenCalledWith("candidate-b");
+    expect(mocks.getAllJobApplications).not.toHaveBeenCalled();
   });
 
   it("allows an administrator to retrieve the full operational feed", async () => {
@@ -75,7 +78,8 @@ describe("application access control and authentication", () => {
     const applications = await admin.campaign.applications.list();
 
     expect(applications).toHaveLength(2);
-    expect(mocks.getJobApplications).toHaveBeenCalledWith();
+    expect(mocks.getAllJobApplications).toHaveBeenCalledWith();
+    expect(mocks.getCandidateJobApplications).not.toHaveBeenCalled();
   });
 
   it("rejects unauthenticated application-list access", async () => {
@@ -84,7 +88,7 @@ describe("application access control and authentication", () => {
   });
 
   it("surfaces application-data failures instead of presenting a false empty campaign", async () => {
-    mocks.getJobApplications.mockRejectedValueOnce(new Error("Application data is temporarily unavailable."));
+    mocks.getCandidateJobApplications.mockRejectedValueOnce(new Error("Application data is temporarily unavailable."));
     const candidate = appRouter.createCaller(makeContext("candidate-a"));
 
     await expect(candidate.campaign.applications.list()).rejects.toThrow("Application data is temporarily unavailable.");
@@ -151,7 +155,7 @@ describe("application access control and authentication", () => {
     });
 
     expect(result).toMatchObject({ success: true, updated: { id: 101, status: "interview" } });
-    expect(mocks.updateJobApplication).toHaveBeenCalledWith(101, "candidate-a", false, {
+    expect(mocks.updateJobApplication).toHaveBeenCalledWith(101, { kind: "candidate", candidateOpenId: "candidate-a" }, {
       status: "interview",
       notes: "Interview confirmed",
     });
@@ -161,13 +165,13 @@ describe("application access control and authentication", () => {
     const admin = appRouter.createCaller(makeContext("owner", "admin"));
     await admin.campaign.applications.update({ id: 202, city: "Riyadh" });
 
-    expect(mocks.updateJobApplication).toHaveBeenCalledWith(202, "owner", true, { city: "Riyadh" });
+    expect(mocks.updateJobApplication).toHaveBeenCalledWith(202, { kind: "admin" }, { city: "Riyadh" });
   });
 
   it("deletes an application only through the protected candidate procedure", async () => {
     const candidate = appRouter.createCaller(makeContext("candidate-a"));
     await expect(candidate.campaign.applications.delete({ id: 101 })).resolves.toEqual({ success: true });
-    expect(mocks.deleteJobApplication).toHaveBeenCalledWith(101, "candidate-a", false);
+    expect(mocks.deleteJobApplication).toHaveBeenCalledWith(101, { kind: "candidate", candidateOpenId: "candidate-a" });
 
     const anonymous = appRouter.createCaller(makeContext(null));
     await expect(anonymous.campaign.applications.delete({ id: 101 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });

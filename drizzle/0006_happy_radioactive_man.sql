@@ -1,0 +1,2 @@
+ALTER TABLE `job_applications` MODIFY COLUMN `candidateOpenId` varchar(64) NOT NULL;--> statement-breakpoint
+CREATE INDEX `job_applications_candidate_open_id_created_at_idx` ON `job_applications` (`candidateOpenId`,`createdAt`);

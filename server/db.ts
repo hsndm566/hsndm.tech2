@@ -1,4 +1,4 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   backupSnapshots,
@@ -128,15 +128,37 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
   return true;
 }
 
-export async function getJobApplications(candidateOpenId?: string): Promise<JobApplication[]> {
+/**
+ * Candidate isolation is enforced by server-scoped predicates because the active
+ * TiDB engine does not provide native PostgreSQL-style RLS policies.
+ */
+export type ApplicationAccessScope =
+  | { kind: "admin" }
+  | { kind: "candidate"; candidateOpenId: string };
+
+function applicationScopeWhere(id: number, scope: ApplicationAccessScope) {
+  if (scope.kind === "admin") return eq(jobApplications.id, id);
+  return and(eq(jobApplications.id, id), eq(jobApplications.candidateOpenId, scope.candidateOpenId));
+}
+
+export async function getCandidateJobApplications(candidateOpenId: string): Promise<JobApplication[]> {
   const db = await getDb();
   if (!db) {
     throw new Error("Application data is temporarily unavailable.");
   }
   try {
-    if (candidateOpenId) {
-      return await db.select().from(jobApplications).where(eq(jobApplications.candidateOpenId, candidateOpenId)).orderBy(desc(jobApplications.createdAt));
-    }
+    return await db.select().from(jobApplications).where(eq(jobApplications.candidateOpenId, candidateOpenId)).orderBy(desc(jobApplications.createdAt));
+  } catch (error) {
+    console.warn("[Database] Failed to fetch job applications:", error);
+    throw new Error("Application data is temporarily unavailable.");
+  }
+}
+
+/** Admin-only callers must opt into the unscoped operational feed explicitly. */
+export async function getAllJobApplications(): Promise<JobApplication[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Application data is temporarily unavailable.");
+  try {
     return await db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
   } catch (error) {
     console.warn("[Database] Failed to fetch job applications:", error);
@@ -207,7 +229,9 @@ export async function getCandidateProfile(openId: string): Promise<CandidateProf
   }
 }
 
-export async function updateCandidateProfile(openId: string, data: Partial<InsertCandidateProfile>): Promise<CandidateProfile | null> {
+export type CandidateProfileUpdate = Partial<Omit<InsertCandidateProfile, "openId" | "createdAt" | "updatedAt">>;
+
+export async function updateCandidateProfile(openId: string, data: CandidateProfileUpdate): Promise<CandidateProfile | null> {
   const db = await getDb();
   if (!db) return null;
   try {
@@ -294,17 +318,15 @@ export async function updateSystemJobRun(taskUid: string, status: "succeeded" | 
     .where(eq(systemJobs.heartbeatTaskUid, taskUid));
 }
 
-export async function updateJobApplication(id: number, candidateOpenId: string, isAdmin: boolean, data: Partial<InsertJobApplication>): Promise<JobApplication | null> {
+export async function updateJobApplication(id: number, scope: ApplicationAccessScope, data: Partial<Omit<InsertJobApplication, "candidateOpenId">>): Promise<JobApplication | null> {
   const db = await getDb();
   if (!db) return null;
   try {
-    const [existing] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    const scopeWhere = applicationScopeWhere(id, scope);
+    const [existing] = await db.select().from(jobApplications).where(scopeWhere).limit(1);
     if (!existing) return null;
-    if (!isAdmin && existing.candidateOpenId !== candidateOpenId) {
-      throw new Error("Unauthorized to update this application");
-    }
-    await db.update(jobApplications).set({ ...data, updatedAt: new Date() }).where(eq(jobApplications.id, id));
-    const [updated] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    await db.update(jobApplications).set({ ...data, updatedAt: new Date() }).where(scopeWhere);
+    const [updated] = await db.select().from(jobApplications).where(scopeWhere).limit(1);
     return updated || null;
   } catch (error) {
     console.warn("[Database] Failed to update job application:", error);
@@ -312,16 +334,14 @@ export async function updateJobApplication(id: number, candidateOpenId: string, 
   }
 }
 
-export async function deleteJobApplication(id: number, candidateOpenId: string, isAdmin: boolean): Promise<boolean> {
+export async function deleteJobApplication(id: number, scope: ApplicationAccessScope): Promise<boolean> {
   const db = await getDb();
   if (!db) return false;
   try {
-    const [existing] = await db.select().from(jobApplications).where(eq(jobApplications.id, id));
+    const scopeWhere = applicationScopeWhere(id, scope);
+    const [existing] = await db.select().from(jobApplications).where(scopeWhere).limit(1);
     if (!existing) return false;
-    if (!isAdmin && existing.candidateOpenId !== candidateOpenId) {
-      throw new Error("Unauthorized to delete this application");
-    }
-    await db.delete(jobApplications).where(eq(jobApplications.id, id));
+    await db.delete(jobApplications).where(scopeWhere);
     return true;
   } catch (error) {
     console.warn("[Database] Failed to delete job application:", error);

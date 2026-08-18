@@ -310,3 +310,6 @@
 - [x] Add an accessible, reduced-motion-aware bot typing indicator to the AutoApply SA chat widget while replies are pending
 - [x] Add bilingual quick-reply buttons for the approved common AutoApply SA visitor queries and intake entry points
 - [x] Add widget interaction regressions, validate mobile and desktop behavior, and publish the verified chat enhancement
+- [x] Audit the active database engine, schema ownership keys, and all candidate-data query and mutation paths for row-isolation gaps
+- [x] Apply enforceable database-supported access controls or equivalent server-side tenant isolation, without claiming unsupported native RLS
+- [x] Add cross-candidate authorization regressions, run full validation, and publish the verified data-isolation hardening

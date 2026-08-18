@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { createCampaignReadiness, getJobApplications, insertJobApplication, getCandidateProfile, updateCandidateProfile, updateJobApplication, deleteJobApplication } from "./db";
+import { ApplicationAccessScope, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateJobApplications, getCandidateProfile, insertJobApplication, updateCandidateProfile, updateJobApplication } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -16,6 +16,10 @@ const keySkillsOutputSchema = z.object({
 });
 
 const emptySkillsResult = { keySkills: [], topDomain: "" };
+
+function getApplicationAccessScope(user: { openId: string; role: "user" | "admin" }): ApplicationAccessScope {
+  return user.role === "admin" ? { kind: "admin" } : { kind: "candidate", candidateOpenId: user.openId };
+}
 
 // The CV text is received only for this transient extraction request; no file or text is persisted.
 
@@ -89,9 +93,9 @@ export const appRouter = router({
       list: protectedProcedure.query(async ({ ctx }) => {
         const user = ctx.user;
         if (user.role === "admin") {
-          return await getJobApplications(); // Admins see all applications
+          return await getAllJobApplications(); // Admins see all applications
         }
-        return await getJobApplications(user.openId); // Candidates see only their own applications
+        return await getCandidateJobApplications(user.openId); // Candidates see only their own applications
       }),
       create: protectedProcedure
         .input(
@@ -132,7 +136,7 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const { id, ...changes } = input;
           try {
-            const updated = await updateJobApplication(id, ctx.user.openId, ctx.user.role === "admin", changes);
+            const updated = await updateJobApplication(id, getApplicationAccessScope(ctx.user), changes);
             if (!updated) throw new Error("Application not found or no longer available.");
             return { success: true, updated } as const;
           } catch (error) { await notifyOperationalFailure("application update", error); throw error; }
@@ -141,7 +145,7 @@ export const appRouter = router({
         .input(z.object({ id: z.number().int().positive() }))
         .mutation(async ({ input, ctx }) => {
           try {
-            const deleted = await deleteJobApplication(input.id, ctx.user.openId, ctx.user.role === "admin");
+            const deleted = await deleteJobApplication(input.id, getApplicationAccessScope(ctx.user));
             if (!deleted) throw new Error("Application not found or no longer available.");
             return { success: true } as const;
           } catch (error) { await notifyOperationalFailure("application deletion", error); throw error; }

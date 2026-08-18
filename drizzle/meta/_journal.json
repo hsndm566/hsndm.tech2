@@ -43,6 +43,13 @@
       "when": 1787043134581,
       "tag": "0005_legal_luke_cage",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1787069393447,
+      "tag": "0006_happy_radioactive_man",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { boolean, int, json, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, json, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -50,7 +50,8 @@ export type InsertCampaignReadiness = typeof campaignReadiness.$inferInsert;
  */
 export const jobApplications = mysqlTable("job_applications", {
   id: int("id").autoincrement().primaryKey(),
-  candidateOpenId: varchar("candidateOpenId", { length: 64 }),
+  /** Every application belongs to exactly one authenticated candidate. */
+  candidateOpenId: varchar("candidateOpenId", { length: 64 }).notNull(),
   candidateName: varchar("candidateName", { length: 120 }).notNull(),
   candidateEmail: varchar("candidateEmail", { length: 320 }),
   candidatePhone: varchar("candidatePhone", { length: 64 }),
@@ -63,7 +64,9 @@ export const jobApplications = mysqlTable("job_applications", {
   appliedAt: timestamp("appliedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, table => ({
+  candidateOpenIdCreatedAtIdx: index("job_applications_candidate_open_id_created_at_idx").on(table.candidateOpenId, table.createdAt),
+}));
 
 export type JobApplication = typeof jobApplications.$inferSelect;
 export type InsertJobApplication = typeof jobApplications.$inferInsert;
