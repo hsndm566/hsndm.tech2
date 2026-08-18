@@ -196,6 +196,7 @@
 - [x] Replace same-origin-only public activity polling with the configured API contract and verify its safe fallback behavior
 - [x] Verify short-viewport cookie-consent stacking does not compete with public chat or WhatsApp fixed controls
 - [x] Add focused regression coverage and full release verification for the activity-polling and short-viewport hardening
+- [x] Correct activity polling to the verified portal-owned endpoint after confirming api.hsndm.tech intentionally rejects the route
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics

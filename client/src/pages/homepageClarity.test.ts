@@ -119,13 +119,14 @@ describe("homepage clarity release", () => {
     expect(english).toContain('document.addEventListener("visibilitychange", onVisibilityChange)');
   });
 
-  it("uses the configured API origin for public activity polling instead of assuming a same-origin backend", () => {
+  it("keeps public activity polling on the portal route instead of the protected automation API host", () => {
     const english = homeSource();
 
-    expect(english).toContain('ACTIVITY_API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\\/$/, "")');
-    expect(english).toContain('LATEST_ACTIVITY_URL = `${ACTIVITY_API_BASE}/v1/campaigns/latest-activity`');
-    expect(english).toContain("fetch(LATEST_ACTIVITY_URL");
+    expect(english).toContain('PORTAL_ACTIVITY_URL = "/v1/campaigns/latest-activity"');
+    expect(english).toContain("fetch(PORTAL_ACTIVITY_URL");
     expect(english).toContain('credentials: "include"');
     expect(english).toContain('Accept: "application/json"');
+    expect(english).toContain("not the separate");
+    expect(english).not.toContain("ACTIVITY_API_BASE");
   });
 });
