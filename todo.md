@@ -203,6 +203,7 @@
 - [x] Normalize dashboard application timestamps so legacy or malformed dates cannot destabilize sorting, activity ordering, or date displays
 - [x] Add and validate a candidate-profile creation timestamp through a safe schema migration for accurate profile activity chronology
 - [x] Make cookie-consent persistence protocol-aware so local HTTP environments retain choices without reducing HTTPS security
+- [x] Isolate the consent-cookie helper from the React component module so development hot reload remains stable
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics

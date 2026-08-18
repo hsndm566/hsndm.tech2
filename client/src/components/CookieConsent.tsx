@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { consentCookieAttributes } from "@/lib/consentCookie";
 
 type ConsentChoice = "accepted" | "necessary";
 
 const COOKIE_NAME = "autoapply_optional_consent";
 const maxAge = 60 * 60 * 24 * 180;
-
-export function consentCookieAttributes(maxAgeValue: number, protocol = typeof window !== "undefined" ? window.location.protocol : "https:") {
-  const secure = protocol === "https:" ? "; Secure" : "";
-  return `Path=/; Max-Age=${maxAgeValue}; SameSite=Lax${secure}`;
-}
 
 function getConsent(): ConsentChoice | null {
   if (typeof document === "undefined") return null;

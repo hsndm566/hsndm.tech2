@@ -2,7 +2,8 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { consentCookieAttributes, CookieConsent } from "./CookieConsent";
+import { consentCookieAttributes } from "@/lib/consentCookie";
+import { CookieConsent } from "./CookieConsent";
 
 let currentLocation = "/";
 vi.mock("wouter", () => ({ useLocation: () => [currentLocation, vi.fn()] }));
