@@ -343,8 +343,10 @@
 - [ ] Verify the user-provided Railway chatbot webhook endpoint’s live response and integration contract without changing the chatbot service
 - [x] Stage 1: Assess the candidate-owned application evidence model and define an evidence-backed dashboard view with no fabricated activity
 - [x] Stage 2: Implement and verify the authenticated evidence-backed candidate campaign dashboard
-- [ ] Stage 3: Implement and verify an explicit campaign-start approval checklist for candidate targeting and consent
+- [x] Stage 3: Implement and verify an explicit campaign-start approval checklist for candidate targeting and consent
 - [ ] Stage 4: Implement and verify a clear application-evidence explanation and a truthful campaign availability indicator
 - [ ] Stage 5: Implement and verify saved signed-in job preferences that are visible in the candidate campaign plan
 - [ ] Publish each verified stage and report the completed milestone before continuing to the next stage
 - [x] Preserve the configured Groq credential without further user prompts; keep direct provider-health validation as a separately tracked external 403 observation while fallback paths remain covered
+- [ ] Update the user-supplied Groq credential and re-run the direct model and structured-response health checks
+- [x] Continue the campaign-start checklist stage with the existing fallback-only skill-extraction path and no further Groq credential prompts

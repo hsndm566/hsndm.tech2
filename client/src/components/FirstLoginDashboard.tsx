@@ -14,17 +14,32 @@ import {
 } from "lucide-react";
 import { firstLoginDashboardCopy, type FirstLoginCopy, type FirstLoginLocale } from "@/lib/firstLoginDashboardCopy";
 import { createFirstLoginDashboardViewModel, type DashboardIdentity } from "@/lib/firstLoginDashboardModel";
+import { CampaignStartApprovalChecklist, type CampaignApprovalDraft } from "@/components/CampaignStartApprovalChecklist";
 import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 type FirstLoginDashboardProps = {
   identity?: DashboardIdentity;
   onSignOut?: () => void;
+  profileDefaults?: Omit<CampaignApprovalDraft, "targetRoles" | "authorizationConfirmed">;
+  approval?: {
+    targetRoles: string[];
+    targetCity: string;
+    targetIndustry: string;
+    seniority: string;
+    preferredLanguage: string;
+    openToRemote: boolean;
+    authorizationConfirmed: boolean;
+    approvedAt: Date | string;
+  } | null;
+  approvalLoading?: boolean;
+  approvalPending?: boolean;
+  onConfirmCampaignApproval?: (draft: CampaignApprovalDraft) => void;
 };
 
 const whatsappHelpUrl = "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20need%20help%20with%20my%20campaign%20dashboard.";
 
-export function FirstLoginDashboard({ identity, onSignOut }: FirstLoginDashboardProps) {
+export function FirstLoginDashboard({ identity, onSignOut, profileDefaults, approval, approvalLoading, approvalPending, onConfirmCampaignApproval }: FirstLoginDashboardProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [locale, setLocale] = useState<FirstLoginLocale>(() => {
     try {
@@ -154,6 +169,15 @@ export function FirstLoginDashboard({ identity, onSignOut }: FirstLoginDashboard
                 <CampaignPath copy={copy} />
               </div>
             </section>
+
+            <CampaignStartApprovalChecklist
+              approval={approval}
+              defaults={profileDefaults ?? { targetCity: "Jeddah", targetIndustry: "Technology & Engineering", seniority: "Mid-level", preferredLanguage: "English", openToRemote: false }}
+              isArabic={isArabic}
+              isLoading={approvalLoading}
+              isPending={approvalPending}
+              onConfirm={onConfirmCampaignApproval}
+            />
 
             <section aria-label="Campaign launch details" className="mt-7 grid gap-7 xl:grid-cols-[1.55fr_1fr]">
               <LaunchChecklist completed={checklist.completed} copy={copy} isArabic={isArabic} total={checklist.total} />

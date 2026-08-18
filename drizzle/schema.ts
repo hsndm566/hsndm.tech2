@@ -69,6 +69,31 @@ export const campaignEnquiries = mysqlTable("campaign_enquiries", {
 export type InsertCampaignEnquiry = typeof campaignEnquiries.$inferInsert;
 
 /**
+ * A candidate-controlled campaign-start confirmation. It records only the
+ * reviewed target configuration and explicit authorization; it never starts
+ * an employer submission and intentionally excludes CV files and CV text.
+ */
+export const candidateCampaignApprovals = mysqlTable("candidate_campaign_approvals", {
+  id: int("id").autoincrement().primaryKey(),
+  openId: varchar("openId", { length: 64 }).notNull().unique(),
+  targetRoles: json("targetRoles").$type<string[]>().notNull(),
+  targetCity: varchar("targetCity", { length: 64 }).notNull(),
+  targetIndustry: varchar("targetIndustry", { length: 100 }).notNull(),
+  seniority: varchar("seniority", { length: 32 }).notNull(),
+  preferredLanguage: varchar("preferredLanguage", { length: 16 }).notNull(),
+  openToRemote: boolean("openToRemote").default(false).notNull(),
+  authorizationConfirmed: boolean("authorizationConfirmed").notNull(),
+  approvedAt: timestamp("approvedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, table => ({
+  candidateCampaignApprovalUpdatedIdx: index("candidate_campaign_approvals_updated_idx").on(table.updatedAt),
+}));
+
+export type CandidateCampaignApproval = typeof candidateCampaignApprovals.$inferSelect;
+export type InsertCandidateCampaignApproval = typeof candidateCampaignApprovals.$inferInsert;
+
+/**
  * Job applications tracker for monitoring submissions made on behalf of candidates.
  */
 export const jobApplications = mysqlTable("job_applications", {

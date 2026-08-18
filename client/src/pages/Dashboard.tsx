@@ -119,7 +119,20 @@ export default function Dashboard() {
   const { data: evidence = [], isLoading: evidenceLoading, isError: evidenceError } = trpc.campaign.applications.evidence.list.useQuery(undefined, {
     enabled: dashboardAuthenticated,
   });
+  const { data: campaignApproval, isLoading: approvalLoading, isError: approvalError } = trpc.campaign.approval.get.useQuery(undefined, {
+    enabled: dashboardAuthenticated,
+  });
   const evidenceByApplicationId = new Map(evidence.map((item) => [item.applicationId, item]));
+
+  const campaignApprovalMutation = trpc.campaign.approval.confirm.useMutation({
+    onSuccess: () => {
+      toast.success("Targeting plan saved for review");
+      utils.campaign.approval.get.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Could not save your targeting plan");
+    },
+  });
 
   const updateProfileMutation = trpc.campaign.applications.profile.update.useMutation({
     onSuccess: () => {
@@ -321,7 +334,7 @@ export default function Dashboard() {
     );
   }
 
-  if (dashboardAuthenticated && (appsError || profileError || evidenceError)) {
+  if (dashboardAuthenticated && (appsError || profileError || evidenceError || approvalError)) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
         <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
@@ -340,13 +353,24 @@ export default function Dashboard() {
     );
   }
 
-  if (dashboardAuthenticated && !appsLoading && !profileLoading && !evidenceLoading && applications.length === 0) {
+  if (dashboardAuthenticated && !appsLoading && !profileLoading && !evidenceLoading && !approvalLoading && applications.length === 0) {
     const fullName = clerkDashboardEnabled ? clerkAuth.user?.fullName : user?.name;
     const email = clerkDashboardEnabled ? clerkAuth.user?.primaryEmailAddress?.emailAddress : user?.email;
     return (
       <FirstLoginDashboard
         identity={{ fullName, email }}
         onSignOut={() => { void (clerkDashboardEnabled ? clerkAuth.signOut() : logout()); }}
+        approval={campaignApproval ?? undefined}
+        approvalLoading={approvalLoading}
+        approvalPending={campaignApprovalMutation.isPending}
+        profileDefaults={{
+          targetCity: profile?.targetCity || "Jeddah",
+          targetIndustry: profile?.targetIndustry || "Technology & Engineering",
+          seniority: (profile?.preferredSeniority || "Mid-level") as "Entry level" | "Mid-level" | "Senior" | "Leadership",
+          preferredLanguage: (profile?.preferredLanguage || "English") as "English" | "Arabic",
+          openToRemote: profile?.openToRemote || false,
+        }}
+        onConfirmCampaignApproval={(draft) => campaignApprovalMutation.mutate(draft)}
       />
     );
   }
@@ -405,7 +429,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ) : (
-          appsLoading || profileLoading || evidenceLoading ? <CandidateDashboardSkeleton /> : <>
+          appsLoading || profileLoading || evidenceLoading || approvalLoading ? <CandidateDashboardSkeleton /> : <>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight">Application Tracking & Feed</h2>

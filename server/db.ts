@@ -4,12 +4,15 @@ import {
   applicationEvidence,
   ApplicationEvidence,
   backupSnapshots,
+  candidateCampaignApprovals,
+  CandidateCampaignApproval,
   campaignEnquiries,
   campaignReadiness,
   CandidateProfile,
   candidateProfiles,
   InsertApplicationEvidence,
   InsertBackupSnapshot,
+  InsertCandidateCampaignApproval,
   InsertCampaignReadiness,
   InsertCampaignEnquiry,
   InsertJobApplication,
@@ -280,6 +283,48 @@ export async function getCandidateProfile(openId: string): Promise<CandidateProf
     return created || null;
   } catch (error) {
     console.warn("[Database] Failed to get/create candidate profile:", error);
+    return null;
+  }
+}
+
+export type CandidateCampaignApprovalInput = Pick<
+  InsertCandidateCampaignApproval,
+  "openId" | "targetRoles" | "targetCity" | "targetIndustry" | "seniority" | "preferredLanguage" | "openToRemote" | "authorizationConfirmed"
+>;
+
+export async function getCandidateCampaignApproval(openId: string): Promise<CandidateCampaignApproval | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [approval] = await db.select().from(candidateCampaignApprovals).where(eq(candidateCampaignApprovals.openId, openId)).limit(1);
+    return approval ?? null;
+  } catch (error) {
+    console.warn("[Database] Failed to fetch candidate campaign approval:", error);
+    return null;
+  }
+}
+
+export async function upsertCandidateCampaignApproval(input: CandidateCampaignApprovalInput): Promise<CandidateCampaignApproval | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const approvedAt = new Date();
+    await db.insert(candidateCampaignApprovals).values({ ...input, approvedAt }).onDuplicateKeyUpdate({
+      set: {
+        targetRoles: input.targetRoles,
+        targetCity: input.targetCity,
+        targetIndustry: input.targetIndustry,
+        seniority: input.seniority,
+        preferredLanguage: input.preferredLanguage,
+        openToRemote: input.openToRemote,
+        authorizationConfirmed: input.authorizationConfirmed,
+        approvedAt,
+        updatedAt: approvedAt,
+      },
+    });
+    return getCandidateCampaignApproval(input.openId);
+  } catch (error) {
+    console.warn("[Database] Failed to save candidate campaign approval:", error);
     return null;
   }
 }

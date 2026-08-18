@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { createFirstLoginDashboardViewModel } from "@/lib/firstLoginDashboardModel";
 import { FirstLoginDashboard } from "./FirstLoginDashboard";
 
@@ -42,6 +42,29 @@ describe("FirstLoginDashboard", () => {
     expect(screen.getByText("Email accepted")).toBeTruthy();
     expect(screen.getAllByText("Needs your action").length).toBeGreaterThanOrEqual(2);
     expect(screen.queryByText(/Application submitted for/i)).toBeNull();
+  });
+
+  it("requires an explicit reviewed targeting approval without implying an automatic submission", () => {
+    const onConfirmCampaignApproval = vi.fn();
+    render(<FirstLoginDashboard
+      profileDefaults={{ targetCity: "Jeddah", targetIndustry: "Technology & Engineering", seniority: "Mid-level", preferredLanguage: "English", openToRemote: false }}
+      onConfirmCampaignApproval={onConfirmCampaignApproval}
+    />);
+
+    const save = screen.getByRole("button", { name: "Confirm targeting plan" });
+    expect(save.getAttribute("disabled")).not.toBeNull();
+    expect(screen.getByText(/does not submit any job application/i)).toBeTruthy();
+
+    fireEvent.change(screen.getByPlaceholderText("For example: Data Analyst, Operations Specialist"), { target: { value: "Data Analyst" } });
+    fireEvent.click(screen.getByRole("checkbox", { name: /I confirm these are the roles/i }));
+    expect(save.getAttribute("disabled")).toBeNull();
+    fireEvent.click(save);
+
+    expect(onConfirmCampaignApproval).toHaveBeenCalledWith(expect.objectContaining({
+      targetRoles: ["Data Analyst"],
+      targetCity: "Jeddah",
+      authorizationConfirmed: true,
+    }));
   });
 
   it("opens and closes accessible mobile navigation without horizontal-only controls", () => {

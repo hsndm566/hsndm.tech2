@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { ApplicationAccessScope, createCampaignEnquiry, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateApplicationEvidence, getCandidateJobApplications, getCandidateProfile, getJobApplicationById, insertJobApplication, recordApplicationEvidence, updateCandidateProfile, updateJobApplication } from "./db";
+import { ApplicationAccessScope, createCampaignEnquiry, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateApplicationEvidence, getCandidateCampaignApproval, getCandidateJobApplications, getCandidateProfile, getJobApplicationById, insertJobApplication, recordApplicationEvidence, updateCandidateProfile, updateJobApplication, upsertCandidateCampaignApproval } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -114,6 +114,26 @@ export const appRouter = router({
         if (!createdAt) throw new Error("Secure enquiry is temporarily unavailable. Please use email or WhatsApp instead.");
         return { reference, createdAt } as const;
       }),
+    }),
+    approval: router({
+      get: protectedProcedure.query(async ({ ctx }) => {
+        return getCandidateCampaignApproval(ctx.user.openId);
+      }),
+      confirm: protectedProcedure
+        .input(z.object({
+          targetRoles: z.array(z.string().trim().min(2).max(100)).min(1).max(5),
+          targetCity: z.string().trim().min(2).max(64),
+          targetIndustry: z.string().trim().min(2).max(100),
+          seniority: z.enum(["Entry level", "Mid-level", "Senior", "Leadership"]),
+          preferredLanguage: z.enum(["English", "Arabic"]),
+          openToRemote: z.boolean(),
+          authorizationConfirmed: z.literal(true),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const approval = await upsertCandidateCampaignApproval({ ...input, openId: ctx.user.openId });
+          if (!approval) throw new Error("Campaign approval could not be saved right now.");
+          return { success: true, approval } as const;
+        }),
     }),
     applications: router({
       list: protectedProcedure.query(async ({ ctx }) => {

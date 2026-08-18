@@ -3,6 +3,7 @@ import type { TrpcContext } from "./_core/context";
 
 const mocks = vi.hoisted(() => ({
   createCampaignReadiness: vi.fn(),
+  getCandidateCampaignApproval: vi.fn(),
   getCandidateProfile: vi.fn(),
   getCandidateApplicationEvidence: vi.fn(),
   getAllJobApplications: vi.fn(),
@@ -10,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   getJobApplicationById: vi.fn(),
   insertJobApplication: vi.fn(),
   recordApplicationEvidence: vi.fn(),
+  upsertCandidateCampaignApproval: vi.fn(),
   updateJobApplication: vi.fn(),
   deleteJobApplication: vi.fn(),
   updateCandidateProfile: vi.fn(),
@@ -62,6 +64,8 @@ describe("application access control and authentication", () => {
     });
     mocks.getJobApplicationById.mockResolvedValue({ id: 101, candidateOpenId: "candidate-a", companyName: "A Co", roleTitle: "Analyst" });
     mocks.recordApplicationEvidence.mockResolvedValue({ id: 1, applicationId: 101, candidateOpenId: "candidate-a", evidenceType: "portal_confirmation" });
+    mocks.getCandidateCampaignApproval.mockResolvedValue(null);
+    mocks.upsertCandidateCampaignApproval.mockImplementation(async (input: Record<string, unknown>) => ({ id: 1, ...input, approvedAt: new Date() }));
   });
 
   it("keeps two candidate feeds isolated through the real applications router", async () => {
@@ -124,6 +128,38 @@ describe("application access control and authentication", () => {
       candidateOpenId: "candidate-a",
       evidenceType: "email_accepted",
     });
+  });
+
+  it("persists campaign approval only against the authenticated candidate account", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.approval.confirm({
+      targetRoles: ["Data Analyst"],
+      targetCity: "Jeddah",
+      targetIndustry: "Technology & Engineering",
+      seniority: "Mid-level",
+      preferredLanguage: "English",
+      openToRemote: false,
+      authorizationConfirmed: true,
+    })).resolves.toMatchObject({ success: true });
+    expect(mocks.upsertCandidateCampaignApproval).toHaveBeenCalledWith(expect.objectContaining({
+      openId: "candidate-a",
+      targetRoles: ["Data Analyst"],
+      authorizationConfirmed: true,
+    }));
+  });
+
+  it("requires explicit campaign authorization before storing a targeting plan", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.approval.confirm({
+      targetRoles: ["Data Analyst"],
+      targetCity: "Jeddah",
+      targetIndustry: "Technology & Engineering",
+      seniority: "Mid-level",
+      preferredLanguage: "English",
+      openToRemote: false,
+      authorizationConfirmed: false,
+    } as never)).rejects.toBeTruthy();
+    expect(mocks.upsertCandidateCampaignApproval).not.toHaveBeenCalled();
   });
 
   it("surfaces application-data failures instead of presenting a false empty campaign", async () => {
