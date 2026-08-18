@@ -1,0 +1,13 @@
+AutoApply SA — dashboard live publication verification
+Date: 2026-08-18
+
+The live Render portal service hsndm-portal (srv-da12uke1egvs739s2jhg) was reachable and reported an update timestamp of 2026-08-18T18:59:39.753695Z.
+
+The production route https://dashboard.hsndm.tech/dashboard loaded successfully. Its first recovery frame resolved to the live passwordless candidate sign-in screen, rather than remaining on an error view.
+
+The rendered production entry bundle referenced Dashboard-CsopTDZd.js. That live code-split bundle contains all three current dashboard feature markers:
+- "Your saved campaign plan"
+- "What counts as a verified application?"
+- "Review and approve your targeting plan"
+
+Conclusion: the latest campaign approval, evidence-guide, and saved-preferences dashboard changes are published and being served by dashboard.hsndm.tech. Signed-in-only content cannot be displayed without a real candidate passwordless session, but the live unauthenticated entry path and published bundle match the current release.

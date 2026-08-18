@@ -351,3 +351,6 @@
 - [x] Preserve the configured Groq credential without further user prompts; keep direct provider-health validation as a separately tracked external 403 observation while fallback paths remain covered
 - [x] Superseded by the user’s fallback-only direction: do not retry direct Groq credential validation without a renewed request
 - [x] Continue the campaign-start checklist stage with the existing fallback-only skill-extraction path and no further Groq credential prompts
+- [x] Verify the latest published dashboard and Sentry changes are actively served on the live production domain
+- [x] Stage 6: Define and implement a data-backed candidate campaign action center showing plan status, evidence progress, and the next required action without fabricating activity
+- [x] Verify and publish the Stage 6 candidate campaign action center across protected data, mobile, tests, type checks, build, and live deployment
