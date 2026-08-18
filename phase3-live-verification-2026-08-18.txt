@@ -1,0 +1,16 @@
+Phase 3 live verification record — 2026-08-18
+
+Local verification completed before publication:
+- 61 Vitest files passed, 160 tests passed, 3 configured skips.
+- TypeScript validation and the production build passed.
+- Desktop and 375px English/Arabic pricing checks passed.
+- The rebuilt production server returned HTTP 200 for /api/client-config/sentry with a configured response shape, without recording the DSN value.
+
+First external production check after the checkpoint:
+- https://www.hsndm.tech/pricing loaded successfully but still returned the pre-Phase-3 pricing view: plan cards and payment placeholder were present, while the comparison table and What We Never Do section were absent.
+- This is recorded as an external deployment-propagation observation. No route, DNS, protected Python service, Railway service, or Clerk configuration was changed.
+
+Final external production check:
+- Render deployment dep-da29tamq1p3s73a5ojbg for checkpoint 45a0a6ee reached `live` at 2026-08-18T18:06:05Z.
+- https://www.hsndm.tech/pricing now renders the deployed comparison table, definition of one approved application, and the What We Never Do boundaries.
+- The route briefly displayed the intentional RecoveryPanel while lazy assets were resolving, then completed normally with the published content. The second browser inspection confirmed the full page content and interactive links.
