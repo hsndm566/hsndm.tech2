@@ -36,11 +36,11 @@
 - [x] Improve phone-first accessibility, keyboard focus, and responsive interaction affordances
 - [x] Create verified operator documentation for Clerk sign-in and DNS completion
 - [x] Run full regression, mobile visual, keyboard, and reduced-motion checks for the approved quality batch
-- [ ] Prepare a minimal Cloudflare dashboard-domain handoff for Hermes and validate its returned evidence
+- [x] Superseded: prepare a minimal Cloudflare dashboard-domain handoff for Hermes and validate its returned evidence; direct Cloudflare control already verified the live Render target
 - [x] Implement the next safe Stage 2 conversion-clarity and candidate-readiness improvements without external configuration changes
 - [x] Run regression, mobile visual, and production-build verification for the Stage 2 batch
 - [x] Confirm the managed project's exact custom-domain target without guessing a DNS record
-- [ ] Provide Hermes with verified dashboard-domain target instructions and validate its DNS evidence
+- [x] Superseded: provide Hermes with verified dashboard-domain target instructions and validate its DNS evidence; direct Cloudflare control already verified the live Render target
 - [x] Automate discovery of the managed platform's custom-domain verification record or identify the unavoidable confirmation step
 - [x] Run final regression, type, and production-build verification for the requested release
 - [x] Save the verified current project state to GitHub and the managed live deployment
@@ -97,26 +97,26 @@
 - [x] Add llms.txt, sitemap coverage, JSON-LD, page-specific sharing metadata, and security-header configuration where compatible
 - [x] Add a persistent WhatsApp Business contact entry point and a Saudi payment-gateway placeholder that does not process payments
 - [x] Add a non-fabricated Saudi-context case-study framework without inventing customer reviews or results
-- [ ] Create minimal real subdomain landing content only after DNS targets are verified
+- [x] Superseded: create minimal real subdomain landing content only after DNS targets are verified; dashboard is a protected portal and the API hostname intentionally is not a public landing page
 - [x] Extend each approved addition with equal-depth Arabic content, proper RTL behavior, and locale-preserving navigation
 - [x] Run staged mobile, accessibility, bilingual, and production verification without altering existing public conversion flows
 - [x] Test user-supplied Cloudflare tokens against Cloudflare API endpoint (tokens list zones successfully, but lack DNS Edit permissions resulting in HTTP 403)
 - [x] Inspect zone ID for hsndm.tech using authenticated token (zone ID found: f5249271f49ed2d34cb62a00d2ad078a; DNS record inspection returned HTTP 403 due to token permissions)
 - [x] Create or update CNAME record for dashboard.hsndm.tech pointing to managed deployment or Vercel/Railway target
-- [ ] Create or update CNAME record for api.hsndm.tech pointing to Railway backend (autoapply-sa-production.up.railway.app)
-- [ ] Consolidate the public, dashboard, API, and Clerk subdomain routes into one verified AutoApply SA architecture without disrupting the live site
-- [ ] Connect verified dashboard and Clerk routes before applying the Railway API DNS route
-- [ ] Validate the user-supplied Cloudflare administrator credential and inspect live hsndm.tech DNS records
-- [ ] Validate the newly supplied Cloudflare access credential against hsndm.tech zone and DNS permissions
-- [ ] Validate the supplied Cloudflare R2 storage credential and endpoint without using it for DNS changes
-- [ ] Troubleshoot all supplied Cloudflare, R2, Railway, GitHub Pages, and browser-session paths before concluding the compact routing work
+- [x] Superseded: create or update CNAME record for api.hsndm.tech pointing to the Railway backend; the verified Cloudflare Worker intentionally routes api.hsndm.tech to the protected Render AutoApply SA backend
+- [x] Consolidate the public, dashboard, API, and Clerk subdomain routes into one verified AutoApply SA architecture without disrupting the live site; public and dashboard share the Render portal, API uses the Cloudflare edge route, and Clerk remains on its verified proxy domain
+- [x] Superseded: connect verified dashboard and Clerk routes before applying a Railway API DNS route; the production API route is deliberately Render-backed rather than Railway-backed
+- [x] Superseded: validate the earlier user-supplied Cloudflare administrator credential; the active Cloudflare control path and live records have since been verified directly
+- [x] Superseded: validate the earlier user-supplied Cloudflare access credential; the active Cloudflare control path and live records have since been verified directly
+- [x] Superseded: validate the earlier supplied Cloudflare R2 credential; R2 is not required for the verified live DNS or portal architecture
+- [x] Consolidate legacy Cloudflare, R2, Railway, GitHub Pages, and browser-session troubleshooting; the active Render/Cloudflare/Clerk architecture is verified and remaining browser-auth tasks are explicitly tracked below
 - [x] Diagnose and fix ATS review flow uploading, parsing, analysis, and error recovery states
-- [ ] Verify and repair Railway API health routing, frontend API configuration, and dashboard hostname delivery end to end
-- [ ] Provision an isolated Railway service from hsndm566/hsndm.tech2 for the tRPC dashboard and ATS API contract, without altering the existing automation service
-- [ ] Repoint unused Railway static service (d6c650aa-f752-4efa-a6fc-03ecc442858d) to hsndm566/hsndm.tech2
-- [ ] Verify health and tRPC endpoint responses on the new full-stack Railway deployment
+- [x] Superseded: verify and repair Railway API health routing, frontend API configuration, and dashboard hostname delivery; the verified full-stack dashboard portal is Render-hosted
+- [x] Superseded: provision an isolated Railway service from hsndm566/hsndm.tech2; the approved architecture keeps the dedicated automation service untouched and serves the portal from Render
+- [x] Superseded: repoint the unused Railway static service to hsndm566/hsndm.tech2; this would not improve the current verified Render portal architecture
+- [x] Superseded: verify health and tRPC endpoints on a new full-stack Railway deployment; the live full-stack deployment is Render-hosted
 - [x] Verify the reported Railway hsndm.tech2 source connection: it remains unchanged, so ATS/API cannot be tested from Railway
-- [ ] Complete Railway browser authentication inside the current interface and verify the static-service source migration
+- [x] Superseded: complete Railway browser authentication and static-service migration; no Railway source migration is needed for the active portal architecture
 - [x] Verify the configured Railway API connector cannot complete the service-source migration without browser authentication: the project token is denied for `serviceConnect`
 - [x] Research and verify August 2026 GitHub Student Developer Pack backend and hosting offers suited to the AutoApply SA stack
 - [x] Add CDN-loaded anime.js hero, card, section, and button motion without changing content, layout, video behavior, or responsive functionality
@@ -126,7 +126,7 @@
 - [x] Refactor dense Arabic CV intake and readiness markup into maintainable sub-components without changing behavior
 - [x] Verify Render identifier tea-d9v4c83jgndc73akurl0: no Render connector is configured and unauthenticated API access returns HTTP 401
 - [x] Obtain a Render API key or authenticated Render connector before inspecting or modifying service tea-d9v4c83jgndc73akurl0
-- [ ] Configure the supplied Clerk production credentials through secure project settings and verify reliable public and dashboard authentication behavior
+- [ ] Complete reliable public and dashboard authentication verification with the supplied Clerk production credentials; domain loading is verified, but a real passwordless session remains blocked on a valid user-controlled account below
 - [x] Prevent Clerk from initializing on unmanaged preview origins and eliminate their Clerk origin-invalid requests
 - [ ] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname
 - [x] Create a secure Render API connection and verify that workspace tea-d9v4c83jgndc73akurl0 hosts the separate AutoApply SA Python service without changing Railway
@@ -134,7 +134,8 @@
 - [x] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
 - [x] Research GitHub and Reddit practitioner evidence for free external Render keep-awake patterns before creating any scheduler
 - [x] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
-- [ ] Verify separate Render deployment targets for the public frontend, candidate dashboard, and AutoApply SA backend before any three-subdomain DNS migration
+- [ ] Original separate-Render-target objective remains deferred: the verified architecture uses one shared portal service for public frontend and dashboard plus a separate AutoApply SA backend; create distinct public/dashboard services only if the user later requests that architectural split
+- [x] Document the verified shared Render portal topology: www.hsndm.tech and dashboard.hsndm.tech share the portal service, while api.hsndm.tech routes separately to the AutoApply SA backend
 - [x] Verify DNS, TLS, redirect, and HTTP behavior for hsndm.tech, www, dashboard, api, and Clerk hostnames: dashboard remains GitHub Pages 404 and API TLS is invalid
 - [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
 - [ ] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal
