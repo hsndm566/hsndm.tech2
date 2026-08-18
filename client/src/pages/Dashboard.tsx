@@ -20,6 +20,7 @@ import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
 import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
 import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
+import { CampaignEvidenceGuide } from "@/components/CampaignEvidenceGuide";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 
 function evidenceLabel(type: "portal_confirmation" | "email_accepted" | "employer_confirmation") {
@@ -642,6 +643,12 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Evidence guide and campaign launch status */}
+            <CampaignEvidenceGuide
+              hasCandidateApproval={Boolean(campaignApproval?.authorizationConfirmed)}
+              verifiedEvidenceCount={evidence.length}
+            />
 
             {/* Recent Activity Feed Card */}
             <Card className="border-[#151515]/10 bg-white shadow-sm">
