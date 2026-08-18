@@ -20,7 +20,10 @@ describe("CookieConsent", () => {
     expect(screen.getByRole("dialog")).toBeTruthy();
     expect(document.querySelector("script[data-autoapply-analytics]")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Use necessary only" }));
-    expect(screen.getByRole("button", { name: "Cookie settings" })).toBeTruthy();
+    const settings = screen.getByRole("button", { name: "Cookie settings" });
+    expect(settings).toBeTruthy();
+    expect(settings.className).toContain("bottom-[calc(max(.75rem,env(safe-area-inset-bottom))+4rem)]");
+    expect(settings.className).toContain("sm:bottom-4");
     expect(document.querySelector("script[data-autoapply-analytics]")).toBeNull();
   });
 

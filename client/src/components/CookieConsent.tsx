@@ -60,7 +60,7 @@ export function CookieConsent() {
   };
 
   if (consent) {
-    return <button type="button" className="fixed bottom-4 left-4 z-50 border border-black/15 bg-white px-3 py-2 font-mono text-[10px] text-black shadow-sm" onClick={() => { document.cookie = `${COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax; Secure`; setConsent(null); }}>{text.settings}</button>;
+    return <button type="button" className="fixed bottom-[calc(max(.75rem,env(safe-area-inset-bottom))+4rem)] left-4 z-50 border border-black/15 bg-white px-3 py-2 font-mono text-[10px] text-black shadow-sm sm:bottom-4" onClick={() => { document.cookie = `${COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax; Secure`; setConsent(null); }}>{text.settings}</button>;
   }
 
   return (
