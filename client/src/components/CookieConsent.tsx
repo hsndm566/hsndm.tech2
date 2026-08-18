@@ -6,6 +6,11 @@ type ConsentChoice = "accepted" | "necessary";
 const COOKIE_NAME = "autoapply_optional_consent";
 const maxAge = 60 * 60 * 24 * 180;
 
+export function consentCookieAttributes(maxAgeValue: number, protocol = typeof window !== "undefined" ? window.location.protocol : "https:") {
+  const secure = protocol === "https:" ? "; Secure" : "";
+  return `Path=/; Max-Age=${maxAgeValue}; SameSite=Lax${secure}`;
+}
+
 function getConsent(): ConsentChoice | null {
   if (typeof document === "undefined") return null;
   const value = document.cookie.split("; ").find((entry) => entry.startsWith(`${COOKIE_NAME}=`))?.split("=")[1];
@@ -13,7 +18,7 @@ function getConsent(): ConsentChoice | null {
 }
 
 function saveConsent(choice: ConsentChoice) {
-  document.cookie = `${COOKIE_NAME}=${choice}; Path=/; Max-Age=${maxAge}; SameSite=Lax; Secure`;
+  document.cookie = `${COOKIE_NAME}=${choice}; ${consentCookieAttributes(maxAge)}`;
 }
 
 function loadAnalytics() {
@@ -60,7 +65,7 @@ export function CookieConsent() {
   };
 
   if (consent) {
-    return <button type="button" className="fixed bottom-[calc(max(.75rem,env(safe-area-inset-bottom))+4rem)] left-4 z-50 border border-black/15 bg-white px-3 py-2 font-mono text-[10px] text-black shadow-sm sm:bottom-4" onClick={() => { document.cookie = `${COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax; Secure`; setConsent(null); }}>{text.settings}</button>;
+    return <button type="button" className="fixed bottom-[calc(max(.75rem,env(safe-area-inset-bottom))+4rem)] left-4 z-50 border border-black/15 bg-white px-3 py-2 font-mono text-[10px] text-black shadow-sm sm:bottom-4" onClick={() => { document.cookie = `${COOKIE_NAME}=; ${consentCookieAttributes(0)}`; setConsent(null); }}>{text.settings}</button>;
   }
 
   return (

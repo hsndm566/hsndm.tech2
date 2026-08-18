@@ -2,7 +2,7 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CookieConsent } from "./CookieConsent";
+import { consentCookieAttributes, CookieConsent } from "./CookieConsent";
 
 let currentLocation = "/";
 vi.mock("wouter", () => ({ useLocation: () => [currentLocation, vi.fn()] }));
@@ -43,5 +43,10 @@ describe("CookieConsent", () => {
     expect(dialog.querySelector("div")?.className).toContain("sticky");
     expect(dialog.querySelector("div")?.className).toContain("grid-cols-2");
     expect(screen.getByRole("button", { name: "Allow analytics" }).className).toContain("min-w-0");
+  });
+
+  it("uses Secure only for HTTPS cookie persistence while retaining same-site protection on HTTP", () => {
+    expect(consentCookieAttributes(60, "http:")).toBe("Path=/; Max-Age=60; SameSite=Lax");
+    expect(consentCookieAttributes(60, "https:")).toBe("Path=/; Max-Age=60; SameSite=Lax; Secure");
   });
 });
