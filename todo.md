@@ -234,7 +234,7 @@
 - [x] Fix verified frontend faults without changing approved copy, pricing, backend architecture, or protected services
 - [x] Add or update deterministic regression tests for each verified fix
 - [x] Re-run tests, type checks, build, and responsive screenshots after repairs
-- [ ] Save the verified engineering-audit checkpoint and report remaining external blockers separately
+- [x] Save the verified engineering-audit checkpoint and report remaining external blockers separately
 
 ---
 
@@ -254,7 +254,7 @@
 - [x] Baseline test/build/log results recorded
 - [x] Responsive audit results recorded
 - [x] Fixes and regression coverage recorded
-- [ ] Final verification checkpoint saved
+- [x] Final verification checkpoint saved
 
 ---
 
@@ -278,7 +278,7 @@
 - [x] Review all findings and prioritize reproducible defects
 - [x] Apply only validated fixes
 - [x] Re-run the full verification suite
-- [ ] Publish the verified checkpoint
+- [x] Publish the verified checkpoint
 
 ## Deep production-readiness expansion
 
