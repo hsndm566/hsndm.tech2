@@ -58,6 +58,7 @@ export function CookieConsent() {
   const choose = (choice: ConsentChoice) => {
     saveConsent(choice);
     setConsent(choice);
+    window.dispatchEvent(new CustomEvent("autoapply:optional-consent", { detail: { analytics: choice === "accepted" } }));
   };
 
   if (consent) {

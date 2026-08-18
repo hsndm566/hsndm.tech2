@@ -1,4 +1,5 @@
 import { Component, ReactNode } from "react";
+import { captureBoundaryException } from "@/lib/sentryTelemetry";
 import { RecoveryPanel } from "./RecoveryPanel";
 
 interface Props {
@@ -25,6 +26,10 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError && this.props.resetKey !== previousProps.resetKey) {
       this.setState({ hasError: false, error: null });
     }
+  }
+
+  componentDidCatch(error: Error) {
+    captureBoundaryException(error);
   }
 
   render() {

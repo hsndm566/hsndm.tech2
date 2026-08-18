@@ -334,3 +334,9 @@
 - [x] Add a pre-handoff shared-data preview, alternate contact choices, and on-page enquiry receipt with pause/delete guidance
 - [x] Add explicit campaign-plan authorization before any live campaign activity and publish a clearly labeled illustrative deliverable sample
 - [x] Run all attached Phase 1 and 2 acceptance checks and stop for Phase 3 approval
+- [x] Audit the approved Phase 3 scope and current client/server reliability monitoring configuration
+- [x] Configure a privacy-safe Sentry integration with direct project triage access and no CV, form, or contact data capture
+- [x] Implement the approved Phase 3 resilience and recovery improvements without changing protected application services
+- [ ] Add Sentry and Phase 3 regression coverage, validate production behavior, and publish the approved release
+- [ ] Verify the connected Sentry integration can access the user’s projects and issue-triage tools without adding a duplicate credential path
+- [x] Add Sentry and Phase 3 regression coverage and validate the completed release locally; publication is the next step

@@ -7,9 +7,11 @@ import superjson from "superjson";
 import App from "./App";
 import { installErrorTelemetry } from "./lib/errorTelemetry";
 import { getClerkToken } from "./lib/clerkToken";
+import { installOptionalSentry } from "./lib/sentryTelemetry";
 import "./index.css";
 
 installErrorTelemetry();
+installOptionalSentry();
 const queryClient = new QueryClient();
 
 queryClient.getQueryCache().subscribe(event => {

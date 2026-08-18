@@ -78,6 +78,14 @@ async function startServer() {
       res.status(200).json({ timestamp: null });
     }
   });
+
+  // A Sentry DSN is intentionally a public browser-routing identifier, not an
+  // authentication secret. It is still delivered only at runtime and only read
+  // by the client after a visitor allows optional analytics/reliability signals.
+  app.get("/api/client-config/sentry", (_req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.status(200).json({ dsn: process.env.SENTRY_DSN || null });
+  });
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerDataBackupRoutes(app);

@@ -514,7 +514,7 @@ export default function Home() {
 
             <div className="hero-stats space-y-2">
               <div className="grid grid-cols-3 gap-2">
-                <div><strong>500+</strong><span>Saudi roles scanned</span></div>
+                <div><strong>500+</strong><span>Preview · Saudi roles reviewed</span></div>
                 <div><strong>24/7</strong><span>Engine in motion</span></div>
                 <div><strong>2</strong><span>Languages supported</span></div>
               </div>
