@@ -142,6 +142,26 @@ export async function getJobApplications(candidateOpenId?: string): Promise<JobA
   }
 }
 
+/**
+ * Public live-status reads need only a timestamp. Do not fetch candidate,
+ * company, role, or application metadata for the public activity indicator.
+ */
+export async function getLatestJobApplicationCreatedAt(): Promise<Date | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [latest] = await db
+      .select({ createdAt: jobApplications.createdAt })
+      .from(jobApplications)
+      .orderBy(desc(jobApplications.createdAt))
+      .limit(1);
+    return latest?.createdAt ?? null;
+  } catch (error) {
+    console.warn("[Database] Failed to fetch latest application activity:", error);
+    return null;
+  }
+}
+
 export async function insertJobApplication(data: InsertJobApplication): Promise<JobApplication | null> {
   const db = await getDb();
   if (!db) return null;

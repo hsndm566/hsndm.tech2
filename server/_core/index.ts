@@ -9,6 +9,8 @@ import { registerDataBackupRoutes } from "../dataBackup";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { createDatabaseHealthPayload, createHealthPayload } from "../health";
+import { isTrustedCorsOrigin } from "../cors";
+import { normalizeLatestActivityTimestamp } from "../latestActivity";
 
 async function startServer() {
   const app = express();
@@ -27,19 +29,16 @@ async function startServer() {
     }
     next();
   });
-  // Configure body parser with larger size limit for file uploads
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // CV files are parsed in the browser; server procedures accept only bounded
+  // extracted text. Keep the global parser small to limit abuse of public APIs.
+  const requestBodyLimit = "512kb";
+  app.use(express.json({ limit: requestBodyLimit }));
+  app.use(express.urlencoded({ limit: requestBodyLimit, extended: true }));
 
   // CORS middleware for production API boundary (Railway & hsndm.tech)
   app.use((req, res, next) => {
     const origin = req.headers.origin;
-    const allowedOrigins = [
-      "https://hsndm.tech",
-      "https://www.hsndm.tech",
-      "https://dashboard.hsndm.tech",
-    ];
-    if (origin && (allowedOrigins.includes(origin) || origin.endsWith(".manus.space") || origin.endsWith(".manus.computer") || origin.startsWith("http://localhost:"))) {
+    if (origin && isTrustedCorsOrigin(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
@@ -70,15 +69,12 @@ async function startServer() {
 
   app.get("/v1/campaigns/latest-activity", async (_req, res) => {
     try {
-      const { getJobApplications } = await import("../db");
-      const apps = await getJobApplications();
-      const latest = apps[0];
-      if (latest && latest.createdAt) {
-        res.status(200).json({ timestamp: new Date(latest.createdAt).getTime() });
-        return;
-      }
-      res.status(200).json({ timestamp: null });
+      const { getLatestJobApplicationCreatedAt } = await import("../db");
+      const createdAt = await getLatestJobApplicationCreatedAt();
+      res.setHeader("Cache-Control", "no-store");
+      res.status(200).json({ timestamp: normalizeLatestActivityTimestamp(createdAt ? { createdAt } : null) });
     } catch {
+      res.setHeader("Cache-Control", "no-store");
       res.status(200).json({ timestamp: null });
     }
   });

@@ -30,4 +30,13 @@ describe("CookieConsent", () => {
     expect(screen.getByRole("heading", { name: "تحليلات اختيارية" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "سياسة الخصوصية" }).getAttribute("href")).toBe("/ar/privacy");
   });
+
+  it("keeps the consent surface compact and actions usable on narrow screens", () => {
+    render(<CookieConsent />);
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.className).toContain("max-h-[min(42vh,20rem)]");
+    expect(dialog.className).toContain("z-[80]");
+    expect(dialog.querySelector("div")?.className).toContain("grid-cols-2");
+    expect(screen.getByRole("button", { name: "Allow analytics" }).className).toContain("min-w-0");
+  });
 });

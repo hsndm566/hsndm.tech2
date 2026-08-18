@@ -65,8 +65,22 @@ describe("AutoApplyChatWidget", () => {
     render(<AutoApplyChatWidget />);
     fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
     expect(screen.getByRole("dialog", { name: "AutoApply SA chat" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Upload CV/i }).getAttribute("href")).toBe("/#cv-intake");
+    expect(screen.getByRole("link", { name: /Upload CV/i }).getAttribute("href")).toBe("/#upload");
     fireEvent.keyDown(window, { key: "Escape" });
     expect(screen.queryByRole("dialog", { name: "AutoApply SA chat" })).toBeNull();
+  });
+
+  it("moves keyboard focus into the modal chat and restores it to the launcher on close", async () => {
+    render(<AutoApplyChatWidget />);
+    const launcher = screen.getByRole("button", { name: "Open AutoApply SA chat" });
+    launcher.focus();
+    fireEvent.click(launcher);
+
+    const dialog = screen.getByRole("dialog", { name: "AutoApply SA chat" });
+    expect(dialog.getAttribute("aria-modal")).toBe("true");
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText("Message AutoApply SA")));
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    await waitFor(() => expect(document.activeElement).toBe(launcher));
   });
 });

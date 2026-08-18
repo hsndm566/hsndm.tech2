@@ -66,12 +66,6 @@ function Router() {
       <>
       <NativeVisualEnhancements routeKey={location} />
       <Switch>
-      {isDashboardSubdomain() ? (
-        <>
-          <Route path="/dashboard/settings" component={() => <ClerkProtectedRoute><ProfileSettings /></ClerkProtectedRoute>} />
-          <Route path="/dashboard" component={() => <ClerkProtectedRoute><Dashboard /></ClerkProtectedRoute>} />
-        </>
-      ) : null}
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
       <Route path="/ar/enquire" component={ArabicEnquire} />

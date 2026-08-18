@@ -84,6 +84,15 @@ export default function Dashboard() {
   const clerkDashboardEnabled = clerkAuth.enabled && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
   const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
   const dashboardAuthLoading = clerkDashboardEnabled ? !clerkAuth.isLoaded : authLoading;
+  const candidateIdentity = clerkDashboardEnabled
+    ? {
+        name: clerkAuth.user?.fullName?.trim() || "Candidate",
+        email: clerkAuth.user?.primaryEmailAddress?.emailAddress || "",
+      }
+    : {
+        name: user?.name || "Candidate",
+        email: user?.email || "",
+      };
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
 
   useEffect(() => {
@@ -169,8 +178,8 @@ export default function Dashboard() {
       return;
     }
     createAppMutation.mutate({
-      candidateName: user?.name || "Candidate",
-      candidateEmail: user?.email || "",
+      candidateName: candidateIdentity.name,
+      candidateEmail: candidateIdentity.email,
       companyName: newCompany.trim(),
       roleTitle: newRole.trim(),
       city: newCity,

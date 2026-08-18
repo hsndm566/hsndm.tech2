@@ -112,5 +112,10 @@ describe("homepage clarity release", () => {
     expect(styles).toContain("select:focus-visible");
     expect(styles).toContain(".drop-zone:focus-within");
     expect(styles).toContain(".skip-link:focus");
+    expect(english).toContain('const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;');
+    expect(english).toContain('behavior: prefersReducedMotion ? "auto" : "smooth"');
+    expect(english).toContain('if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)');
+    expect(english).toContain("new AbortController()");
+    expect(english).toContain('document.addEventListener("visibilitychange", onVisibilityChange)');
   });
 });

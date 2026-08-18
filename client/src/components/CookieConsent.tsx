@@ -64,14 +64,14 @@ export function CookieConsent() {
   }
 
   return (
-    <aside className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md border border-black/15 bg-[#151515] p-4 text-[#f3f0e9] shadow-2xl" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
+    <aside className="fixed inset-x-3 bottom-3 z-[80] mx-auto w-[calc(100%-1.5rem)] max-w-md max-h-[min(42vh,20rem)] overflow-y-auto border border-black/15 bg-[#151515] p-3 text-[#f3f0e9] shadow-2xl sm:inset-x-4 sm:bottom-4 sm:w-auto sm:p-4" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
       <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">{text.kicker}</p>
-      <h2 id="cookie-consent-title" className="mt-1 text-base font-semibold">{text.title}</h2>
-      <p id="cookie-consent-description" className="mt-2 text-xs leading-5 text-white/75">{text.detail}</p>
-      <a className="mt-3 inline-flex text-xs text-[#e5482a] underline underline-offset-4" href={isArabic ? "/ar/privacy" : "/privacy"}>{text.privacy}</a>
-      <div className="mt-4 flex flex-nowrap gap-2">
-        <button type="button" className="border border-[#e5482a] bg-[#e5482a] px-3 py-2 font-mono text-[10px] text-[#151515]" onClick={() => choose("accepted")}>{text.allow}</button>
-        <button type="button" className="border border-white/35 px-3 py-2 font-mono text-[10px] text-white" onClick={() => choose("necessary")}>{text.necessary}</button>
+      <h2 id="cookie-consent-title" className="mt-1 text-sm font-semibold sm:text-base">{text.title}</h2>
+      <p id="cookie-consent-description" className="mt-2 text-[11px] leading-4 text-white/75 sm:text-xs sm:leading-5">{text.detail}</p>
+      <a className="mt-2 inline-flex text-xs text-[#e5482a] underline underline-offset-4 sm:mt-3" href={isArabic ? "/ar/privacy" : "/privacy"}>{text.privacy}</a>
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-nowrap">
+        <button type="button" className="min-w-0 border border-[#e5482a] bg-[#e5482a] px-2 py-2 text-center font-mono text-[10px] leading-4 text-[#151515] sm:px-3" onClick={() => choose("accepted")}>{text.allow}</button>
+        <button type="button" className="min-w-0 border border-white/35 px-2 py-2 text-center font-mono text-[10px] leading-4 text-white sm:px-3" onClick={() => choose("necessary")}>{text.necessary}</button>
       </div>
     </aside>
   );

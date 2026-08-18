@@ -164,25 +164,46 @@ export default function Home() {
   const [explainerVideoFailed, setExplainerVideoFailed] = useState(false);
 
   useEffect(() => {
+    let activeRequest: AbortController | null = null;
     const fetchLatest = async () => {
+      if (document.visibilityState === "hidden") return;
+      activeRequest?.abort();
+      const controller = new AbortController();
+      activeRequest = controller;
+      const timeout = window.setTimeout(() => controller.abort(), 10_000);
       try {
-        const res = await fetch("/v1/campaigns/latest-activity");
-        if (res.ok) {
+        const res = await fetch("/v1/campaigns/latest-activity", { signal: controller.signal });
+        const contentType = res.headers.get("content-type") || "";
+        if (res.ok && contentType.includes("application/json")) {
           const data = await res.json();
-          if (data && data.timestamp) {
-            const diffMins = Math.max(0, Math.floor((Date.now() - data.timestamp) / 60000));
+          const timestamp = typeof data?.timestamp === "number" ? data.timestamp : null;
+          const age = timestamp ? Date.now() - timestamp : Number.NaN;
+          if (Number.isFinite(age) && age >= 0 && age <= 86_400_000) {
+            const diffMins = Math.floor(age / 60000);
             setLatestActivityText(`${diffMins === 0 ? "Just now" : `${diffMins} minutes ago`}`);
           } else {
             setLatestActivityText("Engine active — 24/7");
           }
+        } else {
+          setLatestActivityText("Engine active — 24/7");
         }
-      } catch {
-        setLatestActivityText("Engine active — 24/7");
+      } catch (error) {
+        if ((error as DOMException).name !== "AbortError") setLatestActivityText("Engine active — 24/7");
+      } finally {
+        window.clearTimeout(timeout);
       }
     };
     fetchLatest();
     const interval = setInterval(fetchLatest, 60000);
-    return () => clearInterval(interval);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void fetchLatest();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      activeRequest?.abort();
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, []);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
@@ -223,7 +244,8 @@ export default function Home() {
   }, []);
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById(id)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
     setMenuOpen(false);
   };
 
@@ -246,13 +268,7 @@ export default function Home() {
     setBriefShared(false);
     setBriefStatus("idle");
 
-    const tick = (now: number) => {
-      const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
-      setScanProgress(progress);
-      if (progress < 100) {
-        scanFrame.current = window.requestAnimationFrame(tick);
-        return;
-      }
+    const finishScan = () => {
       void Promise.all([fieldPromise, textPromise]).then(([fields, cvText]) => {
         if (scanVersion.current !== version) return;
         const bestFit = fields[0];
@@ -282,6 +298,22 @@ export default function Home() {
           setScanState("matched");
         });
       });
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setScanProgress(100);
+      finishScan();
+      return;
+    }
+
+    const tick = (now: number) => {
+      const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
+      setScanProgress(progress);
+      if (progress < 100) {
+        scanFrame.current = window.requestAnimationFrame(tick);
+        return;
+      }
+      finishScan();
     };
     scanFrame.current = window.requestAnimationFrame(tick);
   };

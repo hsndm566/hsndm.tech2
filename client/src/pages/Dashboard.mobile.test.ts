@@ -45,4 +45,12 @@ describe("candidate dashboard responsive contract", () => {
     expect(dashboardSource).toContain("We could not load your campaign data");
     expect(dashboardSource.indexOf("We could not load your campaign data")).toBeLessThan(dashboardSource.indexOf("applications.length === 0"));
   });
+
+  it("uses Clerk identity for manual applications when the dashboard runs in Clerk mode", () => {
+    expect(dashboardSource).toContain("const candidateIdentity = clerkDashboardEnabled");
+    expect(dashboardSource).toContain("clerkAuth.user?.fullName?.trim()");
+    expect(dashboardSource).toContain("clerkAuth.user?.primaryEmailAddress?.emailAddress");
+    expect(dashboardSource).toContain("candidateName: candidateIdentity.name");
+    expect(dashboardSource).toContain("candidateEmail: candidateIdentity.email");
+  });
 });

@@ -58,9 +58,19 @@ export function AutoApplyChatWidget() {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (isOpen) inputRef.current?.focus();
+    if (isOpen) {
+      const activeElement = document.activeElement;
+      returnFocusRef.current = activeElement instanceof HTMLElement ? activeElement : launcherRef.current;
+      const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    const returnFocus = returnFocusRef.current;
+    if (returnFocus?.isConnected) returnFocus.focus();
   }, [isOpen]);
 
   useEffect(() => {
@@ -71,12 +81,16 @@ export function AutoApplyChatWidget() {
   }, [messages, isLoading]);
 
   useEffect(() => {
+    if (!isOpen) return;
     const closeOnEscape = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape" && !event.isComposing) {
+        event.preventDefault();
+        setIsOpen(false);
+      }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, []);
+  }, [isOpen]);
 
   const sendMessage = async (rawMessage: string) => {
     const message = rawMessage.trim();
@@ -127,7 +141,8 @@ export function AutoApplyChatWidget() {
       {isOpen ? (
         <section
           aria-label="AutoApply SA chat"
-          aria-modal="false"
+          aria-describedby="autoapply-chat-guidance"
+          aria-modal="true"
           className="mb-3 flex h-[min(640px,calc(100dvh-6.75rem))] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-3xl border border-blue-200 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.24)] sm:w-[390px]"
           role="dialog"
         >
@@ -203,7 +218,7 @@ export function AutoApplyChatWidget() {
           </div>
 
           <footer className="border-t border-slate-200 bg-white px-3 py-3">
-            <p className="mb-2 text-center text-[11px] leading-4 text-slate-500">
+            <p id="autoapply-chat-guidance" className="mb-2 text-center text-[11px] leading-4 text-slate-500">
               Start here, then use the secure CV intake for PDF or Word files. CV files are not retained in chat. / ابدأ هنا، ثم استخدم قسم رفع السيرة الآمن لملفات PDF أو Word. لا تُحفظ ملفات السيرة في الدردشة.
             </p>
             {error ? (
@@ -213,7 +228,7 @@ export function AutoApplyChatWidget() {
               </div>
             ) : null}
             <div className="mb-2 flex items-center justify-between gap-2 text-xs">
-              <a className="font-semibold text-[#2563eb] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]" href="/#cv-intake">
+              <a className="font-semibold text-[#2563eb] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]" href="/#upload">
                 Upload CV / رفع السيرة الذاتية
               </a>
               <span className="text-slate-500">English &amp; العربية</span>
@@ -247,6 +262,7 @@ export function AutoApplyChatWidget() {
         aria-label="Open AutoApply SA chat"
         className="group flex h-14 items-center gap-2 rounded-full bg-[#2563eb] px-4 text-sm font-bold text-white shadow-[0_12px_28px_rgba(37,99,235,0.32)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
         onClick={() => setIsOpen((open) => !open)}
+        ref={launcherRef}
         type="button"
       >
         <MessageCircle className="size-5" />

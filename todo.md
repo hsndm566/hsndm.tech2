@@ -12,7 +12,7 @@
 
 - [x] Configure passwordless email authentication for client dashboard sessions.
 - [x] Bind and verify dashboard.hsndm.tech for private candidate access.
-- [ ] External setup required: point dashboard.hsndm.tech to the managed deployment and complete the Clerk custom-domain DNS verification for clerk.hsndm.tech before live passwordless sign-in can be tested
+- [x] External setup required: point dashboard.hsndm.tech to the managed deployment and complete the Clerk custom-domain DNS verification for clerk.hsndm.tech before live passwordless sign-in can be tested
 - [x] Implement candidate profile settings page and database persistence
 - [x] Replace dashboard spinner with skeleton loading UI during data fetch
 - [x] Build recent activity feed for application status updates and notifications
@@ -27,8 +27,8 @@
 - [x] Diagnose and fix homepage video rendering with phone-safe fallback
 - [x] Assess whether additional subdomains are useful for the current architecture
 - [x] Inspect Cloudflare zone and existing DNS records for hsndm.tech
-- [ ] Bind dashboard.hsndm.tech and clerk.hsndm.tech using verified Cloudflare targets
-- [ ] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
+- [x] Bind dashboard.hsndm.tech and clerk.hsndm.tech using verified Cloudflare targets
+- [x] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
 - [ ] Test the full Clerk magic-link login flow in the browser
 - [x] Bind dashboard.hsndm.tech to the managed production deployment
 - [x] Publish the latest project state and verify the production homepage video on mobile
@@ -223,3 +223,71 @@
 - [x] Create a compressed, muted, seamless-loop hero asset and enforce non-interactive background playback without visible controls
 - [x] Verify optimized hero playback and byte-range delivery at desktop and 375px mobile, then confirm the live Render bundle references the replacement
 - [x] Continue monitoring Railway’s GitHub Auto-Deploy outage, then deploy and verify the dedicated chatbot Groq repair after upstream mitigation
+
+# Engineering Audit & Fault-Fix Sweep
+
+- [x] Run the complete Vitest suite, TypeScript check, and production build for a fresh baseline
+- [x] Inspect frontend runtime logs and network failures for desktop and mobile-relevant issues
+- [x] Audit the public English homepage at desktop and 375px mobile viewports
+- [x] Audit the public Arabic homepage at desktop and 375px mobile viewports, including RTL overflow and language switching
+- [x] Audit dashboard and ATS routes for loading, empty, error, and authenticated-entry behavior
+- [x] Fix verified frontend faults without changing approved copy, pricing, backend architecture, or protected services
+- [x] Add or update deterministic regression tests for each verified fix
+- [x] Re-run tests, type checks, build, and responsive screenshots after repairs
+- [ ] Save the verified engineering-audit checkpoint and report remaining external blockers separately
+
+---
+
+## Engineering audit notes
+
+- Audit started 2026-08-17 after user requested an adversarial desktop/mobile software-engineering review.
+- Scope is limited to reproducible frontend/runtime faults and safe fixes; no DNS, Clerk email dispatch, or AutoApply SA automation-service mutations are permitted without separate approval.
+
+---
+
+## Prior session checklist ends above; preserve its historical entries.
+
+---
+
+## Engineering audit continuation
+
+- [x] Baseline test/build/log results recorded
+- [x] Responsive audit results recorded
+- [x] Fixes and regression coverage recorded
+- [ ] Final verification checkpoint saved
+
+---
+
+## Audit agent lanes
+
+- [x] Lane A: Test and build validation
+- [x] Lane B: English desktop visual audit
+- [x] Lane C: English mobile visual audit
+- [x] Lane D: Arabic desktop RTL audit
+- [x] Lane E: Arabic mobile RTL audit
+- [x] Lane F: Dashboard route and auth-entry audit
+- [x] Lane G: ATS and CV intake interaction audit
+- [x] Lane H: Runtime/network log and API contract audit
+- [x] Lane I: Accessibility and reduced-motion audit
+- [x] Lane J: Regression test and release verification audit
+
+---
+
+## Audit handoff
+
+- [x] Review all findings and prioritize reproducible defects
+- [x] Apply only validated fixes
+- [x] Re-run the full verification suite
+- [ ] Publish the verified checkpoint
+
+## Deep production-readiness expansion
+
+- [x] Verify application-query ordering and timestamp contracts for public activity indicators
+- [x] Verify active-server route registration, static-file fallback, and production entrypoint alignment
+- [x] Verify security headers, CORS behavior, cache controls, and unsafe redirect handling on public routes
+- [x] Verify authenticated-route boundaries cannot render candidate data when authentication is unavailable or stale
+- [x] Verify client network requests fail closed with usable recovery states and no misleading success claims
+- [x] Verify mobile fixed elements never cover mandatory actions, focus rings, or consent controls
+- [x] Verify keyboard-only navigation, focus order, landmark labeling, and reduced-motion behavior on primary routes
+- [x] Verify image and video delivery includes resilient browser-compatible fallback behavior across desktop and mobile
+- [x] Add regression coverage for every newly reproduced defect and re-run all existing coverage
