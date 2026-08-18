@@ -23,10 +23,12 @@ export default function ArabicEnquire() {
   const [city, setCity] = useState("Jeddah");
   const [industry, setIndustry] = useState("Technology & Software");
   const [fileName, setFileName] = useState("");
-  const [isHandingOff, setIsHandingOff] = useState(false);
-  const [handoffStep, setHandoffStep] = useState(0);
+  const [showPreview, setShowPreview] = useState(false);
+  const [contactChoice, setContactChoice] = useState<"whatsapp" | "email" | "web">("whatsapp");
+  const [authorized, setAuthorized] = useState(false);
+  const [receipt, setReceipt] = useState<{ reference: string; timestamp: string; channel: string } | null>(null);
   const [handoffBlocked, setHandoffBlocked] = useState(false);
-  const [handoffHref, setHandoffHref] = useState("");
+  const secureEnquiry = trpc.campaign.enquiry.submit.useMutation();
 
   useEffect(() => {
     applyPageSeo({
@@ -40,9 +42,11 @@ export default function ArabicEnquire() {
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isHandingOff) return;
+    setShowPreview(true);
+    setReceipt(null);
+  };
 
-    const message = [
+  const message = () => [
       "مرحباً AutoApply SA، أرغب في بدء حملة تقديم.",
       `الاسم: ${name}`,
       `البريد الإلكتروني: ${email}`,
@@ -51,24 +55,23 @@ export default function ArabicEnquire() {
       `المجال المستهدف: ${saudiIndustries.find(option => option.en === industry)?.ar || industry}`,
       fileName ? `السيرة المختارة: ${fileName} — سأرفقها في هذه المحادثة.` : "السيرة الذاتية: سأشاركها في هذه المحادثة.",
     ].join("\n");
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
 
-    if (handoffWindow) handoffWindow.opener = null;
-    else reportBlockedHandoff.mutate({ route: "/ar/enquire" });
-
+  const confirmContact = () => {
+    if (!authorized) return;
+    const timestamp = new Date().toLocaleString("ar-SA");
+    if (contactChoice === "web") {
+      secureEnquiry.mutate({ fullName: name, email, targetRole: role, city, industry, language: "Arabic", campaignAuthorizationConfirmed: true }, { onSuccess: ({ reference }) => setReceipt({ reference, timestamp, channel: "استفسار ويب آمن" }) });
+      return;
+    }
+    if (contactChoice === "email") {
+      window.open(`mailto:apply@hsndm.tech?subject=${encodeURIComponent("ملخص حملة AutoApply SA")}&body=${encodeURIComponent(message())}`, "_blank", "noopener,noreferrer");
+      setReceipt({ reference: `EMAIL-${Date.now().toString(36).toUpperCase()}`, timestamp, channel: "البريد الإلكتروني" });
+      return;
+    }
+    const handoffWindow = window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message())}`, "_blank", "noopener,noreferrer");
+    if (!handoffWindow) reportBlockedHandoff.mutate({ route: "/ar/enquire" });
     setHandoffBlocked(!handoffWindow);
-    setHandoffHref(whatsappUrl);
-    setHandoffStep(0);
-    setIsHandingOff(true);
-    window.setTimeout(() => setHandoffStep(1), 520);
-    window.setTimeout(() => setHandoffStep(2), 1040);
-    window.setTimeout(() => {
-      if (handoffWindow) {
-        handoffWindow.location.replace(whatsappUrl);
-        setLocation(`/ar/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
-      }
-    }, 1750);
+    setReceipt({ reference: `WA-${Date.now().toString(36).toUpperCase()}`, timestamp, channel: "واتساب" });
   };
 
   return (
@@ -93,7 +96,7 @@ export default function ArabicEnquire() {
             <div className="response-guard"><ShieldCheck size={17} /><div><b>حماية الاستجابة</b><span>لأسرع رد مباشر، أبقِ الصفحة مفتوحة وتابع عبر WhatsApp إذا لم يصلك رد خلال يوم عمل واحد.</span></div></div>
           </aside>
 
-          <form id="campaign-brief" className="campaign-form" onSubmit={submit} aria-busy={isHandingOff}>
+          <form id="campaign-brief" className="campaign-form" onSubmit={submit} aria-busy={secureEnquiry.isPending}>
             <div className="form-heading"><span>ملخص حملتك</span><b>الحقول المطلوبة مميزة بـ <em>*</em></b></div>
             <label><span>الاسم الكامل <em>*</em></span><input required value={name} onChange={event => setName(event.target.value)} placeholder="كيف نُخاطبك؟" /></label>
             <label><span>البريد الإلكتروني <em>*</em></span><input required type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="name@example.com" /></label>
@@ -103,20 +106,11 @@ export default function ArabicEnquire() {
               <label><span>المجال المستهدف</span><SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={setIndustry} language="ar" placeholder="ابحث عن مجال…" /></label>
             </div>
             <label className="campaign-upload"><input type="file" accept=".pdf,.doc,.docx,.txt" onChange={chooseFile} /><span className="upload-icon"><FileText size={19} /></span><span><b>{fileName || "اختر سيرة ذاتية (اختياري)"}</b><small>PDF أو DOC أو DOCX أو TXT · يبقى الملف على جهازك في المعاينة</small></span><ArrowUpRight size={18} /></label>
-            <div className="form-protection"><Check size={15} /> عند الإرسال، تُفتح رسالة WhatsApp جاهزة بالعربية لتشارك ملخص الحملة وتضيف سيرتك مباشرة.</div>
-            <button className="button button-accent" type="submit" disabled={isHandingOff}>{isHandingOff ? <>جارٍ تجهيز المحادثة <Loader2 className="handoff-inline-spinner" size={17} /></> : <>المتابعة إلى WhatsApp <ArrowUpRight size={18} /></>}</button>
+            <div className="form-protection"><Check size={15} /> راجع أولاً التفاصيل التي ستشاركها. ملف السيرة المختار يبقى على جهازك ولا يُرسل من هذا النموذج.</div>
+            <button className="button button-accent" type="submit">راجع خيارات التواصل <ArrowUpRight size={18} /></button>
             <Link href="/ar" className="form-back">العودة إلى نظرة المحرك</Link>
-            {isHandingOff && (
-              <div className="whatsapp-handoff" role="status" aria-live="polite">
-                <Loader2 size={25} className="handoff-spinner" />
-                <div>
-                  <b>{handoffBlocked ? "حظر المتصفح نافذة WhatsApp." : handoffSteps[handoffStep][0]}</b>
-                  <span>{handoffBlocked ? "ملخص حملتك جاهز. استخدم الرابط الآمن أدناه لفتح WhatsApp يدوياً." : handoffSteps[handoffStep][1]}</span>
-                  {handoffBlocked && handoffHref && <a href={handoffHref} target="_blank" rel="noreferrer" className="form-back">فتح WhatsApp يدوياً</a>}
-                </div>
-                <div className="handoff-steps" aria-label="تقدم فتح WhatsApp">{handoffSteps.map((step, index) => <span className={index <= handoffStep ? "active" : ""} key={step[0]}><i>{index < handoffStep ? "✓" : `0${index + 1}`}</i><small>{step[0]}</small></span>)}</div>
-              </div>
-            )}
+            {showPreview && <section className="mt-6 border border-black/15 bg-white p-4 text-black" aria-labelledby="handoff-preview-title"><p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">قبل التواصل</p><h2 id="handoff-preview-title" className="mt-2 text-xl font-semibold">راجع التفاصيل التي ستشاركها</h2><p className="mt-2 text-sm text-black/70">ستتم مشاركة: <b>الاسم والبريد والمسار الوظيفي والمدينة والمجال.</b> لن تُرسل السيرة الذاتية إلا إذا أرفقتها بنفسك بعد اختيار واتساب أو البريد.</p><dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2"><div><dt>الاسم</dt><dd>{name}</dd></div><div><dt>البريد</dt><dd>{email}</dd></div><div><dt>المسار</dt><dd>{role}</dd></div><div><dt>المدينة</dt><dd>{saudiCities.find(option => option.en === city)?.ar || city}</dd></div><div><dt>المجال</dt><dd>{saudiIndustries.find(option => option.en === industry)?.ar || industry}</dd></div><div><dt>السيرة المختارة</dt><dd>{fileName ? `${fileName} (يبقى على جهازك)` : "لم تُختر سيرة"}</dd></div></dl><fieldset className="mt-4"><legend className="font-semibold">اختر وسيلة التواصل</legend><div className="mt-2 grid gap-2 sm:grid-cols-3">{(["whatsapp", "email", "web"] as const).map(option => <label key={option} className="border border-black/15 p-3 text-sm"><input className="ml-2" type="radio" name="contact-choice" checked={contactChoice === option} onChange={() => setContactChoice(option)} />{option === "whatsapp" ? "واتساب" : option === "email" ? "البريد" : "استفسار ويب آمن"}</label>)}</div></fieldset><section className="mt-4 border-r-2 border-[#e5482a] bg-[#f7f4ed] p-3 text-sm"><h3 className="font-semibold">تفويض خطة الحملة</h3><p className="mt-1">المسار المستهدف: {role}. الموقع: {saudiCities.find(option => option.en === city)?.ar || city}. اللغة: العربية. قنوات التقديم والحجم والمدى الزمني تُحدّد لاحقاً في خطة مكتوبة.</p><p className="mt-2 font-medium">لن يُرسل أي طلب حتى توافق على خطة الحملة. يمكنك الإيقاف أو التعليق في أي وقت، وستتلقى سجل التقديمات.</p><label className="mt-3 flex gap-2"><input type="checkbox" checked={authorized} onChange={event => setAuthorized(event.target.checked)} />أوافق على طلب التواصل هذا وأفهم أنه لا يبدأ أي تقديم لصاحب عمل.</label></section><a className="mt-3 inline-flex text-sm underline underline-offset-4" href="/ar/campaign-report-sample">اطلع على نموذج تقرير الحملة التوضيحي</a>{secureEnquiry.error ? <p className="mt-3 text-sm text-red-700">تعذر إرسال الطلب الآمن الآن. استخدم البريد أو واتساب.</p> : null}<button className="button button-accent mt-4" type="button" disabled={!authorized || secureEnquiry.isPending} onClick={confirmContact}>{secureEnquiry.isPending ? <><Loader2 className="handoff-inline-spinner" size={17} /> جارٍ الإرسال الآمن</> : `تأكيد عبر ${contactChoice === "web" ? "الويب الآمن" : contactChoice === "email" ? "البريد" : "واتساب"}`}</button>{handoffBlocked ? <p className="mt-3 text-sm">حظر المتصفح نافذة واتساب. استخدم البريد أو الويب الآمن بدلاً من ذلك.</p> : null}</section>}
+            {receipt && <section className="mt-4 border border-[#e5482a] bg-[#fff8f5] p-4" role="status" aria-live="polite"><p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">إيصال التواصل</p><h2 className="mt-2 text-xl font-semibold">تم تجهيز طلب التواصل.</h2><p className="mt-2 text-sm">المرجع: <b>{receipt.reference}</b><br />الوقت: {receipt.timestamp}<br />الخطوة التالية: يراجع الفريق ملخصك خلال يوم عمل واحد. لم تُرسل سيرة ذاتية من هذه الصفحة.</p><p className="mt-3 text-sm">لإيقاف أو حذف طلب التواصل، راسل <a className="underline" href={`mailto:apply@hsndm.tech?subject=${encodeURIComponent(`Pause or delete ${receipt.reference}`)}`}>apply@hsndm.tech</a> مع رقم المرجع.</p></section>}
           </form>
         </div>
       </section>

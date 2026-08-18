@@ -23,11 +23,13 @@ describe("public accessibility and recovery contract", () => {
     expect(stylesSource).toContain(".drop-zone:focus-within");
   });
 
-  it("announces media failures and preserves a clear manual WhatsApp recovery path", () => {
+  it("announces media failures and preserves accessible alternate contact recovery paths", () => {
     expect(homeSource).toContain('role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable');
     expect(arabicHomeSource).toContain('role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح');
-    expect(enquireSource).toContain("Open WhatsApp manually");
-    expect(arabicEnquireSource).toContain("فتح WhatsApp يدوياً");
+    expect(enquireSource).toContain("Secure web enquiry");
+    expect(enquireSource).toContain("browser blocked the new WhatsApp window");
+    expect(arabicEnquireSource).toContain("استفسار ويب آمن");
+    expect(arabicEnquireSource).toContain("حظر المتصفح نافذة واتساب");
   });
 
   it("honors reduced-motion preferences for visual transitions and the scanning laser", () => {

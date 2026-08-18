@@ -34,6 +34,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
 import { AutoApplyChatWidget } from "@/components/AutoApplyChatWidget";
+import { RecoveryPanel } from "@/components/RecoveryPanel";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -65,6 +66,7 @@ function Router() {
     <ClerkSessionBoundary enabled={clerkEnabled} publishableKey={clerkPublishableKey}>
       <>
       <NativeVisualEnhancements routeKey={location} />
+      <ErrorBoundary resetKey={location}>
       <Switch>
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
@@ -83,16 +85,19 @@ function Router() {
       <Route path="/how-it-works" component={() => <InformationPage kind="how" />} />
       <Route path="/support" component={() => <InformationPage kind="support" />} />
       <Route path="/case-studies" component={() => <InformationPage kind="case" />} />
+      <Route path="/campaign-report-sample" component={() => <InformationPage kind="sample" />} />
       <Route path="/privacy" component={() => <InformationPage kind="privacy" />} />
       <Route path="/terms" component={() => <InformationPage kind="terms" />} />
       <Route path="/ar/how-it-works" component={() => <InformationPage kind="how" language="ar" />} />
       <Route path="/ar/support" component={() => <InformationPage kind="support" language="ar" />} />
       <Route path="/ar/case-studies" component={() => <InformationPage kind="case" language="ar" />} />
+      <Route path="/ar/campaign-report-sample" component={() => <InformationPage kind="sample" language="ar" />} />
       <Route path="/ar/privacy" component={() => <InformationPage kind="privacy" language="ar" />} />
       <Route path="/ar/terms" component={() => <InformationPage kind="terms" language="ar" />} />
       <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
+      </ErrorBoundary>
       {!isDashboardSubdomain() && !location.startsWith("/dashboard") ? <AutoApplyChatWidget /> : null}
       </>
     </ClerkSessionBoundary>
@@ -107,7 +112,7 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
-          <Suspense fallback={<main className="min-h-screen bg-[#f3f0e9]" aria-busy="true" />}>
+          <Suspense fallback={<RecoveryPanel loading arabic={window.location.pathname.startsWith("/ar")} />}>
             <Router />
           </Suspense>
         </TooltipProvider>

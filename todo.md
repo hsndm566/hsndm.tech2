@@ -326,3 +326,11 @@
 - [x] Verify public frontend, dashboard, API health, Clerk, and chatbot host behavior from the live internet
 - [x] Confirm the live frontend bundle matches the latest published portal release and repair only a verified routing mismatch
 - [x] Repair the verified stale backend.hsndm.tech and dev.hsndm.tech GitHub Pages 404 routes only after confirming a supported Render custom-domain target
+- [x] Reproduce and repair meaningful-content rendering for the public English, Arabic, campaign intake, ATS, privacy, and terms routes
+- [x] Add independent no-JavaScript static fallback pages for the approved critical public routes with bilingual safe-contact guidance
+- [x] Add bilingual route-level error recovery that confirms no data was sent and provides retry, email, and WhatsApp escape paths
+- [x] Add privacy-preserving real-user monitoring for route exceptions, asset failures, blank-content conditions, and sustained client errors
+- [x] Make consent compact, accessible, privacy-safe by default, and non-blocking to visible page content
+- [x] Add a pre-handoff shared-data preview, alternate contact choices, and on-page enquiry receipt with pause/delete guidance
+- [x] Add explicit campaign-plan authorization before any live campaign activity and publish a clearly labeled illustrative deliverable sample
+- [x] Run all attached Phase 1 and 2 acceptance checks and stop for Phase 3 approval

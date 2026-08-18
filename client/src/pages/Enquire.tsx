@@ -21,12 +21,13 @@ export default function Enquire() {
   const [city, setCity] = useState("Jeddah");
   const [industry, setIndustry] = useState("Technology & Software");
   const [fileName, setFileName] = useState("");
-  const [isHandingOff, setIsHandingOff] = useState(false);
-  const [handoffStep, setHandoffStep] = useState(0);
+  const [showPreview, setShowPreview] = useState(false);
+  const [contactChoice, setContactChoice] = useState<"whatsapp" | "email" | "web">("whatsapp");
+  const [authorized, setAuthorized] = useState(false);
+  const [receipt, setReceipt] = useState<{ reference: string; timestamp: string; channel: string } | null>(null);
   const [handoffBlocked, setHandoffBlocked] = useState(false);
-  const [handoffHref, setHandoffHref] = useState("");
   const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
-  const handoffSteps = [["Reviewing your campaign brief", "Checking the essentials for your handoff."], ["Preparing your WhatsApp message", "Adding your selected campaign direction."], ["Opening WhatsApp", "Your chat will be ready in a moment."]] as const;
+  const secureEnquiry = trpc.campaign.enquiry.submit.useMutation();
 
   useEffect(() => {
     applyPageSeo({ title: "Start a Campaign | AutoApply SA", description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.", path: "/enquire" });
@@ -38,32 +39,40 @@ export default function Enquire() {
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isHandingOff) return;
-    const message = [
-      "Hi AutoApply SA, I want to start a campaign.",
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Target lane: ${role}`,
-      `Target city: ${city}`,
-      `Target industry: ${industry}`,
-      fileName ? `CV selected: ${fileName} — I will attach it in this chat.` : "CV: I will share it in this chat.",
-    ].join("\n");
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    const handoffWindow = window.open("about:blank", "autoapply-whatsapp");
-    if (handoffWindow) handoffWindow.opener = null;
-    else reportBlockedHandoff.mutate({ route: "/enquire" });
+    setShowPreview(true);
+    setReceipt(null);
+  };
+
+  const handoffMessage = () => [
+    "Hi AutoApply SA, I want to start a campaign.",
+    `Name: ${name}`,
+    `Email: ${email}`,
+    `Target lane: ${role}`,
+    `Target city: ${city}`,
+    `Target industry: ${industry}`,
+    "CV: I understand that no CV is sent from this page; I will attach one myself only if I choose to.",
+  ].join("\n");
+
+  const confirmContact = () => {
+    if (!authorized) return;
+    const timestamp = new Date().toLocaleString();
+    if (contactChoice === "web") {
+      secureEnquiry.mutate({ fullName: name, email, targetRole: role, city, industry, language: "English", campaignAuthorizationConfirmed: true }, {
+        onSuccess: ({ reference }) => setReceipt({ reference, timestamp, channel: "Secure web enquiry" }),
+      });
+      return;
+    }
+    const body = handoffMessage();
+    if (contactChoice === "email") {
+      window.open(`mailto:apply@hsndm.tech?subject=${encodeURIComponent("AutoApply SA campaign brief")}&body=${encodeURIComponent(body)}`, "_blank", "noopener,noreferrer");
+      setReceipt({ reference: `EMAIL-${Date.now().toString(36).toUpperCase()}`, timestamp, channel: "Email" });
+      return;
+    }
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(body)}`;
+    const handoffWindow = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    if (!handoffWindow) reportBlockedHandoff.mutate({ route: "/enquire" });
     setHandoffBlocked(!handoffWindow);
-    setHandoffHref(whatsappUrl);
-    setHandoffStep(0);
-    setIsHandingOff(true);
-    window.setTimeout(() => setHandoffStep(1), 520);
-    window.setTimeout(() => setHandoffStep(2), 1040);
-    window.setTimeout(() => {
-      if (handoffWindow) {
-        handoffWindow.location.replace(whatsappUrl);
-        setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
-      }
-    }, 1750);
+    setReceipt({ reference: `WA-${Date.now().toString(36).toUpperCase()}`, timestamp, channel: "WhatsApp" });
   };
 
   return (
@@ -87,7 +96,7 @@ export default function Enquire() {
             <div className="response-guard"><ShieldCheck size={17} /><div><b>Response safeguard</b><span>For the fastest direct reply, keep this page open and follow up via WhatsApp if you have not heard back within one business day.</span></div></div>
           </aside>
 
-          <form className="campaign-form" onSubmit={submit} aria-busy={isHandingOff}>
+          <form id="campaign-brief" className="campaign-form" onSubmit={submit} aria-busy={secureEnquiry.isPending}>
             <div className="form-heading"><span>YOUR CAMPAIGN BRIEF</span><b>Required fields are marked <em>*</em></b></div>
             <label>
               <span>Full name <em>*</em></span>
@@ -114,10 +123,22 @@ export default function Enquire() {
               <span><b>{fileName || "Select a CV (optional)"}</b><small>PDF, DOC, DOCX or TXT · remains on this device in preview</small></span>
               <ArrowRight size={18} />
             </label>
-            <div className="form-protection"><Check size={15} /> On submit, a prefilled WhatsApp message opens so you can send your campaign brief and attach your CV directly.</div>
-            <button className="button button-accent" type="submit" disabled={isHandingOff}>{isHandingOff ? <>Preparing your chat <Loader2 className="handoff-inline-spinner" size={17} /></> : <>Continue to WhatsApp <ArrowRight size={18} /></>}</button>
+            <div className="form-protection"><Check size={15} /> Continue to review exactly what would be shared. The selected CV remains on this device and is never sent from this form.</div>
+            <button className="button button-accent" type="submit">Review contact options <ArrowRight size={18} /></button>
             <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
-            {isHandingOff && <div className="whatsapp-handoff" role="status" aria-live="polite"><Loader2 size={25} className="handoff-spinner" /><div><b>{handoffBlocked ? "Your browser blocked the WhatsApp window." : handoffSteps[handoffStep][0]}</b><span>{handoffBlocked ? "Your campaign brief is still ready. Use the secure manual link below to open WhatsApp." : handoffSteps[handoffStep][1]}</span>{handoffBlocked && handoffHref && <a href={handoffHref} target="_blank" rel="noreferrer" className="form-back">Open WhatsApp manually</a>}</div><div className="handoff-steps" aria-label="WhatsApp handoff progress">{handoffSteps.map((step, index) => <span className={index <= handoffStep ? "active" : ""} key={step[0]}><i>{index < handoffStep ? "✓" : `0${index + 1}`}</i><small>{step[0]}</small></span>)}</div></div>}
+            {showPreview && <section className="mt-6 border border-black/15 bg-white p-4 text-black" aria-labelledby="handoff-preview-title">
+              <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">Before you contact us</p>
+              <h2 id="handoff-preview-title" className="mt-2 text-xl font-semibold">Review your shared details</h2>
+              <p className="mt-2 text-sm text-black/70">The following fields will be shared: <b>name, email, target role, city, and industry.</b> Your CV will <b>not</b> be sent unless you personally attach it after choosing WhatsApp or email.</p>
+              <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2"><div><dt>Name</dt><dd>{name}</dd></div><div><dt>Email</dt><dd>{email}</dd></div><div><dt>Target role</dt><dd>{role}</dd></div><div><dt>City</dt><dd>{city}</dd></div><div><dt>Industry</dt><dd>{industry}</dd></div><div><dt>Selected CV</dt><dd>{fileName ? `${fileName} (stays on this device)` : "No CV selected"}</dd></div></dl>
+              <fieldset className="mt-4"><legend className="font-semibold">Choose a contact option</legend><div className="mt-2 grid gap-2 sm:grid-cols-3">{(["whatsapp", "email", "web"] as const).map(option => <label key={option} className="border border-black/15 p-3 text-sm"><input className="mr-2" type="radio" name="contact-choice" checked={contactChoice === option} onChange={() => setContactChoice(option)} />{option === "whatsapp" ? "WhatsApp" : option === "email" ? "Email" : "Secure web enquiry"}</label>)}</div></fieldset>
+              <section className="mt-4 border-l-2 border-[#e5482a] bg-[#f7f4ed] p-3 text-sm"><h3 className="font-semibold">Campaign plan authorization</h3><p className="mt-1">Target role family: {role}. Locations: {city}. Language: English. Channels: email and career portals after a written campaign plan is agreed. Maximum volume and date range are set in that plan.</p><p className="mt-2 font-medium">Nothing is submitted until you approve the campaign plan. You can pause or stop it at any time. You receive an application log showing employer, role, channel, date, and status.</p><label className="mt-3 flex gap-2"><input type="checkbox" checked={authorized} onChange={event => setAuthorized(event.target.checked)} />I approve this contact request and understand it does not start any employer application.</label></section>
+              <a className="mt-3 inline-flex text-sm underline underline-offset-4" href="/campaign-report-sample">View the illustrative campaign-report format</a>
+              {secureEnquiry.error ? <p className="mt-3 text-sm text-red-700">Secure web enquiry is unavailable. Please use email or WhatsApp instead.</p> : null}
+              <button className="button button-accent mt-4" type="button" disabled={!authorized || secureEnquiry.isPending} onClick={confirmContact}>{secureEnquiry.isPending ? <><Loader2 className="handoff-inline-spinner" size={17} /> Sending securely</> : `Confirm ${contactChoice === "web" ? "secure enquiry" : `via ${contactChoice === "email" ? "email" : "WhatsApp"}`}`}</button>
+              {handoffBlocked ? <p className="mt-3 text-sm">Your browser blocked the new WhatsApp window. Use the email or secure web option instead.</p> : null}
+            </section>}
+            {receipt && <section className="mt-4 border border-[#e5482a] bg-[#fff8f5] p-4" role="status" aria-live="polite"><p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">Contact receipt</p><h2 className="mt-2 text-xl font-semibold">Your contact request is prepared.</h2><p className="mt-2 text-sm">Reference: <b>{receipt.reference}</b><br />Time: {receipt.timestamp}<br />Next step: the AutoApply SA team reviews your brief and responds within one business day. No CV was sent from this page.</p><p className="mt-3 text-sm">To pause or delete this contact request, email <a className="underline" href={`mailto:apply@hsndm.tech?subject=${encodeURIComponent(`Pause or delete ${receipt.reference}`)}`}>apply@hsndm.tech</a> with your reference.</p></section>}
           </form>
         </div>
       </section>

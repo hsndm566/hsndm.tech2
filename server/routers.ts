@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { ApplicationAccessScope, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateJobApplications, getCandidateProfile, insertJobApplication, updateCandidateProfile, updateJobApplication } from "./db";
+import { ApplicationAccessScope, createCampaignEnquiry, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateJobApplications, getCandidateProfile, insertJobApplication, updateCandidateProfile, updateJobApplication } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -9,6 +9,7 @@ import { invokeLLM } from "./_core/llm";
 import { invokeGroqJson, isGroqConfigured } from "./groq";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyClientCvExtractionFailure, notifyClientWorkflowFallback, notifyOperationalFailure } from "./operationalAlerts";
+import { nanoid } from "nanoid";
 
 const keySkillsOutputSchema = z.object({
   keySkills: z.array(z.string().trim().min(1).max(80)).max(6),
@@ -87,6 +88,31 @@ export const appRouter = router({
           if (!stored) throw new Error("campaign readiness record was not persisted");
           return { stored } as const;
         } catch (error) { await notifyOperationalFailure("campaign readiness", error); throw error; }
+      }),
+    }),
+    enquiry: router({
+      submit: publicProcedure.input(z.object({
+        fullName: z.string().trim().min(2).max(120),
+        email: z.string().trim().email().max(320),
+        targetRole: z.string().trim().min(2).max(120),
+        city: z.string().trim().min(2).max(64),
+        industry: z.string().trim().min(2).max(100),
+        language: z.enum(["English", "Arabic"]),
+        campaignAuthorizationConfirmed: z.literal(true),
+      })).mutation(async ({ input }) => {
+        const reference = `AA-${nanoid(10).toUpperCase()}`;
+        const createdAt = await createCampaignEnquiry({
+          reference,
+          fullName: input.fullName,
+          email: input.email,
+          targetRole: input.targetRole,
+          city: input.city,
+          industry: input.industry,
+          language: input.language,
+          campaignAuthorizationConfirmed: true,
+        });
+        if (!createdAt) throw new Error("Secure enquiry is temporarily unavailable. Please use email or WhatsApp instead.");
+        return { reference, createdAt } as const;
       }),
     }),
     applications: router({

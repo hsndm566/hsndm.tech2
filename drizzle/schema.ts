@@ -46,6 +46,29 @@ export const campaignReadiness = mysqlTable("campaign_readiness", {
 export type InsertCampaignReadiness = typeof campaignReadiness.$inferInsert;
 
 /**
+ * A consented contact request created only when a visitor selects Secure web enquiry.
+ * It stores the displayed contact and targeting fields; CV bytes, CV text, and filenames
+ * are intentionally excluded. No application activity is initiated from this record.
+ */
+export const campaignEnquiries = mysqlTable("campaign_enquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  reference: varchar("reference", { length: 32 }).notNull(),
+  fullName: varchar("fullName", { length: 120 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  targetRole: varchar("targetRole", { length: 120 }).notNull(),
+  city: varchar("city", { length: 64 }).notNull(),
+  industry: varchar("industry", { length: 100 }).notNull(),
+  language: varchar("language", { length: 16 }).notNull(),
+  campaignAuthorizationConfirmed: boolean("campaignAuthorizationConfirmed").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, table => ({
+  campaignEnquiryReferenceIdx: uniqueIndex("campaign_enquiries_reference_idx").on(table.reference),
+  campaignEnquiryCreatedAtIdx: index("campaign_enquiries_created_at_idx").on(table.createdAt),
+}));
+
+export type InsertCampaignEnquiry = typeof campaignEnquiries.$inferInsert;
+
+/**
  * Job applications tracker for monitoring submissions made on behalf of candidates.
  */
 export const jobApplications = mysqlTable("job_applications", {

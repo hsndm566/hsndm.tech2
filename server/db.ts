@@ -2,11 +2,13 @@ import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   backupSnapshots,
+  campaignEnquiries,
   campaignReadiness,
   CandidateProfile,
   candidateProfiles,
   InsertBackupSnapshot,
   InsertCampaignReadiness,
+  InsertCampaignEnquiry,
   InsertJobApplication,
   InsertCandidateProfile,
   InsertUser,
@@ -126,6 +128,19 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
 
   await db.insert(campaignReadiness).values(record);
   return true;
+}
+
+/** Stores only the fields a visitor reviewed before choosing the secure web contact option. */
+export async function createCampaignEnquiry(record: InsertCampaignEnquiry): Promise<Date | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    await db.insert(campaignEnquiries).values(record);
+    return new Date();
+  } catch (error) {
+    console.warn("[Campaign enquiry] Could not create secure enquiry:", error);
+    return null;
+  }
 }
 
 /**
