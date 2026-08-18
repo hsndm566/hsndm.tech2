@@ -354,3 +354,7 @@
 - [x] Verify the latest published dashboard and Sentry changes are actively served on the live production domain
 - [x] Stage 6: Define and implement a data-backed candidate campaign action center showing plan status, evidence progress, and the next required action without fabricating activity
 - [x] Verify and publish the Stage 6 candidate campaign action center across protected data, mobile, tests, type checks, build, and live deployment
+- [x] Refine Stage 6 action-center hover, focus, and loading states with reduced-motion-safe transitions
+- [x] Stage 7: Implement a data-backed candidate campaign action board without invented activity or outcomes
+- [x] Add accessible filtering and sorting controls for the Stage 7 action and evidence items
+- [x] Verify and publish Stage 6 interaction polish and Stage 7 management controls across data, mobile, tests, type checks, build, and live deployment

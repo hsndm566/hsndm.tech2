@@ -23,6 +23,7 @@ import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
 import { CampaignEvidenceGuide } from "@/components/CampaignEvidenceGuide";
 import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import { CampaignActionCenter } from "@/components/CampaignActionCenter";
+import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 
 function evidenceLabel(type: "portal_confirmation" | "email_accepted" | "employer_confirmation") {
@@ -650,6 +651,12 @@ export default function Dashboard() {
 
             <CampaignActionCenter
               applicationStatuses={applications.map((application) => application.status)}
+              hasCandidateApproval={Boolean(campaignApproval?.authorizationConfirmed)}
+              verifiedEvidenceCount={evidence.length}
+            />
+
+            <CampaignManagementBoard
+              applications={applications}
               hasCandidateApproval={Boolean(campaignApproval?.authorizationConfirmed)}
               verifiedEvidenceCount={evidence.length}
             />

@@ -33,4 +33,10 @@ describe("CampaignActionCenter", () => {
     expect(screen.getByText("خطوتك التالية في الحملة")).toBeTruthy();
     expect(screen.getByText("راجع واعتمد خطة الاستهداف")).toBeTruthy();
   });
+
+  it("shows an accessible Stage 6 loading state without campaign claims", () => {
+    render(<CampaignActionCenter hasCandidateApproval={false} isLoading verifiedEvidenceCount={0} />);
+    expect(screen.getByLabelText("Your next campaign step").getAttribute("aria-busy")).toBe("true");
+    expect(screen.getByText("Loading campaign action details")).toBeTruthy();
+  });
 });
