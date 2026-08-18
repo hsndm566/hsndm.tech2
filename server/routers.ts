@@ -148,7 +148,9 @@ export const appRouter = router({
         }),
       profile: router({
         get: protectedProcedure.query(async ({ ctx }) => {
-          return await getCandidateProfile(ctx.user.openId);
+          const profile = await getCandidateProfile(ctx.user.openId);
+          if (!profile) throw new Error("Candidate profile is temporarily unavailable.");
+          return profile;
         }),
         update: protectedProcedure
           .input(
@@ -169,6 +171,7 @@ export const appRouter = router({
           )
           .mutation(async ({ input, ctx }) => {
             const updated = await updateCandidateProfile(ctx.user.openId, input);
+            if (!updated) throw new Error("Candidate profile could not be updated right now.");
             return { success: true, updated } as const;
           }),
       }),

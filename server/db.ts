@@ -130,7 +130,9 @@ export async function createCampaignReadiness(record: InsertCampaignReadiness): 
 
 export async function getJobApplications(candidateOpenId?: string): Promise<JobApplication[]> {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) {
+    throw new Error("Application data is temporarily unavailable.");
+  }
   try {
     if (candidateOpenId) {
       return await db.select().from(jobApplications).where(eq(jobApplications.candidateOpenId, candidateOpenId)).orderBy(desc(jobApplications.createdAt));
@@ -138,7 +140,7 @@ export async function getJobApplications(candidateOpenId?: string): Promise<JobA
     return await db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
   } catch (error) {
     console.warn("[Database] Failed to fetch job applications:", error);
-    return [];
+    throw new Error("Application data is temporarily unavailable.");
   }
 }
 

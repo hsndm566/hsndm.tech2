@@ -42,6 +42,7 @@ describe("application access control and authentication", () => {
     vi.clearAllMocks();
     mocks.updateJobApplication.mockResolvedValue({ id: 101, candidateOpenId: "candidate-a", companyName: "A Co", roleTitle: "Analyst", city: "Jeddah", status: "interview", notes: "Interview confirmed" });
     mocks.deleteJobApplication.mockResolvedValue(true);
+    mocks.updateCandidateProfile.mockImplementation(async (openId: string) => ({ id: 1, openId }));
     mocks.getJobApplications.mockImplementation(async (openId?: string) => {
       if (openId === "candidate-a") return [{ id: 101, candidateOpenId: "candidate-a", companyName: "A Co" }];
       if (openId === "candidate-b") return [{ id: 202, candidateOpenId: "candidate-b", companyName: "B Co" }];
@@ -80,6 +81,22 @@ describe("application access control and authentication", () => {
   it("rejects unauthenticated application-list access", async () => {
     const anonymous = appRouter.createCaller(makeContext(null));
     await expect(anonymous.campaign.applications.list()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("surfaces application-data failures instead of presenting a false empty campaign", async () => {
+    mocks.getJobApplications.mockRejectedValueOnce(new Error("Application data is temporarily unavailable."));
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+
+    await expect(candidate.campaign.applications.list()).rejects.toThrow("Application data is temporarily unavailable.");
+  });
+
+  it("rejects unavailable profile reads and updates instead of reporting false success", async () => {
+    mocks.getCandidateProfile.mockResolvedValueOnce(null);
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.applications.profile.get()).rejects.toThrow("Candidate profile is temporarily unavailable.");
+
+    mocks.updateCandidateProfile.mockResolvedValueOnce(null);
+    await expect(candidate.campaign.applications.profile.update({ targetCity: "Jeddah" })).rejects.toThrow("Candidate profile could not be updated right now.");
   });
 
   it("persists bounded resume metadata only against the authenticated candidate profile", async () => {
