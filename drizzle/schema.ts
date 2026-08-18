@@ -98,6 +98,7 @@ export const candidateProfiles = mysqlTable("candidate_profiles", {
   resumeSummary: text("resumeSummary"),
   notifyWhatsApp: boolean("notifyWhatsApp").default(true).notNull(),
   notifyEmail: boolean("notifyEmail").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
