@@ -106,6 +106,35 @@ describe("AutoApplyChatWidget", () => {
     expect(screen.getByText("Thank you / شكراً")).toBeTruthy();
   });
 
+  it("reveals an optional, bounded explanation field only after a thumbs-down response rating", async () => {
+    mockedFetch
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reply: "Campaign guidance / إرشادات الحملة", response_id: "web_abcdefghijklmnop" }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ recorded: true }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ recorded: true }) });
+    vi.stubGlobal("fetch", mockedFetch);
+    render(<AutoApplyChatWidget />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start a campaign / ابدأ" }));
+    await screen.findByText("Campaign guidance / إرشادات الحملة");
+    expect(screen.queryByLabelText("Optional explanation for not-helpful response")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Mark this response not helpful" }));
+    const explanation = await screen.findByLabelText("Optional explanation for not-helpful response");
+    expect(explanation.getAttribute("maxlength")).toBe("600");
+    expect(explanation.getAttribute("placeholder")).toContain("CV or contact details");
+
+    fireEvent.change(explanation, { target: { value: "The pricing answer needed a clearer plan comparison." } });
+    fireEvent.click(screen.getByRole("button", { name: "Save note / حفظ الملاحظة" }));
+    await waitFor(() => expect(mockedFetch).toHaveBeenCalledTimes(3));
+    expect(JSON.parse(String((mockedFetch.mock.calls[2]?.[1] as RequestInit).body))).toEqual({
+      response_id: "web_abcdefghijklmnop",
+      rating: "down",
+      explanation: "The pricing answer needed a clearer plan comparison.",
+    });
+    expect(screen.getByText("Note saved / تم حفظ الملاحظة")).toBeTruthy();
+  });
+
   it("shows a loading state and a user-safe recovery message when the endpoint is unavailable", async () => {
     let rejectRequest: (reason?: unknown) => void = () => undefined;
     mockedFetch.mockImplementation(() => new Promise((_, reject) => { rejectRequest = reject; }));

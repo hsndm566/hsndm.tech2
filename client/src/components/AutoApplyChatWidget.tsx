@@ -114,6 +114,9 @@ export function AutoApplyChatWidget() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [feedbackById, setFeedbackById] = useState<Record<string, "up" | "down">>({});
+  const [feedbackExplanationById, setFeedbackExplanationById] = useState<Record<string, string>>({});
+  const [feedbackExplanationSavedById, setFeedbackExplanationSavedById] = useState<Record<string, boolean>>({});
+  const [feedbackSavingById, setFeedbackSavingById] = useState<Record<string, boolean>>({});
   const [feedbackErrorId, setFeedbackErrorId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -185,22 +188,35 @@ export function AutoApplyChatWidget() {
     }
   };
 
-  const submitFeedback = async (feedbackId: string, rating: "up" | "down") => {
-    if (feedbackById[feedbackId] === rating) return;
+  const submitFeedback = async (feedbackId: string, rating: "up" | "down", explanation?: string) => {
+    const previousRating = feedbackById[feedbackId];
+    const isRatingChange = previousRating !== rating;
+    if (!isRatingChange && !explanation) return;
     setFeedbackErrorId(null);
-    setFeedbackById((current) => ({ ...current, [feedbackId]: rating }));
+    if (isRatingChange) setFeedbackById((current) => ({ ...current, [feedbackId]: rating }));
+    setFeedbackSavingById((current) => ({ ...current, [feedbackId]: true }));
     try {
       const response = await fetch(CHAT_FEEDBACK_ENDPOINT, {
         method: "POST",
         mode: "cors",
         credentials: "omit",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ response_id: feedbackId, rating }),
+        body: JSON.stringify({ response_id: feedbackId, rating, ...(explanation ? { explanation } : {}) }),
       });
       if (!response.ok) throw new Error("Feedback was unavailable");
+      if (explanation) setFeedbackExplanationSavedById((current) => ({ ...current, [feedbackId]: true }));
     } catch {
-      setFeedbackById(({ [feedbackId]: _removed, ...current }) => current);
+      if (isRatingChange) {
+        setFeedbackById((current) => {
+          const next = { ...current };
+          if (previousRating) next[feedbackId] = previousRating;
+          else delete next[feedbackId];
+          return next;
+        });
+      }
       setFeedbackErrorId(feedbackId);
+    } finally {
+      setFeedbackSavingById(({ [feedbackId]: _completed, ...current }) => current);
     }
   };
 
@@ -250,7 +266,7 @@ export function AutoApplyChatWidget() {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent className="z-[90] max-w-[18rem] bg-slate-950 px-3 py-2 text-left text-xs leading-5 text-white" side="bottom" sideOffset={8}>
-                      Candidate dashboard records are isolated by signed-in account, and CV files are not retained in chat. / تُعزل سجلات لوحة المرشح بحسب الحساب المسجّل، ولا تُحتفَظ ملفات السيرة في المحادثة.
+                      Candidate dashboard records are isolated by signed-in account, and CV files are not retained in chat. Optional feedback notes are stored only with their selected quality signal; do not include CV or contact details. / تُعزل سجلات لوحة المرشح بحسب الحساب المسجّل، ولا تُحتفَظ ملفات السيرة في المحادثة. وتُحفظ ملاحظات التقييم الاختيارية فقط مع إشارة الجودة المحددة؛ لا تذكر السيرة الذاتية أو بيانات التواصل.
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -294,6 +310,7 @@ export function AutoApplyChatWidget() {
                             aria-label="Mark this response helpful"
                             aria-pressed={feedbackById[message.feedbackId] === "up"}
                             className={`inline-flex size-7 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] ${feedbackById[message.feedbackId] === "up" ? "border-blue-200 bg-blue-100 text-[#2563eb]" : "border-slate-200 bg-white text-slate-500 hover:border-blue-200 hover:text-[#2563eb]"}`}
+                            disabled={feedbackSavingById[message.feedbackId]}
                             onClick={() => void submitFeedback(message.feedbackId!, "up")}
                             type="button"
                           >
@@ -303,6 +320,7 @@ export function AutoApplyChatWidget() {
                             aria-label="Mark this response not helpful"
                             aria-pressed={feedbackById[message.feedbackId] === "down"}
                             className={`inline-flex size-7 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] ${feedbackById[message.feedbackId] === "down" ? "border-rose-200 bg-rose-50 text-rose-700" : "border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:text-rose-700"}`}
+                            disabled={feedbackSavingById[message.feedbackId]}
                             onClick={() => void submitFeedback(message.feedbackId!, "down")}
                             type="button"
                           >
@@ -310,6 +328,41 @@ export function AutoApplyChatWidget() {
                           </button>
                           {feedbackById[message.feedbackId] ? <span className="font-medium text-slate-600" role="status">Thank you / شكراً</span> : null}
                           {feedbackErrorId === message.feedbackId ? <span className="text-rose-700" role="status">Could not save feedback. Try again. / تعذر حفظ الملاحظة، حاول مجددًا.</span> : null}
+                          {feedbackById[message.feedbackId] === "down" ? (
+                            <div className="mt-1 w-full rounded-xl border border-rose-100 bg-white p-2.5">
+                              <label className="block text-[11px] font-semibold text-slate-700" htmlFor={`feedback-note-${message.feedbackId}`}>
+                                Optional note / ملاحظة اختيارية
+                              </label>
+                              <textarea
+                                aria-label="Optional explanation for not-helpful response"
+                                className="mt-1 min-h-16 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-blue-100"
+                                id={`feedback-note-${message.feedbackId}`}
+                                maxLength={600}
+                                onChange={(event) => {
+                                  setFeedbackExplanationSavedById(({ [message.feedbackId!]: _saved, ...current }) => current);
+                                  setFeedbackExplanationById((current) => ({ ...current, [message.feedbackId!]: event.target.value }));
+                                }}
+                                placeholder="Tell us what would have helped. Don’t include your CV or contact details. / أخبرنا بما كان سيفيدك، من دون سيرة ذاتية أو بيانات تواصل."
+                                value={feedbackExplanationById[message.feedbackId] ?? ""}
+                              />
+                              <div className="mt-1.5 flex items-center justify-between gap-2">
+                                <span className="text-[10px] leading-4 text-slate-500">Optional; stored only with this quality signal. / اختيارية؛ تُحفظ فقط مع إشارة الجودة هذه.</span>
+                                <button
+                                  className="shrink-0 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] disabled:cursor-not-allowed disabled:opacity-60"
+                                  disabled={!feedbackExplanationById[message.feedbackId]?.trim() || feedbackSavingById[message.feedbackId]}
+                                  onClick={() => {
+                                    const feedbackId = message.feedbackId;
+                                    const explanation = feedbackId ? feedbackExplanationById[feedbackId]?.trim() : "";
+                                    if (feedbackId && explanation) void submitFeedback(feedbackId, "down", explanation);
+                                  }}
+                                  type="button"
+                                >
+                                  Save note / حفظ الملاحظة
+                                </button>
+                              </div>
+                              {feedbackExplanationSavedById[message.feedbackId] ? <span className="mt-1 block font-medium text-emerald-700" role="status">Note saved / تم حفظ الملاحظة</span> : null}
+                            </div>
+                          ) : null}
                         </div>
                       ) : null}
                     </div>

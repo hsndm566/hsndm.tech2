@@ -319,3 +319,6 @@
 - [x] Audit the current chatbot response contract and Railway persistence layer for minimal feedback recording
 - [x] Add accessible thumbs-up and thumbs-down controls to assistant replies with privacy-preserving response identifiers
 - [x] Persist deduplicated quality feedback in the chatbot service, add regressions, verify the deployed interaction, and publish
+- [x] Audit the active chatbot feedback payload and persistence schema for a strictly optional explanation field
+- [x] Add an accessible optional explanation field after a thumbs-down rating, with conservative limits and bilingual privacy guidance
+- [x] Persist the optional explanation only with the opaque feedback record, add regressions, validate the live flow, and publish
