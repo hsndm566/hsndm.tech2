@@ -322,3 +322,7 @@
 - [x] Audit the active chatbot feedback payload and persistence schema for a strictly optional explanation field
 - [x] Add an accessible optional explanation field after a thumbs-down rating, with conservative limits and bilingual privacy guidance
 - [x] Persist the optional explanation only with the opaque feedback record, add regressions, validate the live flow, and publish
+- [x] Verify authoritative DNS and the intended production target for every active hsndm.tech hostname
+- [x] Verify public frontend, dashboard, API health, Clerk, and chatbot host behavior from the live internet
+- [x] Confirm the live frontend bundle matches the latest published portal release and repair only a verified routing mismatch
+- [x] Repair the verified stale backend.hsndm.tech and dev.hsndm.tech GitHub Pages 404 routes only after confirming a supported Render custom-domain target
