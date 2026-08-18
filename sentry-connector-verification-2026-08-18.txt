@@ -1,0 +1,22 @@
+AutoApply SA — Sentry connector verification
+Date: 2026-08-18
+
+Scope
+- Use only the configured Sentry connector. No browser login, DSN duplication, or connector mutation was performed.
+
+Verified connector path
+- Connector: Sentry (uid 838d5e1c-7dd4-4782-9429-c459126707c7)
+- Connector status: enabled and available.
+- MCP server registry: the `sentry` server was listed successfully.
+- Tool catalog: direct project and issue operations are available, including organization discovery, project discovery, issue search, issue resource retrieval, event search, Seer analysis, and issue update.
+
+Read-only triage verification
+- Organization access: hsndmtech (regional endpoint: https://de.sentry.io)
+- Project access: javascript-react
+- Unresolved issue search: no unresolved issues in the prior 30 days.
+
+Limitation observed
+- A separate aggregate event query returned a Sentry API communication error (event ID: 9ce3a6b3b9bb4a5aad43397bfe5f4313). This does not affect the confirmed organization/project/issue-search connection and was not treated as an application defect or a reason to change credentials.
+
+Result
+- Direct Sentry issue triage is available through the configured connector only. Future issue investigation can use the `sentry` server with the hsndmtech / javascript-react scope.

@@ -338,7 +338,8 @@
 - [x] Configure a privacy-safe Sentry integration with direct project triage access and no CV, form, or contact data capture
 - [x] Implement the approved Phase 3 resilience and recovery improvements without changing protected application services
 - [x] Add Sentry and Phase 3 regression coverage, validate production behavior, and publish the approved release
-- [ ] Verify the connected Sentry integration can access the user’s projects and issue-triage tools without adding a duplicate credential path
+- [x] Verify the connected Sentry integration can access the user’s projects and issue-triage tools without adding a duplicate credential path
+- [x] Use the configured Sentry connector only for direct project and issue-triage verification; do not request a browser login or a duplicate credential
 - [x] Add Sentry and Phase 3 regression coverage and validate the completed release locally; publication is the next step
 - [x] Superseded at the user’s instruction: do not inspect or change the user-provided Railway chatbot webhook endpoint
 - [x] Stage 1: Assess the candidate-owned application evidence model and define an evidence-backed dashboard view with no fabricated activity
@@ -348,5 +349,5 @@
 - [x] Stage 5: Implement and verify saved signed-in job preferences that are visible in the candidate campaign plan
 - [x] Publish each verified stage and report the completed milestone before continuing to the next stage
 - [x] Preserve the configured Groq credential without further user prompts; keep direct provider-health validation as a separately tracked external 403 observation while fallback paths remain covered
-- [ ] Update the user-supplied Groq credential and re-run the direct model and structured-response health checks
+- [x] Superseded by the user’s fallback-only direction: do not retry direct Groq credential validation without a renewed request
 - [x] Continue the campaign-start checklist stage with the existing fallback-only skill-extraction path and no further Groq credential prompts
