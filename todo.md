@@ -193,6 +193,9 @@
 - [ ] Verify Clerk sign-in eligibility and authorized passwordless dispatch for hasanadam506@gmail.com without opening the mailbox link
 - [ ] Create the user-authorized Clerk candidate account for hasanadam506@gmail.com and capture verification-email dispatch without opening the mailbox link
 - [x] Continue safe non-Clerk production hardening: investigate the next reproducible frontend or runtime reliability risk and add regression coverage before release
+- [x] Replace same-origin-only public activity polling with the configured API contract and verify its safe fallback behavior
+- [x] Verify short-viewport cookie-consent stacking does not compete with public chat or WhatsApp fixed controls
+- [x] Add focused regression coverage and full release verification for the activity-polling and short-viewport hardening
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics

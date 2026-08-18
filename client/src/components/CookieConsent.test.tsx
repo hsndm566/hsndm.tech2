@@ -34,8 +34,10 @@ describe("CookieConsent", () => {
   it("keeps the consent surface compact and actions usable on narrow screens", () => {
     render(<CookieConsent />);
     const dialog = screen.getByRole("dialog");
-    expect(dialog.className).toContain("max-h-[min(42vh,20rem)]");
+    expect(dialog.className).toContain("max-h-[calc(100dvh-1.5rem)]");
+    expect(dialog.className).toContain("bottom-[max(.75rem,env(safe-area-inset-bottom))]");
     expect(dialog.className).toContain("z-[80]");
+    expect(dialog.querySelector("div")?.className).toContain("sticky");
     expect(dialog.querySelector("div")?.className).toContain("grid-cols-2");
     expect(screen.getByRole("button", { name: "Allow analytics" }).className).toContain("min-w-0");
   });

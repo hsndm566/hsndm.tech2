@@ -44,6 +44,9 @@ const MapView = lazy(async () => {
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
 
+const ACTIVITY_API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const LATEST_ACTIVITY_URL = `${ACTIVITY_API_BASE}/v1/campaigns/latest-activity`;
+
 import { EXPLAINER_VIDEO_URL } from "@/lib/media";
 const EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL;
 
@@ -172,7 +175,11 @@ export default function Home() {
       activeRequest = controller;
       const timeout = window.setTimeout(() => controller.abort(), 10_000);
       try {
-        const res = await fetch("/v1/campaigns/latest-activity", { signal: controller.signal });
+        const res = await fetch(LATEST_ACTIVITY_URL, {
+          signal: controller.signal,
+          credentials: "include",
+          headers: { Accept: "application/json" },
+        });
         const contentType = res.headers.get("content-type") || "";
         if (res.ok && contentType.includes("application/json")) {
           const data = await res.json();

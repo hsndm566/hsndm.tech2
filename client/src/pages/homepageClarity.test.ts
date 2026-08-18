@@ -118,4 +118,14 @@ describe("homepage clarity release", () => {
     expect(english).toContain("new AbortController()");
     expect(english).toContain('document.addEventListener("visibilitychange", onVisibilityChange)');
   });
+
+  it("uses the configured API origin for public activity polling instead of assuming a same-origin backend", () => {
+    const english = homeSource();
+
+    expect(english).toContain('ACTIVITY_API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\\/$/, "")');
+    expect(english).toContain('LATEST_ACTIVITY_URL = `${ACTIVITY_API_BASE}/v1/campaigns/latest-activity`');
+    expect(english).toContain("fetch(LATEST_ACTIVITY_URL");
+    expect(english).toContain('credentials: "include"');
+    expect(english).toContain('Accept: "application/json"');
+  });
 });
