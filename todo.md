@@ -200,6 +200,7 @@
 - [x] Prevent global tRPC authorization observers from redirecting Clerk dashboard sessions into Manus OAuth, with query-boundary regression coverage
 - [x] Separate mobile cookie-settings and WhatsApp fixed controls so both remain independently tappable after consent
 - [x] Verify the tRPC SuperJSON client/server contract and dashboard timestamp behavior; installed tRPC v11 accepts the existing link transformer and the server contract already matches, so no speculative rewrite was applied
+- [x] Normalize dashboard application timestamps so legacy or malformed dates cannot destabilize sorting, activity ordering, or date displays
 - [x] Test Clerk frontend DNS-only mode, observe the dashboard timeout, and restore the verified proxied CNAME baseline without submitting an account request
 - [x] Audit authoritative DNS, redirect chains, live service ownership, and cache freshness for all public hsndm.tech hostnames
 - [x] Return a standards-compatible HEAD response for api.hsndm.tech/healthz at the Cloudflare edge without changing backend health semantics

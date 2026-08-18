@@ -8,12 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatSafeDate, safeTimestampMs } from "@/lib/safeTimestamp";
 
 type ActivityPreview = {
   id?: string;
   message?: string;
   detail?: string;
-  timestamp: Date | string;
+  timestamp: unknown;
 };
 
 type ActivityNotificationButtonProps = {
@@ -23,12 +24,12 @@ type ActivityNotificationButtonProps = {
   targetId?: string;
 };
 
-function formatPreviewTime(timestamp: Date | string) {
-  return new Date(timestamp).toLocaleDateString([], { month: "short", day: "numeric" });
+function formatPreviewTime(timestamp: unknown) {
+  return formatSafeDate(timestamp, { month: "short", day: "numeric" });
 }
 
 export function ActivityNotificationButton({ activities, seenAt, onSeen, targetId = "recent-activity" }: ActivityNotificationButtonProps) {
-  const unreadActivityCount = activities.filter((activity) => new Date(activity.timestamp).getTime() > seenAt).length;
+  const unreadActivityCount = activities.filter((activity) => safeTimestampMs(activity.timestamp) > seenAt).length;
   const latestActivities = activities.slice(0, 4);
 
   const openActivityFeed = () => {
@@ -69,7 +70,7 @@ export function ActivityNotificationButton({ activities, seenAt, onSeen, targetI
         ) : (
           latestActivities.map((activity) => (
             <DropdownMenuItem key={activity.id || `${activity.message}-${activity.timestamp}`} onSelect={markPreviewSeen} className="items-start gap-3 rounded-lg px-3 py-3 focus:bg-[#151515]/5">
-              <span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full ${new Date(activity.timestamp).getTime() > seenAt ? "bg-[#e5482a]/10 text-[#e5482a]" : "bg-[#151515]/8 text-[#151515]/60"}`}>
+              <span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full ${safeTimestampMs(activity.timestamp) > seenAt ? "bg-[#e5482a]/10 text-[#e5482a]" : "bg-[#151515]/8 text-[#151515]/60"}`}>
                 <Bell className="h-3.5 w-3.5" aria-hidden="true" />
               </span>
               <span className="min-w-0 flex-1">

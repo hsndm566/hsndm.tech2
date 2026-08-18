@@ -20,6 +20,7 @@ import { saudiCities, saudiIndustries } from "@/lib/saudiTaxonomy";
 import { CandidateDashboardSkeleton } from "@/components/CandidateDashboardSkeleton";
 import { ActivityNotificationButton } from "@/components/ActivityNotificationButton";
 import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
+import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 
 function buildRecentActivity(applications: any[], profile: any) {
   const items: Array<{ id: string; title: string; description: string; timestamp: string; type: "status" | "note" | "profile" }> = [];
@@ -28,15 +29,16 @@ function buildRecentActivity(applications: any[], profile: any) {
       id: `app-applied-${app.id}`,
       title: `${app.roleTitle} at ${app.companyName}`,
       description: `Application submitted for ${app.city}, Saudi Arabia`,
-      timestamp: app.appliedAt || new Date().toISOString(),
+      timestamp: toActivityTimestamp(app.appliedAt, app.createdAt),
       type: "status",
     });
-    if (app.updatedAt && app.updatedAt !== app.appliedAt) {
+    const updatedTimestamp = toActivityTimestamp(app.updatedAt, app.createdAt);
+    if (updatedTimestamp && updatedTimestamp !== toActivityTimestamp(app.appliedAt, app.createdAt)) {
       items.push({
         id: `app-updated-${app.id}`,
         title: `Status updated: ${app.roleTitle}`,
         description: `Current milestone: ${app.status.toUpperCase()}`,
-        timestamp: app.updatedAt,
+        timestamp: updatedTimestamp,
         type: "status",
       });
     }
@@ -46,11 +48,11 @@ function buildRecentActivity(applications: any[], profile: any) {
       id: `profile-update-${profile.updatedAt}`,
       title: "Profile preferences saved",
       description: `Target city: ${profile.targetCity || "Jeddah"}, Industry: ${profile.targetIndustry || "General"}`,
-      timestamp: profile.updatedAt,
+      timestamp: toActivityTimestamp(profile.updatedAt, profile.createdAt),
       type: "profile",
     });
   }
-  return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  return items.sort((a, b) => safeTimestampMs(b.timestamp) - safeTimestampMs(a.timestamp));
 }
 
 export default function Dashboard() {
@@ -224,10 +226,10 @@ export default function Dashboard() {
     return matchesSearch && (statusFilter === "all" || app.status === statusFilter);
   }).sort((a, b) => {
     if (sortBy === "newest") {
-      return new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime();
+      return safeTimestampMs(b.appliedAt) - safeTimestampMs(a.appliedAt);
     }
     if (sortBy === "oldest") {
-      return new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime();
+      return safeTimestampMs(a.appliedAt) - safeTimestampMs(b.appliedAt);
     }
     if (sortBy === "company") {
       return a.companyName.localeCompare(b.companyName);
@@ -239,7 +241,7 @@ export default function Dashboard() {
   });
 
   const recentActivity = buildRecentActivity(applications, profile);
-  const unreadActivityCount = recentActivity.filter((activity) => new Date(activity.timestamp).getTime() > activitySeenAt).length;
+  const unreadActivityCount = recentActivity.filter((activity) => safeTimestampMs(activity.timestamp) > activitySeenAt).length;
   const markActivitySeen = () => {
     const seenAt = Date.now();
     setActivitySeenAt(seenAt);
@@ -627,7 +629,7 @@ export default function Dashboard() {
                 ) : (
                   <ol className="relative border-l border-[#151515]/10 ml-3 space-y-6">
                     {recentActivity.slice(0, 5).map((item) => {
-                      const isUnread = new Date(item.timestamp).getTime() > activitySeenAt;
+                      const isUnread = safeTimestampMs(item.timestamp) > activitySeenAt;
                       return (
                         <li key={item.id} className="pl-6 relative">
                           <span className={`absolute -left-1.5 top-1.5 w-3 h-3 rounded-full border-2 border-[#fbf9f5] ${isUnread ? 'bg-[#e5482a]' : 'bg-[#151515]/40'}`} />
@@ -637,7 +639,7 @@ export default function Dashboard() {
                               {isUnread && <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-[#e5482a]/10 text-[#e5482a]">New</span>}
                             </h4>
                             <span className="text-xs font-mono text-[#151515]/60 flex items-center gap-1">
-                              <Clock className="w-3 h-3" /> {new Date(item.timestamp).toLocaleString()}
+                              <Clock className="w-3 h-3" /> {formatSafeDateTime(item.timestamp)}
                             </span>
                           </div>
                           <p className="text-xs text-[#151515]/70 mt-1">{item.description}</p>
@@ -727,7 +729,7 @@ export default function Dashboard() {
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between text-xs text-[#151515]/70 border-t border-[#151515]/10 pt-3">
                         <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {app.city}, Saudi Arabia</span>
-                        <span className="font-mono">{new Date(app.appliedAt).toLocaleDateString()}</span>
+                        <span className="font-mono">{formatSafeDate(app.appliedAt)}</span>
                       </div>
                       <div className="text-xs text-[#e5482a] font-medium flex items-center justify-between pt-1">
                         <span>Click to view interactive timeline</span>
