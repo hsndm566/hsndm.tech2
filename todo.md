@@ -366,3 +366,6 @@
 - [x] Verify canonical host, redirects, 404 behavior, bilingual routes, and active deployment consistency
 - [x] Publish verified non-conflicting improvements through the active Render deployment and document any static-repository conflict for user decision
 - [x] Apply approved owner, retention, employer-sharing, and www canonical-host facts to public privacy, terms, and metadata content
+- [x] Continue safe hardening: audit authenticated-route failure boundaries, deferred-route recovery, and public asset resilience without initiating Clerk authentication or touching protected automation services
+- [x] Continue safe hardening: implement and test only reproducible accessibility or resilience fixes found in the bounded audit
+- [x] Continue safe hardening: run full verification, publish the safe fixes, and document any remaining user-controlled authentication follow-up

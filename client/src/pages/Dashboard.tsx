@@ -109,7 +109,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!clerkDashboardEnabled || clerkAuth.isLoaded) return;
-    const timeoutId = window.setTimeout(() => setClerkLoadTimedOut(true), 8000);
+    // The custom Clerk host can take more than eight seconds on a cold mobile
+    // connection even when its environment and client requests succeed. Keep a
+    // bounded fallback, but avoid showing an incorrect outage state too early.
+    const timeoutId = window.setTimeout(() => setClerkLoadTimedOut(true), 15_000);
     return () => window.clearTimeout(timeoutId);
   }, [clerkDashboardEnabled, clerkAuth.isLoaded]);
 
