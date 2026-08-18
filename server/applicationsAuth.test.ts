@@ -4,9 +4,12 @@ import type { TrpcContext } from "./_core/context";
 const mocks = vi.hoisted(() => ({
   createCampaignReadiness: vi.fn(),
   getCandidateProfile: vi.fn(),
+  getCandidateApplicationEvidence: vi.fn(),
   getAllJobApplications: vi.fn(),
   getCandidateJobApplications: vi.fn(),
+  getJobApplicationById: vi.fn(),
   insertJobApplication: vi.fn(),
+  recordApplicationEvidence: vi.fn(),
   updateJobApplication: vi.fn(),
   deleteJobApplication: vi.fn(),
   updateCandidateProfile: vi.fn(),
@@ -53,6 +56,12 @@ describe("application access control and authentication", () => {
         { id: 101, candidateOpenId: "candidate-a", companyName: "A Co" },
         { id: 202, candidateOpenId: "candidate-b", companyName: "B Co" },
     ]);
+    mocks.getCandidateApplicationEvidence.mockImplementation(async (openId: string) => {
+      if (openId === "candidate-a") return [{ id: 1, applicationId: 101, candidateOpenId: "candidate-a", evidenceType: "portal_confirmation" }];
+      return [];
+    });
+    mocks.getJobApplicationById.mockResolvedValue({ id: 101, candidateOpenId: "candidate-a", companyName: "A Co", roleTitle: "Analyst" });
+    mocks.recordApplicationEvidence.mockResolvedValue({ id: 1, applicationId: 101, candidateOpenId: "candidate-a", evidenceType: "portal_confirmation" });
   });
 
   it("keeps two candidate feeds isolated through the real applications router", async () => {
@@ -85,6 +94,36 @@ describe("application access control and authentication", () => {
   it("rejects unauthenticated application-list access", async () => {
     const anonymous = appRouter.createCaller(makeContext(null));
     await expect(anonymous.campaign.applications.list()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("returns only candidate-owned evidence through the protected evidence feed", async () => {
+    const candidateA = appRouter.createCaller(makeContext("candidate-a"));
+    const candidateB = appRouter.createCaller(makeContext("candidate-b"));
+
+    await expect(candidateA.campaign.applications.evidence.list()).resolves.toEqual([
+      expect.objectContaining({ applicationId: 101, candidateOpenId: "candidate-a" }),
+    ]);
+    await expect(candidateB.campaign.applications.evidence.list()).resolves.toEqual([]);
+    expect(mocks.getCandidateApplicationEvidence).toHaveBeenCalledWith("candidate-a");
+    expect(mocks.getCandidateApplicationEvidence).toHaveBeenCalledWith("candidate-b");
+  });
+
+  it("does not allow a candidate to record proof for any application", async () => {
+    const candidate = appRouter.createCaller(makeContext("candidate-a"));
+    await expect(candidate.campaign.applications.evidence.record({ applicationId: 101, evidenceType: "portal_confirmation" })).rejects.toThrow("Only an authorized operator");
+    expect(mocks.getJobApplicationById).not.toHaveBeenCalled();
+    expect(mocks.recordApplicationEvidence).not.toHaveBeenCalled();
+  });
+
+  it("binds operator-recorded evidence to the application owner rather than request input", async () => {
+    const admin = appRouter.createCaller(makeContext("owner", "admin"));
+    await expect(admin.campaign.applications.evidence.record({ applicationId: 101, evidenceType: "email_accepted" })).resolves.toMatchObject({ success: true });
+    expect(mocks.getJobApplicationById).toHaveBeenCalledWith(101, { kind: "admin" });
+    expect(mocks.recordApplicationEvidence).toHaveBeenCalledWith({
+      applicationId: 101,
+      candidateOpenId: "candidate-a",
+      evidenceType: "email_accepted",
+    });
   });
 
   it("surfaces application-data failures instead of presenting a false empty campaign", async () => {

@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "@shared/const";
-import { ApplicationAccessScope, createCampaignEnquiry, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateJobApplications, getCandidateProfile, insertJobApplication, updateCandidateProfile, updateJobApplication } from "./db";
+import { ApplicationAccessScope, createCampaignEnquiry, createCampaignReadiness, deleteJobApplication, getAllJobApplications, getCandidateApplicationEvidence, getCandidateJobApplications, getCandidateProfile, getJobApplicationById, insertJobApplication, recordApplicationEvidence, updateCandidateProfile, updateJobApplication } from "./db";
 import { z } from "zod";
 import { campaignReadinessInputSchema } from "./campaignReadiness.schema";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -176,6 +176,29 @@ export const appRouter = router({
             return { success: true } as const;
           } catch (error) { await notifyOperationalFailure("application deletion", error); throw error; }
         }),
+      evidence: router({
+        list: protectedProcedure.query(async ({ ctx }) => {
+          if (ctx.user.role === "admin") return [];
+          return getCandidateApplicationEvidence(ctx.user.openId);
+        }),
+        record: protectedProcedure
+          .input(z.object({
+            applicationId: z.number().int().positive(),
+            evidenceType: z.enum(["portal_confirmation", "email_accepted", "employer_confirmation"]),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            if (ctx.user.role !== "admin") throw new Error("Only an authorized operator can record application evidence.");
+            const application = await getJobApplicationById(input.applicationId, { kind: "admin" });
+            if (!application) throw new Error("Application not found.");
+            const recorded = await recordApplicationEvidence({
+              applicationId: application.id,
+              candidateOpenId: application.candidateOpenId,
+              evidenceType: input.evidenceType,
+            });
+            if (!recorded) throw new Error("Evidence could not be recorded. Existing evidence is never overwritten.");
+            return { success: true, recorded } as const;
+          }),
+      }),
       profile: router({
         get: protectedProcedure.query(async ({ ctx }) => {
           const profile = await getCandidateProfile(ctx.user.openId);

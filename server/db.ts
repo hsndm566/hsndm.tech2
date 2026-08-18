@@ -1,11 +1,14 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
+  applicationEvidence,
+  ApplicationEvidence,
   backupSnapshots,
   campaignEnquiries,
   campaignReadiness,
   CandidateProfile,
   candidateProfiles,
+  InsertApplicationEvidence,
   InsertBackupSnapshot,
   InsertCampaignReadiness,
   InsertCampaignEnquiry,
@@ -169,6 +172,22 @@ export async function getCandidateJobApplications(candidateOpenId: string): Prom
   }
 }
 
+/** Returns only evidence rows belonging to the authenticated candidate. */
+export async function getCandidateApplicationEvidence(candidateOpenId: string): Promise<ApplicationEvidence[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Application evidence is temporarily unavailable.");
+  try {
+    return await db
+      .select()
+      .from(applicationEvidence)
+      .where(eq(applicationEvidence.candidateOpenId, candidateOpenId))
+      .orderBy(desc(applicationEvidence.capturedAt));
+  } catch (error) {
+    console.warn("[Database] Failed to fetch application evidence:", error);
+    throw new Error("Application evidence is temporarily unavailable.");
+  }
+}
+
 /** Admin-only callers must opt into the unscoped operational feed explicitly. */
 export async function getAllJobApplications(): Promise<JobApplication[]> {
   const db = await getDb();
@@ -210,6 +229,27 @@ export async function insertJobApplication(data: InsertJobApplication): Promise<
     return inserted || null;
   } catch (error) {
     console.warn("[Database] Failed to insert job application:", error);
+    return null;
+  }
+}
+
+export async function getJobApplicationById(id: number, scope: ApplicationAccessScope): Promise<JobApplication | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [application] = await db.select().from(jobApplications).where(applicationScopeWhere(id, scope)).limit(1);
+  return application ?? null;
+}
+
+/** Records compact proof metadata only; duplicate evidence is rejected by the unique application key. */
+export async function recordApplicationEvidence(data: InsertApplicationEvidence): Promise<ApplicationEvidence | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [result] = await db.insert(applicationEvidence).values(data);
+    const [created] = await db.select().from(applicationEvidence).where(eq(applicationEvidence.id, result.insertId));
+    return created ?? null;
+  } catch (error) {
+    console.warn("[Database] Failed to record application evidence:", error);
     return null;
   }
 }

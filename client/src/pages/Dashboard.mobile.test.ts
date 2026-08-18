@@ -42,8 +42,17 @@ describe("candidate dashboard responsive contract", () => {
   it("renders a data-error recovery state before considering an authenticated dashboard empty", () => {
     expect(dashboardSource).toContain("isError: appsError");
     expect(dashboardSource).toContain("isError: profileError");
+    expect(dashboardSource).toContain("isError: evidenceError");
     expect(dashboardSource).toContain("We could not load your campaign data");
     expect(dashboardSource.indexOf("We could not load your campaign data")).toBeLessThan(dashboardSource.indexOf("applications.length === 0"));
+  });
+
+  it("labels verified proof separately from application tracking records", () => {
+    expect(dashboardSource).toContain("campaign.applications.evidence.list");
+    expect(dashboardSource).toContain("Verified application evidence");
+    expect(dashboardSource).toContain("Evidence boundary");
+    expect(dashboardSource).toContain("Tracking record");
+    expect(dashboardSource).toContain("We do not use activity notes as proof");
   });
 
   it("uses Clerk identity for manual applications when the dashboard runs in Clerk mode", () => {

@@ -94,6 +94,25 @@ export const jobApplications = mysqlTable("job_applications", {
 export type JobApplication = typeof jobApplications.$inferSelect;
 export type InsertJobApplication = typeof jobApplications.$inferInsert;
 
+/**
+ * A compact, evidence-only confirmation record. It never stores screenshots,
+ * CV content, employer credentials, portal payloads, or personal contact data.
+ */
+export const applicationEvidence = mysqlTable("application_evidence", {
+  id: int("id").autoincrement().primaryKey(),
+  applicationId: int("applicationId").notNull(),
+  candidateOpenId: varchar("candidateOpenId", { length: 64 }).notNull(),
+  evidenceType: mysqlEnum("evidenceType", ["portal_confirmation", "email_accepted", "employer_confirmation"]).notNull(),
+  capturedAt: timestamp("capturedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, table => ({
+  applicationEvidenceApplicationIdx: uniqueIndex("application_evidence_application_idx").on(table.applicationId),
+  applicationEvidenceCandidateIdx: index("application_evidence_candidate_idx").on(table.candidateOpenId, table.capturedAt),
+}));
+
+export type ApplicationEvidence = typeof applicationEvidence.$inferSelect;
+export type InsertApplicationEvidence = typeof applicationEvidence.$inferInsert;
+
 export const campaignSignals = mysqlTable("campaign_signals", {
   id: int("id").autoincrement().primaryKey(),
   campaignId: varchar("campaignId", { length: 64 }).notNull(),

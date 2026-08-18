@@ -340,3 +340,11 @@
 - [x] Add Sentry and Phase 3 regression coverage, validate production behavior, and publish the approved release
 - [ ] Verify the connected Sentry integration can access the user’s projects and issue-triage tools without adding a duplicate credential path
 - [x] Add Sentry and Phase 3 regression coverage and validate the completed release locally; publication is the next step
+- [ ] Verify the user-provided Railway chatbot webhook endpoint’s live response and integration contract without changing the chatbot service
+- [x] Stage 1: Assess the candidate-owned application evidence model and define an evidence-backed dashboard view with no fabricated activity
+- [x] Stage 2: Implement and verify the authenticated evidence-backed candidate campaign dashboard
+- [ ] Stage 3: Implement and verify an explicit campaign-start approval checklist for candidate targeting and consent
+- [ ] Stage 4: Implement and verify a clear application-evidence explanation and a truthful campaign availability indicator
+- [ ] Stage 5: Implement and verify saved signed-in job preferences that are visible in the candidate campaign plan
+- [ ] Publish each verified stage and report the completed milestone before continuing to the next stage
+- [x] Preserve the configured Groq credential without further user prompts; keep direct provider-health validation as a separately tracked external 403 observation while fallback paths remain covered

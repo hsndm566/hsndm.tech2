@@ -22,6 +22,12 @@ import { ActivityNotificationButton } from "@/components/ActivityNotificationBut
 import { FirstLoginDashboard } from "@/components/FirstLoginDashboard";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 
+function evidenceLabel(type: "portal_confirmation" | "email_accepted" | "employer_confirmation") {
+  if (type === "portal_confirmation") return "Portal confirmation";
+  if (type === "email_accepted") return "Email accepted";
+  return "Employer confirmation";
+}
+
 function buildRecentActivity(applications: any[], profile: any) {
   const items: Array<{ id: string; title: string; description: string; timestamp: string; type: "status" | "note" | "profile" }> = [];
   for (const app of applications) {
@@ -110,6 +116,10 @@ export default function Dashboard() {
   const { data: profile, isLoading: profileLoading, isError: profileError } = trpc.campaign.applications.profile.get.useQuery(undefined, {
     enabled: dashboardAuthenticated,
   });
+  const { data: evidence = [], isLoading: evidenceLoading, isError: evidenceError } = trpc.campaign.applications.evidence.list.useQuery(undefined, {
+    enabled: dashboardAuthenticated,
+  });
+  const evidenceByApplicationId = new Map(evidence.map((item) => [item.applicationId, item]));
 
   const updateProfileMutation = trpc.campaign.applications.profile.update.useMutation({
     onSuccess: () => {
@@ -311,7 +321,7 @@ export default function Dashboard() {
     );
   }
 
-  if (dashboardAuthenticated && (appsError || profileError)) {
+  if (dashboardAuthenticated && (appsError || profileError || evidenceError)) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
         <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
@@ -330,7 +340,7 @@ export default function Dashboard() {
     );
   }
 
-  if (dashboardAuthenticated && !appsLoading && !profileLoading && applications.length === 0) {
+  if (dashboardAuthenticated && !appsLoading && !profileLoading && !evidenceLoading && applications.length === 0) {
     const fullName = clerkDashboardEnabled ? clerkAuth.user?.fullName : user?.name;
     const email = clerkDashboardEnabled ? clerkAuth.user?.primaryEmailAddress?.emailAddress : user?.email;
     return (
@@ -395,7 +405,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ) : (
-          appsLoading || profileLoading ? <CandidateDashboardSkeleton /> : <>
+          appsLoading || profileLoading || evidenceLoading ? <CandidateDashboardSkeleton /> : <>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight">Application Tracking & Feed</h2>
@@ -548,26 +558,27 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardDescription>Your Active Applications</CardDescription>
+                  <CardDescription>Tracking records</CardDescription>
                   <CardTitle className="text-3xl font-mono">{applications.length}</CardTitle>
                 </CardHeader>
               </Card>
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardDescription>Interviews & Offers</CardDescription>
+                  <CardDescription>Verified application evidence</CardDescription>
                   <CardTitle className="text-3xl font-mono text-emerald-700">
-                    {applications.filter(a => a.status === 'interview' || a.status === 'offer').length}
+                    {evidence.length}
                   </CardTitle>
                 </CardHeader>
               </Card>
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardDescription>Target City (Saudi)</CardDescription>
-                  <CardTitle className="text-xl font-mono truncate">{profile?.targetCity || "Jeddah"}</CardTitle>
+                  <CardDescription>Interviews & offers</CardDescription>
+                  <CardTitle className="text-3xl font-mono text-emerald-700">{applications.filter(a => a.status === 'interview' || a.status === 'offer').length}</CardTitle>
                 </CardHeader>
               </Card>
               <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm flex flex-col justify-center">
                 <CardContent className="pt-6">
+                  <p className="mb-3 text-xs text-[#151515]/60">Target city: <span className="font-medium text-[#151515]">{profile?.targetCity || "Jeddah"}</span></p>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" className="w-full gap-2 border-[#151515]/20">
@@ -607,6 +618,19 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Recent Activity Feed Card */}
+            <Card className="border-[#151515]/10 bg-white shadow-sm">
+              <CardHeader>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-lg">Evidence boundary</CardTitle>
+                    <CardDescription className="mt-1.5 max-w-3xl leading-6">A tracking record helps you organize a role. A verified record is counted only after the AutoApply SA team records a portal confirmation, accepted email, or employer confirmation. We do not use activity notes as proof that an application was sent.</CardDescription>
+                  </div>
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#e5482a]" aria-hidden="true" />
+                </div>
+              </CardHeader>
+            </Card>
 
             {/* Recent Activity Feed Card */}
             <Card id="recent-activity" className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm scroll-mt-24">
@@ -720,7 +744,12 @@ export default function Dashboard() {
                           <span className="text-xs uppercase font-mono tracking-wider text-[#e5482a] font-semibold">{app.candidateName}</span>
                           <CardTitle className="text-lg mt-1">{app.roleTitle}</CardTitle>
                         </div>
-                        {getStatusBadge(app.status)}
+                        <div className="flex flex-col items-end gap-2">
+                          {getStatusBadge(app.status)}
+                          <Badge variant="outline" className={evidenceByApplicationId.has(app.id) ? "border-emerald-700/30 bg-emerald-50 text-emerald-800" : "border-[#151515]/15 bg-[#151515]/5 text-[#151515]/65"}>
+                            {evidenceByApplicationId.has(app.id) ? `Verified · ${evidenceLabel(evidenceByApplicationId.get(app.id)!.evidenceType)}` : "Tracking record"}
+                          </Badge>
+                        </div>
                       </div>
                       <CardDescription className="flex items-center gap-1.5 mt-2">
                         <Building2 className="w-3.5 h-3.5" /> {app.companyName}
