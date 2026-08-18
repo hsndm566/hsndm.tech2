@@ -316,3 +316,6 @@
 - [x] Add a concise, accurate privacy-isolation badge to the AutoApply SA chat interface
 - [x] Add an accessible bilingual tooltip that explains the chat privacy boundary without overstating security guarantees
 - [x] Add focused regression coverage, verify responsive presentation, and publish the privacy reassurance update
+- [x] Audit the current chatbot response contract and Railway persistence layer for minimal feedback recording
+- [x] Add accessible thumbs-up and thumbs-down controls to assistant replies with privacy-preserving response identifiers
+- [x] Persist deduplicated quality feedback in the chatbot service, add regressions, verify the deployed interaction, and publish

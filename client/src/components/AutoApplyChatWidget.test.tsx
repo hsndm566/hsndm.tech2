@@ -85,6 +85,27 @@ describe("AutoApplyChatWidget", () => {
     expect(JSON.parse(String(request.body)).message).toBe("pricing");
   });
 
+  it("sends a minimal up or down quality signal for a server-identified response", async () => {
+    mockedFetch
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reply: "Campaign guidance / إرشادات الحملة", response_id: "web_abcdefghijklmnop" }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ recorded: true }) });
+    vi.stubGlobal("fetch", mockedFetch);
+    render(<AutoApplyChatWidget />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start a campaign / ابدأ" }));
+    await screen.findByText("Campaign guidance / إرشادات الحملة");
+    expect(screen.getByRole("button", { name: "Mark this response not helpful" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Mark this response helpful" }));
+    await waitFor(() => expect(mockedFetch).toHaveBeenCalledTimes(2));
+    const feedbackRequest = mockedFetch.mock.calls[1];
+    expect(feedbackRequest?.[0]).toContain("/web-chat-feedback");
+    expect(JSON.parse(String((feedbackRequest?.[1] as RequestInit).body))).toEqual({ response_id: "web_abcdefghijklmnop", rating: "up" });
+    expect(screen.getByRole("button", { name: "Mark this response helpful" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByText("Thank you / شكراً")).toBeTruthy();
+  });
+
   it("shows a loading state and a user-safe recovery message when the endpoint is unavailable", async () => {
     let rejectRequest: (reason?: unknown) => void = () => undefined;
     mockedFetch.mockImplementation(() => new Promise((_, reject) => { rejectRequest = reject; }));

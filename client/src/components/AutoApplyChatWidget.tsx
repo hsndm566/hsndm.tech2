@@ -1,4 +1,4 @@
-import { Info, MessageCircle, Send, ShieldCheck, Sparkles, X } from "lucide-react";
+import { Info, MessageCircle, Send, ShieldCheck, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import React, { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -8,9 +8,11 @@ type ChatMessage = {
   id: string;
   role: ChatRole;
   text: string;
+  feedbackId?: string;
 };
 
 const CHAT_ENDPOINT = "https://saudi-whatsapp-chatbot-production.up.railway.app/web-chat";
+const CHAT_FEEDBACK_ENDPOINT = "https://saudi-whatsapp-chatbot-production.up.railway.app/web-chat-feedback";
 const SESSION_STORAGE_KEY = "autoapply_sa_web_chat_session";
 const REQUEST_TIMEOUT_MS = 15_000;
 
@@ -99,7 +101,10 @@ function extractReply(value: unknown) {
     typeof value.reply === "string" &&
     value.reply.trim()
   ) {
-    return value.reply.trim();
+    const responseId = "response_id" in value && typeof value.response_id === "string" && /^web_[A-Za-z0-9_-]{16,128}$/.test(value.response_id)
+      ? value.response_id
+      : undefined;
+    return { reply: value.reply.trim(), responseId };
   }
   return null;
 }
@@ -108,6 +113,8 @@ export function AutoApplyChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [feedbackById, setFeedbackById] = useState<Record<string, "up" | "down">>({});
+  const [feedbackErrorId, setFeedbackErrorId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -169,12 +176,31 @@ export function AutoApplyChatWidget() {
       });
       const reply = extractReply(await response.json().catch(() => null));
       if (!response.ok || !reply) throw new Error("Chat response was unavailable");
-      setMessages((current) => [...current, { id: `assistant-${Date.now()}`, role: "assistant", text: reply }]);
+      setMessages((current) => [...current, { id: `assistant-${Date.now()}`, role: "assistant", text: reply.reply, feedbackId: reply.responseId }]);
     } catch {
       setError("Chat is temporarily unavailable. Please try again or continue on WhatsApp.");
     } finally {
       window.clearTimeout(timeout);
       setIsLoading(false);
+    }
+  };
+
+  const submitFeedback = async (feedbackId: string, rating: "up" | "down") => {
+    if (feedbackById[feedbackId] === rating) return;
+    setFeedbackErrorId(null);
+    setFeedbackById((current) => ({ ...current, [feedbackId]: rating }));
+    try {
+      const response = await fetch(CHAT_FEEDBACK_ENDPOINT, {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ response_id: feedbackId, rating }),
+      });
+      if (!response.ok) throw new Error("Feedback was unavailable");
+    } catch {
+      setFeedbackById(({ [feedbackId]: _removed, ...current }) => current);
+      setFeedbackErrorId(feedbackId);
     }
   };
 
@@ -251,15 +277,42 @@ export function AutoApplyChatWidget() {
               <div className="space-y-3" aria-live="polite">
                 {messages.map((message) => (
                   <div className={`flex ${message.role === "visitor" ? "justify-end" : "justify-start"}`} key={message.id}>
-                    <p
-                      className={
-                        message.role === "visitor"
-                          ? "max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-[#2563eb] px-3.5 py-2.5 text-sm leading-6 text-white"
-                          : "max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-sm leading-6 text-slate-800 shadow-sm"
-                      }
-                    >
-                      {message.text}
-                    </p>
+                    <div className="max-w-[85%]">
+                      <p
+                        className={
+                          message.role === "visitor"
+                            ? "whitespace-pre-wrap rounded-2xl rounded-br-md bg-[#2563eb] px-3.5 py-2.5 text-sm leading-6 text-white"
+                            : "whitespace-pre-wrap rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-sm leading-6 text-slate-800 shadow-sm"
+                        }
+                      >
+                        {message.text}
+                      </p>
+                      {message.role === "assistant" && message.feedbackId ? (
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-1 text-[11px] text-slate-500">
+                          <span>Helpful? / مفيدة؟</span>
+                          <button
+                            aria-label="Mark this response helpful"
+                            aria-pressed={feedbackById[message.feedbackId] === "up"}
+                            className={`inline-flex size-7 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] ${feedbackById[message.feedbackId] === "up" ? "border-blue-200 bg-blue-100 text-[#2563eb]" : "border-slate-200 bg-white text-slate-500 hover:border-blue-200 hover:text-[#2563eb]"}`}
+                            onClick={() => void submitFeedback(message.feedbackId!, "up")}
+                            type="button"
+                          >
+                            <ThumbsUp className="size-3.5" aria-hidden="true" />
+                          </button>
+                          <button
+                            aria-label="Mark this response not helpful"
+                            aria-pressed={feedbackById[message.feedbackId] === "down"}
+                            className={`inline-flex size-7 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] ${feedbackById[message.feedbackId] === "down" ? "border-rose-200 bg-rose-50 text-rose-700" : "border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:text-rose-700"}`}
+                            onClick={() => void submitFeedback(message.feedbackId!, "down")}
+                            type="button"
+                          >
+                            <ThumbsDown className="size-3.5" aria-hidden="true" />
+                          </button>
+                          {feedbackById[message.feedbackId] ? <span className="font-medium text-slate-600" role="status">Thank you / شكراً</span> : null}
+                          {feedbackErrorId === message.feedbackId ? <span className="text-rose-700" role="status">Could not save feedback. Try again. / تعذر حفظ الملاحظة، حاول مجددًا.</span> : null}
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                 ))}
                 <QuickReplies compact disabled={isLoading} onSelect={(message) => void sendMessage(message)} />
