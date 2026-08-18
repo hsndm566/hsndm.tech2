@@ -313,3 +313,6 @@
 - [x] Audit the active database engine, schema ownership keys, and all candidate-data query and mutation paths for row-isolation gaps
 - [x] Apply enforceable database-supported access controls or equivalent server-side tenant isolation, without claiming unsupported native RLS
 - [x] Add cross-candidate authorization regressions, run full validation, and publish the verified data-isolation hardening
+- [x] Add a concise, accurate privacy-isolation badge to the AutoApply SA chat interface
+- [x] Add an accessible bilingual tooltip that explains the chat privacy boundary without overstating security guarantees
+- [x] Add focused regression coverage, verify responsive presentation, and publish the privacy reassurance update

@@ -1,5 +1,6 @@
-import { MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Info, MessageCircle, Send, ShieldCheck, Sparkles, X } from "lucide-react";
 import React, { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ChatRole = "assistant" | "visitor";
 
@@ -207,6 +208,26 @@ export function AutoApplyChatWidget() {
               <div>
                 <h2 className="text-sm font-bold leading-tight">AutoApply SA</h2>
                 <p className="mt-0.5 text-xs text-blue-100">مساعد التقديم الوظيفي / Job application assistant</p>
+                <div className="mt-2 flex items-center gap-1.5">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 px-2 py-1 text-[10px] font-semibold text-white">
+                    <ShieldCheck className="size-3" aria-hidden="true" />
+                    Private by design / الخصوصية أولاً
+                  </span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        aria-label="How AutoApply SA protects chat privacy"
+                        className="inline-flex size-6 items-center justify-center rounded-full text-blue-50 transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        type="button"
+                      >
+                        <Info className="size-3.5" aria-hidden="true" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="z-[90] max-w-[18rem] bg-slate-950 px-3 py-2 text-left text-xs leading-5 text-white" side="bottom" sideOffset={8}>
+                      Candidate dashboard records are isolated by signed-in account, and CV files are not retained in chat. / تُعزل سجلات لوحة المرشح بحسب الحساب المسجّل، ولا تُحتفَظ ملفات السيرة في المحادثة.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
             </div>
             <button

@@ -1,12 +1,22 @@
 // @vitest-environment jsdom
 import React from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AutoApplyChatWidget } from "./AutoApplyChatWidget";
 
 const mockedFetch = vi.fn();
 
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
 describe("AutoApplyChatWidget", () => {
+  beforeEach(() => {
+    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  });
+
   afterEach(() => {
     cleanup();
     mockedFetch.mockReset();
@@ -43,6 +53,19 @@ describe("AutoApplyChatWidget", () => {
     expect(screen.getByRole("button", { name: "Privacy / الخصوصية" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Cities / المدن" })).toBeTruthy();
     expect(screen.getByText(/CV files are not retained in chat/)).toBeTruthy();
+  });
+
+  it("shows an accurate bilingual privacy-isolation badge with a keyboard-accessible explanation", async () => {
+    render(<AutoApplyChatWidget />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open AutoApply SA chat" }));
+    expect(screen.getByText("Private by design / الخصوصية أولاً")).toBeTruthy();
+
+    fireEvent.focus(screen.getByRole("button", { name: "How AutoApply SA protects chat privacy" }));
+    const tooltip = await screen.findByRole("tooltip");
+    expect(tooltip.textContent).toContain("Candidate dashboard records are isolated by signed-in account");
+    expect(tooltip.textContent).toContain("CV files are not retained in chat");
+    expect(tooltip.textContent).toContain("تُعزل سجلات لوحة المرشح");
   });
 
   it("keeps bilingual quick replies available after a response so visitors can continue common queries", async () => {
