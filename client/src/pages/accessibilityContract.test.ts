@@ -6,6 +6,7 @@ const arabicHomeSource = readFileSync(new URL("./ArabicHome.tsx", import.meta.ur
 const enquireSource = readFileSync(new URL("./Enquire.tsx", import.meta.url), "utf8");
 const arabicEnquireSource = readFileSync(new URL("./ArabicEnquire.tsx", import.meta.url), "utf8");
 const stylesSource = readFileSync(new URL("../index.css", import.meta.url), "utf8");
+const deferredExplainerSource = readFileSync(new URL("../components/DeferredExplainerVideo.tsx", import.meta.url), "utf8");
 
 describe("public accessibility and recovery contract", () => {
   it("provides bilingual skip navigation to the CV matcher and campaign brief", () => {
@@ -24,8 +25,10 @@ describe("public accessibility and recovery contract", () => {
   });
 
   it("announces media failures and preserves accessible alternate contact recovery paths", () => {
-    expect(homeSource).toContain('role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable');
-    expect(arabicHomeSource).toContain('role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح');
+    expect(homeSource).toContain("DeferredExplainerVideo");
+    expect(arabicHomeSource).toContain("DeferredExplainerVideo");
+    expect(deferredExplainerSource).toContain('role={hasFailed ? "status" : undefined}');
+    expect(deferredExplainerSource).toContain('aria-live={hasFailed ? "polite" : undefined}');
     expect(enquireSource).toContain("Secure web enquiry");
     expect(enquireSource).toContain("browser blocked the new WhatsApp window");
     expect(arabicEnquireSource).toContain("استفسار ويب آمن");

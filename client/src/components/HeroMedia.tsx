@@ -1,6 +1,6 @@
 /** Render the approved hero motion with a light, unobtrusive fallback if autoplay is unavailable. */
 import React, { useState } from "react";
-import { HERO_VIDEO_URL } from "@/lib/media";
+import { HERO_POSTER_URL, HERO_VIDEO_URL } from "@/lib/media";
 
 type HeroMediaProps = { poster?: string; alt: string };
 
@@ -16,7 +16,8 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
           muted
           loop
           playsInline
-          preload="auto"
+          poster={HERO_POSTER_URL}
+          preload="metadata"
           controls={false}
           aria-hidden="true"
           tabIndex={-1}

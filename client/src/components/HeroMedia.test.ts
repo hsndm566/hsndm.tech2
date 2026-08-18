@@ -18,7 +18,8 @@ describe("HeroMedia", () => {
     expect(component).toContain('pointer-events-none');
     expect(component).toContain('aria-hidden="true"');
     expect(component).toContain('disablePictureInPicture');
-    expect(component).toContain('preload="auto"');
+    expect(component).toContain('preload="metadata"');
+    expect(component).toContain("poster={HERO_POSTER_URL}");
     expect(component).toContain('controls={false}');
     expect(component).toContain('className="hero-media-video h-full w-full"');
     expect(component).toContain('onError={() => setVideoFailed(true)}');

@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const output = resolve("dist/public");
 const indexPage = resolve(output, "index.html");
-const siteUrl = "https://hsndm.tech";
+const siteUrl = "https://www.hsndm.tech";
 const pageMetadata = {
   ar: {
     title: "أوتوأبلاي السعودية | محرّك التقديم الوظيفي",
@@ -51,14 +51,14 @@ const pageMetadata = {
   support: { title: "Support | AutoApply SA", description: "Get campaign, dashboard, and privacy support for your Saudi Arabia job search with AutoApply SA.", path: "/support", lang: "en", direction: "ltr", locale: "en_SA" },
   "case-studies": { title: "KAIA Terminal 1 Case Study | AutoApply SA", description: "Read an owner-supplied operations-improvement case-study summary using DMAIC and value-stream mapping in Jeddah.", path: "/case-studies", lang: "en", direction: "ltr", locale: "en_SA" },
   "campaign-report-sample": { title: "Illustrative Campaign Report Format | AutoApply SA", description: "See the fields, cadence, and limits of an illustrative AutoApply SA campaign update format.", path: "/campaign-report-sample", lang: "en", direction: "ltr", locale: "en_SA" },
-  privacy: { title: "Privacy Policy | AutoApply SA", description: "Read the AutoApply SA working privacy-policy draft for Saudi job-search campaign information, CV handling, and privacy rights.", path: "/privacy", lang: "en", direction: "ltr", locale: "en_SA" },
-  terms: { title: "Terms & Conditions | AutoApply SA", description: "Read the AutoApply SA working terms for previews, campaign enquiries, candidate tracking, cancellation, and service boundaries.", path: "/terms", lang: "en", direction: "ltr", locale: "en_SA" },
+  privacy: { title: "Privacy Policy | AutoApply SA", description: "Learn how AutoApply SA handles Saudi job-search campaign information, CVs, contact details, and privacy requests.", path: "/privacy", lang: "en", direction: "ltr", locale: "en_SA" },
+  terms: { title: "Terms & Conditions | AutoApply SA", description: "Read the AutoApply SA service terms for previews, campaign enquiries, candidate tracking, cancellation, and service boundaries.", path: "/terms", lang: "en", direction: "ltr", locale: "en_SA" },
   "ar/how-it-works": { title: "كيف تعمل أوتوأبلاي السعودية | AutoApply SA", description: "تعرّف على مسار حملة AutoApply SA للبحث عن عمل داخل السعودية.", path: "/ar/how-it-works", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/support": { title: "الدعم | أوتوأبلاي السعودية", description: "الدعم للحملة ولوحة التحكم وطلبات الخصوصية للباحثين عن عمل في السعودية.", path: "/ar/support", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/case-studies": { title: "دراسة حالة مبنى الركاب 1 | AutoApply SA", description: "اطلع على ملخص دراسة حالة في تحسين العمليات باستخدام DMAIC ورسم تدفق القيمة في جدة.", path: "/ar/case-studies", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/campaign-report-sample": { title: "نموذج تقرير الحملة التوضيحي | أوتوأبلاي السعودية", description: "اطلع على الحقول والوتيرة والحدود في نموذج توضيحي لتحديث الحملة.", path: "/ar/campaign-report-sample", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  "ar/privacy": { title: "سياسة الخصوصية | أوتوأبلاي السعودية", description: "اطلع على مسودة سياسة الخصوصية في AutoApply SA لمعلومات حملة البحث عن عمل والسيرة الذاتية وحقوق الخصوصية.", path: "/ar/privacy", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  "ar/terms": { title: "الشروط والأحكام | أوتوأبلاي السعودية", description: "اقرأ مسودة الشروط والأحكام الخاصة بالمعاينة واستفسار الحملة وتتبع الطلبات وحدود الخدمة.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/privacy": { title: "سياسة الخصوصية | أوتوأبلاي السعودية", description: "تعرّف على كيفية تعامل AutoApply SA مع معلومات حملة البحث عن عمل والسيرة الذاتية وطلبات الخصوصية.", path: "/ar/privacy", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/terms": { title: "الشروط والأحكام | أوتوأبلاي السعودية", description: "اقرأ شروط خدمة AutoApply SA للمعاينة واستفسار الحملة وتتبع الطلبات وحدود الخدمة.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
   pricing: { title: "Pricing | AutoApply SA", description: "Review provisional Saudi job-application campaign plans and begin with a contact-only discussion.", path: "/pricing", lang: "en", direction: "ltr", locale: "en_SA" },
   services: { title: "Services | Hasan Adam", description: "Explore Saudi-focused job-application support and practical web and operations systems for small businesses.", path: "/services", lang: "en", direction: "ltr", locale: "en_SA" },
   "ar/pricing": { title: "الأسعار | أوتوأبلاي السعودية", description: "اطلع على خطط حملة التقديم الإرشادية وابدأ بمحادثة داخل السعودية.", path: "/ar/pricing", lang: "ar", direction: "rtl", locale: "ar_SA" },

@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
+import { getPathnameFromRequestUrl, isKnownPublicRoute } from "./publicRoutes";
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -39,7 +40,8 @@ export async function setupVite(app: Express, server: Server) {
         `src="/src/main.tsx?v=${nanoid()}"`
       );
       const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      const status = isKnownPublicRoute(getPathnameFromRequestUrl(url)) ? 200 : 404;
+      res.status(status).set({ "Content-Type": "text/html", "Cache-Control": "no-store" }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -60,8 +62,16 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  // Serve the SPA shell only for a registered client route. This prevents
+  // mistyped pages from looking successful to browsers, crawlers, and monitors.
+  app.use("*", (req, res) => {
+    const pathname = getPathnameFromRequestUrl(req.originalUrl);
+    if (pathname.startsWith("/api/") || pathname.startsWith("/v1/")) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    const status = isKnownPublicRoute(pathname) ? 200 : 404;
+    res.status(status).setHeader("Cache-Control", "no-store");
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

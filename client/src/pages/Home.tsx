@@ -4,9 +4,9 @@
  */
 import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
+import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { trackEngagement } from "@/lib/analytics";
 import { demoLists } from "@/lib/careerTaxonomy";
-import { HERO_VIDEO_URL } from "@/lib/media";
 import { applyPageSeo } from "@/lib/seo";
 import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
@@ -166,7 +166,6 @@ export default function Home() {
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [handoffBlocked, setHandoffBlocked] = useState(false);
   const [latestActivityText, setLatestActivityText] = useState("Engine active — 24/7");
-  const [explainerVideoFailed, setExplainerVideoFailed] = useState(false);
 
   useEffect(() => {
     let activeRequest: AbortController | null = null;
@@ -478,11 +477,11 @@ export default function Home() {
               <div className="hero-actions">
                 <Link className="button button-ink" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
-                  See the system <MoveRight size={18} />
+                  See how it works <MoveRight size={18} />
                 </button>
               </div>
               <div className="hero-note">From 99 SAR / month <b /> no card needed to begin a conversation</div>
-              <div className="hero-trust-row"><span><ShieldCheck size={14} /> Start with a brief</span><span><Clock3 size={14} /> Follow up within one business day</span></div>
+              <div className="hero-trust-row" aria-label="Campaign trust details"><span><ShieldCheck size={14} /> Arabic &amp; English support</span><span>Saudi-focused</span><span>Jeddah-based support</span><span>You review campaign direction first</span><span>Request data deletion anytime</span></div>
             </div>
 
               <div className="hero-ledger" aria-label="Application engine status">
@@ -568,17 +567,9 @@ export default function Home() {
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
             <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
-            {EXPLAINER_VIDEO_SRC && !explainerVideoFailed ? (
-              <video className="video-placeholder video-explainer-media" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="AutoApply SA walkthrough video" onError={() => setExplainerVideoFailed(true)}>
-                <source src={EXPLAINER_VIDEO_SRC} type="video/mp4" />
-                Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
-              </video>
-            ) : (
-              <div className="video-placeholder" role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable; service steps remain available">
-                <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
-                <span>Powered by AutoApply SA</span>
-              </div>
-            )}
+            <DeferredExplainerVideo src={EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media" ariaLabel="AutoApply SA walkthrough video" unavailableLabel="AutoApply SA walkthrough video unavailable; service steps remain available">
+              Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
+            </DeferredExplainerVideo>
             <p>Powered by AutoApply SA. This is what runs while you sleep.</p>
             <div className="mt-4 sm:hidden">
               <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
@@ -591,7 +582,7 @@ export default function Home() {
         <section id="upload" className="upload-section section-paper">
           <div className="page-frame upload-grid">
             <div className="upload-image-wrap">
-              <img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" />
+              <img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" loading="lazy" decoding="async" />
               <div className="image-stamp"><span>Try it now — 60 seconds</span><ArrowDownRight size={17} /></div>
             </div>
             <div className="upload-copy">

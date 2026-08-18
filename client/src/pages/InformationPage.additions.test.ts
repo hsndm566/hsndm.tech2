@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest";
 const source = readFileSync(new URL("./InformationPage.tsx", import.meta.url), "utf8");
 
 describe("InformationPage additive trust content", () => {
-  it("keeps bilingual privacy and terms working-draft notice plus data-rights boundaries", () => {
-    expect(source).toContain("Working draft — review with a qualified Saudi privacy professional");
-    expect(source).toContain("مسودة عمل — يُرجى مراجعتها مع مختص سعودي مؤهل في الخصوصية");
+  it("renders finalized bilingual privacy wording with factual data-rights and approval boundaries", () => {
+    expect(source).toContain("AutoApply SA, a Jeddah-based service");
+    expect(source).toContain("لا تُشارك معلومات المرشح مع صاحب عمل أو قناة تقديم إلا بعد اعتماد المرشح لاتجاه الحملة");
+    expect(source).toContain("apply@hsndm.tech");
     expect(source).toContain("Your rights and contact");
     expect(source).toContain("حقوقك والتواصل");
     expect(source).toContain("Fees, cancellation, and refunds");

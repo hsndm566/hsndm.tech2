@@ -66,11 +66,11 @@ export function CookieConsent() {
   }
 
   return (
-    <aside className="fixed inset-x-3 bottom-[max(.75rem,env(safe-area-inset-bottom))] z-[80] mx-auto w-[calc(100%-1.5rem)] max-w-lg border border-black/15 bg-[#151515] p-3 text-[#f3f0e9] shadow-2xl sm:inset-x-4 sm:bottom-4 sm:w-auto" role="dialog" aria-modal="false" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
+    <aside className="fixed inset-x-3 bottom-[max(.75rem,env(safe-area-inset-bottom))] z-[80] mx-auto w-[calc(100%-1.5rem)] max-w-lg border border-black/15 bg-[#151515] p-3 text-[#f3f0e9] shadow-2xl sm:inset-x-auto sm:right-4 sm:bottom-4 sm:mx-0 sm:w-[min(30rem,calc(100vw-2rem))]" role="dialog" aria-modal="false" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">{text.kicker}</p>
-          <p id="cookie-consent-title" role="heading" aria-level={2} className="mt-1 font-sans text-sm font-semibold leading-5">{text.title}</p>
+          <h2 id="cookie-consent-title" className="mt-1 font-sans !text-sm font-semibold !leading-5">{text.title}</h2>
           <p id="cookie-consent-description" className="mt-1 font-sans text-[11px] leading-4 text-white/75">{text.detail} <a className="text-[#f3f0e9] underline underline-offset-4" href={isArabic ? "/ar/privacy" : "/privacy"}>{text.privacy}</a></p>
         </div>
         <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center">

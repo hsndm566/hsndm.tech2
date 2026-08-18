@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 const homeSource = () => readFileSync(resolve(process.cwd(), "client/src/pages/Home.tsx"), "utf8");
   const arabicHomeSource = () => readFileSync(resolve(process.cwd(), "client/src/pages/ArabicHome.tsx"), "utf8");
   const arabicIntakeSource = () => readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicIntakeSection.tsx"), "utf8") + readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicScanProgress.tsx"), "utf8") + readFileSync(resolve(process.cwd(), "client/src/components/arabic/ArabicMatchedResults.tsx"), "utf8");
+const deferredExplainerSource = () => readFileSync(resolve(process.cwd(), "client/src/components/DeferredExplainerVideo.tsx"), "utf8");
 const stylesSource = () => readFileSync(resolve(process.cwd(), "client/src/index.css"), "utf8");
 
 describe("homepage clarity release", () => {
@@ -31,13 +32,14 @@ describe("homepage clarity release", () => {
 
     expect(source).toContain("30 seconds. That&apos;s all it takes to understand.");
     expect(source).toContain("EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL");
-    expect(source).toContain("autoPlay loop muted playsInline disablePictureInPicture");
-    expect(source).toContain('controlsList="nodownload noplaybackrate"');
+    expect(source).toContain("DeferredExplainerVideo");
+    expect(deferredExplainerSource()).toContain("autoPlay loop muted playsInline disablePictureInPicture");
+    expect(deferredExplainerSource()).toContain('controlsList="nodownload noplaybackrate"');
+    expect(deferredExplainerSource()).toContain('preload="metadata"');
     expect(source).toContain("Powered by AutoApply SA.");
     expect(source).toContain("EXPLAINER_VIDEO_URL");
-    expect(source).toContain("explainerVideoFailed");
-    expect(source).toContain("onError={() => setExplainerVideoFailed(true)}");
-    expect(source).toContain("autoPlay loop muted playsInline");
+    expect(deferredExplainerSource()).toContain("hasFailed");
+    expect(deferredExplainerSource()).toContain("onError={() => setHasFailed(true)}");
     expect(source).toContain("Priority human review");
     expect(source).not.toContain("Julie copilot");
   });
@@ -65,8 +67,8 @@ describe("homepage clarity release", () => {
     ["نتقدّم", "للوظائف"].forEach(word => expect(source).toContain(`>${word}</span>`));
     expect(source).toContain("سيرتك الذاتية جاهزة");
     expect(source).toContain("arabic-video-explainer-heading");
-    expect(source).toContain("arabicExplainerVideoFailed");
-    expect(source).toContain("onError={() => setArabicExplainerVideoFailed(true)}");
+    expect(source).toContain("DeferredExplainerVideo");
+    expect(deferredExplainerSource()).toContain("onError={() => setHasFailed(true)}");
     expect(source).not.toContain("البنية التحتية للتقديم");
     expect(source).not.toContain("ما تقدّمه الخدمة");
     expect(source).not.toContain("هذا المثال التوضيحي يشرح كيف تنتقل الحملة");
@@ -107,8 +109,10 @@ describe("homepage clarity release", () => {
     expect(english).toContain("handoffBlocked");
     expect(english).toContain("WhatsApp was blocked by this browser.");
     expect(english).toContain('aria-describedby="cv-privacy-note"');
-    expect(english).toContain('role="status" aria-live="polite" aria-label="AutoApply SA walkthrough video unavailable');
-    expect(arabic).toContain('role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح');
+    expect(english).toContain("DeferredExplainerVideo");
+    expect(arabic).toContain("DeferredExplainerVideo");
+    expect(deferredExplainerSource()).toContain('role={hasFailed ? "status" : undefined}');
+    expect(deferredExplainerSource()).toContain('aria-live={hasFailed ? "polite" : undefined}');
     expect(styles).toContain("select:focus-visible");
     expect(styles).toContain(".drop-zone:focus-within");
     expect(styles).toContain(".skip-link:focus");

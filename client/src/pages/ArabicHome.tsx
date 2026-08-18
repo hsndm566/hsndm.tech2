@@ -22,10 +22,11 @@ import {
 } from "lucide-react";
 import React, { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
+import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
-import { HERO_VIDEO_URL, EXPLAINER_VIDEO_URL } from "@/lib/media";
+import { EXPLAINER_VIDEO_URL } from "@/lib/media";
 import { trpc } from "@/lib/trpc";
 import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
@@ -120,7 +121,6 @@ export default function ArabicHome() {
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "Arabic" });
   const [selectedArabicIndustry, setSelectedArabicIndustry] = useState("Technology & Software");
-  const [arabicExplainerVideoFailed, setArabicExplainerVideoFailed] = useState(false);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
   const recordReadiness = trpc.campaign.readiness.record.useMutation();
@@ -237,9 +237,9 @@ export default function ArabicHome() {
               <div className="eyebrow light"><StatusDot /> محرّك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
               <h1 id="arabic-hero-heading"><span data-anime-hero-word>نتقدّم</span>{" "}<span data-anime-hero-word>للوظائف</span> <br /><span data-anime-hero-word>نيابةً</span>{" "}<span data-anime-hero-word>عنك.</span><br /><i><span data-anime-hero-word>كل</span>{" "}<span data-anime-hero-word>يوم.</span></i></h1>
               <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصّصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تتفرّغ أنت لما يهمّك.</p>
-              <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">تعرّف على النظام <MoveLeft size={18} /></a></div>
+              <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">شاهد كيف يعمل <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
-              <div className="hero-trust-row"><span><ShieldCheck size={14} /> ابدأ بملخص موجز</span><span><Clock3 size={14} /> سنتواصل خلال يوم عمل واحد</span></div>
+              <div className="hero-trust-row" aria-label="معلومات موثوقة عن الحملة"><span><ShieldCheck size={14} /> دعم بالعربية والإنجليزية</span><span>مركّزة على السعودية</span><span>دعم من جدة</span><span>تراجع اتجاه الحملة أولاً</span><span>اطلب حذف بياناتك في أي وقت</span></div>
             </div>
             <div className="hero-ledger" dir="rtl" aria-label="حالة محرك التقديم">
               <div className="ledger-topline"><span>محرّك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
@@ -260,16 +260,7 @@ export default function ArabicHome() {
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
             <h2 id="arabic-video-explainer-heading">30 ثانية فقط، <i>وهذا يكفي لفهمها.</i></h2>
-            {ARABIC_EXPLAINER_VIDEO_SRC && !arabicExplainerVideoFailed ? (
-              <video className="video-placeholder video-explainer-media pointer-events-none select-none" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label="فيديو توضيحي لخدمة AutoApply SA" onError={() => setArabicExplainerVideoFailed(true)}>
-                <source src={ARABIC_EXPLAINER_VIDEO_SRC} type="video/mp4" />
-              </video>
-            ) : (
-              <div className="video-placeholder" role="status" aria-live="polite" aria-label="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة">
-                <span className="video-play" aria-hidden="true"><Send size={22} fill="currentColor" /></span>
-                <span>Powered by AutoApply SA</span>
-              </div>
-            )}
+            <DeferredExplainerVideo src={ARABIC_EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media pointer-events-none select-none" ariaLabel="فيديو توضيحي لخدمة AutoApply SA" unavailableLabel="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة" />
             <p>هذا ما يعمل بينما تتابع يومك.</p>
             <div className="mt-4 sm:hidden">
               <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">

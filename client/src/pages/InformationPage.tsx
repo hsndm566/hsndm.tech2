@@ -30,8 +30,52 @@ const PUBLIC_EMAIL = "apply@hsndm.tech";
 
 const normalizePublicContact = (value: string) => value.replaceAll("hasan@hsndm.tech", PUBLIC_EMAIL);
 
+function publicLegalContent(language: "en" | "ar", kind: PageKind): PageCopy {
+  const source = copy[language][kind];
+  if (kind === "privacy" && language === "en") {
+    return {
+      ...source,
+      intro: "This Privacy Policy explains how AutoApply SA, a Jeddah-based service, handles personal information for Saudi job-search campaign support.",
+      reviewNote: undefined,
+      sections: [
+        { heading: "Who is responsible", detail: "AutoApply SA is a Jeddah-based service. This page does not claim a separate legal entity name, registration number, or certification." },
+        { heading: "Information we may collect", detail: "We may collect CVs or CV text you choose to share, contact details, target-role preferences, preferred language, city, campaign communications, enquiry information, and technical consent preferences. We aim to collect only what is relevant to the service you request." },
+        { heading: "Why we use it", detail: "We use this information to assess fit, prepare or review a campaign plan, communicate with you, provide the agreed service, maintain your candidate dashboard, and protect the service." },
+        { heading: "Sharing and campaign approval", detail: "We do not sell candidate information as a separate product. We may use service providers and channels needed to operate the service, such as hosting, authenticated dashboard, email, WhatsApp, and application platforms. Candidate information is shared with an employer or application channel only after the candidate approves the campaign direction." },
+        { heading: "Retention and security", detail: "We keep identifiable information only as long as necessary for the agreed service, legal obligations, or documented disputes. We use organisational, administrative, and technical safeguards appropriate to the service, then delete or anonymise information when it is no longer needed." },
+        { heading: "Your rights and contact", detail: "You can request access, correction, or deletion of your personal information by emailing apply@hsndm.tech or using the published WhatsApp channel. We may need to verify your identity before acting on a request." },
+        { heading: "Cookies and optional analytics", detail: "Necessary storage records your privacy choice. Optional analytics remains off unless you allow it in the consent notice. You can reopen Cookie settings from the site at any time." },
+      ],
+    };
+  }
+  if (kind === "privacy" && language === "ar") {
+    return {
+      ...source,
+      intro: "توضح سياسة الخصوصية هذه كيفية تعامل AutoApply SA، وهي خدمة مقرها جدة، مع المعلومات الشخصية لدعم حملات البحث عن عمل داخل السعودية.",
+      reviewNote: undefined,
+      sections: [
+        { heading: "الجهة المسؤولة", detail: "AutoApply SA خدمة مقرها جدة. لا تدّعي هذه الصفحة وجود اسم كيان قانوني منفصل أو رقم تسجيل أو شهادة امتثال." },
+        { heading: "المعلومات التي قد نجمعها", detail: "قد نجمع السيرة الذاتية أو نصها الذي تختار مشاركته وبيانات التواصل وتفضيلات الوظائف واللغة والمدينة ومراسلات الحملة ومعلومات الاستفسار وتفضيلات الموافقة التقنية. ونسعى إلى جمع ما يرتبط بالخدمة التي تطلبها فقط." },
+        { heading: "سبب استخدامنا للمعلومات", detail: "نستخدم هذه المعلومات لتقييم الملاءمة وإعداد أو مراجعة خطة الحملة والتواصل معك وتقديم الخدمة المتفق عليها وإدارة لوحة المرشح وحماية الخدمة." },
+        { heading: "المشاركة واعتماد الحملة", detail: "لا نبيع معلومات المرشحين كمنتج مستقل. وقد نستخدم مزودي خدمات وقنوات لازمة لتشغيل الخدمة مثل الاستضافة واللوحة الموثقة والبريد وWhatsApp ومنصات التقديم. ولا تُشارك معلومات المرشح مع صاحب عمل أو قناة تقديم إلا بعد اعتماد المرشح لاتجاه الحملة." },
+        { heading: "الاحتفاظ والأمان", detail: "نحتفظ بالمعلومات القابلة للتعريف فقط للمدة اللازمة للخدمة المتفق عليها أو للالتزامات النظامية أو للنزاعات الموثقة. ونستخدم ضمانات تنظيمية وإدارية وتقنية مناسبة للخدمة، ثم نحذف المعلومات أو نُخفي هويتها عند انتهاء الحاجة إليها." },
+        { heading: "حقوقك والتواصل", detail: "يمكنك طلب الوصول إلى معلوماتك الشخصية أو تصحيحها أو حذفها عبر البريد apply@hsndm.tech أو قناة WhatsApp المنشورة. وقد نحتاج إلى التحقق من هويتك قبل تنفيذ الطلب." },
+        { heading: "ملفات الارتباط والتحليلات الاختيارية", detail: "يُستخدم التخزين الضروري لتسجيل اختيارك للخصوصية. وتبقى التحليلات الاختيارية معطلة ما لم تسمح بها في إشعار الموافقة. ويمكنك إعادة فتح إعدادات ملفات الارتباط في أي وقت." },
+      ],
+    };
+  }
+  if (kind === "terms") {
+    return {
+      ...source,
+      intro: language === "ar" ? "توضح هذه الشروط موقع AutoApply SA وأدوات المعاينة وخدمة الحملة المتفق عليها. ولا تحل محل عرض سعر أو اتفاق حملة مكتوب منفصل." : "These terms explain the AutoApply SA website, preview tools, and agreed campaign service. They do not replace a separate written campaign quotation or agreement.",
+      reviewNote: undefined,
+    };
+  }
+  return source;
+}
+
 export default function InformationPage({ kind, language = "en" }: { kind: PageKind; language?: "en" | "ar" }) {
-  const sourceContent = copy[language][kind];
+  const sourceContent = publicLegalContent(language, kind);
   const content = {
     ...sourceContent,
     sections: sourceContent.sections.map(section => ({ ...section, detail: normalizePublicContact(section.detail) })),

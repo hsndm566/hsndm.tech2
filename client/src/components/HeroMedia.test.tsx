@@ -15,7 +15,8 @@ describe("HeroMedia", () => {
     expect(video?.hasAttribute("loop")).toBe(true);
     expect(video?.hasAttribute("playsinline")).toBe(true);
     expect(video?.muted).toBe(true);
-    expect(video?.getAttribute("preload")).toBe("auto");
+    expect(video?.getAttribute("preload")).toBe("metadata");
+    expect(video?.getAttribute("poster")).toContain("autoapply-hero-operations");
     expect(video?.hasAttribute("controls")).toBe(false);
     expect(source?.getAttribute("src")).toBe("/manus-storage/autoapply-hero-seamless-mobile_1fdb8683.mp4");
   });

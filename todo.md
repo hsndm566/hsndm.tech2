@@ -358,3 +358,11 @@
 - [x] Stage 7: Implement a data-backed candidate campaign action board without invented activity or outcomes
 - [x] Add accessible filtering and sorting controls for the Stage 7 action and evidence items
 - [x] Verify and publish Stage 6 interaction polish and Stage 7 management controls across data, mobile, tests, type checks, build, and live deployment
+- [x] Reconcile the attached production-readiness brief with the verified Render portal and Cloudflare architecture before changing publication targets
+- [x] Audit the live chatbot identity and fail safely to WhatsApp if AutoApply-specific chat cannot be verified
+- [x] Remove zoom restrictions and remediate meaningful public accessibility and mobile consent/chat interaction issues
+- [x] Replace public privacy-draft language with factual production wording that does not invent legal entity or compliance claims
+- [x] Audit and optimize critical public loading, media deferral, and non-critical route/library delivery
+- [x] Verify canonical host, redirects, 404 behavior, bilingual routes, and active deployment consistency
+- [x] Publish verified non-conflicting improvements through the active Render deployment and document any static-repository conflict for user decision
+- [x] Apply approved owner, retention, employer-sharing, and www canonical-host facts to public privacy, terms, and metadata content
