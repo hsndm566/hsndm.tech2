@@ -376,3 +376,7 @@
 - [x] Audit every non-hero homepage image and video for a visible, non-blocking loading state in English and Arabic
 - [x] Add restrained reduced-motion-safe loading transitions for eligible homepage media without changing layout or copy
 - [x] Validate and publish the homepage media-loading enhancement with responsive regression coverage
+- [x] Stage 1: reproduce and document mobile ATS-entry visibility and chat/contact-fallback behavior on English and Arabic public routes
+- [x] Stage 2: repair the highest-impact verified mobile ATS or contact-entry issue without enabling an unverified AI chatbot
+- [x] Stage 3: audit remaining public-site rendering, navigation, media, and route-recovery defects across desktop and mobile
+- [x] Stage 4: validate staged repairs with tests, 375px screenshots, live-route checks, and publish the verified release

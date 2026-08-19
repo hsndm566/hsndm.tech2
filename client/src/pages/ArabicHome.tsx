@@ -10,6 +10,7 @@ import {
   Clock3,
   FileText,
   Globe2,
+  Menu,
   MessageCircle,
   MoveLeft,
   Paperclip,
@@ -18,6 +19,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  X,
   Zap,
 } from "lucide-react";
 import React, { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
@@ -112,6 +114,7 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
 
 export default function ArabicHome() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [campaignStage, setCampaignStage] = useState(1);
   const [selectedFile, setSelectedFile] = useState("");
   const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
@@ -223,9 +226,14 @@ export default function ArabicHome() {
           <span>AutoApply <em>SA</em></span>
         </Link>
         <nav className="desktop-nav" aria-label="روابط الصفحة">
-          <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
+          <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><Link href="/ats">فحص ATS</Link><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
         </nav>
-        <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>English</span><span>العربية</span></LanguageTransitionLink>
+        <Link className="mobile-ats-link" href="/ats">فحص ATS</Link>
+        <div className="nav-actions">
+          <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>English</span><span>العربية</span></LanguageTransitionLink>
+          <button className="mobile-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={menuOpen}>{menuOpen ? <X size={21} /> : <Menu size={22} />}</button>
+        </div>
+        {menuOpen && <nav className="mobile-nav" aria-label="روابط الجوال"><a href="#how" onClick={() => setMenuOpen(false)}><span>01</span> كيف يعمل <MoveLeft size={18} /></a><a href="#upload" onClick={() => setMenuOpen(false)}><span>02</span> ارفع السيرة الذاتية <MoveLeft size={18} /></a><Link href="/ats" onClick={() => setMenuOpen(false)}><span>03</span> فحص ATS المجاني <MoveLeft size={18} /></Link><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><span>04</span> تحدث عبر WhatsApp <MessageCircle size={18} /></a></nav>}
       </header>
 
       <main id="top">

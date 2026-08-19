@@ -423,6 +423,7 @@ export default function Home() {
           <button onClick={() => scrollTo("faq")}>FAQ</button>
         </nav>
 
+        <Link className="mobile-ats-link" href="/ats">ATS check</Link>
         <div className="nav-actions">
           <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>English</span><span>العربية</span></LanguageTransitionLink>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
@@ -449,6 +450,7 @@ export default function Home() {
                 <span>0{index + 1}</span> {label} <ArrowDownRight size={18} />
               </button>
             ))}
+            <Link href="/ats"><span>06</span> Free ATS review <ArrowDownRight size={18} /></Link>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               Talk to the team <MessageCircle size={18} />
             </a>
