@@ -6,6 +6,7 @@ import { ArabicUploadDropZone } from "./ArabicUploadDropZone";
 import { ArabicScanProgress } from "./ArabicScanProgress";
 import { ArabicMatchedResults } from "./ArabicMatchedResults";
 import { ArabicFallbackState } from "./ArabicFallbackState";
+import { HomepageMediaImage } from "@/components/HomepageMediaImage";
 
 type ScanResultType = {
   field: string;
@@ -71,7 +72,7 @@ export function ArabicIntakeSection({
     <section id="upload" className="upload-section section-paper">
       <div className="page-frame upload-grid">
         <div className="upload-image-wrap">
-          <img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="مساحة عمل جاهزة لبدء البحث عن وظيفة" loading="lazy" decoding="async" />
+          <HomepageMediaImage src="/manus-storage/autoapply-desk_635170b2.jpg" alt="مساحة عمل جاهزة لبدء البحث عن وظيفة" />
           <div className="image-stamp">
             <span>ابدأ / 60 ثانية</span>
             <ArrowUpRight size={17} />

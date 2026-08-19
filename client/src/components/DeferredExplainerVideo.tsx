@@ -16,6 +16,7 @@ export function DeferredExplainerVideo({ src, className, ariaLabel, unavailableL
   const regionRef = useRef<HTMLDivElement>(null);
   const [isNearViewport, setIsNearViewport] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
     const target = regionRef.current;
@@ -35,14 +36,18 @@ export function DeferredExplainerVideo({ src, className, ariaLabel, unavailableL
   }, []);
 
   return (
-    <div ref={regionRef}>
+    <div ref={regionRef} className="homepage-media-region">
       {isNearViewport && src && !hasFailed ? (
-        <video className={className} autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" aria-label={ariaLabel} onError={() => setHasFailed(true)}>
-          <source src={src} type="video/mp4" />
-          {children}
-        </video>
+        <div className={`${className} homepage-media-surface${isVideoReady ? " is-ready" : ""}`} aria-busy={!isVideoReady} aria-label={ariaLabel}>
+          {!isVideoReady && <span className="homepage-media-loader" aria-hidden="true"><i /><i /><i /></span>}
+          <video className="homepage-media-video" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" onLoadedData={() => setIsVideoReady(true)} onError={() => setHasFailed(true)}>
+            <source src={src} type="video/mp4" />
+            {children}
+          </video>
+        </div>
       ) : (
-        <div className={className} role={hasFailed ? "status" : undefined} aria-live={hasFailed ? "polite" : undefined} aria-label={hasFailed ? unavailableLabel : ariaLabel} aria-busy={!isNearViewport}>
+        <div className={`${className} homepage-media-surface`} role={hasFailed ? "status" : undefined} aria-live={hasFailed ? "polite" : undefined} aria-label={hasFailed ? unavailableLabel : ariaLabel} aria-busy={!isNearViewport}>
+          {!hasFailed && <span className="homepage-media-loader" aria-hidden="true"><i /><i /><i /></span>}
           <span className="sr-only">{hasFailed ? unavailableLabel : ariaLabel}</span>
         </div>
       )}

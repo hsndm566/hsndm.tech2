@@ -5,6 +5,7 @@
 import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
+import { HomepageMediaImage } from "@/components/HomepageMediaImage";
 import { trackEngagement } from "@/lib/analytics";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { applyPageSeo } from "@/lib/seo";
@@ -582,7 +583,7 @@ export default function Home() {
         <section id="upload" className="upload-section section-paper">
           <div className="page-frame upload-grid">
             <div className="upload-image-wrap">
-              <img src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" loading="lazy" decoding="async" />
+              <HomepageMediaImage src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" />
               <div className="image-stamp"><span>Try it now — 60 seconds</span><ArrowDownRight size={17} /></div>
             </div>
             <div className="upload-copy">
@@ -828,7 +829,7 @@ export default function Home() {
               </div>
             </div>
             <div className="map-frame">
-              <Suspense fallback={<div className="location-map-canvas" role="status" aria-label="Loading Jeddah map" />}>
+              <Suspense fallback={<div className="location-map-canvas homepage-map-loading" role="status" aria-label="Loading Jeddah map" />}>
                 <MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} />
               </Suspense>
               <div className="map-caption"><span><StatusDot /> SERVICE BASE</span><b>JEDDAH / KSA</b></div>

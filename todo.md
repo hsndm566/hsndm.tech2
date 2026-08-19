@@ -373,3 +373,6 @@
 - [x] Finalize non-Clerk production verification for the current live Render release and record the exact deferred passwordless-authentication follow-up
 - [x] Diagnose the user-reported live rendering failures across public and dashboard routes, then patch only reproducible defects
 - [x] Validate and publish the rendering-repair release with responsive route checks and regression coverage
+- [x] Audit every non-hero homepage image and video for a visible, non-blocking loading state in English and Arabic
+- [x] Add restrained reduced-motion-safe loading transitions for eligible homepage media without changing layout or copy
+- [x] Validate and publish the homepage media-loading enhancement with responsive regression coverage

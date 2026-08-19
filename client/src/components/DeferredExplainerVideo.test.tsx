@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from "react";
-import { act, render } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DeferredExplainerVideo } from "./DeferredExplainerVideo";
 
@@ -29,5 +29,13 @@ describe("DeferredExplainerVideo", () => {
 
     expect(container.querySelector("source")?.getAttribute("src")).toBe("/manus-storage/explainer.mp4");
     expect(container.querySelector("video")?.getAttribute("preload")).toBe("metadata");
+    expect(container.querySelector("video")?.className).toContain("homepage-media-video");
+    expect(container.querySelector(".homepage-media-surface")?.getAttribute("aria-busy")).toBe("true");
+    expect(container.querySelector(".homepage-media-loader")).toBeTruthy();
+
+    fireEvent.loadedData(container.querySelector("video")!);
+
+    expect(container.querySelector(".homepage-media-surface")?.className).toContain("is-ready");
+    expect(container.querySelector(".homepage-media-surface")?.getAttribute("aria-busy")).toBe("false");
   });
 });
