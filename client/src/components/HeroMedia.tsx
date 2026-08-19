@@ -6,12 +6,21 @@ type HeroMediaProps = { poster?: string; alt: string };
 
 export default function HeroMedia({ alt }: HeroMediaProps) {
   const [videoFailed, setVideoFailed] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
 
   return (
     <div className="hero-media absolute inset-0 overflow-hidden select-none pointer-events-none" aria-label={alt}>
+      <img
+        className="hero-media-poster h-full w-full"
+        src={HERO_POSTER_URL}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchPriority="high"
+      />
       {HERO_VIDEO_URL && !videoFailed && (
         <video
-          className="hero-media-video h-full w-full"
+          className={`hero-media-video h-full w-full${videoReady ? " is-ready" : ""}`}
           autoPlay
           muted
           loop
@@ -23,6 +32,7 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
           tabIndex={-1}
           disablePictureInPicture
           controlsList="nodownload noplaybackrate"
+          onLoadedData={() => setVideoReady(true)}
           onError={() => setVideoFailed(true)}
         >
           <source src={HERO_VIDEO_URL} type="video/mp4" />

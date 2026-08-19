@@ -369,3 +369,7 @@
 - [x] Continue safe hardening: audit authenticated-route failure boundaries, deferred-route recovery, and public asset resilience without initiating Clerk authentication or touching protected automation services
 - [x] Continue safe hardening: implement and test only reproducible accessibility or resilience fixes found in the bounded audit
 - [x] Continue safe hardening: run full verification, publish the safe fixes, and document any remaining user-controlled authentication follow-up
+- [x] Defer the verified Clerk `www.hsndm.tech` allowed-subdomain configuration at the user’s request; preserve the safe dashboard recovery state for later completion
+- [x] Finalize non-Clerk production verification for the current live Render release and record the exact deferred passwordless-authentication follow-up
+- [x] Diagnose the user-reported live rendering failures across public and dashboard routes, then patch only reproducible defects
+- [x] Validate and publish the rendering-repair release with responsive route checks and regression coverage

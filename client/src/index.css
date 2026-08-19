@@ -102,9 +102,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .mobile-nav { display: none; }
 
 .hero { min-height: 610px; position: relative; background: #fff; color: var(--ink); isolation: isolate; }
-.hero-media { z-index: -3; background: #fff; }
+.hero-media { z-index: -3; background: #eeebe4; }
 .hero-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.12) 47%, rgba(255,255,255,.04) 100%); pointer-events: none; }
-.hero-media-video { display: block; object-fit: contain; object-position: center; opacity: 1; filter: saturate(.94) contrast(1.18) brightness(.96); }
+.hero-media-poster { display: block; object-fit: contain; object-position: center; }
+.hero-media-video { display: block; object-fit: contain; object-position: center; opacity: 0; filter: saturate(.94) contrast(1.18) brightness(.96); transition: opacity 180ms cubic-bezier(.23,1,.32,1); }
+.hero-media-video.is-ready { opacity: 1; }
 .hero-structure { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .28; }
 .hero-grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(21,21,21,.12); }
 .hero-grid-line.one { left: calc((100% - min(100% - 40px, 1272px))/2 + 150px); }
@@ -377,4 +379,12 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 @media (max-width: 680px) {
   .site-shell :is(.split-layout, .detail-layout) { padding-block: var(--section-space-mobile); }
   .site-shell .plan-featured { box-shadow: 0 8px 20px rgba(21,21,21,.15), 0 0 0 1px rgba(229,72,42,.42); }
+}
+
+/* Keep the poster visible on every breakpoint until the video has decoded a frame. */
+.hero-media-video { opacity: 0; }
+.hero-media-video.is-ready { opacity: 1; }
+@media (max-width: 680px) {
+  .hero-media { background: #eeebe4; }
+  .hero-media-video.is-ready { opacity: .9; }
 }

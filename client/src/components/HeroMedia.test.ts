@@ -20,8 +20,11 @@ describe("HeroMedia", () => {
     expect(component).toContain('disablePictureInPicture');
     expect(component).toContain('preload="metadata"');
     expect(component).toContain("poster={HERO_POSTER_URL}");
+    expect(component).toContain('className="hero-media-poster h-full w-full"');
+    expect(component).toContain('fetchPriority="high"');
+    expect(component).toContain('onLoadedData={() => setVideoReady(true)}');
     expect(component).toContain('controls={false}');
-    expect(component).toContain('className="hero-media-video h-full w-full"');
+    expect(component).toContain('hero-media-video h-full w-full${videoReady ? " is-ready" : ""}');
     expect(component).toContain('onError={() => setVideoFailed(true)}');
     expect(component).not.toContain('prefers-reduced-motion: no-preference');
     expect(component).not.toContain('min-width: 768px');
