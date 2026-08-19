@@ -380,3 +380,6 @@
 - [x] Stage 2: repair the highest-impact verified mobile ATS or contact-entry issue without enabling an unverified AI chatbot
 - [x] Stage 3: audit remaining public-site rendering, navigation, media, and route-recovery defects across desktop and mobile
 - [x] Stage 4: validate staged repairs with tests, 375px screenshots, live-route checks, and publish the verified release
+- [x] Audit current WhatsApp fallback message generation and public route context for bilingual page-aware messages
+- [x] Implement page-aware bilingual WhatsApp pre-filled messages without adding personal data or enabling the unverified AI widget
+- [x] Validate and publish the page-aware WhatsApp fallback enhancement
