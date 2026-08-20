@@ -417,3 +417,10 @@
 - [x] Audit SPF, DKIM, DMARC alignment, Brevo sender-domain status, and available message delivery evidence for apply@hsndm.tech
 - [x] Apply only verified sender-authentication and deliverability improvements without breaking Cloudflare Email Routing
 - [x] Verify the final DNS/authentication state with a post-propagation Brevo delivery re-test and document safe sender-reputation practices for future campaign email; Brevo recorded the controlled Gmail test as delivered
+
+## Three-Client Application Sender Package
+
+- [x] Define and implement clients.csv, client_id job mapping, validated per-client PDF attachment handling, and client-name templating without AI-generated claims
+- [x] Preserve sender determinism, MX validation, tracking deduplication, bounded per-identity sending, and opt-out text in the corrected sender script
+- [x] Add a reviewed GitHub Actions workflow, example files, and setup guidance without sending any application email during validation
+- [x] Run non-sending validation for data mappings, attachment failures, deduplication, and workflow syntax
