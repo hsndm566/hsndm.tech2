@@ -265,7 +265,7 @@ export default function ArabicHome() {
             <div className="section-kicker"><Send size={15} /> شاهد كيف تعمل الخدمة</div>
             <h2 id="arabic-video-explainer-heading">30 ثانية فقط، <i>وهذا يكفي لفهمها.</i></h2>
             <DeferredExplainerVideo src={ARABIC_EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media pointer-events-none select-none" ariaLabel="فيديو توضيحي لخدمة AutoApply SA" unavailableLabel="فيديو AutoApply SA التوضيحي غير متاح حالياً؛ خطوات الخدمة ما زالت متاحة" />
-            <p>هذا ما يعمل بينما تتابع يومك.</p>
+            <p>تستمر عمليات الحملة ضمن خطتك المعتمدة فقط.</p>
             <div className="mt-4 sm:hidden">
               <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
                 ارفع سيرتك الذاتية الآن ←
@@ -314,7 +314,7 @@ export default function ArabicHome() {
 
         <section id="location" className="location-section section-fog"><div className="page-frame location-grid"><div className="location-copy"><div className="section-kicker"><Globe2 size={15} /> جدة، السعودية</div><h2>مُركّز على السعودية.<br /><i>مقرّه في جدة.</i></h2><p className="section-summary">AutoApply SA مقرّها في جدة، وتخدم المرشحين الباحثين عن وظائف في جميع أنحاء المملكة العربية السعودية.</p><div className="location-actions"><a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">الاتجاهات <ArrowUpRight size={18} /></a><Link className="text-button" href="/ar/enquire">ابدأ عن بُعد <MoveLeft size={18} /></Link></div></div>          <div className="map-frame"><JeddahLocationCard className="location-map-canvas" language="ar" /><div className="map-caption"><span><StatusDot /> قاعدة الخدمة</span><b>جدة / السعودية</b></div></div></div></section>
 
-        <section className="final-cta section-accent"><div className="page-frame final-inner"><div><div className="eyebrow dark"><StatusDot tone="quiet" /> ابدأ حملة جديدة</div><h2>اجعل وظيفتك القادمة<br /><i>خطوتك التالية.</i></h2></div><div className="final-action"><p>تواصل مباشرة مع حسن لإعداد الحملة، وتفاصيل الدفع، وأفضل طريقة لمشاركة سيرتك الذاتية.</p><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link></div></div></section>
+        <section className="final-cta section-accent"><div className="page-frame final-inner"><div><div className="eyebrow dark"><StatusDot tone="quiet" /> ابدأ حملة جديدة</div><h2>اجعل وظيفتك القادمة<br /><i>خطوتك التالية.</i></h2></div><div className="final-action"><p>تواصل مباشرة مع حسن لإعداد الحملة، وتفاصيل الدفع، وأفضل طريقة لمشاركة سيرتك الذاتية.</p><Link className="button button-ink" href="/ar/enquire">جهّز ملخص حملتك <ArrowUpRight size={18} /></Link></div></div></section>
       </main>
 
       <div className="mobile-campaign-cta"><Link href="/ar/enquire"><span><StatusDot /> ابدأ حملة جديدة</span><b>ابدأ الآن <ArrowUpRight size={17} /></b></Link></div>

@@ -497,3 +497,14 @@
 - [x] Clarify the homepage hero and primary campaign messaging so campaign activity is visibly approval-led, pausable, and fully logged
 - [x] Assess and implement safe authentication availability monitoring and evidence-led application-log resilience without fabricating candidate data
 - [x] Add focused regressions, run full validation, publish the staged reliability release, and document verified outcomes
+
+## Dashboard Authentication, Performance, and Control Enhancements
+
+- [ ] Diagnose the live Clerk publishable-key, provider origin, callback, network, and deployment paths that cause dashboard initialization to time out
+- [ ] Add a clearly labeled urgent campaign-pause recovery action with bilingual WhatsApp/email handoff and no unsupported promise of instantaneous automatic campaign changes
+- [ ] Align secondary automation language with approval-led campaign operations in English and Arabic
+- [ ] Add an indicative-capacity clarification under pricing and clarify that campaign briefs open a contact handoff without transmitting a CV automatically
+- [ ] Audit and improve mobile loading of the English, Arabic, and campaign-intake routes through safe code and media deferral
+- [ ] Select and configure authentication availability monitoring with a clear alert destination and a privacy-safe health signal
+- [ ] Implement the user-selected proactive monitor for auth readiness and Clerk bootstrap, retaining no candidate data and routing failures to hasanadam506@gmail.com plus the existing error-monitoring project
+- [ ] Add regressions, verify live and mobile behavior, and publish the completed enhancement release

@@ -85,7 +85,9 @@ describe("homepage clarity release", () => {
 
     expect(english).toContain("<HeroMedia alt=");
     ["Tailored", "Saudi", "applications,", "approval."].forEach(word => expect(english).toContain(`>${word}</span>`));
-    expect(english).toContain("Start your campaign");
+    expect(english).toContain("Prepare your campaign brief");
+    expect(english).toContain("Approved-plan operations — 24/7");
+    expect(english).toContain("Campaign operations continue only within your approved plan.");
     expect(english).toContain("500+");
     expect(arabic).toContain("<HeroMedia alt=");
     ["طلبات", "سعودية", "موافقتك."].forEach(word => expect(arabic).toContain(`>${word}</span>`));

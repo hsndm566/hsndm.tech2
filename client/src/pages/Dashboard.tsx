@@ -108,6 +108,7 @@ export default function Dashboard() {
       };
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
   const dashboardHelpMessage = encodeURIComponent("Hi AutoApply SA — I need help accessing my candidate dashboard or requesting a secure campaign report.");
+  const dashboardPauseMessage = encodeURIComponent("Hi AutoApply SA — I need to pause my campaign. Please confirm when the pause is effective. مرحباً AutoApply SA — أرغب في إيقاف حملتي. يرجى تأكيد وقت سريان الإيقاف.");
 
   useEffect(() => {
     if (!clerkDashboardEnabled || clerkAuth.isLoaded) return;
@@ -338,8 +339,11 @@ export default function Dashboard() {
             <a className="flex w-full items-center justify-center gap-2 border border-[#151515]/20 px-4 py-3 text-sm font-medium transition-colors hover:border-[#e5482a] hover:text-[#e5482a]" href={`https://wa.me/966571448656?text=${dashboardHelpMessage}`} target="_blank" rel="noreferrer">
               Request secure report help
             </a>
+            <a className="flex w-full items-center justify-center gap-2 border border-[#e5482a] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#9c2f1e] transition-colors hover:bg-[#fff0eb]" href={`https://wa.me/966571448656?text=${dashboardPauseMessage}`} target="_blank" rel="noreferrer">
+              Pause my campaign urgently / أوقف حملتي بشكل عاجل
+            </a>
             <a className="block text-center text-sm underline underline-offset-4" href="/campaign-report-sample">See how application evidence is recorded</a>
-            <p className="text-xs leading-5 text-[#151515]/60">For privacy, we do not display a report link on this public recovery screen. The team confirms your identity before sharing any campaign update.</p>
+            <p className="text-xs leading-5 text-[#151515]/60">For privacy, we do not display a report link on this public recovery screen. The team confirms your identity before sharing any campaign update or confirming that a campaign pause is effective.</p>
           </CardContent>
         </Card>
       </main>

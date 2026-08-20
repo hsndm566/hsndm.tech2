@@ -162,7 +162,7 @@ export default function Home() {
   const [briefShared, setBriefShared] = useState(false);
   const [briefStatus, setBriefStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [handoffBlocked, setHandoffBlocked] = useState(false);
-  const [latestActivityText, setLatestActivityText] = useState("Engine active — 24/7");
+  const [latestActivityText, setLatestActivityText] = useState("Approved-plan operations — 24/7");
 
   useEffect(() => {
     let activeRequest: AbortController | null = null;
@@ -187,13 +187,13 @@ export default function Home() {
             const diffMins = Math.floor(age / 60000);
             setLatestActivityText(`${diffMins === 0 ? "Just now" : `${diffMins} minutes ago`}`);
           } else {
-            setLatestActivityText("Engine active — 24/7");
+            setLatestActivityText("Approved-plan operations — 24/7");
           }
         } else {
-          setLatestActivityText("Engine active — 24/7");
+          setLatestActivityText("Approved-plan operations — 24/7");
         }
       } catch (error) {
-        if ((error as DOMException).name !== "AbortError") setLatestActivityText("Engine active — 24/7");
+        if ((error as DOMException).name !== "AbortError") setLatestActivityText("Approved-plan operations — 24/7");
       } finally {
         window.clearTimeout(timeout);
       }
@@ -474,7 +474,7 @@ export default function Home() {
                 We agree your role targets, volume, and timing first. Once you approve the campaign plan, AutoApply SA manages tailored Saudi job applications and records the evidence.
               </p>
               <div className="hero-actions">
-                <Link className="button button-ink" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
+                <Link className="button button-ink" href="/enquire">Prepare your campaign brief <ArrowDownRight size={18} /></Link>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
                   See how it works <MoveRight size={18} />
                 </button>
@@ -516,7 +516,7 @@ export default function Home() {
                 <div><strong>24/7</strong><span>Engine in motion</span></div>
                 <div><strong>2</strong><span>Languages supported</span></div>
               </div>
-              <p className="text-xs font-mono text-[#fbf9f5]/80 pt-1 border-t border-white/10">⚡ {latestActivityText.includes("Engine") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
+              <p className="text-xs font-mono text-[#fbf9f5]/80 pt-1 border-t border-white/10">⚡ {latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
             </div>
           </div>
         </section>
@@ -526,12 +526,12 @@ export default function Home() {
             <aside className="section-rail inverted">
               <RailLabel>02 / Workflow</RailLabel>
               <span className="rail-rule" />
-              <p>THREE MOVES. ZERO MANUAL APPLYING.</p>
+              <p>THREE MOVES. APPROVED PLAN.</p>
             </aside>
             <div className="workflow-main">
               <div className="section-kicker inverse"><Sparkles size={15} /> CLEAR BY DESIGN</div>
               <h2>Put the search <i>on a system.</i></h2>
-              <p className="section-summary inverse-summary">Start with the material you already have. Then let the engine turn it into a consistent application routine.</p>
+              <p className="section-summary inverse-summary">Start with the material you already have. Then agree the campaign plan before approved operations create a consistent application routine.</p>
               <div className="process-list">
                 <article className="process-item">
                   <div className="process-number">01</div>
@@ -569,7 +569,7 @@ export default function Home() {
             <DeferredExplainerVideo src={EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media" ariaLabel="AutoApply SA walkthrough video" unavailableLabel="AutoApply SA walkthrough video unavailable; service steps remain available">
               Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
             </DeferredExplainerVideo>
-            <p>Powered by AutoApply SA. This is what runs while you sleep.</p>
+            <p>Powered by AutoApply SA. Campaign operations continue only within your approved plan.</p>
             <div className="mt-4 sm:hidden">
               <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
                 Upload CV Now →
@@ -775,6 +775,7 @@ export default function Home() {
                   </article>
                 ))}
               </div>
+              <p className="mt-5 max-w-3xl text-sm leading-6 text-[#151515]/65">Indicative monthly capacity; final volume depends on your approved plan, role availability, quality checks, and employer channels.</p>
             </div>
           </div>
         </section>
@@ -841,7 +842,7 @@ export default function Home() {
             </div>
             <div className="final-action">
               <p>Reach Hasan directly for campaign setup, payment details, and the best way to share your CV.</p>
-              <Link className="button button-ink" href="/enquire">Start your campaign <ArrowUpRight size={18} /></Link>
+              <Link className="button button-ink" href="/enquire">Prepare your campaign brief <ArrowUpRight size={18} /></Link>
             </div>
           </div>
         </section>
@@ -858,7 +859,7 @@ export default function Home() {
             <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
             <span>AutoApply <em>SA</em></span>
           </a>
-          <p>Your 24/7 job application engine.<br />Jeddah built. Saudi focused.</p>
+          <p>Approval-led Saudi job-application campaigns.<br />Jeddah built. Saudi focused.</p>
           <a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a>
         </div>
         <div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="en" /></div>

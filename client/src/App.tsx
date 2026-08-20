@@ -26,24 +26,16 @@ const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
+const ClerkDashboardShell = lazy(() => import("@/components/ClerkDashboardShell").then((module) => ({ default: module.ClerkDashboardShell })));
 import { useLocation } from "wouter";
 import { isDashboardSubdomain } from "@/lib/subdomain";
-import { canUseClerkOnCurrentOrigin } from "@/lib/clerkOrigin";
-import { ClerkSessionBoundary } from "@/components/ClerkSessionBoundary";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 
-const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
-
-function ClerkProtectedRoute({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
-}
-
 function Router() {
   const [location, setLocation] = useLocation();
-  const clerkEnabled = Boolean(clerkPublishableKey) && canUseClerkOnCurrentOrigin() && (isDashboardSubdomain() || location.startsWith("/dashboard"));
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
@@ -62,8 +54,7 @@ function Router() {
   }, [location, setLocation]);
 
   return (
-    <ClerkSessionBoundary enabled={clerkEnabled} publishableKey={clerkPublishableKey}>
-      <>
+    <>
       <NativeVisualEnhancements routeKey={location} />
       <ErrorBoundary resetKey={location}>
       <Switch>
@@ -73,8 +64,8 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
-      <Route path="/dashboard/settings" component={() => <ClerkProtectedRoute><ProfileSettings /></ClerkProtectedRoute>} />
-      <Route path="/dashboard" component={() => <ClerkProtectedRoute><Dashboard /></ClerkProtectedRoute>} />
+      <Route path="/dashboard/settings" component={() => <ClerkDashboardShell><ProfileSettings /></ClerkDashboardShell>} />
+      <Route path="/dashboard" component={() => <ClerkDashboardShell><Dashboard /></ClerkDashboardShell>} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
       <Route path="/pricing" component={() => <PricingPage />} />
@@ -97,8 +88,7 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
       </ErrorBoundary>
-      </>
-    </ClerkSessionBoundary>
+    </>
   );
 }
 

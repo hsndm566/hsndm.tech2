@@ -13,6 +13,9 @@ describe("launch-readiness fallback contracts", () => {
     expect(boundarySource).toContain("RecoveryPanel");
     expect(recoverySource).toContain("No form or CV has been sent from this page.");
     expect(recoverySource).toContain("لم يُرسل أي نموذج أو سيرة ذاتية");
+    expect(recoverySource).toContain("Pause my campaign urgently");
+    expect(recoverySource).toContain("أوقف حملتي بشكل عاجل");
+    expect(recoverySource).toContain("We will confirm when the pause is effective");
   });
 
   it("ships no-JavaScript and independently generated fallback pages for the audited routes", () => {
