@@ -11,6 +11,8 @@ import { serveStatic, setupVite } from "./vite";
 import { createAuthenticationReadinessPayload, createDatabaseHealthPayload, createHealthPayload } from "../health";
 import { isTrustedCorsOrigin } from "../cors";
 import { normalizeLatestActivityTimestamp } from "../latestActivity";
+import { AUTH_MONITOR_PATH, runDashboardAuthMonitor } from "../authMonitor";
+import { sdk } from "./sdk";
 
 async function startServer() {
   const app = express();
@@ -93,6 +95,17 @@ async function startServer() {
   app.get("/api/client-config/sentry", (_req, res) => {
     res.setHeader("Cache-Control", "no-store");
     res.status(200).json({ dsn: process.env.SENTRY_DSN || null });
+  });
+
+  app.post(AUTH_MONITOR_PATH, async (req, res) => {
+    try {
+      const user = await sdk.authenticateRequest(req as never);
+      if (!user.isCron || !user.taskUid) return res.status(403).json({ error: "cron-only" });
+      const result = await runDashboardAuthMonitor(user.taskUid);
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ error: "dashboard-auth-monitor-failed", timestamp: Date.now(), context: { path: AUTH_MONITOR_PATH } });
+    }
   });
   registerStorageProxy(app);
   registerOAuthRoutes(app);

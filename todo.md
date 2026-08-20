@@ -500,11 +500,13 @@
 
 ## Dashboard Authentication, Performance, and Control Enhancements
 
-- [ ] Diagnose the live Clerk publishable-key, provider origin, callback, network, and deployment paths that cause dashboard initialization to time out
-- [ ] Add a clearly labeled urgent campaign-pause recovery action with bilingual WhatsApp/email handoff and no unsupported promise of instantaneous automatic campaign changes
-- [ ] Align secondary automation language with approval-led campaign operations in English and Arabic
-- [ ] Add an indicative-capacity clarification under pricing and clarify that campaign briefs open a contact handoff without transmitting a CV automatically
-- [ ] Audit and improve mobile loading of the English, Arabic, and campaign-intake routes through safe code and media deferral
-- [ ] Select and configure authentication availability monitoring with a clear alert destination and a privacy-safe health signal
-- [ ] Implement the user-selected proactive monitor for auth readiness and Clerk bootstrap, retaining no candidate data and routing failures to hasanadam506@gmail.com plus the existing error-monitoring project
-- [ ] Add regressions, verify live and mobile behavior, and publish the completed enhancement release
+- [x] Diagnose the live Clerk publishable-key, provider origin, callback, network, and deployment paths that cause dashboard initialization to time out
+- [x] Add a clearly labeled urgent campaign-pause recovery action with bilingual WhatsApp/email handoff and no unsupported promise of instantaneous automatic campaign changes
+- [x] Align secondary automation language with approval-led campaign operations in English and Arabic
+- [x] Add an indicative-capacity clarification under pricing and clarify that campaign briefs open a contact handoff without transmitting a CV automatically
+- [x] Audit and improve mobile loading of the English, Arabic, and campaign-intake routes through safe code and media deferral
+- [x] Select and configure authentication availability monitoring with a clear alert destination and a privacy-safe health signal
+- [x] Implement the user-selected proactive monitor for auth readiness and Clerk bootstrap, retaining no candidate data and routing failures to hasanadam506@gmail.com plus the existing error-monitoring project
+- [x] Route privacy-safe monitor faults to the existing Sentry project and retry the read-only Brevo credential validation after the user-authorized IP update; the invalid web-project key remains safely unused while the active GitHub monitor uses its separate configured repository secret
+- [x] Implement the proactive auth monitor in hsndm566/autoapply-sa using its existing BREVO_API_KEY GitHub Actions secret, with technical-only owner alerts and no secret duplication
+- [x] Add regressions, verify live and mobile behavior, and publish the completed enhancement release
