@@ -477,3 +477,13 @@
 - [x] Run and independently verify one bounded live batch only after the selected clients, PDFs, senders, recipient validation, and preflight checks succeed; eight Brevo requests were accepted and two transport-uncertain recipients were suppressed without retry
 - [x] Report sent, skipped, bounce/API, Brevo delivery-event, and tracking evidence after the bounded warm-up
 - [x] Maintain a temporary 30-second local status heartbeat for the active one-time warm-up process without scheduling any additional delivery work
+
+## Scheduled Clients 2 and 3 Delivery
+
+- [x] Inspect the current GitHub Actions schedule, client activation rules, and required repository secrets before enabling scheduled real delivery
+- [x] Configure the repository BREVO_API_KEY Actions secret; the user confirmed it is set, while the configured GitHub integration still cannot list secrets, so the published workflow verifies credential presence before any delivery
+- [x] Implement persistent scheduled selection for future untracked client 2/3 jobs because the current ten assigned rows are fully tracked after the completed warm-up
+- [x] Ensure GitHub Actions can persist accepted and uncertain suppression outcomes to tracking.csv before enabling scheduled real delivery
+- [x] Configure the 06:00 and 18:00 UTC workflow to invoke the capped live dispatcher for only clients 2 and 3 without a manual dispatch
+- [x] Validate, commit, and push the scheduled-delivery configuration without triggering the workflow
+- [x] Confirm the 20-per-day maximum, client 1 block, persistent exclusions, safety controls, and inactive background observer state
