@@ -574,6 +574,13 @@
 - [x] Add small, design-consistent visual refinements that preserve existing layout, content, pricing, dashboard behavior, and campaign setup
 - [x] Validate the refinements on mobile and production build before publication
 
+## Candidate Analytics and Onboarding
+
+- [x] Define and add a candidate-scoped, consent-friendly analytics summary using only evidence-backed application metrics
+- [x] Add a dashboard onboarding checklist that clearly guides new candidates through the campaign setup process
+- [x] Add regression coverage and verify analytics and onboarding behavior on mobile before publication
+- [x] Correct the reproduced component-test React runtime import error in the new analytics and onboarding components
+
 ## Portal-Wide Client Hydration Repair
 
 - [x] Repair the reproduced Clerk chunk runtime error (`Cannot set properties of undefined (setting 'Activity')`) that prevents the public React entry from hydrating by updating React and React DOM to Clerk’s required React 19.2.3 compatibility floor

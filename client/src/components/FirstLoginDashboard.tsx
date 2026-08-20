@@ -18,6 +18,8 @@ import { CampaignStartApprovalChecklist, type CampaignApprovalDraft } from "@/co
 import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import { CampaignActionCenter } from "@/components/CampaignActionCenter";
 import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
+import { CandidateOnboardingChecklist } from "@/components/CandidateOnboardingChecklist";
+import { CandidateAnalyticsSummary } from "@/components/CandidateAnalyticsSummary";
 import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -191,11 +193,15 @@ export function FirstLoginDashboard({ identity, onSignOut, profileDefaults, appr
             </div>
 
             <div className="mt-7">
+              <CandidateAnalyticsSummary applications={[]} evidence={[]} />
+            </div>
+
+            <div className="mt-7">
               <CampaignManagementBoard hasCandidateApproval={Boolean(approval?.authorizationConfirmed)} isArabic={isArabic} isLoading={approvalLoading} verifiedEvidenceCount={0} />
             </div>
 
             <section aria-label="Campaign launch details" className="mt-7 grid gap-7 xl:grid-cols-[1.55fr_1fr]">
-              <LaunchChecklist completed={checklist.completed} copy={copy} isArabic={isArabic} total={checklist.total} />
+              <CandidateOnboardingChecklist applications={[]} approval={approval} evidence={[]} isArabic={isArabic} profile={profileDefaults} />
               <ProofFirstCard copy={copy} isArabic={isArabic} />
             </section>
 

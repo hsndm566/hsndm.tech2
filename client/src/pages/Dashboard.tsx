@@ -24,6 +24,8 @@ import { CampaignEvidenceGuide } from "@/components/CampaignEvidenceGuide";
 import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import { CampaignActionCenter } from "@/components/CampaignActionCenter";
 import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
+import { CandidateAnalyticsSummary } from "@/components/CandidateAnalyticsSummary";
+import { CandidateOnboardingChecklist } from "@/components/CandidateOnboardingChecklist";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 import { captureClientReliabilitySignal } from "@/lib/sentryTelemetry";
 
@@ -676,6 +678,10 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            <CandidateAnalyticsSummary applications={applications} evidence={evidence} />
+
+            <CandidateOnboardingChecklist applications={applications} approval={campaignApproval} evidence={evidence} profile={profile} />
 
             <CampaignPlanSummary approval={campaignApproval} profile={profile} />
 
