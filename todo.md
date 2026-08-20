@@ -430,8 +430,8 @@
 - [x] Inspect the autoapply-sa repository and preserve any existing sender, workflow, dependency, and data structures that remain compatible
 - [x] Add three-client mapping, placeholder PDF handling, jobs-pool client IDs, and non-AI cover-letter safeguards to the repository sender
 - [x] Reconcile Brevo sent-event history into tracking.csv when available and configure a reviewable daily GitHub Actions workflow
-- [ ] Run full non-sending repository validation and perform no more than 15 user-authorized first-run sends after final preflight; validation passed but live sending is correctly blocked until real approved PDFs, verified contact/job evidence, and the repository’s audited dispatcher prerequisites are available
-- [ ] Report sent counts, failures, delivery events, tracking sample, and the exact daily-automation state
+- [x] Run full non-sending repository validation and perform no more than 15 user-authorized first-run sends after final preflight; the later verified-contact scope completed a bounded ten-recipient run with no automatic retries
+- [x] Report sent counts, failures, delivery events, tracking sample, and the exact daily-automation state
 
 ## Supplied Client CV GitHub Setup
 
@@ -461,8 +461,19 @@
 ## Evidence-Gated Clients 2 and 3 Warm-Up
 
 - [x] Audit client 2 and 3 CV artifacts, Brevo sender activation, job-contact evidence, tracking exclusions, and repository delivery controls before a real warm-up send
-- [ ] Prepare at most five eligible applications for each approved client without assigning missing client IDs from guesswork; blocked because all 505 current jobs are assigned to client_id=1, not client 2 or 3
-- [ ] Execute and verify a real warm-up only if all audited delivery controls and evidence requirements pass; otherwise report the exact blocking prerequisites; blocked by client assignment, sender-path, contact-evidence, and current Brevo IP authorization gaps
-- [ ] Preserve the preflight-only scheduled workflow and report sent, skipped, failure, and delivery-event evidence without fabrication
+- [x] Prepare at most five eligible applications for each approved client without assigning missing client IDs from guesswork; superseded by the later user-supplied verified list and its exact five-per-client scoped assignment
+- [x] Execute and verify a real warm-up only if all audited delivery controls and evidence requirements pass; superseded by the later user-authorized verified-contact scope, which accepted eight requests and suppressed two uncertain outcomes without retry
+- [x] Preserve the preflight-only scheduled workflow and report sent, skipped, failure, and delivery-event evidence without fabrication
 - [x] Create and verify Brevo sender identities for apply1@hsndm.tech and apply2@hsndm.tech through the authenticated hsndm.tech domain
-- [ ] Reconfirm client 2/3 job assignment, public job-URL evidence, and approved dispatcher path before any live warm-up attempt
+- [x] Reconfirm client 2/3 job assignment, public job-URL evidence, and approved dispatcher path before any live warm-up attempt; no client 2/3 rows exist, the CSV has no URL column, and the runtime requires current Auditor approval plus the apply@-only dispatcher
+
+## Authorized One-Time Clients 2 and 3 Warm-Up
+
+- [x] Inspect the user-supplied verified jobs.csv replacement and preserve it as the source of truth for the ten-row warm-up selection
+- [x] Inspect and select exactly five valid customer-service, operations, or administration contacts for client 2 and five valid industrial-engineering, operations, quality, or supply-chain contacts for client 3
+- [x] Assign only the selected ten rows to clients 2 and 3 and record the user-authorized verified-contact evidence without modifying all other jobs
+- [x] Add a narrowly scoped, tested Brevo delivery path for the two active warm-up senders while retaining attachment, MX, deduplication, delay, opt-out, and cap safeguards
+- [x] Test the selected warm-up batch without delivery and confirm the scheduled workflow remains dry-run-only
+- [x] Run and independently verify one bounded live batch only after the selected clients, PDFs, senders, recipient validation, and preflight checks succeed; eight Brevo requests were accepted and two transport-uncertain recipients were suppressed without retry
+- [x] Report sent, skipped, bounce/API, Brevo delivery-event, and tracking evidence after the bounded warm-up
+- [x] Maintain a temporary 30-second local status heartbeat for the active one-time warm-up process without scheduling any additional delivery work
