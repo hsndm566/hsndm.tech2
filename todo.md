@@ -411,3 +411,9 @@
 
 - [x] Audit the hsndm.tech Cloudflare zone, Email Routing readiness, forwarding rules, verified destination, and public/root MX records for the three apply aliases
 - [x] Repair only a confirmed Cloudflare Email Routing rule, destination, or DNS configuration issue and re-verify readiness; no configuration fault was found, so no change was required
+
+## Outbound Deliverability and Reputation
+
+- [x] Audit SPF, DKIM, DMARC alignment, Brevo sender-domain status, and available message delivery evidence for apply@hsndm.tech
+- [x] Apply only verified sender-authentication and deliverability improvements without breaking Cloudflare Email Routing
+- [ ] Verify the final DNS/authentication state with a post-propagation Brevo delivery re-test and document safe sender-reputation practices for future campaign email; temporarily blocked until Brevo authorizes the current client IP
