@@ -13,5 +13,7 @@ describe("dashboard-only Clerk loading", () => {
     expect(dashboardShell).toContain("canUseClerkOnCurrentOrigin");
     expect(viteConfig).not.toContain('if (id.includes("@clerk")) return "clerk-auth"');
     expect(viteConfig).not.toContain('dependency.includes("clerk-auth")');
+    expect(appSource).toContain("function DashboardHostRedirectGate");
+    expect(appSource.indexOf("<DashboardHostRedirectGate>")).toBeLessThan(appSource.indexOf("<Suspense fallback="));
   });
 });

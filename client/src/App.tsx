@@ -34,20 +34,29 @@ import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 
-function Router() {
-  const [location, setLocation] = useLocation();
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const dashboardHostRedirect = getDashboardHostRedirect({
+function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  const dashboardHostRedirect = typeof window === "undefined"
+    ? null
+    : getDashboardHostRedirect({
         hostname: window.location.hostname,
         pathname: location,
         search: window.location.search,
         hash: window.location.hash,
       });
-      if (dashboardHostRedirect) {
-        window.location.replace(dashboardHostRedirect);
-        return;
-      }
+
+  useEffect(() => {
+    if (dashboardHostRedirect) window.location.replace(dashboardHostRedirect);
+  }, [dashboardHostRedirect]);
+
+  if (dashboardHostRedirect) return <RecoveryPanel loading arabic={location.startsWith("/ar")} />;
+  return <>{children}</>;
+}
+
+function Router() {
+  const [location, setLocation] = useLocation();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
         setLocation("/dashboard");
         return;
@@ -110,9 +119,11 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
-          <Suspense fallback={<RecoveryPanel loading arabic={window.location.pathname.startsWith("/ar")} />}>
-            <Router />
-          </Suspense>
+          <DashboardHostRedirectGate>
+            <Suspense fallback={<RecoveryPanel loading arabic={window.location.pathname.startsWith("/ar")} />}>
+              <Router />
+            </Suspense>
+          </DashboardHostRedirectGate>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

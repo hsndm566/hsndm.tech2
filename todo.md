@@ -528,6 +528,11 @@
 - [x] Route www.hsndm.tech dashboard entry paths to the already Clerk-accepted dashboard.hsndm.tech host without altering public canonical URLs or Clerk security settings
 - [ ] Add regression coverage for the dashboard-host redirect and validate live first-party Clerk bootstrap behavior
 
+## Dashboard Redirect Suspension Repair
+
+- [x] Move the www dashboard-host redirect into a committed pre-suspense gate so it executes before the lazy Clerk dashboard route can suspend
+- [ ] Add a regression proving protected redirects do not depend on a lazy dashboard component resolving, then verify live redirection and Clerk bootstrap
+
 ## Portal-Wide Client Hydration Repair
 
 - [x] Repair the reproduced Clerk chunk runtime error (`Cannot set properties of undefined (setting 'Activity')`) that prevents the public React entry from hydrating by updating React and React DOM to Clerk’s required React 19.2.3 compatibility floor
