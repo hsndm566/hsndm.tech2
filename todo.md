@@ -510,3 +510,20 @@
 - [x] Route privacy-safe monitor faults to the existing Sentry project and retry the read-only Brevo credential validation after the user-authorized IP update; the invalid web-project key remains safely unused while the active GitHub monitor uses its separate configured repository secret
 - [x] Implement the proactive auth monitor in hsndm566/autoapply-sa using its existing BREVO_API_KEY GitHub Actions secret, with technical-only owner alerts and no secret duplication
 - [x] Add regressions, verify live and mobile behavior, and publish the completed enhancement release
+
+## Authorized Clerk Allowlist Repair
+
+- [x] Validate the user-supplied Clerk production credential using a read-only instance request without logging the credential
+- [x] Discover whether Clerk exposes a supported API for the production subdomain allowlist and add www.hsndm.tech only if the official API supports the mutation; Clerk’s documented Backend API exposes browser-style allowed origins but not the production FAPI subdomain allowlist, so no unsupported mutation was attempted
+- [x] Superseded by the independent dashboard-host recovery: Clerk continues to reject www.hsndm.tech because its dashboard-only allowlist cannot be updated with the supplied Backend API key, while dashboard.hsndm.tech accepts the same bootstrap and is now the protected-entry host
+- [ ] Run focused dashboard regressions and publish only if source changes are needed
+
+## Independent Clerk Remediation Investigation
+
+- [x] Inspect official Clerk-supported credential-backed and version-control configuration paths for the production FAPI allowed-subdomains setting without relying on a browser dashboard session; no supported non-interactive API, CLI, or configuration-as-code route controls this dashboard-only setting
+- [x] Apply only a documented precise configuration update if an independent route exists, then verify the live www.hsndm.tech bootstrap response; no unsupported provider mutation was attempted, and the accepted dashboard first-party hostname was confirmed instead
+
+## Dashboard Host Authentication Recovery
+
+- [x] Route www.hsndm.tech dashboard entry paths to the already Clerk-accepted dashboard.hsndm.tech host without altering public canonical URLs or Clerk security settings
+- [ ] Add regression coverage for the dashboard-host redirect and validate live first-party Clerk bootstrap behavior

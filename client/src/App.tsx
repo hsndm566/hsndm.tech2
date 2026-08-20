@@ -28,7 +28,7 @@ const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
 const ClerkDashboardShell = lazy(() => import("@/components/ClerkDashboardShell").then((module) => ({ default: module.ClerkDashboardShell })));
 import { useLocation } from "wouter";
-import { isDashboardSubdomain } from "@/lib/subdomain";
+import { getDashboardHostRedirect, isDashboardSubdomain } from "@/lib/subdomain";
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
@@ -38,6 +38,16 @@ function Router() {
   const [location, setLocation] = useLocation();
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const dashboardHostRedirect = getDashboardHostRedirect({
+        hostname: window.location.hostname,
+        pathname: location,
+        search: window.location.search,
+        hash: window.location.hash,
+      });
+      if (dashboardHostRedirect) {
+        window.location.replace(dashboardHostRedirect);
+        return;
+      }
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
         setLocation("/dashboard");
         return;
