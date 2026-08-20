@@ -399,5 +399,5 @@
 - [x] Audit current Cloudflare Email Routing status, email DNS records, destination addresses, and available Brevo access for hsndm.tech
 - [x] Enable Cloudflare Email Routing and create apply@hsndm.tech, apply1@hsndm.tech, and apply2@hsndm.tech forwarding rules to hasanadam506@gmail.com
 - [x] Add or safely merge the required Cloudflare Email Routing MX and SPF DNS records without disrupting existing mail authentication
-- [ ] Configure and verify Brevo sender-domain authentication records for hsndm.tech when valid Brevo API access is available; blocked because no Brevo API credential or configured Brevo connector exists
+- [x] Configure and verify Brevo sender-domain authentication records for hsndm.tech using the secured reusable Brevo API connector and account-specific DNS records
 - [x] Verify final Cloudflare DNS and routing-rule status; document any remaining Brevo credential requirement separately
