@@ -424,3 +424,17 @@
 - [x] Preserve sender determinism, MX validation, tracking deduplication, bounded per-identity sending, and opt-out text in the corrected sender script
 - [x] Add a reviewed GitHub Actions workflow, example files, and setup guidance without sending any application email during validation
 - [x] Run non-sending validation for data mappings, attachment failures, deduplication, and workflow syntax
+
+## autoapply-sa Repository Sender Setup
+
+- [x] Inspect the autoapply-sa repository and preserve any existing sender, workflow, dependency, and data structures that remain compatible
+- [x] Add three-client mapping, placeholder PDF handling, jobs-pool client IDs, and non-AI cover-letter safeguards to the repository sender
+- [x] Reconcile Brevo sent-event history into tracking.csv when available and configure a reviewable daily GitHub Actions workflow
+- [ ] Run full non-sending repository validation and perform no more than 15 user-authorized first-run sends after final preflight; validation passed but live sending is correctly blocked until real approved PDFs, verified contact/job evidence, and the repository’s audited dispatcher prerequisites are available
+- [ ] Report sent counts, failures, delivery events, tracking sample, and the exact daily-automation state
+
+## Supplied Client CV GitHub Setup
+
+- [x] Validate the two supplied CV PDFs, map them to client 2 and client 3, and commit them to autoapply-sa without enabling sends
+- [x] Keep client 1 blocked pending a real approved PDF and re-run the repository’s non-sending validations after the mapping update
+- [x] Push the completed GitHub-side configuration and report the exact remaining audited-delivery prerequisites
