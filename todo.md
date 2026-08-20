@@ -383,3 +383,9 @@
 - [x] Audit current WhatsApp fallback message generation and public route context for bilingual page-aware messages
 - [x] Implement page-aware bilingual WhatsApp pre-filled messages without adding personal data or enabling the unverified AI widget
 - [x] Validate and publish the page-aware WhatsApp fallback enhancement
+- [x] Verify the requested OpenSEO MCP endpoint, authentication model, and supported connector configuration
+- [x] Install the OpenSEO MCP connector using the approved project configuration workflow
+- [x] Verify the OpenSEO MCP tool catalog and record any user authorization follow-up
+- [x] Collect live crawlability, indexability, on-page, and OpenSEO audit evidence for www.hsndm.tech
+- [x] Analyze verified SEO findings and select the top three ranking priorities by expected impact and effort
+- [x] Deliver the evidence-backed SEO audit summary and top-three improvement plan
