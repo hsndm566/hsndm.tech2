@@ -451,3 +451,9 @@
 - [x] Append the 12 supplied historical recipients to autoapply-sa tracking.csv only when missing, preserving the 505 existing jobs
 - [x] Verify three client mappings, CV readiness, and the preflight-only workflow without running the sender
 - [x] Push the tracking-only update and report final counts before any separately approved warm-up run
+
+## Dynamic Client-Driven Sender
+
+- [x] Remove fixed client-count and sender-list assumptions from send_applications.py while retaining client-specific CSV/CV validation
+- [x] Add regression coverage for arbitrary client IDs and sender identities, missing CV handling, and client-specific letter identity
+- [x] Verify the workflow remains preflight-only, push the refactor, and document the precise files needed to add a client
