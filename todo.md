@@ -457,3 +457,12 @@
 - [x] Remove fixed client-count and sender-list assumptions from send_applications.py while retaining client-specific CSV/CV validation
 - [x] Add regression coverage for arbitrary client IDs and sender identities, missing CV handling, and client-specific letter identity
 - [x] Verify the workflow remains preflight-only, push the refactor, and document the precise files needed to add a client
+
+## Evidence-Gated Clients 2 and 3 Warm-Up
+
+- [x] Audit client 2 and 3 CV artifacts, Brevo sender activation, job-contact evidence, tracking exclusions, and repository delivery controls before a real warm-up send
+- [ ] Prepare at most five eligible applications for each approved client without assigning missing client IDs from guesswork; blocked because all 505 current jobs are assigned to client_id=1, not client 2 or 3
+- [ ] Execute and verify a real warm-up only if all audited delivery controls and evidence requirements pass; otherwise report the exact blocking prerequisites; blocked by client assignment, sender-path, contact-evidence, and current Brevo IP authorization gaps
+- [ ] Preserve the preflight-only scheduled workflow and report sent, skipped, failure, and delivery-event evidence without fabrication
+- [x] Create and verify Brevo sender identities for apply1@hsndm.tech and apply2@hsndm.tech through the authenticated hsndm.tech domain
+- [ ] Reconfirm client 2/3 job assignment, public job-URL evidence, and approved dispatcher path before any live warm-up attempt
