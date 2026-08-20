@@ -438,3 +438,16 @@
 - [x] Validate the two supplied CV PDFs, map them to client 2 and client 3, and commit them to autoapply-sa without enabling sends
 - [x] Keep client 1 blocked pending a real approved PDF and re-run the repository’s non-sending validations after the mapping update
 - [x] Push the completed GitHub-side configuration and report the exact remaining audited-delivery prerequisites
+
+## Shared Sender Baseline Reset
+
+- [ ] Replace the autoapply-sa client records and CV artifacts with the confirmed three-placeholder shared baseline without sending email
+- [ ] Replace jobs.csv with the requested empty schema and seed tracking.csv with the 12 user-supplied do-not-contact records
+- [ ] Retain a non-sending sender and daily workflow, validate the baseline without execution, and push it to GitHub
+- [ ] Report the committed repository URL and final sender file tree
+
+## Tracking-Only Warm-Up Preparation
+
+- [x] Append the 12 supplied historical recipients to autoapply-sa tracking.csv only when missing, preserving the 505 existing jobs
+- [x] Verify three client mappings, CV readiness, and the preflight-only workflow without running the sender
+- [x] Push the tracking-only update and report final counts before any separately approved warm-up run
