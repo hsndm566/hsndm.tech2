@@ -33,7 +33,7 @@ export default function ArabicEnquire() {
   useEffect(() => {
     applyPageSeo({
       title: "ابدأ حملتك | أوتوأبلاي السعودية",
-      description: "ابدأ حملة أوتوأبلاي السعودية وشارك المعلومات الأساسية لبحثك عن وظيفة داخل المملكة.",
+      description: "ابدأ حملة AutoApply SA للبحث عن وظيفة داخل السعودية وشارك الأدوار المستهدفة وتفضيلاتك قبل اعتماد اتجاه الحملة.",
       path: "/ar/enquire",
     });
   }, []);

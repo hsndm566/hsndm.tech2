@@ -389,3 +389,7 @@
 - [x] Collect live crawlability, indexability, on-page, and OpenSEO audit evidence for www.hsndm.tech
 - [x] Analyze verified SEO findings and select the top three ranking priorities by expected impact and effort
 - [x] Deliver the evidence-backed SEO audit summary and top-three improvement plan
+- [x] Inventory metadata, sitemap route definitions, image dimensions/formats, and public loading bottlenecks for every primary English and Arabic page
+- [x] Apply optimized bilingual page titles, meta descriptions, canonical sitemap/robots corrections, and relevant metadata regressions
+- [x] Compress or replace eligible large static images and optimize critical image loading without reducing visible quality
+- [x] Validate metadata, image delivery, build output, and responsive routes before publishing the technical SEO release

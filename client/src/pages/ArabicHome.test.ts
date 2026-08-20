@@ -22,7 +22,7 @@ describe("Arabic readiness experience", () => {
   });
 
   it("keeps the user-approved reviewed Arabic copy in the primary public sections", () => {
-    expect(source).toContain("محرّك التقديم للوظائف");
+    expect(source).toContain("دعم حملات التقديم للوظائف");
     expect(source).toContain("الأسئلة الشائعة");
     expect(source).toContain("ضع بحثك <i>في نظام واضح.</i>");
     expect(source).toContain("الإعلانات المتاحة في السعودية");

@@ -46,10 +46,10 @@ export default function PricingPage({ language = "en" }: { language?: "en" | "ar
   const root = arabic ? "/ar" : "/";
   const enquiry = arabic ? "/ar/enquire" : "/enquire";
   const title = arabic ? "خطط واضحة لحملة التقديم." : "Clear options for your campaign.";
-  const description = arabic ? "هذه أسعار إرشادية لحملات التقديم داخل السعودية. لا يتم تحصيل أي دفعة من هذه الصفحة." : "These are provisional Saudi application-campaign prices. This page does not collect a payment.";
+  const description = arabic ? "خطط لحملات التقديم للوظائف في السعودية تبدأ من 99 ريالاً شهرياً. راجع النطاق وقارن الخطط وابدأ بمحادثة." : "Saudi job-application campaign plans from 99 SAR/month. Review scope, compare plans, and start with a conversation.";
 
   useEffect(() => {
-    applyPageSeo({ title: `${arabic ? "الأسعار" : "Pricing"} | AutoApply SA`, description, path: arabic ? "/ar/pricing" : "/pricing" });
+    applyPageSeo({ title: arabic ? "خطط حملات التقديم في السعودية | AutoApply SA" : "Saudi Job-Application Plans | AutoApply SA", description, path: arabic ? "/ar/pricing" : "/pricing" });
   }, [arabic, description]);
 
   return <main className="min-h-screen bg-[#f3f0e9] text-[#151515]" dir={arabic ? "rtl" : "ltr"} lang={language}>

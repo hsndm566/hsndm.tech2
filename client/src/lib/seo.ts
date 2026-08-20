@@ -19,8 +19,13 @@ function setMeta(selector: string, attribute: "name" | "property", value: string
   element.content = content;
 }
 
+function canonicalPath(path: string) {
+  if (path === "/") return "/";
+  return `/${path.replace(/^\/+|\/+$/g, "")}/`;
+}
+
 export function applyPageSeo({ title, description, path, noindex = false }: SeoOptions) {
-  const url = `${SITE_URL}${path}`;
+  const url = `${SITE_URL}${canonicalPath(path)}`;
   document.title = title;
   setMeta('meta[name="description"]', "name", "description", description);
   setMeta('meta[name="robots"]', "name", "robots", noindex ? "noindex, follow" : "index, follow");

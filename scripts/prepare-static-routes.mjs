@@ -4,10 +4,11 @@ import { resolve } from "node:path";
 const output = resolve("dist/public");
 const indexPage = resolve(output, "index.html");
 const siteUrl = "https://www.hsndm.tech";
+const canonicalPath = (path) => path === "/" ? "/" : `/${path.replace(/^\/+|\/+$/g, "")}/`;
 const pageMetadata = {
   ar: {
-    title: "أوتوأبلاي السعودية | محرّك التقديم الوظيفي",
-    description: "أوتوأبلاي السعودية ينظّم ويخصص طلبات التوظيف للباحثين عن عمل في المملكة العربية السعودية، من جدة إلى جميع أنحاء المملكة.",
+    title: "أوتوأبلاي السعودية | دعم حملات التقديم للوظائف",
+    description: "دعم منظّم لحملات التقديم للوظائف داخل السعودية: راجع سيرتك، حدّد أدوارك، واعتمد اتجاه حملتك مع AutoApply SA من جدة.",
     path: "/ar",
     lang: "ar",
     direction: "rtl",
@@ -15,7 +16,7 @@ const pageMetadata = {
   },
   "ar/enquire": {
     title: "ابدأ حملتك | أوتوأبلاي السعودية",
-    description: "ابدأ حملة أوتوأبلاي السعودية وشارك المعلومات الأساسية لبحثك عن وظيفة داخل المملكة.",
+    description: "ابدأ حملة AutoApply SA للبحث عن وظيفة داخل السعودية وشارك الأدوار المستهدفة وتفضيلاتك قبل اعتماد اتجاه الحملة.",
     path: "/ar/enquire",
     lang: "ar",
     direction: "rtl",
@@ -32,7 +33,7 @@ const pageMetadata = {
   },
   enquire: {
     title: "Start a Campaign | AutoApply SA",
-    description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.",
+    description: "Start an AutoApply SA job-application campaign for Saudi Arabia. Share your target roles and preferences before any campaign direction is confirmed.",
     path: "/enquire",
     lang: "en",
     direction: "ltr",
@@ -47,27 +48,27 @@ const pageMetadata = {
     locale: "en_SA",
     robots: "noindex, follow",
   },
-  "how-it-works": { title: "How AutoApply SA Works | AutoApply SA", description: "Understand the Saudi-focused AutoApply SA campaign journey from role direction through candidate tracking.", path: "/how-it-works", lang: "en", direction: "ltr", locale: "en_SA" },
-  support: { title: "Support | AutoApply SA", description: "Get campaign, dashboard, and privacy support for your Saudi Arabia job search with AutoApply SA.", path: "/support", lang: "en", direction: "ltr", locale: "en_SA" },
+  "how-it-works": { title: "How AutoApply SA Works | Saudi Job Search", description: "How AutoApply SA works: review your CV, set Saudi role targets, confirm your campaign direction, and track applications in your dashboard.", path: "/how-it-works", lang: "en", direction: "ltr", locale: "en_SA" },
+  support: { title: "Saudi Job Campaign Support | AutoApply SA", description: "Get help with your AutoApply SA campaign, dashboard access, or privacy requests for Saudi Arabia job seekers.", path: "/support", lang: "en", direction: "ltr", locale: "en_SA" },
   "case-studies": { title: "KAIA Terminal 1 Case Study | AutoApply SA", description: "Read an owner-supplied operations-improvement case-study summary using DMAIC and value-stream mapping in Jeddah.", path: "/case-studies", lang: "en", direction: "ltr", locale: "en_SA" },
   "campaign-report-sample": { title: "Illustrative Campaign Report Format | AutoApply SA", description: "See the fields, cadence, and limits of an illustrative AutoApply SA campaign update format.", path: "/campaign-report-sample", lang: "en", direction: "ltr", locale: "en_SA" },
   privacy: { title: "Privacy Policy | AutoApply SA", description: "Learn how AutoApply SA handles Saudi job-search campaign information, CVs, contact details, and privacy requests.", path: "/privacy", lang: "en", direction: "ltr", locale: "en_SA" },
   terms: { title: "Terms & Conditions | AutoApply SA", description: "Read the AutoApply SA service terms for previews, campaign enquiries, candidate tracking, cancellation, and service boundaries.", path: "/terms", lang: "en", direction: "ltr", locale: "en_SA" },
-  "ar/how-it-works": { title: "كيف تعمل أوتوأبلاي السعودية | AutoApply SA", description: "تعرّف على مسار حملة AutoApply SA للبحث عن عمل داخل السعودية.", path: "/ar/how-it-works", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  "ar/support": { title: "الدعم | أوتوأبلاي السعودية", description: "الدعم للحملة ولوحة التحكم وطلبات الخصوصية للباحثين عن عمل في السعودية.", path: "/ar/support", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/how-it-works": { title: "كيف تعمل أوتوأبلاي السعودية | البحث عن عمل", description: "كيف تعمل AutoApply SA: راجع سيرتك، حدّد أدوارك المستهدفة داخل السعودية، واعتمد اتجاه الحملة، ثم تابع الطلبات في لوحتك.", path: "/ar/how-it-works", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/support": { title: "دعم حملات التقديم في السعودية | AutoApply SA", description: "احصل على المساعدة في حملة AutoApply SA أو دخول لوحة المرشح أو طلبات الخصوصية للباحثين عن عمل في السعودية.", path: "/ar/support", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/case-studies": { title: "دراسة حالة مبنى الركاب 1 | AutoApply SA", description: "اطلع على ملخص دراسة حالة في تحسين العمليات باستخدام DMAIC ورسم تدفق القيمة في جدة.", path: "/ar/case-studies", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/campaign-report-sample": { title: "نموذج تقرير الحملة التوضيحي | أوتوأبلاي السعودية", description: "اطلع على الحقول والوتيرة والحدود في نموذج توضيحي لتحديث الحملة.", path: "/ar/campaign-report-sample", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/privacy": { title: "سياسة الخصوصية | أوتوأبلاي السعودية", description: "تعرّف على كيفية تعامل AutoApply SA مع معلومات حملة البحث عن عمل والسيرة الذاتية وطلبات الخصوصية.", path: "/ar/privacy", lang: "ar", direction: "rtl", locale: "ar_SA" },
   "ar/terms": { title: "الشروط والأحكام | أوتوأبلاي السعودية", description: "اقرأ شروط خدمة AutoApply SA للمعاينة واستفسار الحملة وتتبع الطلبات وحدود الخدمة.", path: "/ar/terms", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  pricing: { title: "Pricing | AutoApply SA", description: "Review provisional Saudi job-application campaign plans and begin with a contact-only discussion.", path: "/pricing", lang: "en", direction: "ltr", locale: "en_SA" },
-  services: { title: "Services | Hasan Adam", description: "Explore Saudi-focused job-application support and practical web and operations systems for small businesses.", path: "/services", lang: "en", direction: "ltr", locale: "en_SA" },
-  "ar/pricing": { title: "الأسعار | أوتوأبلاي السعودية", description: "اطلع على خطط حملة التقديم الإرشادية وابدأ بمحادثة داخل السعودية.", path: "/ar/pricing", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  "ar/services": { title: "الخدمات | Hasan Adam", description: "اطلع على دعم التقديم للوظائف وأنظمة الويب والتشغيل العملية للشركات الصغيرة داخل السعودية.", path: "/ar/services", lang: "ar", direction: "rtl", locale: "ar_SA" },
-  ats: { title: "ATS Review | AutoApply SA", description: "Review CV structure, keywords, and evidence for Saudi Arabia job applications with AutoApply SA.", path: "/ats", lang: "en", direction: "ltr", locale: "en_SA" },
+  pricing: { title: "Saudi Job-Application Plans | AutoApply SA", description: "Saudi job-application campaign plans from 99 SAR/month. Review scope, compare plans, and start with a conversation.", path: "/pricing", lang: "en", direction: "ltr", locale: "en_SA" },
+  services: { title: "Services | AutoApply SA", description: "AutoApply SA — Saudi-focused job-application campaign support and practical web systems for small businesses in Jeddah.", path: "/services", lang: "en", direction: "ltr", locale: "en_SA" },
+  "ar/pricing": { title: "خطط حملات التقديم في السعودية | AutoApply SA", description: "خطط لحملات التقديم للوظائف في السعودية تبدأ من 99 ريالاً شهرياً. راجع النطاق وقارن الخطط وابدأ بمحادثة.", path: "/ar/pricing", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  "ar/services": { title: "الخدمات | AutoApply SA", description: "AutoApply SA: دعم لحملات التقديم للوظائف في السعودية وأنظمة ويب عملية للشركات الصغيرة في جدة.", path: "/ar/services", lang: "ar", direction: "rtl", locale: "ar_SA" },
+  ats: { title: "ATS CV Review for Saudi Jobs | AutoApply SA", description: "Check your CV's ATS readiness for Saudi Arabia job applications — free browser-based preview, no file upload required.", path: "/ats", lang: "en", direction: "ltr", locale: "en_SA" },
 };
 
 const staticMeta = (indexHtml, metadata) => {
-  const url = `${siteUrl}${metadata.path}`;
+  const url = `${siteUrl}${canonicalPath(metadata.path)}`;
   const withMetadata = indexHtml
     .replace('<html lang="en">', `<html lang="${metadata.lang}"${metadata.direction === "rtl" ? ' dir="rtl"' : ""}>`)
     .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${metadata.description}" />`)

@@ -30,7 +30,7 @@ export default function Enquire() {
   const secureEnquiry = trpc.campaign.enquiry.submit.useMutation();
 
   useEffect(() => {
-    applyPageSeo({ title: "Start a Campaign | AutoApply SA", description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.", path: "/enquire" });
+    applyPageSeo({ title: "Start a Campaign | AutoApply SA", description: "Start an AutoApply SA job-application campaign for Saudi Arabia. Share your target roles and preferences before any campaign direction is confirmed.", path: "/enquire" });
   }, []);
 
   const chooseFile = (event: ChangeEvent<HTMLInputElement>) => {

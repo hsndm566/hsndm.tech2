@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { invokeGroqJson } from "./groq";
 
-describe("Groq credential", () => {
+// This requires a live third-party credential. Keep it opt-in while the approved
+// production posture is fallback-only, so deterministic local/release tests do
+// not depend on external provider availability.
+describe.runIf(process.env.RUN_EXTERNAL_GROQ_HEALTH === "true")("Groq credential", () => {
   it("can list available models without exposing the API key", async () => {
     const apiKey = process.env.GROQ_API_KEY;
     expect(apiKey).toBeTruthy();

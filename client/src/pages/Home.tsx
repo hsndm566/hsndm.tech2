@@ -226,7 +226,7 @@ export default function Home() {
     || window.location.hostname.includes("manus.computer");
 
   useEffect(() => {
-    applyPageSeo({ title: "AutoApply SA | AI Job Application Engine for Saudi Arabia", description: "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.", path: "/" });
+    applyPageSeo({ title: "AutoApply SA | Saudi Job-Application Campaign Support", description: "Saudi job-application campaign support from Jeddah: review your CV, confirm target roles, and track your applications with AutoApply SA.", path: "/" });
   }, []);
 
   useEffect(() => {
@@ -410,7 +410,7 @@ export default function Home() {
       <a className="skip-link" href="#upload">Skip to CV matcher</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
           <span>AutoApply <em>SA</em></span>
         </a>
 
@@ -585,7 +585,7 @@ export default function Home() {
         <section id="upload" className="upload-section section-paper">
           <div className="page-frame upload-grid">
             <div className="upload-image-wrap">
-              <HomepageMediaImage src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" />
+              <HomepageMediaImage src="/manus-storage/autoapply-desk_635170b2.jpg" alt="Minimal worktable prepared for a job search" width={1536} height={1920} />
               <div className="image-stamp"><span>Try it now — 60 seconds</span><ArrowDownRight size={17} /></div>
             </div>
             <div className="upload-copy">
@@ -861,7 +861,7 @@ export default function Home() {
       <footer className="footer">
         <div className="page-frame footer-top">
           <a className="brand footer-brand" href="#top">
-            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
             <span>AutoApply <em>SA</em></span>
           </a>
           <p>Your 24/7 job application engine.<br />Jeddah built. Saudi focused.</p>

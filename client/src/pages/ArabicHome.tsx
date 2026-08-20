@@ -137,8 +137,8 @@ export default function ArabicHome() {
 
   useEffect(() => {
     applyPageSeo({
-      title: "أوتوأبلاي السعودية | محرّك التقديم للوظائف",
-      description: "AutoApply SA يبحث عن الوظائف في السعودية، ويُخصّص طلبات التقديم، ويرسلها عبر البريد الإلكتروني والمنصات بناءً على سيرتك الذاتية ولغتك المفضلة.",
+      title: "أوتوأبلاي السعودية | دعم حملات التقديم للوظائف",
+      description: "دعم منظّم لحملات التقديم للوظائف داخل السعودية: راجع سيرتك، حدّد أدوارك، واعتمد اتجاه حملتك مع AutoApply SA من جدة.",
       path: "/ar",
     });
   }, []);
@@ -222,7 +222,7 @@ export default function ArabicHome() {
       <a className="skip-link" href="#upload">انتقل إلى مطابقة السيرة الذاتية</a>
       <header className="topbar" aria-label="التنقل الرئيسي">
         <Link className="brand" href="/ar" aria-label="الصفحة الرئيسية AutoApply SA">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
           <span>AutoApply <em>SA</em></span>
         </Link>
         <nav className="desktop-nav" aria-label="روابط الصفحة">
@@ -322,7 +322,7 @@ export default function ArabicHome() {
       </main>
 
       <div className="mobile-campaign-cta"><Link href="/ar/enquire"><span><StatusDot /> ابدأ حملة جديدة</span><b>ابدأ الآن <ArrowUpRight size={17} /></b></Link></div>
-      <footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer>
+      <footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer>
     </div>
   );
 }

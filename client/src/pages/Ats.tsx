@@ -28,8 +28,8 @@ export default function Ats() {
 
   useEffect(() => {
     applyPageSeo({
-      title: "ATS Review | AutoApply SA",
-      description: "Review CV structure, keywords, and evidence for Saudi Arabia job applications with AutoApply SA.",
+      title: "ATS CV Review for Saudi Jobs | AutoApply SA",
+      description: "Check your CV's ATS readiness for Saudi Arabia job applications — free browser-based preview, no file upload required.",
       path: "/ats",
     });
   }, []);
