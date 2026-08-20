@@ -29,7 +29,7 @@ export function CandidateOnboardingChecklist({ applications, approval, evidence,
       </div>
       <ol className="mt-5 grid gap-3 lg:grid-cols-2">
         {steps.map((step, index) => (
-          <li key={step.id} className={`flex gap-3 rounded-xl border p-4 ${step.complete ? "border-emerald-700/20 bg-emerald-50/50" : "border-[#151515]/10 bg-white"}`}>
+          <li data-anime-dashboard-onboarding-step key={step.id} className={`flex gap-3 rounded-xl border p-4 ${step.complete ? "border-emerald-700/20 bg-emerald-50/50" : "border-[#151515]/10 bg-white"}`}>
             <span className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full border ${step.complete ? "border-emerald-700/25 bg-emerald-100 text-emerald-800" : "border-[#151515]/15 bg-[#f3f0e9] text-[#151515]/60"}`}>{step.complete ? <Check className="size-4" aria-label="Complete" /> : <Circle className="size-4" aria-label="Not complete" />}</span>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2"><span className="font-mono text-[10px] text-[#151515]/50">{String(index + 1).padStart(2, "0")}</span><h3 className="text-sm font-bold">{step.title}</h3>{!step.complete && index === completed ? <span className="rounded-full bg-[#e5482a]/10 px-2 py-0.5 text-[10px] font-semibold text-[#9c2f1e]">{copy.next}</span> : null}</div>

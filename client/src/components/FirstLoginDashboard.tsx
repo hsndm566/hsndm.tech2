@@ -20,6 +20,7 @@ import { CampaignActionCenter } from "@/components/CampaignActionCenter";
 import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
 import { CandidateOnboardingChecklist } from "@/components/CandidateOnboardingChecklist";
 import { CandidateAnalyticsSummary } from "@/components/CandidateAnalyticsSummary";
+import { DashboardAnimeVisualEnhancements } from "@/components/DashboardAnimeVisualEnhancements";
 import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -74,7 +75,8 @@ export function FirstLoginDashboard({ identity, onSignOut, profileDefaults, appr
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className={`min-h-screen bg-[#f5f2eb] text-[#151515] ${isArabic ? "font-[Noto_Sans_Arabic]" : ""}`} dir={isArabic ? "rtl" : "ltr"} lang={locale}>
+    <div data-anime-dashboard-root className={`min-h-screen bg-[#f5f2eb] text-[#151515] ${isArabic ? "font-[Noto_Sans_Arabic]" : ""}`} dir={isArabic ? "rtl" : "ltr"} lang={locale}>
+      <DashboardAnimeVisualEnhancements isReady />
       <a
         className="sr-only fixed left-4 top-4 z-[80] rounded-lg bg-[#e5482a] px-4 py-3 text-sm font-bold text-[#151515] focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-[#151515]"
         href="#main-content"

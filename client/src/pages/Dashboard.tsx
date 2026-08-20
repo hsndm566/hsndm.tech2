@@ -26,6 +26,7 @@ import { CampaignActionCenter } from "@/components/CampaignActionCenter";
 import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
 import { CandidateAnalyticsSummary } from "@/components/CandidateAnalyticsSummary";
 import { CandidateOnboardingChecklist } from "@/components/CandidateOnboardingChecklist";
+import { DashboardAnimeVisualEnhancements } from "@/components/DashboardAnimeVisualEnhancements";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
 import { captureClientReliabilitySignal } from "@/lib/sentryTelemetry";
 
@@ -412,7 +413,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
+    <div data-anime-dashboard-root className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
+      <DashboardAnimeVisualEnhancements isReady={dashboardAuthenticated && !appsLoading && !profileLoading && !evidenceLoading && !approvalLoading} />
       <header className="border-b border-[#151515]/10 bg-[#fbf9f5] sticky top-0 z-30">
         <div className="max-w-7xl mx-auto w-full px-4 md:px-6 min-h-20 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex w-full min-w-0 items-center gap-2 md:gap-4">
@@ -616,13 +618,13 @@ export default function Dashboard() {
             </AlertDialog>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
+              <Card data-anime-dashboard-metric className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardDescription>Tracking records</CardDescription>
                   <CardTitle className="text-3xl font-mono">{applications.length}</CardTitle>
                 </CardHeader>
               </Card>
-              <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
+              <Card data-anime-dashboard-metric className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardDescription>Verified application evidence</CardDescription>
                   <CardTitle className="text-3xl font-mono text-emerald-700">
@@ -630,13 +632,13 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
               </Card>
-              <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
+              <Card data-anime-dashboard-metric className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardDescription>Interviews & offers</CardDescription>
                   <CardTitle className="text-3xl font-mono text-emerald-700">{applications.filter(a => a.status === 'interview' || a.status === 'offer').length}</CardTitle>
                 </CardHeader>
               </Card>
-              <Card className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm flex flex-col justify-center">
+              <Card data-anime-dashboard-metric className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm flex flex-col justify-center">
                 <CardContent className="pt-6">
                   <p className="mb-3 text-xs text-[#151515]/60">Target city: <span className="font-medium text-[#151515]">{profile?.targetCity || "Jeddah"}</span></p>
                   <Dialog>

@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("./AnimeVisualEnhancements.tsx", import.meta.url), "utf8");
+const dashboardSource = readFileSync(new URL("./DashboardAnimeVisualEnhancements.tsx", import.meta.url), "utf8");
 const appSource = readFileSync(new URL("../App.tsx", import.meta.url), "utf8");
 
 describe("Anime.js visual enhancements", () => {
@@ -11,9 +12,20 @@ describe("Anime.js visual enhancements", () => {
     expect(appSource).toContain("<AnimeVisualEnhancements routeKey={location} />");
   });
 
-  it("keeps hero motion reduced-motion-safe and reversible", () => {
-    expect(source).toContain("prefers-reduced-motion: reduce");
+  it("keeps public and dashboard motion reduced-motion-safe and reversible", () => {
+    expect(source).toContain("createScope");
+    expect(source).toContain('mediaQueries: { reducedMotion: "(prefers-reduced-motion)" }');
     expect(source).toContain("data-anime-hero-word");
+    expect(source).toContain(".hero-ledger .ledger-route > div");
+    expect(source).toContain("createTimeline");
+    expect(source).toContain("onScroll");
+    expect(source).toContain("--workflow-path-progress");
     expect(source).toContain("animation.revert()");
+    expect(dashboardSource).toContain("createScope");
+    expect(dashboardSource).toContain("ctx?.matches.reducedMotion");
+    expect(dashboardSource).toContain("data-anime-dashboard-metric");
+    expect(dashboardSource).toContain("data-anime-dashboard-analytics-card");
+    expect(dashboardSource).toContain("data-anime-dashboard-onboarding-step");
+    expect(dashboardSource).toContain("delay: stagger(60");
   });
 });

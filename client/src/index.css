@@ -393,8 +393,12 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 
 /* Anime.js owns only the landing-page arrival; native CSS remains responsible for all scroll reveals and controls. */
 .has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: transform, opacity; }
+.process-list { --workflow-path-progress: 0; position: relative; isolation: isolate; }
+.process-list::before { content: ""; position: absolute; z-index: 1; top: 1px; bottom: 1px; left: 41px; width: 1px; pointer-events: none; opacity: .9; background: var(--signal); transform: scaleY(var(--workflow-path-progress)); transform-origin: top; will-change: transform; }
+.site-shell[lang="ar"] .process-list::before { right: 41px; left: auto; transform-origin: top; }
 @media (prefers-reduced-motion: reduce) {
   .has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: auto; }
+  .process-list { --workflow-path-progress: 1; }
 }
 
 .ledger-topline span:last-child { display: inline-flex; align-items: center; gap: 5px; }
@@ -407,6 +411,8 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 @media (max-width: 680px) {
   .site-shell :is(.split-layout, .detail-layout) { padding-block: var(--section-space-mobile); }
   .site-shell .plan-featured { box-shadow: 0 8px 20px rgba(21,21,21,.15), 0 0 0 1px rgba(229,72,42,.42); }
+  .process-list::before { left: 18px; }
+  .site-shell[lang="ar"] .process-list::before { right: 18px; left: auto; }
 }
 
 /* Keep the poster visible on every breakpoint until the video has decoded a frame. */

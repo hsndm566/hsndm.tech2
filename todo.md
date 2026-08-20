@@ -581,7 +581,19 @@
 - [x] Add regression coverage and verify analytics and onboarding behavior on mobile before publication
 - [x] Correct the reproduced component-test React runtime import error in the new analytics and onboarding components
 
+## Read-Only Anime.js Pattern Review
+
+- [x] Review visible Anime.js patterns that would fit the existing AutoApply visual system without changing the current site
+
 ## Portal-Wide Client Hydration Repair
 
 - [x] Repair the reproduced Clerk chunk runtime error (`Cannot set properties of undefined (setting 'Activity')`) that prevents the public React entry from hydrating by updating React and React DOM to Clerk’s required React 19.2.3 compatibility floor
 - [x] Add a deterministic regression for the Clerk bundle interoperability boundary and verify live public homepage plus dashboard-host redirect after publication
+
+## Approved Anime.js Enhancements
+
+- [x] Implement Option 1: application-engine sequence animation in the hero ledger
+- [x] Implement Option 2: workflow path-draw animation triggered on scroll
+- [x] Implement Option 4: evidence-card stagger-in animation in the candidate dashboard
+- [x] Add regression coverage for all three Anime.js enhancements and reduced-motion behavior
+- [x] Validate the enhancements at 375px, with TypeScript, the complete test suite, and the production build

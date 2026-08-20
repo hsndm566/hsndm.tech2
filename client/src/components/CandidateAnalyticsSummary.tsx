@@ -32,7 +32,7 @@ export function CandidateAnalyticsSummary({ applications, evidence }: CandidateA
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#151515]/70">These rates are calculated from your own tracked applications and available evidence. They are not a benchmark, prediction, or comparison with other candidates.</p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(({ detail, icon: Icon, label, value }) => (
-          <article key={label} className="rounded-xl border border-[#151515]/10 bg-white p-4">
+          <article data-anime-dashboard-analytics-card key={label} className="rounded-xl border border-[#151515]/10 bg-white p-4">
             <div className="flex items-start justify-between gap-3"><span className="text-xs font-semibold text-[#151515]/70">{label}</span><span className="grid size-8 place-items-center rounded-lg bg-[#e5482a]/10 text-[#e5482a]"><Icon className="size-4" aria-hidden="true" /></span></div>
             <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-[#151515]">{value}</p>
             <p className="mt-1 text-xs leading-5 text-[#151515]/60">{detail}</p>
