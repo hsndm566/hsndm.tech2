@@ -12,8 +12,8 @@ describe("homepage clarity release", () => {
   it("states the service plainly and keeps the approved campaign CTA paths", () => {
     const source = homeSource();
 
-    ["We", "apply", "jobs", "you."].forEach(word => expect(source).toContain(`>${word}</span>`));
-    expect(source).toContain("AutoApply SA submits tailored job applications to Saudi companies on your behalf");
+    ["Tailored", "Saudi", "applications,", "approval."].forEach(word => expect(source).toContain(`>${word}</span>`));
+    expect(source).toContain("We agree your role targets, volume, and timing first.");
     expect(source).toContain('href="/enquire"');
     expect(source).toContain("https://wa.me/966571448656");
   });
@@ -64,7 +64,7 @@ describe("homepage clarity release", () => {
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
     const source = arabicHomeSource();
 
-    ["نتقدّم", "للوظائف"].forEach(word => expect(source).toContain(`>${word}</span>`));
+    ["طلبات", "سعودية", "موافقتك."].forEach(word => expect(source).toContain(`>${word}</span>`));
     expect(source).toContain("سيرتك الذاتية جاهزة");
     expect(source).toContain("arabic-video-explainer-heading");
     expect(source).toContain("DeferredExplainerVideo");
@@ -84,11 +84,11 @@ describe("homepage clarity release", () => {
     const styles = stylesSource();
 
     expect(english).toContain("<HeroMedia alt=");
-    ["We", "apply", "jobs", "for"].forEach(word => expect(english).toContain(`>${word}</span>`));
+    ["Tailored", "Saudi", "applications,", "approval."].forEach(word => expect(english).toContain(`>${word}</span>`));
     expect(english).toContain("Start your campaign");
     expect(english).toContain("500+");
     expect(arabic).toContain("<HeroMedia alt=");
-    ["نتقدّم", "للوظائف"].forEach(word => expect(arabic).toContain(`>${word}</span>`));
+    ["طلبات", "سعودية", "موافقتك."].forEach(word => expect(arabic).toContain(`>${word}</span>`));
     expect(arabic).toContain("ابدأ حملتك");
     expect(arabic).toContain("لغتان مدعومتان");
     expect(styles).toContain(".hero { min-height: 610px");

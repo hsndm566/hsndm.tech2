@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMapsScriptUrl, getJeddahDirectionsUrl, getMapFallbackMessage } from "./Map";
+import { buildMapsScriptUrl, getJeddahDirectionsUrl, getJeddahLocationCopy, getMapFallbackMessage } from "./Map";
 
 describe("MapView localization contract", () => {
   it("requests the Saudi Arabic Maps locale when Arabic is selected", () => {
@@ -24,5 +24,11 @@ describe("MapView localization contract", () => {
 
   it("uses Jeddah as the safe external-directions fallback", () => {
     expect(getJeddahDirectionsUrl()).toContain("destination=Jeddah");
+  });
+
+  it("provides an Arabic and English directions-first location-card contract", () => {
+    expect(getJeddahLocationCopy("en").directions).toBe("Get directions");
+    expect(getJeddahLocationCopy("ar").directions).toContain("الاتجاهات");
+    expect(getJeddahLocationCopy("ar").title).toContain("جدة");
   });
 });

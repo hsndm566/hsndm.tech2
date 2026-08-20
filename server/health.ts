@@ -11,6 +11,12 @@ export type DatabaseHealthPayload = {
   timestamp: number;
 };
 
+export type AuthenticationReadinessPayload = {
+  status: "healthy" | "unhealthy";
+  dependency: "dashboard-auth-configuration";
+  timestamp: number;
+};
+
 export function createHealthPayload(now = Date.now(), uptime = process.uptime()): HealthPayload {
   return {
     status: "healthy",
@@ -24,6 +30,14 @@ export function createDatabaseHealthPayload(connected: boolean, now = Date.now()
   return {
     status: connected ? "healthy" : "unhealthy",
     dependency: "database",
+    timestamp: now,
+  };
+}
+
+export function createAuthenticationReadinessPayload(configured: boolean, now = Date.now()): AuthenticationReadinessPayload {
+  return {
+    status: configured ? "healthy" : "unhealthy",
+    dependency: "dashboard-auth-configuration",
     timestamp: now,
   };
 }

@@ -2,7 +2,7 @@
  * Design reminder — Operational Clarity: Swiss information design with a signal rail,
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
-import { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { HomepageMediaImage } from "@/components/HomepageMediaImage";
@@ -36,11 +36,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "wouter";
-
-const MapView = lazy(async () => {
-  const module = await import("@/components/Map");
-  return { default: module.MapView };
-});
+import { JeddahLocationCard } from "@/components/Map";
 
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
@@ -468,14 +464,14 @@ export default function Home() {
           </div>
           <div className="hero-content page-frame">
             <div className="hero-lead">
-              <div className="eyebrow light"><StatusDot /> 24/7 job engine <span /> Jeddah, Saudi Arabia</div>
+              <div className="eyebrow light"><StatusDot /> Approval-led campaign support <span /> Jeddah, Saudi Arabia</div>
               <h1 id="hero-heading">
-                <span data-anime-hero-word>We</span>{" "}<span data-anime-hero-word>apply</span>{" "}<span data-anime-hero-word>to</span>{" "}<span data-anime-hero-word>jobs</span>{" "}<span data-anime-hero-word>for</span>{" "}<span data-anime-hero-word>you.</span><br />
-                <span data-anime-hero-word>Every</span>{" "}<span data-anime-hero-word>day.</span><br />
-                <span data-anime-hero-word>Automatically.</span>
+                <span data-anime-hero-word>Tailored</span>{" "}<span data-anime-hero-word>Saudi</span><br />
+                <span data-anime-hero-word>applications,</span>{" "}<span data-anime-hero-word>after</span><br />
+                <span data-anime-hero-word>your</span>{" "}<span data-anime-hero-word>approval.</span>
               </h1>
               <p>
-                AutoApply SA submits tailored job applications to Saudi companies on your behalf — by email and portal — while you focus on everything else.
+                We agree your role targets, volume, and timing first. Once you approve the campaign plan, AutoApply SA manages tailored Saudi job applications and records the evidence.
               </p>
               <div className="hero-actions">
                 <Link className="button button-ink" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
@@ -484,7 +480,7 @@ export default function Home() {
                 </button>
               </div>
               <div className="hero-note">From 99 SAR / month <b /> no card needed to begin a conversation</div>
-              <div className="hero-trust-row" aria-label="Campaign trust details"><span><ShieldCheck size={14} /> Arabic &amp; English support</span><span>Saudi-focused</span><span>Jeddah-based support</span><span>You review campaign direction first</span><span>Request data deletion anytime</span></div>
+              <div className="hero-trust-row" aria-label="Campaign trust details"><span><ShieldCheck size={14} /> You approve role targets</span><span>Set volume &amp; dates</span><span>Pause anytime</span><span>Every application is logged</span><span>Saudi-focused support</span></div>
             </div>
 
               <div className="hero-ledger" aria-label="Application engine status">
@@ -556,8 +552,8 @@ export default function Home() {
                 <article className="process-item active-process">
                   <div className="process-number">03</div>
                   <div className="process-content">
-                    <h3>The engine applies 24/7</h3>
-                    <p>Applications, tailored cover letters, portals, email sends, and delivery checks progress while you get on with your day.</p>
+                    <h3>Approve, then we manage</h3>
+                    <p>After your written campaign plan is approved, tailored applications, portal submissions, email sends, and delivery checks follow your agreed direction.</p>
                   </div>
                   <Send size={24} strokeWidth={1.4} />
                 </article>
@@ -831,9 +827,7 @@ export default function Home() {
               </div>
             </div>
             <div className="map-frame">
-              <Suspense fallback={<div className="location-map-canvas homepage-map-loading" role="status" aria-label="Loading Jeddah map" />}>
-                <MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} />
-              </Suspense>
+              <JeddahLocationCard className="location-map-canvas" />
               <div className="map-caption"><span><StatusDot /> SERVICE BASE</span><b>JEDDAH / KSA</b></div>
             </div>
           </div>

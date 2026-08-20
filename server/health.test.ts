@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createDatabaseHealthPayload, createHealthPayload } from "./health";
+import { createAuthenticationReadinessPayload, createDatabaseHealthPayload, createHealthPayload } from "./health";
 
 describe("Health check endpoint payload", () => {
   it("returns a healthy service payload with stable fields", () => {
@@ -24,5 +24,14 @@ describe("Health check endpoint payload", () => {
       dependency: "database",
       timestamp: 1_725_000_000_000,
     });
+  });
+
+  it("reports dashboard authentication configuration without exposing a secret", () => {
+    expect(createAuthenticationReadinessPayload(true, 1_725_000_000_000)).toEqual({
+      status: "healthy",
+      dependency: "dashboard-auth-configuration",
+      timestamp: 1_725_000_000_000,
+    });
+    expect(createAuthenticationReadinessPayload(false, 1_725_000_000_000).status).toBe("unhealthy");
   });
 });

@@ -8,7 +8,7 @@ import { appRouter } from "../routers";
 import { registerDataBackupRoutes } from "../dataBackup";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { createDatabaseHealthPayload, createHealthPayload } from "../health";
+import { createAuthenticationReadinessPayload, createDatabaseHealthPayload, createHealthPayload } from "../health";
 import { isTrustedCorsOrigin } from "../cors";
 import { normalizeLatestActivityTimestamp } from "../latestActivity";
 
@@ -65,6 +65,14 @@ async function startServer() {
     const { checkDatabaseConnection } = await import("../db");
     const connected = await checkDatabaseConnection();
     res.status(connected ? 200 : 503).json(createDatabaseHealthPayload(connected));
+  });
+
+  // This endpoint confirms configuration only. It exposes neither secrets nor
+  // candidate data, and provides a stable check for external uptime monitors.
+  app.get("/healthz/auth", (_req, res) => {
+    const configured = Boolean(process.env.VITE_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
+    res.setHeader("Cache-Control", "no-store");
+    res.status(configured ? 200 : 503).json(createAuthenticationReadinessPayload(configured));
   });
 
   app.get("/v1/campaigns/latest-activity", async (_req, res) => {

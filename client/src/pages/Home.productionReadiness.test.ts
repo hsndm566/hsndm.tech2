@@ -16,12 +16,12 @@ describe("public homepage production-readiness contract", () => {
   });
 
   it("shows only factual bilingual trust boundaries near the hero CTA", () => {
-    expect(englishHome).toContain("Arabic &amp; English support");
-    expect(englishHome).toContain("You review campaign direction first");
-    expect(englishHome).toContain("Request data deletion anytime");
-    expect(arabicHome).toContain("دعم بالعربية والإنجليزية");
-    expect(arabicHome).toContain("تراجع اتجاه الحملة أولاً");
-    expect(arabicHome).toContain("اطلب حذف بياناتك في أي وقت");
+    expect(englishHome).toContain("You approve role targets");
+    expect(englishHome).toContain("Set volume &amp; dates");
+    expect(englishHome).toContain("Every application is logged");
+    expect(arabicHome).toContain("توافق على الوظائف المستهدفة");
+    expect(arabicHome).toContain("تحدد الحجم والتواريخ");
+    expect(arabicHome).toContain("كل طلب مسجّل");
   });
 
   it("avoids eagerly downloading decorative media while preserving a visual hero fallback", () => {

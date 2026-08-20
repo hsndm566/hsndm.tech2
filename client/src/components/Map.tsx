@@ -77,6 +77,7 @@
 /// <reference types="@types/google.maps" />
 
 import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -107,6 +108,43 @@ export function getMapFallbackMessage(language = "en") {
 
 export function getJeddahDirectionsUrl() {
   return "https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia";
+}
+
+export function getJeddahLocationCopy(language = "en") {
+  const arabic = language.toLowerCase().startsWith("ar");
+  return arabic
+    ? {
+        eyebrow: "قاعدة الخدمة",
+        title: "جدة، المملكة العربية السعودية",
+        detail: "خدمة عن بُعد لمرشحي الوظائف في جميع أنحاء المملكة. افتح الاتجاهات في خرائط Google عند الحاجة.",
+        directions: "فتح الاتجاهات",
+      }
+    : {
+        eyebrow: "Service base",
+        title: "Jeddah, Saudi Arabia",
+        detail: "A remote service for job seekers across Saudi Arabia. Open directions in Google Maps whenever you need them.",
+        directions: "Get directions",
+      };
+}
+
+export function JeddahLocationCard({ className, language = "en" }: { className?: string; language?: string }) {
+  const arabic = language.toLowerCase().startsWith("ar");
+  const copy = getJeddahLocationCopy(language);
+
+  return (
+    <section dir={arabic ? "rtl" : "ltr"} className={cn("relative grid min-h-[20rem] place-items-center overflow-hidden border border-black/10 bg-[#ebe7de] p-6 text-[#151515] sm:min-h-[28rem] sm:p-10", className)} aria-label={copy.title}>
+      <div className="absolute inset-0 opacity-45" aria-hidden="true" style={{ backgroundImage: "linear-gradient(rgba(21,21,21,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(21,21,21,.08) 1px, transparent 1px)", backgroundSize: "2.2rem 2.2rem" }} />
+      <div className="relative max-w-sm border border-black/15 bg-[#fbf9f5] p-5 shadow-[0_18px_38px_rgba(21,21,21,.10)] sm:p-7">
+        <p className="font-mono text-[11px] uppercase tracking-[.13em] text-[#e5482a]">{copy.eyebrow}</p>
+        <MapPin className="mt-5 h-8 w-8 text-[#e5482a]" aria-hidden="true" />
+        <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{copy.title}</h3>
+        <p className="mt-3 text-sm leading-6 text-black/70">{copy.detail}</p>
+        <a href={getJeddahDirectionsUrl()} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 bg-[#151515] px-4 py-3 font-mono text-xs text-white transition-colors hover:bg-[#e5482a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e5482a] focus-visible:ring-offset-2">
+          {copy.directions} <ArrowUpRight size={15} />
+        </a>
+      </div>
+    </section>
+  );
 }
 
 function resetMapsScriptLoader() {

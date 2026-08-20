@@ -487,3 +487,13 @@
 - [x] Configure the 06:00 and 18:00 UTC workflow to invoke the capped live dispatcher for only clients 2 and 3 without a manual dispatch
 - [x] Validate, commit, and push the scheduled-delivery configuration without triggering the workflow
 - [x] Confirm the 20-per-day maximum, client 1 block, persistent exclusions, safety controls, and inactive background observer state
+
+## Reliability and Trust Improvements
+
+- [x] Reproduce and diagnose the dashboard sign-in recovery failure, first-load blank-state report, and Jeddah map failure across live and local environments
+- [x] Add a branded first-load shell and time-bounded visible recovery state so public visitors never see an empty initial screen
+- [x] Replace the fragile live map default with a lightweight accessible Jeddah location card while retaining a reliable directions link
+- [x] Add a safe dashboard authentication-unavailable recovery surface with direct secure-report contact options and approval-boundary guidance
+- [x] Clarify the homepage hero and primary campaign messaging so campaign activity is visibly approval-led, pausable, and fully logged
+- [x] Assess and implement safe authentication availability monitoring and evidence-led application-log resilience without fabricating candidate data
+- [x] Add focused regressions, run full validation, publish the staged reliability release, and document verified outcomes

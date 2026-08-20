@@ -25,6 +25,7 @@ import { CampaignPlanSummary } from "@/components/CampaignPlanSummary";
 import { CampaignActionCenter } from "@/components/CampaignActionCenter";
 import { CampaignManagementBoard } from "@/components/CampaignManagementBoard";
 import { formatSafeDate, formatSafeDateTime, safeTimestampMs, toActivityTimestamp } from "@/lib/safeTimestamp";
+import { captureClientReliabilitySignal } from "@/lib/sentryTelemetry";
 
 function evidenceLabel(type: "portal_confirmation" | "email_accepted" | "employer_confirmation") {
   if (type === "portal_confirmation") return "Portal confirmation";
@@ -106,15 +107,22 @@ export default function Dashboard() {
         email: user?.email || "",
       };
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
+  const dashboardHelpMessage = encodeURIComponent("Hi AutoApply SA — I need help accessing my candidate dashboard or requesting a secure campaign report.");
 
   useEffect(() => {
     if (!clerkDashboardEnabled || clerkAuth.isLoaded) return;
-    // The custom Clerk host can take more than eight seconds on a cold mobile
-    // connection even when its environment and client requests succeed. Keep a
-    // bounded fallback, but avoid showing an incorrect outage state too early.
-    const timeoutId = window.setTimeout(() => setClerkLoadTimedOut(true), 15_000);
+    // The candidate portal must not leave visitors on an unexplained spinner.
+    // If Clerk has not initialized within eight seconds, switch to a safe,
+    // non-data-bearing recovery path rather than guessing the session state.
+    const timeoutId = window.setTimeout(() => setClerkLoadTimedOut(true), 8_000);
     return () => window.clearTimeout(timeoutId);
   }, [clerkDashboardEnabled, clerkAuth.isLoaded]);
+
+  useEffect(() => {
+    if (clerkLoadTimedOut) {
+      captureClientReliabilitySignal("clerk_load_timeout", "Candidate dashboard sign-in did not initialize within the bounded recovery window.");
+    }
+  }, [clerkLoadTimedOut]);
 
   const utils = trpc.useUtils();
   const { data: applications = [], isLoading: appsLoading, isError: appsError } = trpc.campaign.applications.list.useQuery(undefined, {
@@ -300,7 +308,16 @@ export default function Dashboard() {
   if (clerkDashboardEnabled && !clerkAuth.isLoaded && !clerkLoadTimedOut) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6" aria-busy="true">
-        <Loader2 className="h-7 w-7 animate-spin text-[#e5482a]" aria-label="Loading secure sign-in" />
+        <Card className="w-full max-w-lg border-[#151515]/10 bg-[#fbf9f5] shadow-sm">
+          <CardHeader>
+            <div className="mb-3 flex items-center gap-3 text-[#e5482a]"><Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" /><span className="font-mono text-[11px] uppercase tracking-[.12em]">Secure candidate access</span></div>
+            <CardTitle>Connecting your private dashboard</CardTitle>
+            <CardDescription>We are checking your secure sign-in session. No campaign records, CV files, or application actions are exposed while this connection is loading.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[#151515]/65">If this takes longer than a few seconds, a safe recovery option will appear automatically.</p>
+          </CardContent>
+        </Card>
       </main>
     );
   }
@@ -310,13 +327,19 @@ export default function Dashboard() {
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
         <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
           <CardHeader>
+            <p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure access recovery</p>
             <CardTitle>Sign-in is temporarily unavailable</CardTitle>
-            <CardDescription>The secure email sign-in service did not respond. Please try again shortly.</CardDescription>
+            <CardDescription>The secure email sign-in service did not respond within eight seconds. Your campaign data remains protected and no application activity has been changed.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>
               Try again
             </Button>
+            <a className="flex w-full items-center justify-center gap-2 border border-[#151515]/20 px-4 py-3 text-sm font-medium transition-colors hover:border-[#e5482a] hover:text-[#e5482a]" href={`https://wa.me/966571448656?text=${dashboardHelpMessage}`} target="_blank" rel="noreferrer">
+              Request secure report help
+            </a>
+            <a className="block text-center text-sm underline underline-offset-4" href="/campaign-report-sample">See how application evidence is recorded</a>
+            <p className="text-xs leading-5 text-[#151515]/60">For privacy, we do not display a report link on this public recovery screen. The team confirms your identity before sharing any campaign update.</p>
           </CardContent>
         </Card>
       </main>
@@ -403,7 +426,7 @@ export default function Dashboard() {
                 <ActivityNotificationButton activities={recentActivity} seenAt={activitySeenAt} onSeen={markActivitySeen} />
                 <Link href="/dashboard/settings"><Button variant="outline" size="sm" className="gap-1.5" aria-label="Open profile settings"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Settings</span></Button></Link>
                 <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
-                  <User className="w-3.5 h-3.5 text-[#e5482a]" /> {user?.name || user?.email || "Candidate"}
+                  <User className="w-3.5 h-3.5 text-[#e5482a]" /> {candidateIdentity.name || candidateIdentity.email || "Candidate"}
                   {user?.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
                 </span>
                 <Button variant="outline" size="sm" onClick={() => clerkDashboardEnabled ? clerkAuth.signOut() : logout()} className="gap-1.5">

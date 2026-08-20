@@ -22,7 +22,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import React, { ChangeEvent, DragEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { demoLists } from "@/lib/careerTaxonomy";
@@ -36,11 +36,7 @@ import { ArabicIntakeSection } from "@/components/arabic/ArabicIntakeSection";
 import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
 import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
 import { Link } from "wouter";
-
-const MapView = lazy(async () => {
-  const module = await import("@/components/Map");
-  return { default: module.MapView };
-});
+import { JeddahLocationCard } from "@/components/Map";
 
 const WHATSAPP_URL = "https://wa.me/966571448656?text=مرحباً%20AutoApply%20SA،%20أرغب%20في%20بدء%20حملة%20تقديم.";
 
@@ -242,12 +238,12 @@ export default function ArabicHome() {
           <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
           <div className="hero-content page-frame" dir="rtl">
             <div className="hero-lead" dir="rtl">
-              <div className="eyebrow light"><StatusDot /> محرّك توظيف يعمل 24/7 <span /> جدة، المملكة العربية السعودية</div>
-              <h1 id="arabic-hero-heading"><span data-anime-hero-word>نتقدّم</span>{" "}<span data-anime-hero-word>للوظائف</span> <br /><span data-anime-hero-word>نيابةً</span>{" "}<span data-anime-hero-word>عنك.</span><br /><i><span data-anime-hero-word>كل</span>{" "}<span data-anime-hero-word>يوم.</span></i></h1>
-              <p>يتولى <bdi dir="ltr">AutoApply SA</bdi> إرسال طلبات توظيف مخصّصة إلى الشركات السعودية نيابةً عنك، عبر البريد الإلكتروني والمنصات، بينما تتفرّغ أنت لما يهمّك.</p>
+              <div className="eyebrow light"><StatusDot /> دعم حملة بعد موافقتك <span /> جدة، المملكة العربية السعودية</div>
+              <h1 id="arabic-hero-heading"><span data-anime-hero-word>طلبات</span>{" "}<span data-anime-hero-word>سعودية</span><br /><span data-anime-hero-word>مخصّصة،</span>{" "}<span data-anime-hero-word>بعد</span><br /><i><span data-anime-hero-word>موافقتك.</span></i></h1>
+              <p>نتفق أولاً على الوظائف المستهدفة والحجم والتوقيت. بعد موافقتك على خطة الحملة، يتولى <bdi dir="ltr">AutoApply SA</bdi> إدارة طلبات توظيف سعودية مخصّصة وتسجيل دليل كل إجراء.</p>
               <div className="hero-actions"><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link><a className="text-button light-text" href="#how">شاهد كيف يعمل <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
-              <div className="hero-trust-row" aria-label="معلومات موثوقة عن الحملة"><span><ShieldCheck size={14} /> دعم بالعربية والإنجليزية</span><span>مركّزة على السعودية</span><span>دعم من جدة</span><span>تراجع اتجاه الحملة أولاً</span><span>اطلب حذف بياناتك في أي وقت</span></div>
+              <div className="hero-trust-row" aria-label="معلومات موثوقة عن الحملة"><span><ShieldCheck size={14} /> توافق على الوظائف المستهدفة</span><span>تحدد الحجم والتواريخ</span><span>يمكنك الإيقاف في أي وقت</span><span>كل طلب مسجّل</span><span>دعم مركّز على السعودية</span></div>
             </div>
             <div className="hero-ledger" dir="rtl" aria-label="حالة محرك التقديم">
               <div className="ledger-topline"><span>محرّك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
@@ -261,7 +257,7 @@ export default function ArabicHome() {
 
 
         <section id="how" className="workflow-section section-ink">
-          <div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>02 / كيف يعمل</RailLabel><span className="rail-rule" /><p>ثلاث خطوات. بلا تقديم يدوي.</p></aside><div className="workflow-main"><div className="section-kicker inverse"><Sparkles size={15} /> واضح بالتصميم</div><h2>ضع بحثك <i>في نظام واضح.</i></h2><p className="section-summary inverse-summary">ابدأ بما لديك بالفعل، ثم دع المحرّك يحوّله إلى روتين تقديم منتظم.</p><div className="process-list"><article className="process-item"><div className="process-number">01</div><div className="process-content"><h3>ارفع سيرتك الذاتية</h3><p>أضف ملف PDF أو DOC أو DOCX أو TXT. مهاراتك وخبراتك ومسارك المهني تصبح نقطة الانطلاق.</p></div><FileText size={24} strokeWidth={1.4} /></article><article className="process-item"><div className="process-number">02</div><div className="process-content"><h3>حدّد الوظائف المستهدفة</h3><p>راجع أفضل مسارات الوظائف المتوافقة معك من بين الإعلانات المتاحة في السعودية، ووجّه البحث نحو خطوتك القادمة.</p></div><Globe2 size={24} strokeWidth={1.4} /></article><article className="process-item active-process"><div className="process-number">03</div><div className="process-content"><h3>المحرّك يقدّم على مدار الساعة</h3><p>الطلبات، وخطابات التقديم المخصّصة، والمنصات، ورسائل البريد الإلكتروني، والتحقق من التسليم — كل ذلك يسير بينما تُكمل يومك.</p></div><Send size={24} strokeWidth={1.4} /></article></div></div></div>
+          <div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>02 / كيف يعمل</RailLabel><span className="rail-rule" /><p>ثلاث خطوات. بلا تقديم يدوي.</p></aside><div className="workflow-main"><div className="section-kicker inverse"><Sparkles size={15} /> واضح بالتصميم</div><h2>ضع بحثك <i>في نظام واضح.</i></h2><p className="section-summary inverse-summary">ابدأ بما لديك بالفعل، ثم دع المحرّك يحوّله إلى روتين تقديم منتظم.</p><div className="process-list"><article className="process-item"><div className="process-number">01</div><div className="process-content"><h3>ارفع سيرتك الذاتية</h3><p>أضف ملف PDF أو DOC أو DOCX أو TXT. مهاراتك وخبراتك ومسارك المهني تصبح نقطة الانطلاق.</p></div><FileText size={24} strokeWidth={1.4} /></article><article className="process-item"><div className="process-number">02</div><div className="process-content"><h3>حدّد الوظائف المستهدفة</h3><p>راجع أفضل مسارات الوظائف المتوافقة معك من بين الإعلانات المتاحة في السعودية، ووجّه البحث نحو خطوتك القادمة.</p></div><Globe2 size={24} strokeWidth={1.4} /></article><article className="process-item active-process"><div className="process-number">03</div><div className="process-content"><h3>وافق، ثم ندير الحملة</h3><p>بعد موافقتك الخطية على خطة الحملة، تتبع الطلبات المخصّصة والمنصات ورسائل البريد والتحقق من التسليم الاتجاه الذي اتفقت عليه.</p></div><Send size={24} strokeWidth={1.4} /></article></div></div></div>
         </section>
 
         <section id="product" className="video-explainer section-paper" aria-labelledby="arabic-video-explainer-heading">
@@ -316,7 +312,7 @@ export default function ArabicHome() {
 
         <section id="faq" className="faq-section section-ink"><div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>06 / الأسئلة الشائعة</RailLabel><span className="rail-rule" /><p>قبل أن تبدأ</p></aside><div className="faq-main"><div className="section-kicker inverse"><MessageCircle size={15} /> الأسئلة، بإجابات واضحة</div><h2>أشياء تستحق <i>التوضيح.</i></h2><div className="faq-list">{faqs.map((faq, index) => { const isOpen = activeFaq === index; return <article className={`faq-item ${isOpen ? "open" : ""}`} key={faq.question}><button onClick={() => setActiveFaq(isOpen ? null : index)} aria-expanded={isOpen}><span>0{index + 1}</span><b>{faq.question}</b><ChevronDown size={20} /></button><div className="faq-answer"><p>{faq.answer}</p></div></article>; })}</div></div></div></section>
 
-        <section id="location" className="location-section section-fog"><div className="page-frame location-grid"><div className="location-copy"><div className="section-kicker"><Globe2 size={15} /> جدة، السعودية</div><h2>مُركّز على السعودية.<br /><i>مقرّه في جدة.</i></h2><p className="section-summary">AutoApply SA مقرّها في جدة، وتخدم المرشحين الباحثين عن وظائف في جميع أنحاء المملكة العربية السعودية.</p><div className="location-actions"><a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">الاتجاهات <ArrowUpRight size={18} /></a><Link className="text-button" href="/ar/enquire">ابدأ عن بُعد <MoveLeft size={18} /></Link></div></div>          <div className="map-frame"><Suspense fallback={<div className="location-map-canvas homepage-map-loading" role="status" aria-label="جارٍ تحميل خريطة جدة" />}><MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} language="ar" region="SA" /></Suspense><div className="map-caption"><span><StatusDot /> قاعدة الخدمة</span><b>جدة / السعودية</b></div></div></div></section>
+        <section id="location" className="location-section section-fog"><div className="page-frame location-grid"><div className="location-copy"><div className="section-kicker"><Globe2 size={15} /> جدة، السعودية</div><h2>مُركّز على السعودية.<br /><i>مقرّه في جدة.</i></h2><p className="section-summary">AutoApply SA مقرّها في جدة، وتخدم المرشحين الباحثين عن وظائف في جميع أنحاء المملكة العربية السعودية.</p><div className="location-actions"><a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">الاتجاهات <ArrowUpRight size={18} /></a><Link className="text-button" href="/ar/enquire">ابدأ عن بُعد <MoveLeft size={18} /></Link></div></div>          <div className="map-frame"><JeddahLocationCard className="location-map-canvas" language="ar" /><div className="map-caption"><span><StatusDot /> قاعدة الخدمة</span><b>جدة / السعودية</b></div></div></div></section>
 
         <section className="final-cta section-accent"><div className="page-frame final-inner"><div><div className="eyebrow dark"><StatusDot tone="quiet" /> ابدأ حملة جديدة</div><h2>اجعل وظيفتك القادمة<br /><i>خطوتك التالية.</i></h2></div><div className="final-action"><p>تواصل مباشرة مع حسن لإعداد الحملة، وتفاصيل الدفع، وأفضل طريقة لمشاركة سيرتك الذاتية.</p><Link className="button button-ink" href="/ar/enquire">ابدأ حملتك <ArrowUpRight size={18} /></Link></div></div></section>
       </main>
