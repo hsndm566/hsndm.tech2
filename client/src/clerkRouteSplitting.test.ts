@@ -11,7 +11,7 @@ describe("dashboard-only Clerk loading", () => {
     expect(appSource).not.toContain('from "@/components/ClerkSessionBoundary"');
     expect(dashboardShell).toContain("ClerkSessionBoundary");
     expect(dashboardShell).toContain("canUseClerkOnCurrentOrigin");
-    expect(viteConfig).toContain('if (id.includes("@clerk")) return "clerk-auth"');
-    expect(viteConfig).toContain('!dependency.includes("clerk-auth")');
+    expect(viteConfig).not.toContain('if (id.includes("@clerk")) return "clerk-auth"');
+    expect(viteConfig).not.toContain('dependency.includes("clerk-auth")');
   });
 });

@@ -172,14 +172,10 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    modulePreload: {
-      resolveDependencies: (_filename, dependencies) => dependencies.filter((dependency) => !dependency.includes("clerk-auth")),
-    },
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
-          if (id.includes("@clerk")) return "clerk-auth";
           if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
           if (id.includes("lucide-react")) return "icons";
           if (id.includes("@tanstack") || id.includes("@trpc") || id.includes("superjson")) return "data-client";
