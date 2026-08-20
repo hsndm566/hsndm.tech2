@@ -370,6 +370,27 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .site-shell .plan-featured { box-shadow: 0 10px 24px rgba(21,21,21,.16), 0 0 0 1px rgba(229,72,42,.42); }
 .site-shell .plan-featured:focus-within { border-color: var(--signal); box-shadow: 0 16px 30px rgba(21,21,21,.2), 0 0 0 2px rgba(229,72,42,.58); }
 
+/* Small interaction refinements: clearer keyboard focus and a more deliberate technical rhythm. */
+.site-shell :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+.site-shell :is(.button, .text-button, .plan-cta) svg {
+  transition: transform 160ms var(--polish-ease);
+}
+@media (hover: hover) {
+  .site-shell :is(.button, .text-button, .plan-cta):hover svg { transform: translate(2px, -1px); }
+  .site-shell .process-item { transition: transform 180ms var(--polish-ease), background-color 180ms ease, box-shadow 180ms ease; }
+  .site-shell .process-item:hover { transform: translateX(4px); background-color: rgba(255,255,255,.035); box-shadow: inset 2px 0 0 var(--signal); }
+  .site-shell .hero-ledger { transition: transform 220ms var(--polish-ease), box-shadow 220ms ease; }
+  .site-shell .hero-ledger:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(21,21,21,.14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell :is(.button, .text-button, .plan-cta) svg,
+  .site-shell .process-item,
+  .site-shell .hero-ledger { transition: none; }
+}
+
 /* Anime.js owns only the landing-page arrival; native CSS remains responsible for all scroll reveals and controls. */
 .has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: transform, opacity; }
 @media (prefers-reduced-motion: reduce) {

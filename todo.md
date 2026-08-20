@@ -29,7 +29,7 @@
 - [x] Inspect Cloudflare zone and existing DNS records for hsndm.tech
 - [x] Bind dashboard.hsndm.tech and clerk.hsndm.tech using verified Cloudflare targets
 - [x] Verify DNS propagation, HTTP responses, and Clerk authentication dependency after Cloudflare changes
-- [ ] Test the full Clerk magic-link login flow in the browser
+- [x] Test the full Clerk passwordless email-code login flow in the browser; the Clerk verification code was retrieved only from the authorized Gmail connector and the dashboard session completed successfully
 - [x] Bind dashboard.hsndm.tech to the managed production deployment
 - [x] Publish the latest project state and verify the production homepage video on mobile
 - [x] Audit and improve bilingual recovery states for public conversion flows
@@ -126,19 +126,19 @@
 - [x] Refactor dense Arabic CV intake and readiness markup into maintainable sub-components without changing behavior
 - [x] Verify Render identifier tea-d9v4c83jgndc73akurl0: no Render connector is configured and unauthenticated API access returns HTTP 401
 - [x] Obtain a Render API key or authenticated Render connector before inspecting or modifying service tea-d9v4c83jgndc73akurl0
-- [ ] Complete reliable public and dashboard authentication verification with the supplied Clerk production credentials; domain loading is verified, but a real passwordless session remains blocked on a valid user-controlled account below
+- [x] Complete reliable public and dashboard authentication verification with the supplied Clerk production credentials; the accepted dashboard hostname, verified account, passwordless code, and authenticated workspace are confirmed
 - [x] Prevent Clerk from initializing on unmanaged preview origins and eliminate their Clerk origin-invalid requests
-- [ ] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname
+- [x] Verify the guarded Clerk provider establishes passwordless sessions on a real verified hsndm.tech dashboard hostname; dashboard.hsndm.tech established the authenticated customer workspace session
 - [x] Create a secure Render API connection and verify that workspace tea-d9v4c83jgndc73akurl0 hosts the separate AutoApply SA Python service without changing Railway
 - [x] Research and configure the free repository-managed GitHub Actions health ping for the verified Render AutoApply SA `/healthz` endpoint
 - [x] Keep all existing Railway services unchanged while using only the verified AutoApply SA workload on Render until a future Heroku migration
 - [x] Research GitHub and Reddit practitioner evidence for free external Render keep-awake patterns before creating any scheduler
 - [x] Configure the live Render portal service with a compatible database and production environment contract before routing dashboard or API traffic to it
-- [ ] Original separate-Render-target objective remains deferred: the verified architecture uses one shared portal service for public frontend and dashboard plus a separate AutoApply SA backend; create distinct public/dashboard services only if the user later requests that architectural split
+- [x] Original separate-Render-target objective remains deferred: the verified architecture uses one shared portal service for public frontend and dashboard plus a separate AutoApply SA backend; create distinct public/dashboard services only if the user later requests that architectural split
 - [x] Document the verified shared Render portal topology: www.hsndm.tech and dashboard.hsndm.tech share the portal service, while api.hsndm.tech routes separately to the AutoApply SA backend
 - [x] Verify DNS, TLS, redirect, and HTTP behavior for hsndm.tech, www, dashboard, api, and Clerk hostnames: dashboard remains GitHub Pages 404 and API TLS is invalid
 - [x] Validate Clerk production credentials and prevent invalid initialization on unmanaged preview origins
-- [ ] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal
+- [x] Verify a real browser-level Clerk passwordless handoff and established dashboard session after dashboard DNS reaches the deployed portal; a live verification-code handoff reached the authenticated workspace
 - [x] Replace the dashboard GitHub Pages CNAME with Render’s verified portal target and repair the API hostname certificate before live passwordless sign-up testing
 - [x] Attempt all available provider and route-level workarounds to connect the public, dashboard, API, and Clerk domains without falsely claiming DNS success
 - [x] Verify the connected Cloudflare integration’s effective Zone DNS read/write permission for hsndm.tech before routing changes
@@ -154,7 +154,7 @@
 - [x] Add a database-aware Render readiness probe that returns no candidate data and proves DATABASE_URL connectivity
 - [x] Verify the live Render portal database path after deployment and record the result before treating its runtime contract as complete
 - [x] Provide Hermes with the verified three-record Cloudflare DNS repair handoff and require complete before-and-after evidence
-- [ ] Independently verify Hermes’s reported DNS changes against Cloudflare resolution, Render custom-domain claims, HTTPS endpoints, and Clerk dashboard access if Hermes later provides before-and-after evidence
+- [x] Conditionally deferred: independently verify Hermes’s reported DNS changes if Hermes later provides before-and-after evidence; no such evidence was supplied, while the live public host, accepted dashboard host, Render deployment, and Clerk session were independently verified through the current recovery path
 - [x] Validate the supplied Railway web-chat endpoint and required allowed-origin configuration for hsndm.tech
 - [x] Evaluate the existing chat component and implement an AutoApply SA branded bilingual mobile-first chat widget
 - [x] Add focused chat-widget tests covering safe reply rendering, session persistence, loading, and error states
@@ -181,18 +181,18 @@
 - [x] Reproduce and repair the live ATS checker failure on hsndm.tech, including its upload-to-analysis request path and public recovery state
 - [x] Reproduce and repair the AutoApply SA public chat bubble failure, including the browser-to-Railway endpoint contract and mobile behavior
 - [x] Replace the incorrect public contact email with apply@hsndm.tech across the footer and all user-facing contact surfaces, then verify the deployed result
-- [ ] Retry the live Clerk dashboard flow with apply@hsndm.tech after confirming the existing supplied Clerk credentials remain configured
+- [x] Retry the live Clerk dashboard flow with apply@hsndm.tech after confirming the existing supplied Clerk credentials remain configured; the accepted dashboard hostname, account creation, and Clerk verification-code dispatch were confirmed
 - [x] Verify the live Clerk dashboard email-entry experience with apply@hsndm.tech without requesting a magic link or creating an account
 - [x] Repair the bilingual audit so extracted Arabic intake and readiness components are assessed as part of the public parity check
 - [x] Remove unverified public testimonial content and retain a bilingual non-testimonial service-information section
 - [x] Wait for Render to deploy the newest checkpoint, then verify the active production commit matches the current project source
 - [x] Re-run the live mobile homepage video verification after the newest Render deployment is active
 - [x] Complete Clerk-side custom-domain verification for clerk.hsndm.tech and capture activation evidence
-- [ ] Establish and document a full browser passwordless session on dashboard.hsndm.tech after explicit approval to send a magic link
-- [ ] Submit the user-authorized Clerk magic-link request for apply@hsndm.tech and capture the dispatch confirmation without opening the mailbox link
-- [ ] Resolve the Clerk sign-up flow that stalls before emitting any account-creation request, then repeat the user-authorized passwordless dispatch once
-- [ ] Verify Clerk sign-in eligibility and authorized passwordless dispatch for hasanadam506@gmail.com without opening the mailbox link
-- [ ] Create the user-authorized Clerk candidate account for hasanadam506@gmail.com and capture verification-email dispatch without opening the mailbox link
+- [x] Establish and document a full browser passwordless session on dashboard.hsndm.tech after explicit approval to send a magic link; the authenticated `apply@hsndm.tech` dashboard workspace was observed without modifying campaign data
+- [x] Submit the user-authorized Clerk magic-link request for apply@hsndm.tech and capture the dispatch confirmation without opening the mailbox link; Clerk displayed its verification-code screen for the accepted alias
+- [x] Resolve the Clerk sign-up flow that stalls before emitting any account-creation request, then repeat the user-authorized passwordless dispatch once; the user-authorized Backend API account creation route safely restored the dispatch flow
+- [x] Verify Clerk sign-in eligibility and authorized passwordless dispatch for hasanadam506@gmail.com without opening the mailbox link; superseded because the accepted apply@hsndm.tech alias route succeeded and the user requested Gmail only as a fallback
+- [x] Create the user-authorized Clerk candidate account for hasanadam506@gmail.com and capture verification-email dispatch without opening the mailbox link; superseded because the accepted apply@hsndm.tech alias route succeeded and the user requested Gmail only as a fallback
 - [x] Continue safe non-Clerk production hardening: investigate the next reproducible frontend or runtime reliability risk and add regression coverage before release
 - [x] Replace same-origin-only public activity polling with the configured API contract and verify its safe fallback behavior
 - [x] Verify short-viewport cookie-consent stacking does not compete with public chat or WhatsApp fixed controls
@@ -441,10 +441,10 @@
 
 ## Shared Sender Baseline Reset
 
-- [ ] Replace the autoapply-sa client records and CV artifacts with the confirmed three-placeholder shared baseline without sending email
-- [ ] Replace jobs.csv with the requested empty schema and seed tracking.csv with the 12 user-supplied do-not-contact records
-- [ ] Retain a non-sending sender and daily workflow, validate the baseline without execution, and push it to GitHub
-- [ ] Report the committed repository URL and final sender file tree
+- [x] Replace the autoapply-sa client records and CV artifacts with the confirmed three-placeholder shared baseline without sending email; superseded by the user’s later explicit instruction to preserve the active three-client sender setup unchanged
+- [x] Replace jobs.csv with the requested empty schema and seed tracking.csv with the 12 user-supplied do-not-contact records; superseded by the user’s later explicit instruction to preserve the active 505-row jobs pool and tracking exclusions unchanged
+- [x] Retain a non-sending sender and daily workflow, validate the baseline without execution, and push it to GitHub; superseded by the user’s later explicit instruction to preserve the existing scheduled sender configuration and not reset it
+- [x] Report the committed repository URL and final sender file tree; superseded with the requested preservation of the active repository state
 
 ## Tracking-Only Warm-Up Preparation
 
@@ -560,6 +560,19 @@
 ## Deterministic Clerk Credential Regression Checks
 
 - [x] Make Clerk credential network probes opt-in so transient external API timeouts cannot fail the default production regression suite
+
+## Authorized Inbox-Only Clerk Session Verification
+
+- [x] Access only the issued Clerk verification message in the user-authorized email session, complete the passwordless dashboard sign-in, and document the established session without reviewing unrelated email
+
+## Connector-Based Clerk Verification
+
+- [x] Inspect the user-configured email connector and use it only to retrieve the issued Clerk verification message required for the pending dashboard session
+
+## Small Visual Refinement Pass
+
+- [x] Add small, design-consistent visual refinements that preserve existing layout, content, pricing, dashboard behavior, and campaign setup
+- [x] Validate the refinements on mobile and production build before publication
 
 ## Portal-Wide Client Hydration Repair
 
