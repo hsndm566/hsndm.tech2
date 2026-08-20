@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 describe("Clerk credential configuration", () => {
-  it("authenticates against Clerk without exposing the secret", async () => {
+  const runExternalCheck = process.env.RUN_CLERK_CREDENTIAL_CHECK === "true" ? it : it.skip;
+
+  runExternalCheck("authenticates against Clerk without exposing the secret", async () => {
     const secret = process.env.CLERK_SECRET_KEY;
     expect(secret, "CLERK_SECRET_KEY must be configured for this validation").toBeTruthy();
 

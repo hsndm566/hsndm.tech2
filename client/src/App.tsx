@@ -32,6 +32,7 @@ import { getDashboardHostRedirect, isDashboardSubdomain } from "@/lib/subdomain"
 import { CookieConsent } from "@/components/CookieConsent";
 import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
+import { AnimeVisualEnhancements } from "@/components/AnimeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 
 function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
@@ -75,6 +76,7 @@ function Router() {
   return (
     <>
       <NativeVisualEnhancements routeKey={location} />
+      <AnimeVisualEnhancements routeKey={location} />
       <ErrorBoundary resetKey={location}>
       <Switch>
       <Route path="/" component={Home} />

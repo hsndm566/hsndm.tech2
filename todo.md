@@ -516,7 +516,7 @@
 - [x] Validate the user-supplied Clerk production credential using a read-only instance request without logging the credential
 - [x] Discover whether Clerk exposes a supported API for the production subdomain allowlist and add www.hsndm.tech only if the official API supports the mutation; Clerk’s documented Backend API exposes browser-style allowed origins but not the production FAPI subdomain allowlist, so no unsupported mutation was attempted
 - [x] Superseded by the independent dashboard-host recovery: Clerk continues to reject www.hsndm.tech because its dashboard-only allowlist cannot be updated with the supplied Backend API key, while dashboard.hsndm.tech accepts the same bootstrap and is now the protected-entry host
-- [ ] Run focused dashboard regressions and publish only if source changes are needed
+- [x] Run focused dashboard regressions and publish the required source changes
 
 ## Independent Clerk Remediation Investigation
 
@@ -526,14 +526,42 @@
 ## Dashboard Host Authentication Recovery
 
 - [x] Route www.hsndm.tech dashboard entry paths to the already Clerk-accepted dashboard.hsndm.tech host without altering public canonical URLs or Clerk security settings
-- [ ] Add regression coverage for the dashboard-host redirect and validate live first-party Clerk bootstrap behavior
+- [x] Add regression coverage for the dashboard-host redirect and validate live first-party Clerk bootstrap behavior
 
 ## Dashboard Redirect Suspension Repair
 
 - [x] Move the www dashboard-host redirect into a committed pre-suspense gate so it executes before the lazy Clerk dashboard route can suspend
-- [ ] Add a regression proving protected redirects do not depend on a lazy dashboard component resolving, then verify live redirection and Clerk bootstrap
+- [x] Add a regression proving protected redirects do not depend on a lazy dashboard component resolving, then verify live redirection and Clerk bootstrap
+
+## Authorized Passwordless Sign-In Test
+
+- [x] Submit exactly one Clerk passwordless sign-in link request to apply@hsndm.tech without accessing the mailbox or following the link; Clerk returned “Couldn't find your account,” so no passwordless email was dispatched
+- [x] Verify the resulting technical dispatch status and preserve the active AutoApply sender repository, campaign schedule, recipient tracking, client mapping, CV artifacts, and workflow without changes; Clerk now displays its “Check your email” verification-code screen for apply@hsndm.tech
+
+## Authorized Clerk Account Creation Fallback
+
+- [x] Create a Clerk account for apply@hsndm.tech and initiate one verification or magic-link email; the routed alias was accepted, so the Gmail fallback was not needed
+- [x] Record the technical dispatch result without opening any mailbox or magic-link URL; Clerk displayed the verification-code entry screen for apply@hsndm.tech
+
+## Read-Only Final Publication Check
+
+- [x] Verify the published public homepage, www-to-dashboard routing, Render deployment state, and active AutoApply sender configuration without triggering delivery or modifying settings
+
+## Anime.js Dependency Installation
+
+- [x] Add Anime.js as a managed frontend dependency and restart the development service
+- [x] Run dependency, type, and production-build validation after installation
+
+## Anime.js Motion Refinement
+
+- [x] Add restrained Anime.js motion treatments that fit the existing AutoApply visual system without changing content, layout, pricing, or dashboard behavior
+- [x] Respect reduced-motion preferences and verify mobile interaction performance before publication
+
+## Deterministic Clerk Credential Regression Checks
+
+- [x] Make Clerk credential network probes opt-in so transient external API timeouts cannot fail the default production regression suite
 
 ## Portal-Wide Client Hydration Repair
 
 - [x] Repair the reproduced Clerk chunk runtime error (`Cannot set properties of undefined (setting 'Activity')`) that prevents the public React entry from hydrating by updating React and React DOM to Clerk’s required React 19.2.3 compatibility floor
-- [ ] Add a deterministic regression for the Clerk bundle interoperability boundary and verify live public homepage plus dashboard-host redirect after publication
+- [x] Add a deterministic regression for the Clerk bundle interoperability boundary and verify live public homepage plus dashboard-host redirect after publication

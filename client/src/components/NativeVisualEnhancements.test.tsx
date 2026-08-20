@@ -3,13 +3,12 @@ import { describe, expect, it } from "vitest";
 
 const appSource = readFileSync(new URL("../App.tsx", import.meta.url), "utf8");
 const controllerSource = readFileSync(new URL("./NativeVisualEnhancements.tsx", import.meta.url), "utf8");
-const htmlSource = readFileSync(new URL("../../index.html", import.meta.url), "utf8");
 const styleSource = readFileSync(new URL("../index.css", import.meta.url), "utf8");
 
 describe("native visual refinement", () => {
-  it("uses one shared native controller and no animation-library runtime", () => {
-    expect(htmlSource).not.toContain("animejs");
+  it("keeps shared scroll reveals native while allowing a separate scoped motion layer", () => {
     expect(appSource).toContain("<NativeVisualEnhancements routeKey={location} />");
+    expect(appSource).toContain("<AnimeVisualEnhancements routeKey={location} />");
   });
 
   it("keeps scroll reveals native, reduced-motion-safe, and route-aware", () => {

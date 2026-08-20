@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 describe("Clerk public client configuration", () => {
-  it("keeps the public alias aligned with the authenticated Clerk instance", async () => {
+  const runExternalCheck = process.env.RUN_CLERK_CREDENTIAL_CHECK === "true" ? it : it.skip;
+
+  runExternalCheck("keeps the public alias aligned with the authenticated Clerk instance", async () => {
     const secret = process.env.CLERK_SECRET_KEY;
     const publishable = process.env.VITE_CLERK_PUBLISHABLE_KEY;
 

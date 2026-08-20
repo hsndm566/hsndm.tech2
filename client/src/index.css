@@ -370,6 +370,12 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .site-shell .plan-featured { box-shadow: 0 10px 24px rgba(21,21,21,.16), 0 0 0 1px rgba(229,72,42,.42); }
 .site-shell .plan-featured:focus-within { border-color: var(--signal); box-shadow: 0 16px 30px rgba(21,21,21,.2), 0 0 0 2px rgba(229,72,42,.58); }
 
+/* Anime.js owns only the landing-page arrival; native CSS remains responsible for all scroll reveals and controls. */
+.has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: transform, opacity; }
+@media (prefers-reduced-motion: reduce) {
+  .has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: auto; }
+}
+
 .ledger-topline span:last-child { display: inline-flex; align-items: center; gap: 5px; }
 .ledger-topline span:last-child::before { width: 5px; height: 5px; border-radius: 999px; content: ""; background: currentColor; box-shadow: 0 0 0 3px rgba(229,72,42,.12); }
 @media (prefers-reduced-motion: no-preference) {
