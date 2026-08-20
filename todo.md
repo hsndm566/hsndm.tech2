@@ -401,3 +401,13 @@
 - [x] Add or safely merge the required Cloudflare Email Routing MX and SPF DNS records without disrupting existing mail authentication
 - [x] Configure and verify Brevo sender-domain authentication records for hsndm.tech using the secured reusable Brevo API connector and account-specific DNS records
 - [x] Verify final Cloudflare DNS and routing-rule status; document any remaining Brevo credential requirement separately
+
+## Brevo Outbound Delivery Test
+
+- [x] Confirm Brevo sender readiness for apply@hsndm.tech and send one user-authorized transactional delivery test to hasanadam506@gmail.com
+- [x] Verify Brevo’s send response and record the test outcome without sending additional messages
+
+## Cloudflare Email Routing Delivery Diagnosis
+
+- [x] Audit the hsndm.tech Cloudflare zone, Email Routing readiness, forwarding rules, verified destination, and public/root MX records for the three apply aliases
+- [x] Repair only a confirmed Cloudflare Email Routing rule, destination, or DNS configuration issue and re-verify readiness; no configuration fault was found, so no change was required
