@@ -416,4 +416,4 @@
 
 - [x] Audit SPF, DKIM, DMARC alignment, Brevo sender-domain status, and available message delivery evidence for apply@hsndm.tech
 - [x] Apply only verified sender-authentication and deliverability improvements without breaking Cloudflare Email Routing
-- [ ] Verify the final DNS/authentication state with a post-propagation Brevo delivery re-test and document safe sender-reputation practices for future campaign email; temporarily blocked until Brevo authorizes the current client IP
+- [x] Verify the final DNS/authentication state with a post-propagation Brevo delivery re-test and document safe sender-reputation practices for future campaign email; Brevo recorded the controlled Gmail test as delivered
