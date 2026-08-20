@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
@@ -73,6 +73,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "company" | "role">("newest");
+  const [isFilterTransitioning, setIsFilterTransitioning] = useState(false);
+  const filterTransitionInitialized = useRef(false);
   const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const [isNewAppOpen, setIsNewAppOpen] = useState(false);
   const [newCompany, setNewCompany] = useState("");
@@ -127,6 +129,16 @@ export default function Dashboard() {
       captureClientReliabilitySignal("clerk_load_timeout", "Candidate dashboard sign-in did not initialize within the bounded recovery window.");
     }
   }, [clerkLoadTimedOut]);
+
+  useEffect(() => {
+    if (!filterTransitionInitialized.current) {
+      filterTransitionInitialized.current = true;
+      return;
+    }
+    setIsFilterTransitioning(true);
+    const timeoutId = window.setTimeout(() => setIsFilterTransitioning(false), 320);
+    return () => window.clearTimeout(timeoutId);
+  }, [statusFilter, sortBy]);
 
   const utils = trpc.useUtils();
   const { data: applications = [], isLoading: appsLoading, isError: appsError } = trpc.campaign.applications.list.useQuery(undefined, {
@@ -801,28 +813,30 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {filteredApps.length === 0 ? (
-              <Card className="bg-[#fbf9f5] border-[#151515]/10 text-center py-16">
-                <CardContent className="space-y-4">
-                  <Briefcase className="w-12 h-12 mx-auto text-[#151515]/30" />
-                  <h3 className="text-lg font-semibold">No applications found in your account</h3>
-                  <p className="text-sm text-[#151515]/60 max-w-md mx-auto">
-                    You haven't submitted any campaign briefs yet, or your applications are currently being prepared by our Jeddah matching engine.
-                  </p>
-                  <Link href="/enquire">
-                    <Button className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">
-                      Start Application Campaign
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredApps.map((app) => (
+            <div className="dashboard-filter-results" data-dashboard-filtering={isFilterTransitioning ? "true" : "false"} aria-live="polite">
+              {filteredApps.length === 0 ? (
+                <Card className="dashboard-filter-empty bg-[#fbf9f5] border-[#151515]/10 text-center py-16">
+                  <CardContent className="space-y-4">
+                    <Briefcase className="w-12 h-12 mx-auto text-[#151515]/30" />
+                    <h3 className="text-lg font-semibold">No applications found in your account</h3>
+                    <p className="text-sm text-[#151515]/60 max-w-md mx-auto">
+                      You haven't submitted any campaign briefs yet, or your applications are currently being prepared by our Jeddah matching engine.
+                    </p>
+                    <Link href="/enquire">
+                      <Button className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">
+                        Start Application Campaign
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredApps.map((app, index) => (
                   <Card 
                     key={app.id} 
-                    className="bg-[#fbf9f5] border-[#151515]/10 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between cursor-pointer"
+                    className="dashboard-application-card bg-[#fbf9f5] border-[#151515]/10 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between cursor-pointer"
                     onClick={() => setSelectedApp(app)}
+                    style={{ animationDelay: `${index * 35}ms` }}
                   >
                     <CardHeader>
                       <div className="flex justify-between items-start gap-2">
@@ -860,9 +874,10 @@ export default function Dashboard() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Application Timeline Dialog */}
             <Dialog open={!!selectedApp} onOpenChange={(open) => !open && setSelectedApp(null)}>

@@ -597,3 +597,10 @@
 - [x] Implement Option 4: evidence-card stagger-in animation in the candidate dashboard
 - [x] Add regression coverage for all three Anime.js enhancements and reduced-motion behavior
 - [x] Validate the enhancements at 375px, with TypeScript, the complete test suite, and the production build
+
+## Interaction Animation Refinement
+
+- [x] Add a restrained primary-CTA approval-sweep animation
+- [x] Add completion-only onboarding check feedback animation
+- [x] Add subtle dashboard filter and sort transition animation
+- [x] Add regression coverage and validate reduced-motion, 375px, TypeScript, complete tests, and production build

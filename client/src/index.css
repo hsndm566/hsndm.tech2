@@ -393,6 +393,21 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 
 /* Anime.js owns only the landing-page arrival; native CSS remains responsible for all scroll reveals and controls. */
 .has-anime-motion .hero :is([data-anime-hero-word], .hero-ledger, .hero-stats > div > div) { will-change: transform, opacity; }
+.button-ink { background: linear-gradient(102deg, var(--ink) 0%, var(--ink) 42%, var(--signal) 49%, var(--ink) 56%, var(--ink) 100%); background-position: 0 0; background-size: 250% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .button-ink { transition: transform .18s cubic-bezier(.23,1,.32,1), color .18s ease, border-color .18s ease, background-position .42s cubic-bezier(.23,1,.32,1); }
+  .button-ink:is(:hover, :focus-visible) { color: var(--paper); border-color: var(--ink); background-position: 100% 0; }
+}
+.dashboard-filter-results { min-width: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-onboarding-complete-feedback="true"] { animation: onboarding-completion-settle .52s cubic-bezier(.23,1,.32,1) both; }
+  [data-onboarding-completion-check="true"] { animation: onboarding-completion-check .42s .08s cubic-bezier(.23,1,.32,1) both; }
+  [data-dashboard-filtering="true"] .dashboard-application-card,
+  [data-dashboard-filtering="true"] .dashboard-filter-empty { animation: dashboard-filter-card-in .28s cubic-bezier(.23,1,.32,1) both; }
+}
+@keyframes onboarding-completion-settle { 0% { opacity: .7; transform: translateY(6px); } 65% { opacity: 1; transform: translateY(-1px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes onboarding-completion-check { 0% { transform: scale(.8) rotate(-8deg); } 70% { transform: scale(1.12) rotate(0); } 100% { transform: scale(1); } }
+@keyframes dashboard-filter-card-in { from { opacity: .4; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .process-list { --workflow-path-progress: 0; position: relative; isolation: isolate; }
 .process-list::before { content: ""; position: absolute; z-index: 1; top: 1px; bottom: 1px; left: 41px; width: 1px; pointer-events: none; opacity: .9; background: var(--signal); transform: scaleY(var(--workflow-path-progress)); transform-origin: top; will-change: transform; }
 .site-shell[lang="ar"] .process-list::before { right: 41px; left: auto; transform-origin: top; }
