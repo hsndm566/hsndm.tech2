@@ -732,3 +732,9 @@
 - [x] Inspect existing public CTA anchors and feature-card interaction selectors
 - [x] Add accessible smooth scrolling for in-page marketing CTAs and restrained feature-card hover feedback with reduced-motion support
 - [x] Validate interaction behavior, regression coverage, mobile presentation, and production build before publication
+
+## Full-Site Reliability Audit and Bug-Fix Pass
+
+- [x] Run parallel source, runtime, network, route, responsive, accessibility, and production-build diagnostics without altering approved UX or content
+- [x] Reproduce and fix only confirmed bugs, with focused regression coverage for every source change
+- [x] Revalidate public, Arabic, protected dashboard boundaries, mobile layouts, production build, and live availability before publication
