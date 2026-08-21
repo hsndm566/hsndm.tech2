@@ -12,11 +12,13 @@
   <url><loc>https://www.hsndm.tech/how-it-works/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.hsndm.tech/support/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.hsndm.tech/case-studies/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.hsndm.tech/campaign-report-sample/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.hsndm.tech/privacy/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.hsndm.tech/terms/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.hsndm.tech/ar/how-it-works/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.hsndm.tech/ar/support/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.hsndm.tech/ar/case-studies/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.hsndm.tech/ar/campaign-report-sample/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.hsndm.tech/ar/privacy/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.hsndm.tech/ar/terms/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

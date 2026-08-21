@@ -13,6 +13,7 @@ const pageMetadata = {
     lang: "ar",
     direction: "rtl",
     locale: "ar_SA",
+    faqSchema: "ar",
   },
   "ar/enquire": {
     title: "ابدأ حملتك | أوتوأبلاي السعودية",
@@ -67,9 +68,25 @@ const pageMetadata = {
   ats: { title: "ATS CV Review for Saudi Jobs | AutoApply SA", description: "Check your CV's ATS readiness for Saudi Arabia job applications — free browser-based preview, no file upload required.", path: "/ats", lang: "en", direction: "ltr", locale: "en_SA" },
 };
 
+const faqSchemas = {
+  ar: {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      { "@type": "Question", name: "هل بيانات سيرتي الذاتية خاصة؟", acceptedAnswer: { "@type": "Answer", text: "تُستخدم سيرتك الذاتية لمطابقة الطلبات وتخصيصها. يمكنك طلب حذفها في أي وقت، ولا تُباع كمنتج منفصل." } },
+      { "@type": "Question", name: "هل تتقدّمون فعلياً لشركات حقيقية؟", acceptedAnswer: { "@type": "Answer", text: "صُمِّمت الخدمة للوظائف الفعلية والمتاحة في السعودية، باستخدام البريد الإلكتروني والتقديم المباشر عبر المنصات، مع التحقق من صحة عناوين البريد الإلكتروني المستخدَمة." } },
+      { "@type": "Question", name: "ما اللغات المدعومة؟", acceptedAnswer: { "@type": "Answer", text: "تدعم الخدمة حالياً اللغتين العربية والإنجليزية للباحثين عن عمل في جميع أنحاء السعودية." } },
+      { "@type": "Question", name: "كيف أدفع؟", acceptedAnswer: { "@type": "Answer", text: "يمكن ترتيب الباقات الشهرية عبر STC Pay أو التحويل البنكي (الآيبان). يمكنك سؤال الفريق عن تفاصيل الدفع الحالية عند بدء حملتك." } },
+      { "@type": "Question", name: "متى أتوقع الرد؟", acceptedAnswer: { "@type": "Answer", text: "يراجع الفريق طلبات الحملة أولاً بأول. للحصول على أسرع رد مباشر، استخدم WhatsApp بعد إرسال ملخصك؛ وإذا لم تسمع رداً خلال يوم عمل واحد، أرسل متابعة قصيرة تتضمن اسمك والوظيفة المستهدفة." } },
+    ],
+  },
+};
+
+const faqSchemaPattern = /\s*<script id="homepage-faq-schema" type="application\/ld\+json">[\s\S]*?<\/script>/;
+
 const staticMeta = (indexHtml, metadata) => {
   const url = `${siteUrl}${canonicalPath(metadata.path)}`;
-  const withMetadata = indexHtml
+  let withMetadata = indexHtml
     .replace('<html lang="en">', `<html lang="${metadata.lang}"${metadata.direction === "rtl" ? ' dir="rtl"' : ""}>`)
     .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${metadata.description}" />`)
     .replace(/<meta name="robots" content="[^"]*" \/>/, `<meta name="robots" content="${metadata.robots || "index, follow"}" />`)
@@ -81,6 +98,15 @@ const staticMeta = (indexHtml, metadata) => {
     .replace(/<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${metadata.title}" />`)
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${metadata.description}" />`)
     .replace(/<title>[^<]*<\/title>/, `<title>${metadata.title}</title>`);
+
+  if (metadata.faqSchema) {
+    withMetadata = withMetadata.replace(
+      faqSchemaPattern,
+      `\n    <script id="homepage-faq-schema" type="application/ld+json">${JSON.stringify(faqSchemas[metadata.faqSchema])}</script>`,
+    );
+  } else {
+    withMetadata = withMetadata.replace(faqSchemaPattern, "");
+  }
 
   return withMetadata;
 };

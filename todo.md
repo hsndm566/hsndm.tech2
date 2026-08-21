@@ -609,3 +609,114 @@
 
 - [x] Add a compact, truthful result-count transition after a status or sort change
 - [x] Add regression coverage and validate reduced-motion, 375px, TypeScript, complete tests, and production build
+
+## Read-Only AutoApply Scheduled Workflow Audit
+
+- [x] Inspect the most recent 06:00 UTC and 18:00 UTC scheduled workflow logs without triggering delivery
+- [x] Audit workflow presence, non-secret credential availability, job and tracking eligibility, client CV integrity, and historical exclusions
+- [x] Report the exact cause and safest non-executed fix for approval
+
+## Authorized AutoApply Workflow Verification
+
+- [x] Rerun exactly one failed scheduled workflow after the user restored the Brevo Actions secret
+- [x] Inspect full rerun logs, verify zero eligible deliveries, and report any remaining blocker without modifying repository files
+
+## Authorized Temporary Brevo Secret Repair
+
+- [ ] Store the user-provided temporary credential as the `BREVO_API_KEY` repository Actions secret
+- [ ] Rerun exactly one previously failed workflow and inspect its complete outcome without editing repository files
+
+## Authorized Single Brevo Delivery Test
+
+- [ ] Send exactly one test email from `apply@hsndm.tech` to the user’s connected Gmail address
+- [ ] Verify inbox delivery and report the single-message outcome without changing GitHub or campaign configuration
+
+## Authorized Brevo Test Retry
+
+- [x] Send exactly one new test email after the user authorized the current Brevo IP
+- [x] Verify the connected Gmail inbox and report the retry outcome without configuration changes
+
+## Read-Only AutoApply CSV Preflight
+
+- [x] Synchronize current AutoApply CSV and CV inputs without changing repository state
+- [x] Run the current preflight in dry-run mode and report active-client eligibility, exclusions, CV readiness, and blockers
+
+## AutoApply Delivery Start Assessment
+
+- [x] Confirm whether today’s authorized delivery can proceed without bypassing tracking, active-client, evidence, CV, or credential safeguards
+- [x] Report the exact prerequisites for a compliant delivery start
+
+## Guardrail-Compliant Delivery Attempt
+
+- [x] Reconfirm whether any current active-client recipient is eligible for a guarded delivery without changing records or safeguards
+- [x] Report whether a safe delivery can occur today
+
+## Authorized AutoApply Scheduled Delivery Update
+
+- [x] Audit the current AutoApply workflow, contact assignments, CVs, tracking, and sender safeguards
+- [x] Reassign eligible client 1 job rows between active clients 2 and 3 without changing contact or role details
+- [x] Update the scheduled workflow to use the guarded production dispatcher while preserving schedule, deduplication, MX, CV, delay, cap, sender, and opt-out controls
+- [x] Execute one authorized application-package delivery and inspect accepted-delivery and tracking evidence
+- [x] Push only the verified AutoApply repository changes and report final readiness
+- [x] Resolve the current verified-contact evidence-status blocker before any scheduled or test delivery
+
+## Approved Verified-Contact Delivery Completion
+
+- [x] Mark only the 473 user-confirmed reassigned contact rows as `verified_contact` while keeping `public_job_url` blank
+- [x] Preserve the six incomplete company or role rows as excluded from sending without changing their details
+- [x] Validate active-client scheduling, sender mapping, CVs, MX, deduplication, delay, cap, and opt-out safeguards
+- [x] Send exactly one approved application package through the existing audited dispatcher and verify delivery plus tracking evidence
+- [x] Push only the verified AutoApply repository changes and report the next scheduled-run readiness
+
+## Authorized Local Ten-Message Brevo Batch
+
+- [ ] Determine the current outbound IP and authorize it in Brevo only if not already authorized
+- [ ] Select exactly five new eligible untracked application packages for each active client using existing guarded logic
+- [ ] Deliver the capped ten-message batch locally with MX, CV, sender, opt-out, delay, and global deduplication safeguards
+- [ ] Record accepted outcomes and uncertain suppressions locally, then report batch evidence without GitHub Actions or repository publishing
+
+## Approved AutoApply Publish and Scheduled-Run Observation
+
+- [x] Revalidate and push only the prepared client reassignment, verified-contact evidence, client-level CV guard, and regression-test changes
+- [x] Do not manually trigger or send any batch; inspect the next existing 06:00 or 18:00 UTC workflow run afterward
+- [ ] Report scheduled sent counts, Brevo authentication or IP errors, and new tracking rows after the run completes
+
+## Authorized Immediate Guarded AutoApply Batch
+
+- [ ] Revalidate Brevo authentication, current tracking exclusions, eligible client 2/3 package selection, and client CV readiness
+- [ ] Send today’s capped guarded batch locally without retrying the prior uncertain recipient
+- [ ] Confirm the existing 06:00 and 18:00 UTC workflow schedule remains active for subsequent runs and report delivery evidence
+
+## AutoApply Scheduled Workflow Failure Repair
+
+- [x] Inspect the complete newly failed scheduled-run logs and current published workflow state without triggering another run
+- [ ] Apply and validate the smallest safe correction while retaining deduplication, CV, MX, sender, delay, cap, opt-out, and tracking safeguards
+- [ ] Report the failure cause, correction, and local-batch/scheduled-delivery state
+
+## In-Interface GitHub Authorization Repair
+
+- [ ] Request the minimum GitHub authorization needed to manage repository Actions secrets without leaving this task
+- [ ] Set and verify the `BREVO_API_KEY` repository secret once the user-approved authorization is available
+
+## Read-Only Brevo Daily Delivery Architecture Review
+
+- [x] Verify current Brevo IP allowlisting and GitHub hosted-runner networking guidance
+- [x] Recommend the safest permanent daily delivery model without changing credentials, workflow files, or production settings
+
+## Authorized Immediate Ten-Email AutoApply Batch
+
+- [x] Revalidate ten untracked verified application packages, per-client CV PDFs, MX records, sender mapping, and the repaired Brevo credential
+- [x] Send exactly five safeguarded packages for client 2 and five for client 3 locally with 60–120 second randomized delays and no workflow changes
+- [x] Record accepted deliveries and uncertain/failure suppressions in tracking.csv, preserve global deduplication, and report verified outcomes
+
+## Read-Only Post-Batch Delivery and Remaining-Pool Review
+
+- [x] Retrieve Brevo delivery, bounce, and deferred event evidence for the ten most recently accepted messages without retrying or sending
+- [x] Analyze jobs.csv against tracking.csv to count and identify the remaining eligible uncontacted recipients for active clients
+- [x] Report delivery-status findings and future-batch readiness without changing workflow, jobs, clients, or tracking data
+
+## Attached Public Marketing Frontend Update
+
+- [x] Inspect the supplied content and map it only to the public hsndm.tech marketing frontend
+- [x] Implement the supplied public-frontend change without modifying dashboard, routing, email systems, or backend
+- [x] Validate public frontend behavior, tests, mobile presentation, and production build before publication

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Saudi job-application campaign support from Jeddah: review your CV, confirm target roles, and track your applications with AutoApply SA." />
+    <meta name="description" content="AutoApply SA is a Jeddah-based service for job seekers in Saudi Arabia, helping prepare CVs, agree role targets, and coordinate personalized job applications." />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#151515" />
     <link rel="icon" type="image/png" href="/manus-storage/autoapply-symbol_80d77010.png" />
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://www.hsndm.tech/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="AutoApply SA" />
-    <meta property="og:title" content="AutoApply SA | Saudi Job-Application Campaign Support" />
-    <meta property="og:description" content="Saudi job-application campaign support from Jeddah: review your CV, confirm target roles, and track your applications." />
+    <meta property="og:title" content="AutoApply SA — Job Application Support in Saudi Arabia" />
+    <meta property="og:description" content="Jeddah-based job-application support for Saudi Arabia: CV preparation, role targeting, and personalized application coordination." />
     <meta property="og:locale" content="en_SA" />
     <meta property="og:url" content="https://www.hsndm.tech/" />
     <meta property="og:image" content="https://www.hsndm.tech/manus-storage/autoapply-hero-operations_ad007abc.jpg" />
     <meta property="og:image:alt" content="AutoApply SA job application service" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AutoApply SA | Saudi Job-Application Campaign Support" />
-    <meta name="twitter:description" content="Saudi job-application campaign support from Jeddah: review your CV, confirm target roles, and track your applications." />
+    <meta name="twitter:title" content="AutoApply SA — Job Application Support in Saudi Arabia" />
+    <meta name="twitter:description" content="Jeddah-based job-application support for Saudi Arabia: CV preparation, role targeting, and personalized application coordination." />
     <meta name="twitter:image" content="https://www.hsndm.tech/manus-storage/autoapply-hero-operations_ad007abc.jpg" />
     <style>
       #app-loading-shell { min-height:100vh; box-sizing:border-box; background:#f3f0e9; color:#151515; display:flex; align-items:center; justify-content:center; padding:1.5rem; font-family:Arial,sans-serif; }
@@ -34,12 +34,14 @@
       @keyframes app-loading-shimmer { to { background-position:-220% 0; } }
       @media (prefers-reduced-motion:reduce) { .app-loading-block { animation:none; } }
     </style>
+    <!-- Structured data is limited to the live service, current displayed prices, and no review or rating claims. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
           {
             "@type": "Organization",
+            "@id": "https://www.hsndm.tech/#organization",
             "name": "AutoApply SA",
             "url": "https://www.hsndm.tech/",
             "email": "apply@hsndm.tech",
@@ -48,10 +50,17 @@
           },
           {
             "@type": "Service",
+            "@id": "https://www.hsndm.tech/#job-application-support",
             "name": "AutoApply SA job-application support",
-            "provider": { "@type": "Organization", "name": "AutoApply SA" },
+            "serviceType": "Job application support",
+            "provider": { "@id": "https://www.hsndm.tech/#organization" },
             "areaServed": { "@type": "Country", "name": "Saudi Arabia" },
-            "description": "Saudi-focused CV matching, application-campaign support, and candidate application tracking."
+            "description": "Jeddah-based support for Saudi job seekers that prepares CVs, confirms role targets, and coordinates personalized job applications by email and direct portals.",
+            "offers": [
+              { "@type": "Offer", "name": "Starter", "price": "99", "priceCurrency": "SAR", "url": "https://www.hsndm.tech/pricing/" },
+              { "@type": "Offer", "name": "Pro", "price": "149", "priceCurrency": "SAR", "url": "https://www.hsndm.tech/pricing/" },
+              { "@type": "Offer", "name": "Founder", "price": "249", "priceCurrency": "SAR", "url": "https://www.hsndm.tech/pricing/" }
+            ]
           },
           {
             "@type": "Person",
@@ -62,7 +71,20 @@
         ]
       }
     </script>
-    <title>AutoApply SA | Saudi Job-Application Campaign Support</title>
+    <script id="homepage-faq-schema" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Is my CV data private?", "acceptedAnswer": { "@type": "Answer", "text": "Your CV is used to match and tailor applications. You can request deletion at any time; it is not sold as a separate product." } },
+          { "@type": "Question", "name": "Do you apply to real companies?", "acceptedAnswer": { "@type": "Answer", "text": "The service is designed for live Saudi Arabia roles, using email and direct portal submission, with bounce-checked addresses where email is used." } },
+          { "@type": "Question", "name": "Which languages are supported?", "acceptedAnswer": { "@type": "Answer", "text": "The current service supports English and Arabic for job seekers across Saudi Arabia." } },
+          { "@type": "Question", "name": "How do I pay?", "acceptedAnswer": { "@type": "Answer", "text": "Monthly plans can be arranged through STC Pay or bank transfer (IBAN). You can ask the team about the current payment instructions when you start a campaign." } },
+          { "@type": "Question", "name": "When should I expect a response?", "acceptedAnswer": { "@type": "Answer", "text": "Campaign enquiries are reviewed by the team. For the fastest direct response, use WhatsApp after submitting your brief; if you have not heard back within one business day, send a short follow-up with your name and target role." } }
+        ]
+      }
+    </script>
+    <title>AutoApply SA — Job Application Support in Saudi Arabia</title>
   </head>
   <body>
     <div id="root">

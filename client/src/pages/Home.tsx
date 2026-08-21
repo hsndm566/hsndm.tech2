@@ -222,7 +222,11 @@ export default function Home() {
     || window.location.hostname.includes("manus.computer");
 
   useEffect(() => {
-    applyPageSeo({ title: "AutoApply SA | Saudi Job-Application Campaign Support", description: "Saudi job-application campaign support from Jeddah: review your CV, confirm target roles, and track your applications with AutoApply SA.", path: "/" });
+    applyPageSeo({
+      title: "AutoApply SA — Job Application Support in Saudi Arabia",
+      description: "AutoApply SA is a Jeddah-based service for job seekers in Saudi Arabia, helping prepare CVs, agree role targets, and coordinate personalized job applications.",
+      path: "/",
+    });
   }, []);
 
   useEffect(() => {
