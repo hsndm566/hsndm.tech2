@@ -60,7 +60,15 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, {
+    setHeaders(res, filePath) {
+      if (/[\\/]assets[\\/][^/]+-[a-z0-9_-]{8,}\.(?:js|css|mjs)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        return;
+      }
+      res.setHeader("Cache-Control", "no-cache");
+    },
+  }));
 
   // Serve the SPA shell only for a registered client route. This prevents
   // mistyped pages from looking successful to browsers, crawlers, and monitors.

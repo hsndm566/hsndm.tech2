@@ -29,7 +29,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    captureBoundaryException(error);
+    void captureBoundaryException(error);
   }
 
   render() {

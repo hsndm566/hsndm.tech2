@@ -720,3 +720,9 @@
 - [x] Inspect the supplied content and map it only to the public hsndm.tech marketing frontend
 - [x] Implement the supplied public-frontend change without modifying dashboard, routing, email systems, or backend
 - [x] Validate public frontend behavior, tests, mobile presentation, and production build before publication
+
+## Public Marketing Frontend Mobile Performance
+
+- [x] Profile the production public route’s bundle composition, initial assets, request flow, client-side rendering boundary, and first-paint blockers
+- [x] Apply targeted public-only code splitting, loading, and asset-delivery fixes without changing design, content, SEO files, or private routes
+- [x] Validate mobile-first public performance, production build, regression coverage, and live rendering before publication

@@ -15,7 +15,7 @@ function monitorBlankMain() {
     if (!main || !rect || rect.height < 24 || rect.width < 24) {
       recorded = true;
       trackEngagement("client_blank_content", { page: window.location.pathname, type: "missing_or_zero_height_main" });
-      captureClientReliabilitySignal("blank_content", "missing_or_zero_height_main");
+      void captureClientReliabilitySignal("blank_content", "missing_or_zero_height_main");
     }
   };
   window.setTimeout(check, 1600);
@@ -31,7 +31,7 @@ export function installErrorTelemetry() {
       type,
       message: compactMessage(message),
     });
-    if (type.startsWith("asset_")) captureClientReliabilitySignal(type, compactMessage(message));
+    if (type.startsWith("asset_")) void captureClientReliabilitySignal(type, compactMessage(message));
     if (errorCount === 3) trackEngagement("client_sustained_errors", { page: window.location.pathname, type: "three_or_more_errors" });
   };
 

@@ -1,4 +1,5 @@
-import * as Sentry from "@sentry/react";
+type SentryModule = typeof import("@sentry/react");
+type SentryErrorEvent = import("@sentry/react").ErrorEvent;
 
 const OPTIONAL_CONSENT_COOKIE = "autoapply_optional_consent=accepted";
 const MAX_MESSAGE_LENGTH = 180;
@@ -22,6 +23,13 @@ function currentRoute() {
 }
 
 let dsnRequest: Promise<string | null> | null = null;
+let sentryModule: Promise<SentryModule> | null = null;
+let sentryStarted = false;
+
+function loadSentry() {
+  sentryModule ??= import("@sentry/react");
+  return sentryModule;
+}
 
 export async function resolveSentryDsn() {
   const buildDsn = import.meta.env.VITE_SENTRY_DSN as string | undefined;
@@ -38,7 +46,7 @@ export async function resolveSentryDsn() {
   return dsnRequest;
 }
 
-function sanitizeEvent(event: Sentry.ErrorEvent) {
+function sanitizeEvent(event: SentryErrorEvent) {
   event.request = undefined;
   event.user = undefined;
   event.contexts = undefined;
@@ -60,8 +68,12 @@ function sanitizeEvent(event: Sentry.ErrorEvent) {
 }
 
 export async function startOptionalSentry() {
+  if (!hasOptionalConsent() || sentryStarted) return false;
   const dsn = await resolveSentryDsn();
-  if (!dsn || !hasOptionalConsent() || Sentry.getClient()) return false;
+  if (!dsn || !hasOptionalConsent()) return false;
+
+  const Sentry = await loadSentry();
+  if (Sentry.getClient()) return false;
 
   Sentry.init({
     dsn,
@@ -72,10 +84,13 @@ export async function startOptionalSentry() {
     beforeBreadcrumb: () => null,
     beforeSend: sanitizeEvent,
   });
+  sentryStarted = true;
   return true;
 }
 
-export function captureClientReliabilitySignal(type: string, message: unknown) {
+export async function captureClientReliabilitySignal(type: string, message: unknown) {
+  if (!sentryStarted) return;
+  const Sentry = await loadSentry();
   if (!Sentry.getClient()) return;
   Sentry.withScope((scope) => {
     scope.setTag("reliability_signal", sanitizeSentryText(type));
@@ -85,7 +100,9 @@ export function captureClientReliabilitySignal(type: string, message: unknown) {
   });
 }
 
-export function captureBoundaryException(error: Error) {
+export async function captureBoundaryException(error: Error) {
+  if (!sentryStarted) return;
+  const Sentry = await loadSentry();
   if (!Sentry.getClient()) return;
   Sentry.withScope((scope) => {
     scope.setTag("boundary", "route-recovery");
@@ -95,6 +112,7 @@ export function captureBoundaryException(error: Error) {
 }
 
 export function installOptionalSentry() {
-  void startOptionalSentry();
+  // A no-consent visit performs neither the DSN fetch nor the Sentry dynamic import.
+  if (hasOptionalConsent()) void startOptionalSentry();
   window.addEventListener("autoapply:optional-consent", () => { void startOptionalSentry(); });
 }

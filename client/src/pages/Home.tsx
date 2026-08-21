@@ -166,6 +166,7 @@ export default function Home() {
 
   useEffect(() => {
     let activeRequest: AbortController | null = null;
+    let poller: number | null = null;
     const fetchLatest = async () => {
       if (document.visibilityState === "hidden") return;
       activeRequest?.abort();
@@ -198,15 +199,21 @@ export default function Home() {
         window.clearTimeout(timeout);
       }
     };
-    fetchLatest();
-    const interval = setInterval(fetchLatest, 60000);
+    // The static label is already visible at first paint. Defer this non-critical
+    // freshness check so it cannot compete with hero CSS, media, or route hydration.
+    const startPolling = () => {
+      void fetchLatest();
+      poller = window.setInterval(() => { void fetchLatest(); }, 60_000);
+    };
+    const initialPoll = window.setTimeout(startPolling, 1_800);
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible") void fetchLatest();
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       activeRequest?.abort();
-      clearInterval(interval);
+      window.clearTimeout(initialPoll);
+      if (poller !== null) window.clearInterval(poller);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);

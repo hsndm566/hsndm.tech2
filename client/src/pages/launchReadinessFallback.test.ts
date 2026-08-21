@@ -9,7 +9,7 @@ const staticRouteSource = readFileSync(new URL("../../../scripts/prepare-static-
 
 describe("launch-readiness fallback contracts", () => {
   it("replaces empty route loading with visible bilingual recovery content", () => {
-    expect(appSource).toContain("<RecoveryPanel loading arabic={window.location.pathname.startsWith(\"/ar\")} />");
+    expect(appSource).toContain("<RecoveryPanel loading arabic={typeof window !== \"undefined\" && window.location.pathname.startsWith(\"/ar\")} />");
     expect(boundarySource).toContain("RecoveryPanel");
     expect(recoverySource).toContain("No form or CV has been sent from this page.");
     expect(recoverySource).toContain("لم يُرسل أي نموذج أو سيرة ذاتية");

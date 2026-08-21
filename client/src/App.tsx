@@ -18,15 +18,13 @@ const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
 const ArabicThankYou = lazy(() => import("@/pages/ArabicThankYou"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
 const CampaignStatus = lazy(() => import("@/pages/CampaignStatus"));
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
-const ProfileSettings = lazy(() => import("@/pages/ProfileSettings"));
+const DashboardEntry = lazy(() => import("@/routes/DashboardEntry"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
-const ClerkDashboardShell = lazy(() => import("@/components/ClerkDashboardShell").then((module) => ({ default: module.ClerkDashboardShell })));
 import { useLocation } from "wouter";
 import { getDashboardHostRedirect, isDashboardSubdomain } from "@/lib/subdomain";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -85,8 +83,8 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
-      <Route path="/dashboard/settings" component={() => <ClerkDashboardShell><ProfileSettings /></ClerkDashboardShell>} />
-      <Route path="/dashboard" component={() => <ClerkDashboardShell><Dashboard /></ClerkDashboardShell>} />
+      <Route path="/dashboard/settings" component={DashboardEntry} />
+      <Route path="/dashboard" component={DashboardEntry} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/ats" component={Ats} />
       <Route path="/pricing" component={() => <PricingPage />} />
@@ -122,7 +120,7 @@ function App() {
           <CookieConsent />
           <WhatsAppBusinessCta />
           <DashboardHostRedirectGate>
-            <Suspense fallback={<RecoveryPanel loading arabic={window.location.pathname.startsWith("/ar")} />}>
+            <Suspense fallback={<RecoveryPanel loading arabic={typeof window !== "undefined" && window.location.pathname.startsWith("/ar")} />}>
               <Router />
             </Suspense>
           </DashboardHostRedirectGate>

@@ -176,6 +176,8 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
+          if (id.includes("/node_modules/@clerk/clerk-react/")) return "clerk-auth";
+          if (id.includes("/node_modules/@sentry/")) return "sentry-optional";
           if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
           if (id.includes("lucide-react")) return "icons";
           if (id.includes("@tanstack") || id.includes("@trpc") || id.includes("superjson")) return "data-client";
