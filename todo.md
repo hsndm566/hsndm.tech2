@@ -623,7 +623,7 @@
 
 ## Authorized Temporary Brevo Secret Repair
 
-- [ ] Store the user-provided temporary credential as the `BREVO_API_KEY` repository Actions secret
+- [x] Store the user-provided temporary credential as the `BREVO_API_KEY` repository Actions secret
 - [ ] Rerun exactly one previously failed workflow and inspect its complete outcome without editing repository files
 
 ## Authorized Single Brevo Delivery Test
@@ -671,8 +671,8 @@
 ## Authorized Local Ten-Message Brevo Batch
 
 - [ ] Determine the current outbound IP and authorize it in Brevo only if not already authorized
-- [ ] Select exactly five new eligible untracked application packages for each active client using existing guarded logic
-- [ ] Deliver the capped ten-message batch locally with MX, CV, sender, opt-out, delay, and global deduplication safeguards
+- [x] Select exactly five new eligible untracked application packages for each active client using existing guarded logic
+- [x] Deliver the capped ten-message batch locally with MX, CV, sender, opt-out, delay, and global deduplication safeguards
 - [ ] Record accepted outcomes and uncertain suppressions locally, then report batch evidence without GitHub Actions or repository publishing
 
 ## Approved AutoApply Publish and Scheduled-Run Observation
@@ -683,20 +683,20 @@
 
 ## Authorized Immediate Guarded AutoApply Batch
 
-- [ ] Revalidate Brevo authentication, current tracking exclusions, eligible client 2/3 package selection, and client CV readiness
-- [ ] Send today’s capped guarded batch locally without retrying the prior uncertain recipient
-- [ ] Confirm the existing 06:00 and 18:00 UTC workflow schedule remains active for subsequent runs and report delivery evidence
+- [x] Revalidate Brevo authentication, current tracking exclusions, eligible client 2/3 package selection, and client CV readiness
+- [x] Send today’s capped guarded batch locally without retrying the prior uncertain recipient
+- [x] Confirm the existing 06:00 and 18:00 UTC workflow schedule remains active for subsequent runs and report delivery evidence
 
 ## AutoApply Scheduled Workflow Failure Repair
 
 - [x] Inspect the complete newly failed scheduled-run logs and current published workflow state without triggering another run
-- [ ] Apply and validate the smallest safe correction while retaining deduplication, CV, MX, sender, delay, cap, opt-out, and tracking safeguards
-- [ ] Report the failure cause, correction, and local-batch/scheduled-delivery state
+- [x] Apply and validate the smallest safe correction while retaining deduplication, CV, MX, sender, delay, cap, opt-out, and tracking safeguards
+- [x] Report the failure cause, correction, and local-batch/scheduled-delivery state
 
 ## In-Interface GitHub Authorization Repair
 
-- [ ] Request the minimum GitHub authorization needed to manage repository Actions secrets without leaving this task
-- [ ] Set and verify the `BREVO_API_KEY` repository secret once the user-approved authorization is available
+- [x] Request the minimum GitHub authorization needed to manage repository Actions secrets without leaving this task
+- [x] Set and verify the `BREVO_API_KEY` repository secret once the user-approved authorization is available
 
 ## Read-Only Brevo Daily Delivery Architecture Review
 
