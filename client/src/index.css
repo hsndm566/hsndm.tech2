@@ -177,6 +177,8 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 @media (hover: hover) {
   .process-item:hover { color: var(--signal); border-color: rgba(229,72,42,.65); background: linear-gradient(90deg, rgba(229,72,42,.16), transparent 72%); transform: translateX(8px); }
   .site-shell[lang="ar"] .process-item:hover { transform: translateX(-8px); background: linear-gradient(270deg, rgba(229,72,42,.16), transparent 72%); }
+  .capability-card:hover { z-index: 1; transform: translateY(-4px); border-color: rgba(21,21,21,.42); box-shadow: 5px 5px 0 rgba(21,21,21,.16); }
+  .capability-card:hover .card-rule { width: 44px; color: var(--signal); }
   .plan-card:hover { transform: translateY(-5px); border-color: var(--ink); box-shadow: 6px 6px 0 var(--ink); }
   .plan-card:hover :is(.plan-top svg, .plan-cta svg) { transform: translate(3px, -3px); }
 }
@@ -184,6 +186,10 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .process-item:hover { padding-left: 0; }
 .process-item:focus-within { color: var(--signal); border-color: rgba(229,72,42,.65); background: linear-gradient(90deg, rgba(229,72,42,.16), transparent 72%); transform: translateX(8px); }
 .site-shell[lang="ar"] .process-item:focus-within { transform: translateX(-8px); background: linear-gradient(270deg, rgba(229,72,42,.16), transparent 72%); }
+.capability-card { transition: transform .2s cubic-bezier(.23,1,.32,1), border-color .2s ease, box-shadow .2s ease; }
+.capability-card:focus-within { z-index: 1; transform: translateY(-4px); border-color: rgba(21,21,21,.42); box-shadow: 5px 5px 0 rgba(21,21,21,.16); }
+.capability-card .card-rule { transition: width .2s cubic-bezier(.23,1,.32,1), color .2s ease; }
+.capability-card:focus-within .card-rule { width: 44px; color: var(--signal); }
 .plan-card { transition: transform .2s cubic-bezier(.23,1,.32,1), box-shadow .2s ease, border-color .2s ease; }
 .plan-card:focus-within { transform: translateY(-5px); border-color: var(--ink); box-shadow: 6px 6px 0 var(--ink); }
 .plan-card :is(.plan-top svg, .plan-cta svg) { transition: transform .18s cubic-bezier(.23,1,.32,1); }

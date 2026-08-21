@@ -726,3 +726,9 @@
 - [x] Profile the production public route’s bundle composition, initial assets, request flow, client-side rendering boundary, and first-paint blockers
 - [x] Apply targeted public-only code splitting, loading, and asset-delivery fixes without changing design, content, SEO files, or private routes
 - [x] Validate mobile-first public performance, production build, regression coverage, and live rendering before publication
+
+## Public Marketing CTA and Feature-Card Interaction Refinement
+
+- [x] Inspect existing public CTA anchors and feature-card interaction selectors
+- [x] Add accessible smooth scrolling for in-page marketing CTAs and restrained feature-card hover feedback with reduced-motion support
+- [x] Validate interaction behavior, regression coverage, mobile presentation, and production build before publication

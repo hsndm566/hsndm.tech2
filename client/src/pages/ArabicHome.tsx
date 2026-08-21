@@ -35,6 +35,7 @@ import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
 import { ArabicIntakeSection } from "@/components/arabic/ArabicIntakeSection";
 import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
 import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
+import { MarketingAnchorScroller } from "@/components/MarketingAnchorScroller";
 import { Link } from "wouter";
 import { JeddahLocationCard } from "@/components/Map";
 
@@ -215,6 +216,7 @@ export default function ArabicHome() {
 
   return (
     <div className="site-shell" lang="ar" dir="rtl">
+      <MarketingAnchorScroller />
       <a className="skip-link" href="#upload">انتقل إلى مطابقة السيرة الذاتية</a>
       <header className="topbar" aria-label="التنقل الرئيسي">
         <Link className="brand" href="/ar" aria-label="الصفحة الرئيسية AutoApply SA">

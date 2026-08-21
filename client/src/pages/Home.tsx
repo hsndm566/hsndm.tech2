@@ -13,6 +13,7 @@ import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
 import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
+import { MarketingAnchorScroller } from "@/components/MarketingAnchorScroller";
 import { saudiCities, saudiIndustries, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import {
   ArrowDownRight,
@@ -414,6 +415,7 @@ export default function Home() {
 
   return (
     <div className="site-shell">
+      <MarketingAnchorScroller />
       <a className="skip-link" href="#upload">Skip to CV matcher</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
