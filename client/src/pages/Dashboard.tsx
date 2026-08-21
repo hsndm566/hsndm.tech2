@@ -809,11 +809,14 @@ export default function Dashboard() {
                 </Select>
               </div>
               <div className="text-sm text-[#151515]/60 flex items-center gap-3">
-                <span>Showing {filteredApps.length} applications</span>
+                <span aria-atomic="true" aria-live="polite" className="dashboard-filter-count" data-dashboard-filter-count={isFilterTransitioning ? "true" : "false"}>
+                  Showing <strong className="dashboard-filter-count-value">{filteredApps.length}</strong> applications
+                  {isFilterTransitioning ? <span className="dashboard-filter-count-note">Updated</span> : null}
+                </span>
               </div>
             </div>
 
-            <div className="dashboard-filter-results" data-dashboard-filtering={isFilterTransitioning ? "true" : "false"} aria-live="polite">
+            <div className="dashboard-filter-results" data-dashboard-filtering={isFilterTransitioning ? "true" : "false"}>
               {filteredApps.length === 0 ? (
                 <Card className="dashboard-filter-empty bg-[#fbf9f5] border-[#151515]/10 text-center py-16">
                   <CardContent className="space-y-4">

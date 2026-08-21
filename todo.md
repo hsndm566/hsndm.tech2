@@ -604,3 +604,8 @@
 - [x] Add completion-only onboarding check feedback animation
 - [x] Add subtle dashboard filter and sort transition animation
 - [x] Add regression coverage and validate reduced-motion, 375px, TypeScript, complete tests, and production build
+
+## Dashboard Filter Count Feedback
+
+- [x] Add a compact, truthful result-count transition after a status or sort change
+- [x] Add regression coverage and validate reduced-motion, 375px, TypeScript, complete tests, and production build

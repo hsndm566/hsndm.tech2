@@ -26,4 +26,13 @@ describe("interaction animation refinements", () => {
     expect(dashboardSource).toContain("dashboard-application-card");
     expect(css).toContain("dashboard-filter-card-in");
   });
+
+  it("provides a compact, truthful, and accessible results-count update", () => {
+    expect(dashboardSource).toContain('aria-live="polite"');
+    expect(dashboardSource).toContain("data-dashboard-filter-count");
+    expect(dashboardSource).toContain("dashboard-filter-count-value");
+    expect(dashboardSource).toContain("dashboard-filter-count-note");
+    expect(css).toContain("dashboard-filter-count-pop");
+    expect(css).toContain("dashboard-filter-note-in");
+  });
 });
