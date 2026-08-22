@@ -743,3 +743,4 @@
 - [x] Map the supplied resilience, lazy-loading, bilingual homepage, RTL, media, SEO, and public-bundle requirements to the existing public implementation
 - [x] Add compatible public-only infrastructure and implement the approved homepage content, section, RTL, and metadata changes without touching private systems
 - [x] Validate public performance, accessibility, bilingual mobile layouts, SEO output, private SDK isolation, tests, and production build before publication
+- [x] Replace stale desktop homepage navigation links that target hidden product and CV-preview sections with anchors in the rendered approval-led public sequence

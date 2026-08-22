@@ -421,7 +421,7 @@ export default function Home() {
   return (
     <div className="site-shell">
       <MarketingAnchorScroller />
-      <a className="skip-link" href="#upload">Skip to CV matcher</a>
+      <a className="skip-link" href="#how">Skip to how it works</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
           <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
@@ -430,8 +430,8 @@ export default function Home() {
 
         <nav className="desktop-nav" aria-label="Primary navigation">
           <button onClick={() => scrollTo("how")}>How it works</button>
-          <button onClick={() => scrollTo("product")}>Product</button>
-          <button onClick={() => scrollTo("upload")}>Upload CV</button>
+          <button onClick={() => scrollTo("reviews")}>Who it&apos;s for</button>
+          <button onClick={() => scrollTo("approval")}>What you approve</button>
           <Link href="/ats">ATS review</Link>
           <button onClick={() => scrollTo("pricing")}>Pricing</button>
           <button onClick={() => scrollTo("faq")}>FAQ</button>

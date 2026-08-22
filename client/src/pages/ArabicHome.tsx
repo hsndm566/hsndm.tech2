@@ -222,14 +222,14 @@ export default function ArabicHome() {
   return (
     <div className="site-shell" lang="ar" dir="rtl">
       <MarketingAnchorScroller />
-      <a className="skip-link" href="#upload">انتقل إلى مطابقة السيرة الذاتية</a>
+      <a className="skip-link" href="#how">انتقل إلى شرح الخدمة</a>
       <header className="topbar" aria-label="التنقل الرئيسي">
         <Link className="brand" href="/ar" aria-label="الصفحة الرئيسية AutoApply SA">
           <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
           <span>AutoApply <em>SA</em></span>
         </Link>
         <nav className="desktop-nav" aria-label="روابط الصفحة">
-          <a href="#how">كيف يعمل</a><a href="#upload">السيرة الذاتية</a><Link href="/ats">فحص ATS</Link><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
+          <a href="#how">كيف يعمل</a><a href="#reviews">لمن تناسب الخدمة</a><a href="#approval">ما الذي توافق عليه</a><Link href="/ats">فحص ATS</Link><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة الشائعة</a>
         </nav>
         <Link className="mobile-ats-link" href="/ats">فحص ATS</Link>
         <div className="nav-actions">

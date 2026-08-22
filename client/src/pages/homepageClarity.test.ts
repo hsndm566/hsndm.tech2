@@ -105,8 +105,8 @@ describe("homepage clarity release", () => {
     const arabic = arabicHomeSource();
     const styles = stylesSource();
 
-    expect(english).toContain('className="skip-link" href="#upload"');
-    expect(arabic).toContain('className="skip-link" href="#upload"');
+    expect(english).toContain('className="skip-link" href="#how"');
+    expect(arabic).toContain('className="skip-link" href="#how"');
     expect(english).toContain("handoffBlocked");
     expect(english).toContain("WhatsApp was blocked by this browser.");
     expect(english).toContain('aria-describedby="cv-privacy-note"');

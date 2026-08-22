@@ -9,9 +9,9 @@ const stylesSource = readFileSync(new URL("../index.css", import.meta.url), "utf
 const deferredExplainerSource = readFileSync(new URL("../components/DeferredExplainerVideo.tsx", import.meta.url), "utf8");
 
 describe("public accessibility and recovery contract", () => {
-  it("provides bilingual skip navigation to the CV matcher and campaign brief", () => {
-    expect(homeSource).toContain('className="skip-link" href="#upload"');
-    expect(arabicHomeSource).toContain('className="skip-link" href="#upload"');
+  it("provides bilingual skip navigation to visible workflow content and campaign brief", () => {
+    expect(homeSource).toContain('className="skip-link" href="#how"');
+    expect(arabicHomeSource).toContain('className="skip-link" href="#how"');
     expect(arabicEnquireSource).toContain('className="skip-link" href="#campaign-brief"');
   });
 
