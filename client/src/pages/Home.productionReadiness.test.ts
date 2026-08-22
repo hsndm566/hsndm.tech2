@@ -9,10 +9,10 @@ const homepageMediaImage = readFileSync(new URL("../components/HomepageMediaImag
 
 describe("public homepage production-readiness contract", () => {
   it("keeps one clear primary campaign CTA and an explanatory secondary CTA in each language", () => {
-    expect(englishHome).toContain("See plans");
+    expect(englishHome).toContain("Start your campaign plan");
     expect(englishHome).toContain("See how it works");
-    expect(arabicHome).toContain("شاهد الباقات");
-    expect(arabicHome).toContain("شاهد كيف يعمل");
+    expect(arabicHome).toContain("ابدأ خطة التقديم");
+    expect(arabicHome).toContain("كيف تعمل الخدمة؟");
   });
 
   it("shows only factual bilingual trust boundaries near the hero CTA", () => {

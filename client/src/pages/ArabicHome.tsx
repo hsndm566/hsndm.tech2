@@ -252,7 +252,7 @@ export default function ArabicHome() {
               <div className="eyebrow light"><StatusDot /> دعم حملة بعد موافقتك <span /> جدة، المملكة العربية السعودية</div>
               <h1 id="arabic-hero-heading"><span data-anime-hero-word>نُعِدّ طلباتك</span><br /><span data-anime-hero-word>للوظائف.</span>{" "}<span data-anime-hero-word>وأنت توافق</span><br /><i><span data-anime-hero-word>قبل الإرسال.</span></i></h1>
               <p>أخبرنا بالوظائف التي تريدها. نبحث عن فرص حقيقية ونكتب طلبات مخصّصة لكل فرصة. لا يُرسل أي شيء حتى توافق.</p>
-              <div className="hero-actions"><a className="button button-ink" href="#pricing">شاهد الباقات <ArrowUpRight size={18} /></a><a className="text-button light-text" href="#how">شاهد كيف يعمل <MoveLeft size={18} /></a></div>
+              <div className="hero-actions"><a className="button button-ink" href="#pricing">ابدأ خطة التقديم <ArrowUpRight size={18} /></a><a className="text-button light-text" href="#how">كيف تعمل الخدمة؟ <MoveLeft size={18} /></a></div>
               <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
               <div className="hero-trust-row" aria-label="معلومات موثوقة عن الحملة"><span><ShieldCheck size={14} /> توافق على الوظائف المستهدفة</span><span>تحدد الحجم والتواريخ</span><span>يمكنك الإيقاف في أي وقت</span><span>كل طلب مسجّل</span><span>دعم مركّز على السعودية</span></div>
             </div>

@@ -496,7 +496,7 @@ export default function Home() {
                 Tell us the roles you want. We find real openings and draft tailored applications for each one. Nothing goes out until you say yes.
               </p>
               <div className="hero-actions">
-                <button className="button button-ink" onClick={() => scrollTo("pricing")}>See plans <ArrowDownRight size={18} /></button>
+                <button className="button button-ink" onClick={() => scrollTo("pricing")}>Start your campaign plan <ArrowDownRight size={18} /></button>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
                   See how it works <MoveRight size={18} />
                 </button>

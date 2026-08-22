@@ -39,8 +39,9 @@ describe("CookieConsent", () => {
     render(<CookieConsent />);
     const dialog = screen.getByRole("dialog");
     expect(dialog.getAttribute("aria-modal")).toBe("false");
-    expect(dialog.className).toContain("bottom-[max(.75rem,env(safe-area-inset-bottom))]");
+    expect(dialog.className).toContain("bottom-[max(.5rem,env(safe-area-inset-bottom))]");
     expect(dialog.className).toContain("z-[80]");
+    expect(dialog.className).toContain("max-w-md");
     expect(dialog.querySelector("div")?.className).toContain("sm:flex-row");
     expect(dialog.querySelector(".grid")?.className).toContain("grid-cols-2");
     expect(screen.getByRole("button", { name: "Allow analytics" }).className).toContain("min-w-0");

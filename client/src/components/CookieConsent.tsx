@@ -66,16 +66,16 @@ export function CookieConsent() {
   }
 
   return (
-    <aside className="fixed inset-x-3 bottom-[max(.75rem,env(safe-area-inset-bottom))] z-[80] mx-auto w-[calc(100%-1.5rem)] max-w-lg border border-black/15 bg-[#151515] p-3 text-[#f3f0e9] shadow-2xl sm:inset-x-auto sm:right-4 sm:bottom-4 sm:mx-0 sm:w-[min(30rem,calc(100vw-2rem))]" role="dialog" aria-modal="false" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <aside className="fixed inset-x-2 bottom-[max(.5rem,env(safe-area-inset-bottom))] z-[80] mx-auto w-[calc(100%-1rem)] max-w-md border border-black/15 bg-[#151515] p-2.5 text-[#f3f0e9] shadow-2xl sm:inset-x-auto sm:right-4 sm:bottom-4 sm:mx-0 sm:w-[min(30rem,calc(100vw-2rem))] sm:p-3" role="dialog" aria-modal="false" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description" dir={isArabic ? "rtl" : "ltr"} lang={isArabic ? "ar" : "en"}>
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
         <div className="min-w-0">
-          <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">{text.kicker}</p>
-          <h2 id="cookie-consent-title" className="mt-1 font-sans !text-sm font-semibold !leading-5">{text.title}</h2>
-          <p id="cookie-consent-description" className="mt-1 font-sans text-[11px] leading-4 text-white/75">{text.detail} <a className="text-[#f3f0e9] underline underline-offset-4" href={isArabic ? "/ar/privacy" : "/privacy"}>{text.privacy}</a></p>
+          <p className="hidden font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a] sm:block">{text.kicker}</p>
+          <h2 id="cookie-consent-title" className="font-sans !text-sm font-semibold !leading-5 sm:mt-1">{text.title}</h2>
+          <p id="cookie-consent-description" className="mt-0.5 font-sans text-[11px] leading-[.9rem] text-white/75 sm:mt-1 sm:leading-4">{text.detail} <a className="text-[#f3f0e9] underline underline-offset-4" href={isArabic ? "/ar/privacy" : "/privacy"}>{text.privacy}</a></p>
         </div>
-        <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center">
-          <button type="button" className="min-w-0 border border-[#e5482a] bg-[#e5482a] px-2 py-2 text-center font-mono text-[10px] leading-4 text-[#151515]" onClick={() => choose("accepted")}>{text.allow}</button>
-          <button type="button" autoFocus className="min-w-0 border border-white/35 px-2 py-2 text-center font-mono text-[10px] leading-4 text-white" onClick={() => choose("necessary")}>{text.necessary}</button>
+        <div className="grid shrink-0 grid-cols-2 gap-1.5 sm:flex sm:items-center sm:gap-2">
+          <button type="button" className="min-w-0 border border-[#e5482a] bg-[#e5482a] px-2 py-1.5 text-center font-mono text-[10px] leading-4 text-[#151515] sm:py-2" onClick={() => choose("accepted")}>{text.allow}</button>
+          <button type="button" autoFocus className="min-w-0 border border-white/35 px-2 py-1.5 text-center font-mono text-[10px] leading-4 text-white sm:py-2" onClick={() => choose("necessary")}>{text.necessary}</button>
         </div>
       </div>
     </aside>

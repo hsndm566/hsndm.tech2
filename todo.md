@@ -755,3 +755,6 @@
 - [x] Profile remaining built-public mobile LCP and main-thread work after the poster-first release
 - [x] Apply only safe public first-paint and interaction-responsiveness refinements while preserving approved content and private-route isolation
 - [x] Revalidate check, tests, build, built-preview mobile Lighthouse, accessibility, and public SDK isolation before publication
+- [x] Update the visible English and Arabic primary hero CTA labels while preserving their existing destinations and secondary CTA labels
+- [x] Compact the public mobile privacy-consent panel so it does not cover the hero CTA, while retaining opt-in-only analytics behavior
+- [x] Validate scoped CTA/consent changes with check, full tests, production build, and mobile English/Arabic rendering
