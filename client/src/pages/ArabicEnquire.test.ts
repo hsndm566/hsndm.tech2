@@ -41,4 +41,15 @@ describe("bilingual enquiry handoff", () => {
     expect(arabicSource).toContain("إيقاف أو حذف طلب التواصل");
     expect(arabicSource).toContain('className="skip-link" href="#campaign-brief"');
   });
+
+  it("keeps a selected plan visible and in the bilingual WhatsApp handoff context", () => {
+    expect(englishSource).toContain("You selected");
+    expect(englishSource).toContain("Selected plan:");
+    expect(englishSource).toContain("Continue to WhatsApp with my brief");
+    expect(englishSource).toContain("You control whether to send it.");
+    expect(arabicSource).toContain("اخترت");
+    expect(arabicSource).toContain("الباقة المختارة:");
+    expect(arabicSource).toContain("المتابعة إلى واتساب مع تفاصيل طلبي");
+    expect(arabicSource).toContain("أنت تتحكم في إرساله.");
+  });
 });

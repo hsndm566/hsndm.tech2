@@ -59,7 +59,7 @@ describe("campaign taxonomy handoff flow", () => {
     fireEvent.change(selects[2], { target: { value: "Finance & Banking" } });
     fireEvent.submit(container.querySelector("form")!);
     fireEvent.click(screen.getByLabelText("I approve this contact request and understand it does not start any employer application."));
-    fireEvent.click(screen.getByRole("button", { name: "Confirm via WhatsApp" }));
+    fireEvent.click(screen.getByRole("button", { name: "Continue to WhatsApp with my brief" }));
 
     expect(decodeURIComponent(vi.mocked(window.open).mock.calls[0][0] as string)).toContain("Target city: Riyadh");
     expect(decodeURIComponent(vi.mocked(window.open).mock.calls[0][0] as string)).toContain("Target industry: Finance & Banking");
@@ -78,7 +78,7 @@ describe("campaign taxonomy handoff flow", () => {
     fireEvent.change(selects[2], { target: { value: "Finance & Banking" } });
     fireEvent.submit(container.querySelector("form")!);
     fireEvent.click(screen.getByLabelText("أوافق على طلب التواصل هذا وأفهم أنه لا يبدأ أي تقديم لصاحب عمل."));
-    fireEvent.click(screen.getByRole("button", { name: "تأكيد عبر واتساب" }));
+    fireEvent.click(screen.getByRole("button", { name: "المتابعة إلى واتساب مع تفاصيل طلبي" }));
 
     expect(decodeURIComponent(vi.mocked(window.open).mock.calls[0][0] as string)).toContain("المدينة المستهدفة: الرياض");
     expect(decodeURIComponent(vi.mocked(window.open).mock.calls[0][0] as string)).toContain("المجال المستهدف: المالية والمصارف");
@@ -95,7 +95,7 @@ describe("campaign taxonomy handoff flow", () => {
     fireEvent.submit(container.querySelector("form")!);
     fireEvent.click(screen.getByLabelText("Secure web enquiry"));
     fireEvent.click(screen.getByLabelText("I approve this contact request and understand it does not start any employer application."));
-    fireEvent.click(screen.getByRole("button", { name: "Confirm secure enquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm via secure enquiry" }));
 
     expect(mocks.submitSecureEnquiry).toHaveBeenCalledWith(expect.objectContaining({ fullName: "Sara", email: "sara@example.com", targetRole: "Technology", campaignAuthorizationConfirmed: true }), expect.any(Object));
     expect(mocks.submitSecureEnquiry.mock.calls[0][0]).not.toHaveProperty("fileName");

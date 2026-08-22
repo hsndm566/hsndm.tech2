@@ -20,6 +20,20 @@ describe("public homepage enhancement contracts", () => {
     expect(arabicHome).toContain("لا يُقدَّم شيء دون موافقتك");
     expect(arabicHome).toContain("هل تضمنون حصولي على وظيفة؟");
     expect(arabicHome).toContain("الخصوصية والأمان");
+    expect(arabicHome).toContain("لا يتم إرسال أي طلب أو دفع اليوم.");
+    expect(arabicHome).toContain("الوصول إلى لوحة التحكم محمي بتسجيل الدخول عبر بريدك الإلكتروني.");
+  });
+
+  it("keeps conversion reassurance, plan continuity, and crawlable support links on the public homepage", () => {
+    expect(home).toContain("No payment or application is sent today.");
+    expect(home).toContain('href={`/enquire?plan=${plan.name.toLowerCase()}`}');
+    expect(home).toContain('href="/how-it-works/"');
+    expect(home).toContain('href="/pricing/"');
+    expect(home).toContain('href="/services/"');
+    expect(home).toContain('href="/ats/"');
+    expect(home).toContain('trackEngagement("hero_start_campaign_click"');
+    expect(home).toContain('trackEngagement("hero_see_plans_click"');
+    expect(home).toContain('trackEngagement("plan_selected"');
   });
 
   it("uses route-derived document direction, lazy below-fold rendering, and static FAQ metadata", () => {

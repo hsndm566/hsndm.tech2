@@ -38,7 +38,10 @@ describe("public route SEO coverage", () => {
     expect(indexHtml).toContain('id="homepage-faq-schema"');
     expect(indexHtml).not.toContain("AggregateRating");
     expect(indexHtml).not.toContain('"@type": "Review"');
-    expect(homePage).toContain("AutoApply SA — We Prepare Your Job Applications, You Approve");
+    expect(indexHtml).toContain("Saudi Job Application Support | Prepare, Review &amp; Approve Applications | AutoApply SA");
+    expect(homePage).toContain("Saudi Job Application Support | Prepare, Review & Approve Applications | AutoApply SA");
+    expect(indexHtml).toContain("Dashboard access is protected by your email sign-in.");
+    expect(staticRoutes).toContain("الوصول إلى لوحة التحكم محمي بتسجيل الدخول عبر بريدك الإلكتروني.");
     expect(homePage).toContain("Nothing goes out until you say yes.");
     expect(campaignStatus).toContain("noindex: true");
     expect(readFileSync(new URL("./seo.ts", import.meta.url), "utf8")).toContain('"noindex, nofollow"');

@@ -758,3 +758,9 @@
 - [x] Update the visible English and Arabic primary hero CTA labels while preserving their existing destinations and secondary CTA labels
 - [x] Compact the public mobile privacy-consent panel so it does not cover the hero CTA, while retaining opt-in-only analytics behavior
 - [x] Validate scoped CTA/consent changes with check, full tests, production build, and mobile English/Arabic rendering
+- [x] Add the approved hero reassurance line and preserve the exact bilingual CTA labels and destinations
+- [x] Carry selected pricing plans into bilingual enquiry and WhatsApp handoff flows with factual selected-plan context
+- [x] Replace approved intake and FAQ data-security wording in visible EN/AR content and synchronized FAQ schema
+- [x] Add contextually relevant crawlable homepage links and the approved English homepage title change without altering other SEO content
+- [x] Add non-blocking local conversion event hooks using the existing public analytics utility without introducing a third-party SDK
+- [x] Validate conversion, SEO, query-continuity, public-isolation, and bilingual mobile behavior with check, tests, build, and 375px review

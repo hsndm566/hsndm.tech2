@@ -99,7 +99,7 @@ const faqs = [
     answer:
       "It depends on your plan — see the plan details above.",
   },
-  { question: "Is my data secure?", answer: "Yes — see our Privacy & Safety section above." },
+  { question: "Is my data secure?", answer: "Yes. Your CV stays private until you approve a specific job. We only use it to prepare applications you&apos;ve approved, and it is never sold. You can request deletion or pause anytime from your dashboard. Dashboard access is protected by your email sign-in." },
   { question: "How do you find these openings?", answer: "We search job postings across multiple portals and match them to your profile." },
 ];
 
@@ -238,7 +238,7 @@ export default function Home() {
 
   useEffect(() => {
     applyPageSeo({
-      title: "AutoApply SA — We Prepare Your Job Applications, You Approve",
+      title: "Saudi Job Application Support | Prepare, Review & Approve Applications | AutoApply SA",
       description: "Tell us the roles you want. We find real openings in Saudi Arabia and prepare tailored applications — you review and approve before anything is sent.",
       path: "/",
     });
@@ -496,11 +496,12 @@ export default function Home() {
                 Tell us the roles you want. We find real openings and draft tailored applications for each one. Nothing goes out until you say yes.
               </p>
               <div className="hero-actions">
-                <button className="button button-ink" onClick={() => scrollTo("pricing")}>Start your campaign plan <ArrowDownRight size={18} /></button>
-                <button className="text-button light-text" onClick={() => scrollTo("how")}>
+                <button className="button button-ink" onClick={() => { trackEngagement("hero_start_campaign_click", { page: window.location.pathname }); scrollTo("pricing"); }}>Start your campaign plan <ArrowDownRight size={18} /></button>
+                <button className="text-button light-text" onClick={() => { trackEngagement("hero_see_plans_click", { page: window.location.pathname }); scrollTo("how"); }}>
                   See how it works <MoveRight size={18} />
                 </button>
               </div>
+              <p className="mt-2 text-xs font-mono text-[#151515]/70">No payment or application is sent today.</p>
               <div className="hero-note">From 99 SAR / month <b /> no card needed to begin a conversation</div>
               <div className="hero-trust-row" aria-label="Campaign trust details"><span><ShieldCheck size={14} /> You approve role targets</span><span>Set volume &amp; dates</span><span>Pause anytime</span><span>Every application is logged</span><span>Saudi-focused support</span></div>
             </div>
@@ -593,6 +594,7 @@ export default function Home() {
                   <Send size={24} strokeWidth={1.4} />
                 </article>
               </div>
+              <p className="mt-6 text-sm"><a href="/how-it-works/" className="underline underline-offset-4">See how our approval process works</a></p>
             </div>
           </div>
         </section>
@@ -602,6 +604,7 @@ export default function Home() {
           <section id="reviews" className="reviews-pending section-fog below-fold-section" aria-labelledby="campaign-clarity-heading">
             <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> WHO IT&apos;S FOR</div><h2 id="campaign-clarity-heading">More applications,<br /><i>without every evening on portals.</i></h2></div><p><ShieldCheck size={16} /> Built for job seekers in Saudi Arabia who need volume without doing it manually.</p></div>
             <div className="page-frame review-cards"><article className="review-card"><span className="review-index">01 / FIRST ROLE</span><h3>New graduates</h3><p className="review-detail">For candidates looking for a first role and a practical, steady application routine.</p></article><article className="review-card"><span className="review-index">02 / CAREER CHANGE</span><h3>Professionals changing direction</h3><p className="review-detail">For people considering a new role lane, industry, city, or career step.</p></article><article className="review-card"><span className="review-index">03 / BUSY SEARCH</span><h3>Busy candidates</h3><p className="review-detail">For candidates who need more relevant applications without managing every portal and cover letter manually.</p></article></div>
+            <div className="page-frame mt-6 text-sm"><a href="/services/" className="underline underline-offset-4">Learn about our job application support services</a></div>
           </section>
         </SectionErrorBoundary>
 
@@ -819,11 +822,11 @@ export default function Home() {
                     <div className="price"><b>{plan.price}</b><span>SAR<br />/ MO</span></div>
                     <p>{plan.descriptor}</p>
                     <ul>{plan.features.map((feature) => <li key={feature}><Check size={15} /> {feature}</li>)}</ul>
-                    <Link href="/enquire" className="plan-cta">Choose {plan.name} <MoveRight size={17} /></Link>
+                    <Link href={`/enquire?plan=${plan.name.toLowerCase()}`} className="plan-cta" onClick={() => trackEngagement("plan_selected", { plan: plan.name, page: window.location.pathname })}>Choose {plan.name} <MoveRight size={17} /></Link>
                   </article>
                 ))}
               </div>
-              <p className="mt-5 max-w-3xl text-sm leading-6 text-[#151515]/65">Indicative monthly capacity; final volume depends on your approved plan, role availability, quality checks, and employer channels.</p>
+              <p className="mt-5 max-w-3xl text-sm leading-6 text-[#151515]/65">Indicative monthly capacity; final volume depends on your approved plan, role availability, quality checks, and employer channels. <a href="/pricing/" className="underline underline-offset-4">View our pricing plans</a>.</p>
             </div>
           </div>
         </section>
@@ -841,7 +844,7 @@ export default function Home() {
         <SectionErrorBoundary name="privacy-safety" fallback={<section id="location" className="location-section section-fog"><div className="page-frame"><h2>Your data stays private.</h2><p>Information is used only to prepare applications you approve.</p></div></section>}>
           <section id="location" className="location-section section-fog below-fold-section">
             <div className="page-frame location-grid">
-              <div className="location-copy"><div className="section-kicker"><ShieldCheck size={15} /> PRIVACY &amp; SAFETY</div><h2>Your data stays <i>private.</i></h2><p className="section-summary">We use your information only to find and prepare applications on your behalf — it is never sold to third parties. Your CV and details are shared with an employer only as part of an application you&apos;ve already approved.</p><div className="location-actions"><Link className="button button-ink" href="/privacy">Privacy policy <ArrowUpRight size={18} /></Link><Link className="text-button" href="/terms">Terms <MoveRight size={18} /></Link></div></div>
+              <div className="location-copy"><div className="section-kicker"><ShieldCheck size={15} /> PRIVACY &amp; SAFETY</div><h2>Your data stays <i>private.</i></h2><p className="section-summary">We use your information only to find and prepare applications on your behalf — it is never sold to third parties. Your CV and details are shared with an employer only as part of an application you&apos;ve already approved.</p><p className="mt-4 text-sm"><a href="/ats/" className="underline underline-offset-4">Check your CV with our ATS review</a></p><div className="location-actions"><Link className="button button-ink" href="/privacy">Privacy policy <ArrowUpRight size={18} /></Link><Link className="text-button" href="/terms">Terms <MoveRight size={18} /></Link></div></div>
               <div className="map-frame"><div className="location-map-canvas privacy-panel"><StatusDot /><b>APPROVAL REQUIRED</b><p>Nothing is submitted on your behalf without your go-ahead, every time.</p></div><div className="map-caption"><span><StatusDot /> PRIVATE BY DEFAULT</span><b>YOU STAY IN CONTROL</b></div></div>
             </div>
           </section>
