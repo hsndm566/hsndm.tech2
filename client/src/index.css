@@ -376,6 +376,16 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .has-native-motion .site-shell .is-visible { opacity: 1; transform: translateY(0); }
 }
 
+/* Phone sections remain fully rendered; only their composited entry is delayed until viewport entry. */
+@media (max-width: 680px) and (prefers-reduced-motion: no-preference) {
+  .has-native-motion .site-shell .mobile-section-reveal-target {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 300ms var(--polish-ease), transform 300ms var(--polish-ease);
+  }
+  .has-native-motion .site-shell .mobile-section-reveal-target.is-visible { opacity: 1; transform: translateY(0); }
+}
+
 .site-shell :is(.button, .text-button, .plan-cta, .drop-zone, .campaign-switcher button, .dashboard-progress) {
   transition: transform 160ms var(--polish-ease), color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }

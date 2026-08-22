@@ -15,6 +15,8 @@ describe("native visual refinement", () => {
     expect(controllerSource).toContain("prefers-reduced-motion: reduce");
     expect(controllerSource).toContain("IntersectionObserver");
     expect(controllerSource).toContain('classList.add("is-visible")');
+    expect(controllerSource).toContain("mobileSectionSelector");
+    expect(controllerSource).toContain('classList.add("mobile-section-reveal-target")');
     expect(controllerSource).toContain("[routeKey]");
   });
 
@@ -24,5 +26,12 @@ describe("native visual refinement", () => {
     expect(styleSource).toContain("live-status-breathe");
     expect(styleSource).toContain(".plan-featured");
     expect(styleSource).toContain(".drop-zone:active");
+  });
+
+  it("limits whole-section entry motion to phones without reintroducing deferred section rendering", () => {
+    expect(styleSource).toContain("@media (max-width: 680px) and (prefers-reduced-motion: no-preference)");
+    expect(styleSource).toContain(".mobile-section-reveal-target");
+    expect(styleSource).toContain("translateY(8px)");
+    expect(styleSource).toContain(".below-fold-section { content-visibility: visible; contain-intrinsic-size: auto; }");
   });
 });

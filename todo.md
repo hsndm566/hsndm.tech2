@@ -767,3 +767,5 @@
 - [x] Diagnose and repair public mobile blank reserved sections shown on iPhone Safari, including deferred/lazy rendering fallbacks
 - [x] Ensure public fixed mobile controls, cookie settings, and back-to-top controls do not obstruct page content or primary interactions on typical phone viewports
 - [x] Validate the repaired public English and Arabic mobile rendering with tests, build, and responsive full-page checks before publication
+- [x] Add a restrained mobile public-section fade-in on viewport entry without delaying or hiding section rendering
+- [x] Preserve reduced-motion behavior and validate mobile section-reveal motion with tests, production build, and 375px review

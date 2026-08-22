@@ -11,6 +11,8 @@ const revealSelector = [
   ".site-shell .map-frame",
 ].join(",");
 
+const mobileSectionSelector = ".site-shell main > section:not(.hero)";
+
 /**
  * Adds only a native, one-time Intersection Observer reveal state. CSS owns the
  * 300ms transition so users with reduced motion keep the fully static interface.
@@ -22,6 +24,9 @@ export function NativeVisualEnhancements({ routeKey }: { routeKey: string }) {
     const root = document.documentElement;
     root.classList.add("has-native-motion");
     const targets = Array.from(document.querySelectorAll<HTMLElement>(revealSelector));
+    const mobileSectionTargets = Array.from(document.querySelectorAll<HTMLElement>(mobileSectionSelector));
+    mobileSectionTargets.forEach(target => target.classList.add("mobile-section-reveal-target"));
+    const observerTargets = Array.from(new Set([...targets, ...mobileSectionTargets]));
 
     const observer = new IntersectionObserver(
       entries => {
@@ -34,12 +39,13 @@ export function NativeVisualEnhancements({ routeKey }: { routeKey: string }) {
       { threshold: 0.08, rootMargin: "0px 0px -5%" },
     );
 
-    targets.forEach(target => observer.observe(target));
+    observerTargets.forEach(target => observer.observe(target));
 
     return () => {
       observer.disconnect();
       root.classList.remove("has-native-motion");
-      targets.forEach(target => target.classList.remove("is-visible"));
+      observerTargets.forEach(target => target.classList.remove("is-visible"));
+      mobileSectionTargets.forEach(target => target.classList.remove("mobile-section-reveal-target"));
     };
   }, [routeKey]);
 
