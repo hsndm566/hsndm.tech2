@@ -914,9 +914,6 @@ export default function Home() {
       </main>
       </SectionErrorBoundary>
 
-      <div className="mobile-campaign-cta">
-        <Link href="/enquire"><span><StatusDot /> OPEN CAMPAIGN</span><b>Start now <ArrowUpRight size={17} /></b></Link>
-      </div>
       {showBackToTop && <button className="back-to-top" type="button" onClick={returnToTop} aria-label="Back to top" title="Back to top"><ArrowUp size={17} /><span>TOP</span></button>}
 
       <SectionErrorBoundary name="marketing-footer" fallback={<footer className="footer"><div className="page-frame footer-top"><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech</a></div></footer>}>

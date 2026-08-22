@@ -5,6 +5,7 @@ const heroMedia = readFileSync(new URL("../components/HeroMedia.tsx", import.met
 const home = readFileSync(new URL("./Home.tsx", import.meta.url), "utf8");
 const arabicHome = readFileSync(new URL("./ArabicHome.tsx", import.meta.url), "utf8");
 const styles = readFileSync(new URL("../index.css", import.meta.url), "utf8");
+const updates = readFileSync(new URL("../updates.css", import.meta.url), "utf8");
 
 describe("public homepage technical polish", () => {
   it("reserves intrinsic hero media space before the poster or video decodes", () => {
@@ -33,5 +34,13 @@ describe("public homepage technical polish", () => {
     expect(styles).toContain("padding-inline");
     expect(styles).toContain("border-inline-start");
     expect(styles).toContain("text-align: start");
+  });
+
+  it("paints deferred public sections and avoids stacked campaign bars on phone viewports", () => {
+    expect(styles).toContain(".below-fold-section { content-visibility: visible; contain-intrinsic-size: auto; }");
+    expect(home).not.toContain('className="mobile-campaign-cta"');
+    expect(arabicHome).not.toContain('className="mobile-campaign-cta"');
+    expect(updates).toContain(".mobile-campaign-cta { display: none !important; }");
+    expect(updates).toContain(".cookie-settings-trigger");
   });
 });

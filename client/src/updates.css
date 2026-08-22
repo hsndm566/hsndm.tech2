@@ -68,3 +68,10 @@
 @keyframes back-to-top-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 680px) { .back-to-top { right: 16px; bottom: 72px; min-width: 42px; min-height: 42px; padding: 0 9px; } }
 @media (prefers-reduced-motion: reduce) { .back-to-top { animation: none; } }
+
+/* Mobile repair: the global WhatsApp control is the sole fixed campaign entry point. */
+@media (max-width: 680px) {
+  .mobile-campaign-cta { display: none !important; }
+  .back-to-top { inset-inline-end: 16px; bottom: max(1rem, env(safe-area-inset-bottom)); }
+  .cookie-settings-trigger { inset-inline-start: auto; inset-inline-end: 12px; padding: 6px 8px; font-size: 9px; }
+}

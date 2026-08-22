@@ -86,6 +86,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .section-ink { background: var(--ink); color: var(--paper); }
 .section-accent { background: var(--signal); }
 .below-fold-section { content-visibility: auto; contain-intrinsic-size: 800px; }
+@media (max-width: 680px) {
+  /* Avoid iOS Safari retaining a skipped section's intrinsic placeholder after scroll restoration. */
+  .below-fold-section { content-visibility: visible; contain-intrinsic-size: auto; }
+}
 .privacy-panel { min-height: 100%; display: grid; align-content: center; gap: 13px; padding: clamp(28px, 4vw, 56px); color: var(--paper); background: var(--ink); }
 .privacy-panel b { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: .08em; }
 .privacy-panel p { max-width: 29rem; margin: 0; color: rgba(245,242,235,.72); font-size: 15px; line-height: 1.75; }

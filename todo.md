@@ -764,3 +764,6 @@
 - [x] Add contextually relevant crawlable homepage links and the approved English homepage title change without altering other SEO content
 - [x] Add non-blocking local conversion event hooks using the existing public analytics utility without introducing a third-party SDK
 - [x] Validate conversion, SEO, query-continuity, public-isolation, and bilingual mobile behavior with check, tests, build, and 375px review
+- [x] Diagnose and repair public mobile blank reserved sections shown on iPhone Safari, including deferred/lazy rendering fallbacks
+- [x] Ensure public fixed mobile controls, cookie settings, and back-to-top controls do not obstruct page content or primary interactions on typical phone viewports
+- [x] Validate the repaired public English and Arabic mobile rendering with tests, build, and responsive full-page checks before publication

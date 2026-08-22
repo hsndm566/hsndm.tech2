@@ -339,7 +339,6 @@ export default function ArabicHome() {
       </main>
       </SectionErrorBoundary>
 
-      <div className="mobile-campaign-cta"><Link href="/ar/enquire"><span><StatusDot /> ابدأ حملة جديدة</span><b>ابدأ الآن <ArrowUpRight size={17} /></b></Link></div>
       <SectionErrorBoundary name="arabic-marketing-footer" fallback={<footer className="footer"><div className="page-frame footer-top"><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech</a></div></footer>}><footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer></SectionErrorBoundary>
     </div>
   );
