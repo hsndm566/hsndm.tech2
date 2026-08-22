@@ -9,6 +9,7 @@ describe("Anime.js visual enhancements", () => {
   it("loads Anime.js only after a public landing route has committed", () => {
     expect(source).toContain('void import("animejs")');
     expect(source).toContain('const landingRoutes = new Set(["/", "/ar"])');
+    expect(source).toContain('window.matchMedia("(max-width: 680px), (prefers-reduced-motion: reduce)").matches');
     expect(appSource).toContain("<AnimeVisualEnhancements routeKey={location} />");
   });
 

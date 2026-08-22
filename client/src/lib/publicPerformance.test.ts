@@ -32,4 +32,10 @@ describe("public marketing performance contracts", () => {
     expect(staticServer).toContain('"public, max-age=31536000, immutable"');
     expect(staticServer).toContain('res.setHeader("Cache-Control", "no-cache")');
   });
+
+  it("keeps the tRPC and React Query provider graph out of the initial English and Arabic homepage routes", () => {
+    expect(entry).toContain('const publicHomepageRoutes = new Set(["/", "/ar"])');
+    expect(entry).toContain('lazy(() => import("./components/DataClientProviders")');
+    expect(home).not.toContain('from "@/lib/trpc"');
+  });
 });

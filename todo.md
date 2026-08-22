@@ -752,3 +752,6 @@
 - [x] Replace public hero initial video paint with a lightweight static-poster first paint and defer any optional hero video playback without changing visible copy or visual direction
 - [x] Correct public homepage contrast findings using scoped neutral or darker-orange text treatments while preserving approved primary tokens and hero brightness
 - [x] Revalidate public below-fold deferral, async fonts, Clerk/Sentry initial-route isolation, check, tests, build, Lighthouse mobile, and axe-based contrast findings
+- [x] Profile remaining built-public mobile LCP and main-thread work after the poster-first release
+- [x] Apply only safe public first-paint and interaction-responsiveness refinements while preserving approved content and private-route isolation
+- [x] Revalidate check, tests, build, built-preview mobile Lighthouse, accessibility, and public SDK isolation before publication

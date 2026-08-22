@@ -14,6 +14,7 @@ describe("public homepage technical polish", () => {
     expect(heroMedia).toContain('preload="none"');
     expect(heroMedia).not.toContain("autoPlay");
     expect(heroMedia).toContain("videoRequested && HERO_VIDEO_URL");
+    expect(styles).toContain("backdrop-filter: none");
   });
 
   it("contains hero, final CTA, footer, and Arabic FAQ failures at public section scope", () => {

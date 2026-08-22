@@ -11,6 +11,7 @@ const landingRoutes = new Set(["/", "/ar"]);
 export function AnimeVisualEnhancements({ routeKey }: { routeKey: string }) {
   useEffect(() => {
     if (!landingRoutes.has(routeKey)) return;
+    if (window.matchMedia("(max-width: 680px), (prefers-reduced-motion: reduce)").matches) return;
 
     let cancelled = false;
     const root = document.documentElement;

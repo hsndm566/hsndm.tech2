@@ -29,7 +29,6 @@ import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
 import { applyPageSeo } from "@/lib/seo";
 import { EXPLAINER_VIDEO_URL } from "@/lib/media";
-import { trpc } from "@/lib/trpc";
 import { saudiCities, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import { ArabicMarketSelector } from "@/components/ArabicMarketSelector";
 import { ArabicIntakeSection } from "@/components/arabic/ArabicIntakeSection";
@@ -105,6 +104,9 @@ const roleTranslations: Record<string, string> = {
 export type MatchPreferences = { city: string; industry: keyof typeof industryLabels; seniority: string; language: "Arabic" };
 type ScanResult = { field: string; roles: string[]; confidence: string; rationale: string; keySkills?: string[]; topDomain?: string };
 
+const hiddenLegacyMutation = { mutate: (_input: unknown) => undefined };
+const hiddenLegacySkillsMutation = { mutateAsync: async (_input: unknown) => ({ keySkills: [], topDomain: "" }) };
+
 function RailLabel({ children }: { children: React.ReactNode }) {
   return <span className="rail-label">{children}</span>;
 }
@@ -128,10 +130,10 @@ export default function ArabicHome() {
   const [selectedArabicIndustry, setSelectedArabicIndustry] = useState("Technology & Software");
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
-  const recordReadiness = trpc.campaign.readiness.record.useMutation();
-  const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
-  const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
-  const extractSkillsMutation = trpc.campaign.ats.extractSkills.useMutation();
+  const recordReadiness = hiddenLegacyMutation;
+  const reportCvExtractionFailure = hiddenLegacyMutation;
+  const reportBlockedHandoff = hiddenLegacyMutation;
+  const extractSkillsMutation = hiddenLegacySkillsMutation;
   const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
     || window.location.hostname === "localhost"
     || window.location.hostname.endsWith(".manus.space")

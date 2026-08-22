@@ -343,7 +343,7 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .hero-actions { margin-top: 16px; gap: 13px; }
   .hero-note { margin-top: 9px; }
   .hero-trust-row { margin-top: 8px; }
-  .hero-ledger { position: static; width: 100%; margin-top: 6px; padding: 10px 12px; background: rgba(255,255,255,.94); }
+  .hero-ledger { position: static; width: 100%; margin-top: 6px; padding: 10px 12px; background: rgba(255,255,255,.94); backdrop-filter: none; }
   .hero-stats { position: static; width: 100%; margin-top: 13px; gap: 0; justify-content: space-between; }
   .hero-stats strong { font-size: 24px; }
   .hero-stats span { max-width: 78px; font-size: 7px; line-height: 1.35; }

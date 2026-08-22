@@ -9,7 +9,6 @@ import { HomepageMediaImage } from "@/components/HomepageMediaImage";
 import { trackEngagement } from "@/lib/analytics";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { applyPageSeo } from "@/lib/seo";
-import { trpc } from "@/lib/trpc";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
 import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
@@ -129,6 +128,9 @@ const industryLabels: Record<string, string> = {
   "engineering-construction": "Engineering & Construction",
 };
 
+const hiddenLegacyMutation = { mutate: (_input: unknown) => undefined };
+const hiddenLegacySkillsMutation = { mutateAsync: async (_input: unknown) => ({ keySkills: [], topDomain: "" }) };
+
 export default function Home() {
   const legacyPublicPreviewVisible: boolean = false;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -225,10 +227,10 @@ export default function Home() {
   }, []);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
-  const recordReadiness = trpc.campaign.readiness.record.useMutation();
-  const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
-  const reportBlockedHandoff = trpc.campaign.clientIssue.reportBlockedWhatsAppHandoff.useMutation();
-  const extractSkillsMutation = trpc.campaign.ats.extractSkills.useMutation();
+  const recordReadiness = hiddenLegacyMutation;
+  const reportCvExtractionFailure = hiddenLegacyMutation;
+  const reportBlockedHandoff = hiddenLegacyMutation;
+  const extractSkillsMutation = hiddenLegacySkillsMutation;
   const backendAvailable = Boolean(import.meta.env.VITE_API_BASE_URL)
     || window.location.hostname === "localhost"
     || window.location.hostname.endsWith(".manus.space")
