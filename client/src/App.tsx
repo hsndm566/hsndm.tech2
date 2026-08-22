@@ -4,7 +4,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -32,6 +32,7 @@ import { WhatsAppBusinessCta } from "@/components/WhatsAppBusinessCta";
 import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements";
 import { AnimeVisualEnhancements } from "@/components/AnimeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
+import { ChatLauncherSlot } from "@/components/ChatLauncherSlot";
 
 function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -54,19 +55,18 @@ function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) 
 
 function Router() {
   const [location, setLocation] = useLocation();
+  const isArabicRoute = location.startsWith("/ar");
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.lang = isArabicRoute ? "ar" : "en";
+    root.dir = isArabicRoute ? "rtl" : "ltr";
+  }, [isArabicRoute]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
         setLocation("/dashboard");
-        return;
-      }
-      if (location === "/") {
-        const hasVisited = sessionStorage.getItem("autoapply_lang_routed");
-        const preferredLocale = document.cookie.split("; ").find((entry) => entry.startsWith("autoapply_preferred_locale="))?.split("=")[1];
-        if (!hasVisited && (preferredLocale === "ar" || (!preferredLocale && navigator.language && navigator.language.startsWith("ar")))) {
-          sessionStorage.setItem("autoapply_lang_routed", "true");
-          setLocation("/ar");
-        }
       }
     }
   }, [location, setLocation]);
@@ -119,6 +119,7 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
+          <ChatLauncherSlot />
           <DashboardHostRedirectGate>
             <Suspense fallback={<RecoveryPanel loading arabic={typeof window !== "undefined" && window.location.pathname.startsWith("/ar")} />}>
               <Router />

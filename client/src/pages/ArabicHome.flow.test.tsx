@@ -25,41 +25,28 @@ describe("ArabicHome canonical taxonomy flow", () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  it("carries selected canonical Arabic city and industry values into the readiness output", async () => {
+  it("renders the Arabic approval-led public path in the intended order", async () => {
     const { default: ArabicHome } = await import("./ArabicHome");
     const { container } = render(<ArabicHome />);
-    await waitFor(() => expect(container.querySelectorAll(".arabic-canonical-preference select")).toHaveLength(2));
-    const selectors = container.querySelectorAll<HTMLSelectElement>(".arabic-canonical-preference select");
-    fireEvent.change(selectors[0], { target: { value: "Riyadh" } });
-    fireEvent.change(selectors[1], { target: { value: "Finance & Banking" } });
-    const upload = container.querySelector('input[type="file"]') as HTMLInputElement;
-    fireEvent.change(upload, { target: { files: [new File(["cv"], "cv.txt", { type: "text/plain" })] } });
-    await waitFor(() => expect(mocks.callbacks.length).toBeGreaterThan(0));
-    mocks.callbacks.at(-1)!(999_999);
 
-    await waitFor(() => {
-      expect(container.textContent).toContain("الرياض");
-      expect(container.textContent).toContain("المالية والمصارف");
-    });
+    expect(container.textContent).toContain("لا يُقدَّم شيء دون موافقتك");
+    expect(container.querySelector("#how")).not.toBeNull();
+    expect(container.querySelector("#reviews")).not.toBeNull();
+    expect(container.querySelector("#approval")).not.toBeNull();
+    expect(container.querySelector("#pricing")).not.toBeNull();
+    expect(container.querySelector("#location")).not.toBeNull();
+    expect(container.querySelector("#faq")).not.toBeNull();
+    expect(container.querySelector('input[type="file"]')).toBeNull();
   });
 
-  it("preserves the Arabic intake, local scan, readiness, and privacy landmarks", async () => {
+  it("keeps privacy and final campaign direction visible without mounting the legacy readiness preview", async () => {
     const { default: ArabicHome } = await import("./ArabicHome");
     const { container } = render(<ArabicHome />);
 
-    expect(container.querySelector(".arabic-canonical-preference")).not.toBeNull();
-    expect(container.querySelector(".drop-zone")).not.toBeNull();
-    expect(container.querySelector(".privacy-note")).not.toBeNull();
-
-    const upload = container.querySelector('input[type="file"]') as HTMLInputElement;
-    fireEvent.change(upload, { target: { files: [new File(["cv"], "cv.txt", { type: "text/plain" })] } });
-    await waitFor(() => expect(mocks.callbacks.length).toBeGreaterThan(0));
-    mocks.callbacks.at(-1)!(999_999);
-
-    await waitFor(() => {
-      expect(container.querySelector(".role-results")).not.toBeNull();
-      expect(container.querySelector(".readiness-card")).not.toBeNull();
-      expect(container.textContent).toContain("أرسل هذا الملخص إلى حسن");
-    });
+    expect(container.querySelector(".privacy-panel")).not.toBeNull();
+    expect(container.textContent).toContain("بياناتك تبقى خاصة");
+    expect(container.textContent).toContain("ابدأ بخطة");
+    expect(container.querySelector(".arabic-canonical-preference")).toBeNull();
+    expect(container.querySelector(".readiness-card")).toBeNull();
   });
 });

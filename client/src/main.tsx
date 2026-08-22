@@ -7,24 +7,9 @@ import superjson from "superjson";
 import App from "./App";
 import { installErrorTelemetry } from "./lib/errorTelemetry";
 import { getClerkToken } from "./lib/clerkToken";
-import { installOptionalSentry } from "./lib/sentryTelemetry";
 import "./index.css";
 
 installErrorTelemetry();
-
-// Keep optional third-party telemetry outside the public first-paint path.
-const scheduleOptionalTelemetry = () => {
-  const start = () => installOptionalSentry();
-  const requestIdle = (window as Window & {
-    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
-  }).requestIdleCallback;
-  if (requestIdle) {
-    requestIdle(start, { timeout: 2_500 });
-  } else {
-    window.setTimeout(start, 1_800);
-  }
-};
-scheduleOptionalTelemetry();
 const queryClient = new QueryClient();
 
 queryClient.getQueryCache().subscribe(event => {

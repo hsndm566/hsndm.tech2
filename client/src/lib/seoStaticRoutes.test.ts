@@ -38,8 +38,8 @@ describe("public route SEO coverage", () => {
     expect(indexHtml).toContain('id="homepage-faq-schema"');
     expect(indexHtml).not.toContain("AggregateRating");
     expect(indexHtml).not.toContain('"@type": "Review"');
-    expect(homePage).toContain("AutoApply SA — Job Application Support in Saudi Arabia");
-    expect(homePage).toContain("Jeddah-based service for job seekers in Saudi Arabia");
+    expect(homePage).toContain("AutoApply SA — We Prepare Your Job Applications, You Approve");
+    expect(homePage).toContain("Nothing goes out until you say yes.");
     expect(campaignStatus).toContain("noindex: true");
     expect(readFileSync(new URL("./seo.ts", import.meta.url), "utf8")).toContain('"noindex, nofollow"');
   });

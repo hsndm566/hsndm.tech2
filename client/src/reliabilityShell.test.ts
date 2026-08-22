@@ -17,10 +17,10 @@ describe("first-paint reliability shell", () => {
     const english = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
     const arabic = readFileSync(resolve(projectRoot, "client/src/pages/ArabicHome.tsx"), "utf8");
 
-    expect(english).toContain(">applications,</span>");
-    expect(english).toContain(">approval.</span>");
+    expect(english).toContain(">applications.</span>");
+    expect(english).toContain(">You approve</span>");
     expect(english).toContain("You approve role targets");
-    expect(arabic).toContain("موافقتك");
+    expect(arabic).toContain("وأنت توافق");
     expect(arabic).toContain("كل طلب مسجّل");
   });
 });

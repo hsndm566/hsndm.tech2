@@ -22,7 +22,7 @@ describe("public content policy", () => {
     const english = readFileSync(resolve(root, publicPages[0]), "utf8");
     const arabic = readFileSync(resolve(root, publicPages[1]), "utf8");
 
-    expect(english).toContain("CAMPAIGN CLARITY");
-    expect(arabic).toContain("وضوح الحملة");
+    expect(english).toContain("WHO IT&apos;S FOR");
+    expect(arabic).toContain("لمن تناسب الخدمة");
   });
 });

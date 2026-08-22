@@ -12,8 +12,8 @@ describe("homepage clarity release", () => {
   it("states the service plainly and keeps the approved campaign CTA paths", () => {
     const source = homeSource();
 
-    ["Tailored", "Saudi", "applications,", "approval."].forEach(word => expect(source).toContain(`>${word}</span>`));
-    expect(source).toContain("We agree your role targets, volume, and timing first.");
+    ["We prepare", "your job", "applications.", "You approve", "before we send."].forEach(word => expect(source).toContain(`>${word}</span>`));
+    expect(source).toContain("Nothing goes out until you say yes.");
     expect(source).toContain('href="/enquire"');
     expect(source).toContain("https://wa.me/966571448656");
   });
@@ -64,7 +64,7 @@ describe("homepage clarity release", () => {
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
     const source = arabicHomeSource();
 
-    ["طلبات", "سعودية", "موافقتك."].forEach(word => expect(source).toContain(`>${word}</span>`));
+    ["نُعِدّ طلباتك", "للوظائف.", "وأنت توافق", "قبل الإرسال."].forEach(word => expect(source).toContain(`>${word}</span>`));
     expect(source).toContain("سيرتك الذاتية جاهزة");
     expect(source).toContain("arabic-video-explainer-heading");
     expect(source).toContain("DeferredExplainerVideo");
@@ -84,14 +84,13 @@ describe("homepage clarity release", () => {
     const styles = stylesSource();
 
     expect(english).toContain("<HeroMedia alt=");
-    ["Tailored", "Saudi", "applications,", "approval."].forEach(word => expect(english).toContain(`>${word}</span>`));
-    expect(english).toContain("Prepare your campaign brief");
+    ["We prepare", "your job", "applications.", "You approve", "before we send."].forEach(word => expect(english).toContain(`>${word}</span>`));
+    expect(english).toContain("See plans");
     expect(english).toContain("Approved-plan operations — 24/7");
-    expect(english).toContain("Campaign operations continue only within your approved plan.");
-    expect(english).toContain("500+");
+    expect(english).toContain("Nothing goes out until you say yes.");
     expect(arabic).toContain("<HeroMedia alt=");
-    ["طلبات", "سعودية", "موافقتك."].forEach(word => expect(arabic).toContain(`>${word}</span>`));
-    expect(arabic).toContain("ابدأ حملتك");
+    ["نُعِدّ طلباتك", "للوظائف.", "وأنت توافق", "قبل الإرسال."].forEach(word => expect(arabic).toContain(`>${word}</span>`));
+    expect(arabic).toContain("شاهد الباقات");
     expect(arabic).toContain("لغتان مدعومتان");
     expect(styles).toContain(".hero { min-height: 610px");
     expect(styles).toContain(".hero-media::after");

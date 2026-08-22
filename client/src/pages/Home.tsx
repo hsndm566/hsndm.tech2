@@ -14,6 +14,8 @@ import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
 import { FooterEnquiryForm } from "@/components/FooterEnquiryForm";
 import { LanguageTransitionLink } from "@/components/LanguageTransitionLink";
 import { MarketingAnchorScroller } from "@/components/MarketingAnchorScroller";
+import { LazyMount } from "@/components/LazyMount";
+import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { saudiCities, saudiIndustries, toMatchIndustry } from "@/lib/saudiTaxonomy";
 import {
   ArrowDownRight,
@@ -54,50 +56,52 @@ const plans = [
   {
     name: "Starter",
     price: "99",
-    descriptor: "A focused starting lane.",
+    descriptor: "For candidates who want a steady baseline of applications going out every week without doing it themselves.",
     features: ["~40 applications", "Email + portal submit", "Weekly report"],
   },
   {
     name: "Pro",
     price: "149",
-    descriptor: "For active multi-channel momentum.",
+    descriptor: "For candidates who want faster tailoring and priority human review on top of the baseline.",
     features: ["~90 applications", "Priority tailoring", "Priority human review", "Daily report"],
     featured: true,
   },
   {
     name: "Founder",
     price: "249",
-    descriptor: "High-touch targeting for a pivotal move.",
+    descriptor: "For candidates targeting multiple roles at once who want white-glove onboarding.",
     features: ["~150 applications", "Multi-role targeting", "White-glove onboarding"],
   },
 ];
 
 const faqs = [
   {
-    question: "Is my CV data private?",
+    question: "Do you guarantee I'll get hired?",
     answer:
-      "Your CV is used to match and tailor applications. You can request deletion at any time; it is not sold as a separate product.",
+      "No one can guarantee an interview or offer. We increase the number of relevant applications going out on your behalf; outcomes depend on the market and your profile.",
   },
   {
-    question: "Do you apply to real companies?",
+    question: "What if I don't like a prepared application?",
     answer:
-      "The service is designed for live Saudi Arabia roles, using email and direct portal submission, with bounce-checked addresses where email is used.",
+      "Nothing is sent until you approve it. You can request changes or skip it.",
   },
   {
-    question: "Which languages are supported?",
+    question: "Is this only for tech/engineering roles?",
     answer:
-      "The current service supports English and Arabic for job seekers across Saudi Arabia.",
+      "No — it works across industries.",
   },
   {
-    question: "How do I pay?",
+    question: "What do I need to provide?",
     answer:
-      "Monthly plans can be arranged through STC Pay or bank transfer (IBAN). You can ask the team about the current payment instructions when you start a campaign.",
+      "Your CV/resume and your target roles or industries.",
   },
   {
-    question: "When should I expect a response?",
+    question: "How many applications will I get?",
     answer:
-      "Campaign enquiries are reviewed by the team. For the fastest direct response, use WhatsApp after submitting your brief; if you have not heard back within one business day, send a short follow-up with your name and target role.",
+      "It depends on your plan — see the plan details above.",
   },
+  { question: "Is my data secure?", answer: "Yes — see our Privacy & Safety section above." },
+  { question: "How do you find these openings?", answer: "We search job postings across multiple portals and match them to your profile." },
 ];
 
 const campaignStages = [
@@ -126,6 +130,7 @@ const industryLabels: Record<string, string> = {
 };
 
 export default function Home() {
+  const legacyPublicPreviewVisible: boolean = false;
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [selectedFile, setSelectedFile] = useState("");
@@ -231,8 +236,8 @@ export default function Home() {
 
   useEffect(() => {
     applyPageSeo({
-      title: "AutoApply SA — Job Application Support in Saudi Arabia",
-      description: "AutoApply SA is a Jeddah-based service for job seekers in Saudi Arabia, helping prepare CVs, agree role targets, and coordinate personalized job applications.",
+      title: "AutoApply SA — We Prepare Your Job Applications, You Approve",
+      description: "Tell us the roles you want. We find real openings in Saudi Arabia and prepare tailored applications — you review and approve before anything is sent.",
       path: "/",
     });
   }, []);
@@ -450,8 +455,8 @@ export default function Home() {
           <nav className="mobile-nav" aria-label="Mobile navigation">
             {[
               ["How it works", "how"],
-              ["Product", "product"],
-              ["Upload CV", "upload"],
+              ["Who it’s for", "reviews"],
+              ["What you approve", "approval"],
               ["Pricing", "pricing"],
               ["FAQ", "faq"],
             ].map(([label, id], index) => (
@@ -467,6 +472,7 @@ export default function Home() {
         )}
       </header>
 
+      <SectionErrorBoundary name="marketing-home" fallback={<main id="top" />}>
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
           <HeroMedia alt="Professional reviewing a job application at a laptop" />
@@ -479,15 +485,15 @@ export default function Home() {
             <div className="hero-lead">
               <div className="eyebrow light"><StatusDot /> Approval-led campaign support <span /> Jeddah, Saudi Arabia</div>
               <h1 id="hero-heading">
-                <span data-anime-hero-word>Tailored</span>{" "}<span data-anime-hero-word>Saudi</span><br />
-                <span data-anime-hero-word>applications,</span>{" "}<span data-anime-hero-word>after</span><br />
-                <span data-anime-hero-word>your</span>{" "}<span data-anime-hero-word>approval.</span>
+                <span data-anime-hero-word>We prepare</span>{" "}<span data-anime-hero-word>your job</span><br />
+                <span data-anime-hero-word>applications.</span>{" "}<span data-anime-hero-word>You approve</span><br />
+                <span data-anime-hero-word>before we send.</span>
               </h1>
               <p>
-                We agree your role targets, volume, and timing first. Once you approve the campaign plan, AutoApply SA manages tailored Saudi job applications and records the evidence.
+                Tell us the roles you want. We find real openings and draft tailored applications for each one. Nothing goes out until you say yes.
               </p>
               <div className="hero-actions">
-                <Link className="button button-ink" href="/enquire">Prepare your campaign brief <ArrowDownRight size={18} /></Link>
+                <button className="button button-ink" onClick={() => scrollTo("pricing")}>See plans <ArrowDownRight size={18} /></button>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
                   See how it works <MoveRight size={18} />
                 </button>
@@ -534,6 +540,18 @@ export default function Home() {
           </div>
         </section>
 
+        <SectionErrorBoundary name="approval-promise" fallback={<section className="proof-strip" aria-label="Approval promise"><div className="page-frame proof-grid"><div><StatusDot /> Nothing is submitted without your go-ahead</div></div></section>}>
+          <section className="proof-strip" aria-label="Approval promise">
+            <div className="page-frame proof-grid">
+              <div><StatusDot /> We search and prepare</div>
+              <div><StatusDot /> You review and approve</div>
+              <div><StatusDot /> Nothing is submitted without your go-ahead</div>
+              <div><StatusDot /> Every application remains visible</div>
+            </div>
+          </section>
+        </SectionErrorBoundary>
+
+        <SectionErrorBoundary name="how-it-works" fallback={<section id="how" className="workflow-section section-ink"><div className="page-frame"><h2>How the service works.</h2><p>Tell us what you want, review prepared applications, and approve before anything is submitted.</p></div></section>}>
         <section id="how" className="workflow-section section-ink">
           <div className="page-frame split-layout">
             <aside className="section-rail inverted">
@@ -543,30 +561,30 @@ export default function Home() {
             </aside>
             <div className="workflow-main">
               <div className="section-kicker inverse"><Sparkles size={15} /> CLEAR BY DESIGN</div>
-              <h2>Put the search <i>on a system.</i></h2>
-              <p className="section-summary inverse-summary">Start with the material you already have. Then agree the campaign plan before approved operations create a consistent application routine.</p>
+              <h2>How the service <i>works.</i></h2>
+              <p className="section-summary inverse-summary">A clear setup, tailored preparation, and your approval before any application is submitted.</p>
               <div className="process-list">
                 <article className="process-item">
                   <div className="process-number">01</div>
                   <div className="process-content">
-                    <h3>Upload your CV</h3>
-                    <p>Drop a PDF, DOC, DOCX, or TXT. Your skills, experience, and career trajectory become the starting brief.</p>
+                    <h3>Tell us what you want</h3>
+                    <p>Share your target roles, industries, and preferences in a short setup.</p>
                   </div>
                   <FileText size={24} strokeWidth={1.4} />
                 </article>
                 <article className="process-item">
                   <div className="process-number">02</div>
                   <div className="process-content">
-                    <h3>Set your target roles</h3>
-                    <p>Review the best-fit role lanes found across Saudi Arabia listings and align the search to your next move.</p>
+                    <h3>We find and prepare</h3>
+                    <p>Our team finds matching openings and drafts a tailored application for each one.</p>
                   </div>
                   <Globe2 size={24} strokeWidth={1.4} />
                 </article>
                 <article className="process-item active-process">
                   <div className="process-number">03</div>
                   <div className="process-content">
-                    <h3>Approve, then we manage</h3>
-                    <p>After your written campaign plan is approved, tailored applications, portal submissions, email sends, and delivery checks follow your agreed direction.</p>
+                    <h3>You approve, we submit</h3>
+                    <p>Review every application before it goes out. Once approved, we submit it and track the response.</p>
                   </div>
                   <Send size={24} strokeWidth={1.4} />
                 </article>
@@ -574,14 +592,23 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </SectionErrorBoundary>
 
-        <section id="product" className="video-explainer section-paper" aria-labelledby="video-explainer-heading">
+        <SectionErrorBoundary name="who-its-for" fallback={<section id="reviews" className="reviews-pending section-fog"><div className="page-frame"><h2>Who it&apos;s for.</h2><p>Saudi job seekers who need more relevant applications without doing every step manually.</p></div></section>}>
+          <section id="reviews" className="reviews-pending section-fog below-fold-section" aria-labelledby="campaign-clarity-heading">
+            <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> WHO IT&apos;S FOR</div><h2 id="campaign-clarity-heading">More applications,<br /><i>without every evening on portals.</i></h2></div><p><ShieldCheck size={16} /> Built for job seekers in Saudi Arabia who need volume without doing it manually.</p></div>
+            <div className="page-frame review-cards"><article className="review-card"><span className="review-index">01 / FIRST ROLE</span><h3>New graduates</h3><p className="review-detail">For candidates looking for a first role and a practical, steady application routine.</p></article><article className="review-card"><span className="review-index">02 / CAREER CHANGE</span><h3>Professionals changing direction</h3><p className="review-detail">For people considering a new role lane, industry, city, or career step.</p></article><article className="review-card"><span className="review-index">03 / BUSY SEARCH</span><h3>Busy candidates</h3><p className="review-detail">For candidates who need more relevant applications without managing every portal and cover letter manually.</p></article></div>
+          </section>
+        </SectionErrorBoundary>
+
+        {legacyPublicPreviewVisible && <>
+        <section id="product" className="video-explainer section-paper below-fold-section" aria-labelledby="video-explainer-heading">
           <div className="page-frame video-explainer-inner">
             <div className="section-kicker"><Send size={15} /> SEE IT WORK</div>
             <h2 id="video-explainer-heading">30 seconds. That&apos;s all it takes to understand.</h2>
-            <DeferredExplainerVideo src={EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media" ariaLabel="AutoApply SA walkthrough video" unavailableLabel="AutoApply SA walkthrough video unavailable; service steps remain available">
+            <LazyMount><DeferredExplainerVideo src={EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media" ariaLabel="AutoApply SA walkthrough video" unavailableLabel="AutoApply SA walkthrough video unavailable; service steps remain available">
               Your browser cannot play this background video. The campaign walkthrough remains available through the surrounding service steps.
-            </DeferredExplainerVideo>
+            </DeferredExplainerVideo></LazyMount>
             <p>Powered by AutoApply SA. Campaign operations continue only within your approved plan.</p>
             <div className="mt-4 sm:hidden">
               <a href="#upload" className="block w-full text-center bg-[#e5482a] text-white py-3 px-4 font-medium shadow-lg hover:bg-[#c93b20] transition-colors">
@@ -744,24 +771,28 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </>}
 
-        <section className="proof-strip" aria-label="Service properties">
+        {legacyPublicPreviewVisible && <section className="proof-strip" aria-label="Approval promise">
           <div className="page-frame proof-grid">
-            <div><StatusDot /> Bounce-verified sends</div>
-            <div><StatusDot /> Email + portal submission</div>
-            <div><StatusDot /> STC Pay & IBAN accepted</div>
-            <div><StatusDot /> EN / AR · Saudi Arabia</div>
+            <div><StatusDot /> We search and prepare</div>
+            <div><StatusDot /> You review and approve</div>
+            <div><StatusDot /> Nothing is submitted without your go-ahead</div>
+            <div><StatusDot /> Every application remains visible</div>
           </div>
-        </section>
+        </section>}
 
-        <section className="campaign-preview section-ink">
+        <SectionErrorBoundary name="application-approval" fallback={<section id="approval" className="campaign-preview section-ink"><div className="page-frame"><h2>Full visibility before anything is sent.</h2><p>You review the job, tailored application, and employer details before approval.</p></div></section>}>
+        <section id="approval" className="campaign-preview section-ink below-fold-section">
           <div className="page-frame campaign-preview-grid">
-            <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> BEFORE YOU COMMIT</div><h2>See the campaign <i>take shape.</i></h2><p className="section-summary inverse-summary">Choose a stage to see how the Saudi Arabia campaign moves from your CV signal to a visible application rhythm.</p><div className="campaign-switcher" role="tablist" aria-label="Campaign preview stages">{campaignStages.map((stage, index) => <button key={stage.label} className={campaignStage === index ? "active" : ""} role="tab" aria-selected={campaignStage === index} aria-controls="campaign-preview-status" onClick={() => setCampaignStage(index)}><span>0{index + 1}</span>{stage.label}</button>)}</div><Link href="/enquire" className="text-button light-text">Open your campaign brief <MoveRight size={17} /></Link></div>
+            <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> WHAT YOU APPROVE</div><h2>Full visibility before <i>anything is sent.</i></h2><p className="section-summary inverse-summary">For every application you&apos;ll see the original job posting and link, the tailored CV or application version prepared for it, and the company and role details before you tap approve.</p><div className="campaign-switcher" role="tablist" aria-label="Application approval details">{campaignStages.map((stage, index) => <button key={stage.label} className={campaignStage === index ? "active" : ""} role="tab" aria-selected={campaignStage === index} aria-controls="campaign-preview-status" onClick={() => setCampaignStage(index)}><span>0{index + 1}</span>{stage.label}</button>)}</div><Link href="/enquire" className="text-button light-text">Review your campaign plan <MoveRight size={17} /></Link></div>
             <div id="campaign-preview-status" className="campaign-dashboard" aria-label="Interactive example campaign status dashboard"><div className="dashboard-top"><span>SAUDI CAMPAIGN / PREVIEW</span><b>{campaignStages[campaignStage].status}</b></div><div className="dashboard-spotlight"><span>0{campaignStage + 1}</span><div><b>{campaignStages[campaignStage].title}</b><p>{campaignStages[campaignStage].detail}</p></div></div>{campaignStages.map((stage, index) => <button className={`dashboard-progress ${index === campaignStage ? "active" : ""} ${index > campaignStage ? "quiet" : ""}`} key={stage.label} onClick={() => setCampaignStage(index)}><span>0{index + 1}</span><div><b>{stage.label}</b><small>{index < campaignStage ? "Step prepared" : index === campaignStage ? "Current preview" : "Next in the flow"}</small></div>{index < campaignStage ? <Check size={16} /> : index === campaignStage ? <Clock3 size={16} /> : <ArrowUpRight size={16} />}</button>)}</div>
           </div>
         </section>
+        </SectionErrorBoundary>
 
-        <section id="pricing" className="pricing-section section-paper">
+        <SectionErrorBoundary name="plans" fallback={<section id="pricing" className="pricing-section section-paper"><div className="page-frame"><h2>Plans</h2><p>Monthly plans from 99 SAR. Contact us to choose a plan.</p></div></section>}>
+        <section id="pricing" className="pricing-section section-paper below-fold-section">
           <div className="page-frame split-layout">
             <aside className="section-rail">
               <RailLabel>04 / Pricing</RailLabel>
@@ -792,17 +823,28 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </SectionErrorBoundary>
 
-        <section id="reviews" className="reviews-pending section-fog" aria-labelledby="campaign-clarity-heading">
-          <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> CAMPAIGN CLARITY</div><h2 id="campaign-clarity-heading">Clear steps,<br /><i>no invented promises.</i></h2></div><p><ShieldCheck size={16} /> Your direction, confirmation, and follow-up remain visible.</p></div>
+        {legacyPublicPreviewVisible && <section id="reviews" className="reviews-pending section-fog below-fold-section" aria-labelledby="campaign-clarity-heading">
+          <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> WHO IT&apos;S FOR</div><h2 id="campaign-clarity-heading">More applications,<br /><i>without every evening on portals.</i></h2></div><p><ShieldCheck size={16} /> Built for job seekers in Saudi Arabia who need volume without doing it manually.</p></div>
           <div className="page-frame review-cards">
-            <article className="review-card"><span className="review-index">01 / YOUR DIRECTION</span><h3>Start with the brief.</h3><p className="review-detail">Choose the Saudi city, industry, seniority, and language that make the search relevant to you.</p></article>
-            <article className="review-card"><span className="review-index">02 / YOUR CONFIRMATION</span><h3>Review before anything moves.</h3><p className="review-detail">The readiness preview helps you discuss a campaign through WhatsApp. It does not submit an application from this page.</p></article>
-            <article className="review-card"><span className="review-index">03 / YOUR VIEW</span><h3>Keep the campaign visible.</h3><p className="review-detail">For an agreed campaign, the candidate dashboard is designed to keep your application activity and status updates in one place.</p></article>
+            <article className="review-card"><span className="review-index">01 / FIRST ROLE</span><h3>New graduates</h3><p className="review-detail">For candidates looking for a first role and a practical, steady application routine.</p></article>
+            <article className="review-card"><span className="review-index">02 / CAREER CHANGE</span><h3>Professionals changing direction</h3><p className="review-detail">For people considering a new role lane, industry, city, or career step.</p></article>
+            <article className="review-card"><span className="review-index">03 / BUSY SEARCH</span><h3>Busy candidates</h3><p className="review-detail">For candidates who need more relevant applications without managing every portal and cover letter manually.</p></article>
           </div>
-        </section>
+        </section>}
 
-        <section id="faq" className="faq-section section-ink">
+        <SectionErrorBoundary name="privacy-safety" fallback={<section id="location" className="location-section section-fog"><div className="page-frame"><h2>Your data stays private.</h2><p>Information is used only to prepare applications you approve.</p></div></section>}>
+          <section id="location" className="location-section section-fog below-fold-section">
+            <div className="page-frame location-grid">
+              <div className="location-copy"><div className="section-kicker"><ShieldCheck size={15} /> PRIVACY &amp; SAFETY</div><h2>Your data stays <i>private.</i></h2><p className="section-summary">We use your information only to find and prepare applications on your behalf — it is never sold to third parties. Your CV and details are shared with an employer only as part of an application you&apos;ve already approved.</p><div className="location-actions"><Link className="button button-ink" href="/privacy">Privacy policy <ArrowUpRight size={18} /></Link><Link className="text-button" href="/terms">Terms <MoveRight size={18} /></Link></div></div>
+              <div className="map-frame"><div className="location-map-canvas privacy-panel"><StatusDot /><b>APPROVAL REQUIRED</b><p>Nothing is submitted on your behalf without your go-ahead, every time.</p></div><div className="map-caption"><span><StatusDot /> PRIVATE BY DEFAULT</span><b>YOU STAY IN CONTROL</b></div></div>
+            </div>
+          </section>
+        </SectionErrorBoundary>
+
+        <SectionErrorBoundary name="faq" fallback={<section id="faq" className="faq-section section-ink"><div className="page-frame"><h2>Questions, answered.</h2><Link href="/support">Visit support</Link></div></section>}>
+        <section id="faq" className="faq-section section-ink below-fold-section">
           <div className="page-frame split-layout">
             <aside className="section-rail inverted">
               <RailLabel>05 / FAQ</RailLabel>
@@ -828,38 +870,40 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </SectionErrorBoundary>
 
-        <section id="location" className="location-section section-fog">
+        {legacyPublicPreviewVisible && <section id="location" className="location-section section-fog below-fold-section">
           <div className="page-frame location-grid">
             <div className="location-copy">
-              <div className="section-kicker"><Globe2 size={15} /> JEDDAH, KSA</div>
-              <h2>Saudi focused.<br /><i>Jeddah based.</i></h2>
-              <p className="section-summary">AutoApply SA is based in Jeddah and serves candidates pursuing roles across Saudi Arabia. Directions open in Google Maps, while campaign support continues online.</p>
+              <div className="section-kicker"><ShieldCheck size={15} /> PRIVACY &amp; SAFETY</div>
+              <h2>Your data stays <i>private.</i></h2>
+              <p className="section-summary">We use your information only to find and prepare applications on your behalf — it is never sold to third parties. Your CV and details are shared with an employer only as part of an application you&apos;ve already approved.</p>
               <div className="location-actions">
-                <a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={18} /></a>
-                <Link className="text-button" href="/enquire">Start remotely <MoveRight size={18} /></Link>
+                <Link className="button button-ink" href="/privacy">Privacy policy <ArrowUpRight size={18} /></Link>
+                <Link className="text-button" href="/terms">Terms <MoveRight size={18} /></Link>
               </div>
             </div>
             <div className="map-frame">
-              <JeddahLocationCard className="location-map-canvas" />
-              <div className="map-caption"><span><StatusDot /> SERVICE BASE</span><b>JEDDAH / KSA</b></div>
+              <div className="location-map-canvas privacy-panel"><StatusDot /><b>APPROVAL REQUIRED</b><p>Nothing is submitted on your behalf without your go-ahead, every time.</p></div>
+              <div className="map-caption"><span><StatusDot /> PRIVATE BY DEFAULT</span><b>YOU STAY IN CONTROL</b></div>
             </div>
           </div>
-        </section>
+        </section>}
 
         <section className="final-cta section-accent">
           <div className="page-frame final-inner">
             <div>
               <div className="eyebrow dark"><StatusDot tone="quiet" /> OPEN A NEW CAMPAIGN</div>
-              <h2>Make the next role<br /><i>your next move.</i></h2>
+              <h2>Start with a plan<br /><i>built around your job search.</i></h2>
             </div>
             <div className="final-action">
-              <p>Reach Hasan directly for campaign setup, payment details, and the best way to share your CV.</p>
-              <Link className="button button-ink" href="/enquire">Prepare your campaign brief <ArrowUpRight size={18} /></Link>
+              <p>Tell us the roles you want, then review a campaign direction before anything is submitted.</p>
+              <Link className="button button-ink" href="/enquire">Start a campaign <ArrowUpRight size={18} /></Link>
             </div>
           </div>
         </section>
       </main>
+      </SectionErrorBoundary>
 
       <div className="mobile-campaign-cta">
         <Link href="/enquire"><span><StatusDot /> OPEN CAMPAIGN</span><b>Start now <ArrowUpRight size={17} /></b></Link>

@@ -738,3 +738,8 @@
 - [x] Run parallel source, runtime, network, route, responsive, accessibility, and production-build diagnostics without altering approved UX or content
 - [x] Reproduce and fix only confirmed bugs, with focused regression coverage for every source change
 - [x] Revalidate public, Arabic, protected dashboard boundaries, mobile layouts, production build, and live availability before publication
+
+## Attached Public Homepage Enhancement Specification
+- [x] Map the supplied resilience, lazy-loading, bilingual homepage, RTL, media, SEO, and public-bundle requirements to the existing public implementation
+- [x] Add compatible public-only infrastructure and implement the approved homepage content, section, RTL, and metadata changes without touching private systems
+- [x] Validate public performance, accessibility, bilingual mobile layouts, SEO output, private SDK isolation, tests, and production build before publication

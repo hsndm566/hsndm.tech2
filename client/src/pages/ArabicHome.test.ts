@@ -22,16 +22,15 @@ describe("Arabic readiness experience", () => {
   });
 
   it("keeps the user-approved reviewed Arabic copy in the primary public sections", () => {
-    expect(source).toContain("دعم حملات التقديم للوظائف");
+    expect(source).toContain("دعم حملة بعد موافقتك");
     expect(source).toContain("الأسئلة الشائعة");
-    expect(source).toContain("ضع بحثك <i>في نظام واضح.</i>");
-    expect(source).toContain("الإعلانات المتاحة في السعودية");
-    expect(source).toContain("تمت مراجعتها");
-    expect(source).toContain("تُرتَّب الوظائف ذات الصلة حسب الأولوية");
-    expect(source).toContain("reviewedArabicCopy");
-    expect(source).toContain("ولا يبقى خارج هذه الصفحة سوى ما تختار مشاركته");
-    expect(source).toContain("وضوح الحملة");
-    expect(source).toContain("من دون وعود مصطنعة");
+    expect(source).toContain("كيف تعمل <i>الخدمة.</i>");
+    expect(source).toContain("فرص حقيقية");
+    expect(source).toContain("لا يُرسل أي شيء حتى توافق");
+    expect(source).toContain("نبحث ونُعِدّ الطلبات");
+    expect(source).toContain("لا يُقدَّم شيء دون موافقتك");
+    expect(source).toContain("لمن تناسب الخدمة");
+    expect(source).toContain("لا نبيعها لأطراف ثالثة");
     expect(source).not.toContain("ثلاث مراجعات مُشارَكة مباشرة من عملاء AutoApply SA.");
     expect(styles).not.toContain(".privacy-note::after");
   });

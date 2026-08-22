@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const entry = readFileSync(new URL("../main.tsx", import.meta.url), "utf8");
+const dashboardEntry = readFileSync(new URL("../routes/DashboardEntry.tsx", import.meta.url), "utf8");
 const sentry = readFileSync(new URL("./sentryTelemetry.ts", import.meta.url), "utf8");
 const home = readFileSync(new URL("../pages/Home.tsx", import.meta.url), "utf8");
 const styles = readFileSync(new URL("../index.css", import.meta.url), "utf8");
@@ -10,11 +11,12 @@ const viteConfig = readFileSync(new URL("../../../vite.config.ts", import.meta.u
 const staticServer = readFileSync(new URL("../../../server/_core/vite.ts", import.meta.url), "utf8");
 
 describe("public marketing performance contracts", () => {
-  it("defers optional Sentry work until consent and idle time", () => {
+  it("keeps optional Sentry startup out of the public entry and inside the lazy dashboard route", () => {
     expect(sentry).toContain('import("@sentry/react")');
     expect(sentry).not.toContain('import * as Sentry from "@sentry/react"');
     expect(sentry).toContain("if (hasOptionalConsent()) void startOptionalSentry()");
-    expect(entry).toContain("requestIdleCallback");
+    expect(entry).not.toContain("installOptionalSentry");
+    expect(dashboardEntry).toContain("installOptionalSentry()");
   });
 
   it("keeps marketing freshness checks and remote fonts off the first-paint critical path", () => {
