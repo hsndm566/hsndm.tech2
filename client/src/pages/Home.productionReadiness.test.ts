@@ -26,7 +26,9 @@ describe("public homepage production-readiness contract", () => {
 
   it("avoids eagerly downloading decorative media while preserving a visual hero fallback", () => {
     expect(heroMedia).toContain("poster={HERO_POSTER_URL}");
-    expect(heroMedia).toContain('preload="metadata"');
+    expect(heroMedia).toContain('preload="none"');
+    expect(heroMedia).toContain("videoRequested && HERO_VIDEO_URL");
+    expect(heroMedia).not.toContain("autoPlay");
     expect(englishHome).toContain("HomepageMediaImage");
     expect(homepageMediaImage).toContain('loading="lazy"');
     expect(englishHome).toContain("DeferredExplainerVideo");

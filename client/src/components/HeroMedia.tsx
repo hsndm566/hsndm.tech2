@@ -1,5 +1,5 @@
-/** Render the approved hero motion with a light, unobtrusive fallback if autoplay is unavailable. */
-import React, { useState } from "react";
+/** Render the approved hero poster immediately and defer optional motion until the visitor interacts. */
+import React, { useEffect, useState } from "react";
 import { HERO_POSTER_URL, HERO_VIDEO_URL } from "@/lib/media";
 
 type HeroMediaProps = { poster?: string; alt: string };
@@ -7,6 +7,24 @@ type HeroMediaProps = { poster?: string; alt: string };
 export default function HeroMedia({ alt }: HeroMediaProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const [videoRequested, setVideoRequested] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    const requestVideo = () => setVideoRequested(true);
+    const options = { once: true, passive: true };
+
+    window.addEventListener("pointerdown", requestVideo, options);
+    window.addEventListener("touchstart", requestVideo, options);
+    window.addEventListener("keydown", requestVideo, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", requestVideo);
+      window.removeEventListener("touchstart", requestVideo);
+      window.removeEventListener("keydown", requestVideo);
+    };
+  }, []);
 
   return (
     <div className="hero-media absolute inset-0 overflow-hidden select-none pointer-events-none" role="img" aria-label={alt}>
@@ -20,23 +38,24 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
         decoding="async"
         fetchPriority="high"
       />
-      {HERO_VIDEO_URL && !videoFailed && (
+      {videoRequested && HERO_VIDEO_URL && !videoFailed && (
         <video
           className={`hero-media-video h-full w-full${videoReady ? " is-ready" : ""}`}
           width={1920}
           height={1080}
-          autoPlay
           muted
           loop
           playsInline
           poster={HERO_POSTER_URL}
-          preload="metadata"
+          preload="none"
           controls={false}
           aria-hidden="true"
           tabIndex={-1}
           disablePictureInPicture
           controlsList="nodownload noplaybackrate"
-          onLoadedData={() => setVideoReady(true)}
+          onCanPlay={(event) => {
+            void event.currentTarget.play().then(() => setVideoReady(true)).catch(() => setVideoFailed(true));
+          }}
           onError={() => setVideoFailed(true)}
         >
           <source src={HERO_VIDEO_URL} type="video/mp4" />

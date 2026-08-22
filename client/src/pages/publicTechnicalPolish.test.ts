@@ -11,6 +11,9 @@ describe("public homepage technical polish", () => {
     expect(heroMedia).toContain("width={1920}");
     expect(heroMedia).toContain("height={1080}");
     expect(styles).toContain("aspect-ratio: 16 / 9");
+    expect(heroMedia).toContain('preload="none"');
+    expect(heroMedia).not.toContain("autoPlay");
+    expect(heroMedia).toContain("videoRequested && HERO_VIDEO_URL");
   });
 
   it("contains hero, final CTA, footer, and Arabic FAQ failures at public section scope", () => {

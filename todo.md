@@ -749,3 +749,6 @@
 - [x] Add remaining scoped public SectionErrorBoundary coverage for hero, final CTA/footer, Arabic FAQ, and Arabic final CTA
 - [x] Convert safe remaining physical RTL CSS properties to logical equivalents without changing flex-direction semantics
 - [x] Run check, full test suite, production build, Lighthouse mobile, and axe scan; report measured accessibility and layout-stability results or unavailable checks explicitly
+- [x] Replace public hero initial video paint with a lightweight static-poster first paint and defer any optional hero video playback without changing visible copy or visual direction
+- [x] Correct public homepage contrast findings using scoped neutral or darker-orange text treatments while preserving approved primary tokens and hero brightness
+- [x] Revalidate public below-fold deferral, async fonts, Clerk/Sentry initial-route isolation, check, tests, build, Lighthouse mobile, and axe-based contrast findings
