@@ -233,7 +233,7 @@ export default function ArabicHome() {
         </nav>
         <Link className="mobile-ats-link" href="/ats">فحص ATS</Link>
         <div className="nav-actions">
-          <LanguageTransitionLink href="/" className="language-toggle is-arabic" aria-label="Switch to the English version"><span>English</span><span>العربية</span></LanguageTransitionLink>
+          <LanguageTransitionLink href="/" className="language-toggle is-arabic"><span>English</span><span>العربية</span></LanguageTransitionLink>
           <button className="mobile-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={menuOpen}>{menuOpen ? <X size={21} /> : <Menu size={22} />}</button>
         </div>
         {menuOpen && <nav className="mobile-nav" aria-label="روابط الجوال"><a href="#how" onClick={() => setMenuOpen(false)}><span>01</span> كيف يعمل <MoveLeft size={18} /></a><a href="#reviews" onClick={() => setMenuOpen(false)}><span>02</span> لمن تناسب الخدمة <MoveLeft size={18} /></a><a href="#approval" onClick={() => setMenuOpen(false)}><span>03</span> ما الذي توافق عليه <MoveLeft size={18} /></a><a href="#pricing" onClick={() => setMenuOpen(false)}><span>04</span> الباقات <MoveLeft size={18} /></a><Link href="/ats" onClick={() => setMenuOpen(false)}><span>05</span> فحص ATS المجاني <MoveLeft size={18} /></Link></nav>}
@@ -241,6 +241,7 @@ export default function ArabicHome() {
 
       <SectionErrorBoundary name="arabic-marketing-home" fallback={<main id="top" dir="rtl" />}>
       <main id="top">
+        <SectionErrorBoundary name="arabic-hero" fallback={<section className="hero" aria-labelledby="arabic-hero-heading"><div className="hero-content page-frame"><div className="hero-lead"><h1 id="arabic-hero-heading">نُعِدّ طلباتك للوظائف. وأنت توافق قبل الإرسال.</h1><p>أخبرنا بالوظائف التي تريدها. لا يُرسل أي شيء حتى توافق.</p></div></div></section>}>
         <section className="hero" aria-labelledby="arabic-hero-heading">
           <HeroMedia alt="محترف يراجع طلبات توظيف عبر جهاز محمول" />
           <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
@@ -262,6 +263,7 @@ export default function ArabicHome() {
             <div className="hero-stats" dir="rtl"><div><strong>500+</strong><span>معاينة · وظائف سعودية تمت مراجعتها</span></div><div><strong>24/7</strong><span>محرّك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div>
 	          </div>
 	        </section>
+	        </SectionErrorBoundary>
 
 
         <SectionErrorBoundary name="arabic-approval-promise" fallback={<section className="proof-strip" aria-label="وعد الموافقة"><div className="page-frame proof-grid"><div><StatusDot /> لا يُقدَّم شيء دون موافقتك</div></div></section>}><section className="proof-strip" aria-label="وعد الموافقة"><div className="page-frame proof-grid"><div><StatusDot /> نبحث ونُعِدّ الطلبات</div><div><StatusDot /> تراجع وتوافق</div><div><StatusDot /> لا يُقدَّم شيء دون موافقتك</div><div><StatusDot /> كل طلب يبقى واضحاً أمامك</div></div></section></SectionErrorBoundary>
@@ -284,10 +286,10 @@ export default function ArabicHome() {
                 ارفع سيرتك الذاتية الآن ←
               </a>
             </div>
-          </div>
-        </section>
+	          </div>
+	        </section>
 
-        <ArabicIntakeSection
+	        <ArabicIntakeSection
           matchPreferences={matchPreferences}
           setMatchPreferences={setMatchPreferences}
           selectedArabicIndustry={selectedArabicIndustry}
@@ -326,16 +328,16 @@ export default function ArabicHome() {
 
         <SectionErrorBoundary name="arabic-privacy-safety" fallback={<section id="location" className="location-section section-fog"><div className="page-frame"><h2>بياناتك تبقى خاصة.</h2><p>نستخدم المعلومات فقط لإعداد طلبات توافق عليها.</p></div></section>}><section id="location" className="location-section section-fog below-fold-section"><div className="page-frame location-grid"><div className="location-copy"><div className="section-kicker"><ShieldCheck size={15} /> الخصوصية والأمان</div><h2>بياناتك تبقى <i>خاصة.</i></h2><p className="section-summary">نستخدم معلوماتك فقط للبحث عن طلبات وإعدادها بالنيابة عنك، ولا نبيعها لأطراف ثالثة. لا تُشارك سيرتك وبياناتك مع جهة عمل إلا كجزء من طلب وافقت عليه مسبقاً.</p><div className="location-actions"><Link className="button button-ink" href="/ar/privacy">سياسة الخصوصية <ArrowUpRight size={18} /></Link><Link className="text-button" href="/ar/terms">الشروط <MoveLeft size={18} /></Link></div></div><div className="map-frame"><div className="location-map-canvas privacy-panel"><StatusDot /><b>الموافقة مطلوبة</b><p>لا يُقدَّم أي طلب بالنيابة عنك من دون موافقتك، في كل مرة.</p></div><div className="map-caption"><span><StatusDot /> خاص افتراضياً</span><b>أنت تبقى المتحكم</b></div></div></div></section></SectionErrorBoundary>
 
-        <section id="faq" className="faq-section section-ink below-fold-section"><div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>06 / الأسئلة الشائعة</RailLabel><span className="rail-rule" /><p>قبل أن تبدأ</p></aside><div className="faq-main"><div className="section-kicker inverse"><MessageCircle size={15} /> الأسئلة، بإجابات واضحة</div><h2>أشياء تستحق <i>التوضيح.</i></h2><div className="faq-list">{faqs.map((faq, index) => { const isOpen = activeFaq === index; return <article className={`faq-item ${isOpen ? "open" : ""}`} key={faq.question}><button onClick={() => setActiveFaq(isOpen ? null : index)} aria-expanded={isOpen}><span>0{index + 1}</span><b>{faq.question}</b><ChevronDown size={20} /></button><div className="faq-answer"><p>{faq.answer}</p></div></article>; })}</div></div></div></section>
+        <SectionErrorBoundary name="arabic-faq" fallback={<section id="faq" className="faq-section section-ink"><div className="page-frame"><h2>الأسئلة الشائعة</h2><Link href="/ar/support">مركز الدعم</Link></div></section>}><section id="faq" className="faq-section section-ink below-fold-section"><div className="page-frame split-layout"><aside className="section-rail inverted"><RailLabel>06 / الأسئلة الشائعة</RailLabel><span className="rail-rule" /><p>قبل أن تبدأ</p></aside><div className="faq-main"><div className="section-kicker inverse"><MessageCircle size={15} /> الأسئلة، بإجابات واضحة</div><h2>أشياء تستحق <i>التوضيح.</i></h2><div className="faq-list">{faqs.map((faq, index) => { const isOpen = activeFaq === index; return <article className={`faq-item ${isOpen ? "open" : ""}`} key={faq.question}><button onClick={() => setActiveFaq(isOpen ? null : index)} aria-expanded={isOpen}><span>0{index + 1}</span><b>{faq.question}</b><ChevronDown size={20} /></button><div className="faq-answer"><p>{faq.answer}</p></div></article>; })}</div></div></div></section></SectionErrorBoundary>
 
         {legacyPublicPreviewVisible && <section id="location" className="location-section section-fog below-fold-section"><div className="page-frame location-grid"><div className="location-copy"><div className="section-kicker"><ShieldCheck size={15} /> الخصوصية والأمان</div><h2>بياناتك تبقى <i>خاصة.</i></h2><p className="section-summary">نستخدم معلوماتك فقط للبحث عن طلبات وإعدادها بالنيابة عنك، ولا نبيعها لأطراف ثالثة. لا تُشارك سيرتك وبياناتك مع جهة عمل إلا كجزء من طلب وافقت عليه مسبقاً.</p><div className="location-actions"><Link className="button button-ink" href="/ar/privacy">سياسة الخصوصية <ArrowUpRight size={18} /></Link><Link className="text-button" href="/ar/terms">الشروط <MoveLeft size={18} /></Link></div></div>          <div className="map-frame"><div className="location-map-canvas privacy-panel"><StatusDot /><b>الموافقة مطلوبة</b><p>لا يُقدَّم أي طلب بالنيابة عنك من دون موافقتك، في كل مرة.</p></div><div className="map-caption"><span><StatusDot /> خاص افتراضياً</span><b>أنت تبقى المتحكم</b></div></div></div></section>}
 
-        <section className="final-cta section-accent"><div className="page-frame final-inner"><div><div className="eyebrow dark"><StatusDot tone="quiet" /> ابدأ حملة جديدة</div><h2>ابدأ بخطة <br /><i>تدور حول بحثك عن وظيفة.</i></h2></div><div className="final-action"><p>أخبرنا بالوظائف التي تريدها، ثم راجع اتجاه الحملة قبل تقديم أي طلب.</p><Link className="button button-ink" href="/ar/enquire">ابدأ حملة <ArrowUpRight size={18} /></Link></div></div></section>
+        <SectionErrorBoundary name="arabic-final-cta" fallback={<section className="final-cta section-accent"><div className="page-frame final-inner"><div><h2>ابدأ بخطة تدور حول بحثك عن وظيفة.</h2></div><div className="final-action"><p>أخبرنا بالوظائف التي تريدها، ثم راجع اتجاه الحملة قبل تقديم أي طلب.</p><Link className="button button-ink" href="/ar/enquire">ابدأ حملة <ArrowUpRight size={18} /></Link></div></div></section>}><section className="final-cta section-accent"><div className="page-frame final-inner"><div><div className="eyebrow dark"><StatusDot tone="quiet" /> ابدأ حملة جديدة</div><h2>ابدأ بخطة <br /><i>تدور حول بحثك عن وظيفة.</i></h2></div><div className="final-action"><p>أخبرنا بالوظائف التي تريدها، ثم راجع اتجاه الحملة قبل تقديم أي طلب.</p><Link className="button button-ink" href="/ar/enquire">ابدأ حملة <ArrowUpRight size={18} /></Link></div></div></section></SectionErrorBoundary>
       </main>
       </SectionErrorBoundary>
 
       <div className="mobile-campaign-cta"><Link href="/ar/enquire"><span><StatusDot /> ابدأ حملة جديدة</span><b>ابدأ الآن <ArrowUpRight size={17} /></b></Link></div>
-      <footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer>
+      <SectionErrorBoundary name="arabic-marketing-footer" fallback={<footer className="footer"><div className="page-frame footer-top"><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech</a></div></footer>}><footer className="footer"><div className="page-frame footer-top"><Link className="brand footer-brand" href="/ar"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" /><span>AutoApply <em>SA</em></span></Link><p>مُركّز على السعودية. مقرّه في جدة.<br />خدمة للمرشحين في جميع أنحاء المملكة.</p><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a></div><div className="page-frame footer-enquiry-wrap"><FooterEnquiryForm locale="ar" /></div><div className="page-frame footer-bottom"><span>© 2026 AUTOAPPLY SA</span><div><a href="https://instagram.com/hsndm_" target="_blank" rel="noreferrer">Instagram</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noreferrer">LinkedIn</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></div><span>جدة، السعودية</span></div></footer></SectionErrorBoundary>
     </div>
   );
 }

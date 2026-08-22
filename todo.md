@@ -745,3 +745,7 @@
 - [x] Validate public performance, accessibility, bilingual mobile layouts, SEO output, private SDK isolation, tests, and production build before publication
 - [x] Replace stale desktop homepage navigation links that target hidden product and CV-preview sections with anchors in the rendered approval-led public sequence
 - [x] Produce a verified technical implementation summary covering public homepage files, infrastructure status, locale/RTL, SEO, SDK isolation, and validation evidence
+- [x] Add stable intrinsic media sizing to every visible public-homepage hero and section image/video without changing copy, pricing, or visual tokens
+- [x] Add remaining scoped public SectionErrorBoundary coverage for hero, final CTA/footer, Arabic FAQ, and Arabic final CTA
+- [x] Convert safe remaining physical RTL CSS properties to logical equivalents without changing flex-direction semantics
+- [x] Run check, full test suite, production build, Lighthouse mobile, and axe scan; report measured accessibility and layout-stability results or unavailable checks explicitly

@@ -439,7 +439,7 @@ export default function Home() {
 
         <Link className="mobile-ats-link" href="/ats">ATS check</Link>
         <div className="nav-actions">
-          <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar" aria-label="التبديل إلى النسخة العربية"><span>English</span><span>العربية</span></LanguageTransitionLink>
+          <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar"><span>English</span><span>العربية</span></LanguageTransitionLink>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"
@@ -474,6 +474,7 @@ export default function Home() {
 
       <SectionErrorBoundary name="marketing-home" fallback={<main id="top" />}>
       <main id="top">
+        <SectionErrorBoundary name="hero" fallback={<section className="hero" aria-labelledby="hero-heading"><div className="hero-content page-frame"><div className="hero-lead"><h1 id="hero-heading">We prepare your job applications. You approve before we send.</h1><p>Tell us the roles you want. Nothing goes out until you say yes.</p></div></div></section>}>
         <section className="hero" aria-labelledby="hero-heading">
           <HeroMedia alt="Professional reviewing a job application at a laptop" />
           <div className="hero-structure" aria-hidden="true">
@@ -539,6 +540,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </SectionErrorBoundary>
 
         <SectionErrorBoundary name="approval-promise" fallback={<section className="proof-strip" aria-label="Approval promise"><div className="page-frame proof-grid"><div><StatusDot /> Nothing is submitted without your go-ahead</div></div></section>}>
           <section className="proof-strip" aria-label="Approval promise">
@@ -890,6 +892,7 @@ export default function Home() {
           </div>
         </section>}
 
+        <SectionErrorBoundary name="final-cta" fallback={<section className="final-cta section-accent"><div className="page-frame final-inner"><div><h2>Start with a plan built around your job search.</h2></div><div className="final-action"><p>Tell us the roles you want, then review a campaign direction before anything is submitted.</p><Link className="button button-ink" href="/enquire">Start a campaign <ArrowUpRight size={18} /></Link></div></div></section>}>
         <section className="final-cta section-accent">
           <div className="page-frame final-inner">
             <div>
@@ -902,6 +905,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </SectionErrorBoundary>
       </main>
       </SectionErrorBoundary>
 
@@ -910,6 +914,7 @@ export default function Home() {
       </div>
       {showBackToTop && <button className="back-to-top" type="button" onClick={returnToTop} aria-label="Back to top" title="Back to top"><ArrowUp size={17} /><span>TOP</span></button>}
 
+      <SectionErrorBoundary name="marketing-footer" fallback={<footer className="footer"><div className="page-frame footer-top"><a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech</a></div></footer>}>
       <footer className="footer">
         <div className="page-frame footer-top">
           <a className="brand footer-brand" href="#top">
@@ -926,6 +931,7 @@ export default function Home() {
           <span>JEDDAH, KSA</span>
         </div>
       </footer>
+      </SectionErrorBoundary>
     </div>
   );
 }

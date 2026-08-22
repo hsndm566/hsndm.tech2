@@ -9,10 +9,12 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
   const [videoReady, setVideoReady] = useState(false);
 
   return (
-    <div className="hero-media absolute inset-0 overflow-hidden select-none pointer-events-none" aria-label={alt}>
+    <div className="hero-media absolute inset-0 overflow-hidden select-none pointer-events-none" role="img" aria-label={alt}>
       <img
         className="hero-media-poster h-full w-full"
         src={HERO_POSTER_URL}
+        width={1920}
+        height={1080}
         alt=""
         aria-hidden="true"
         decoding="async"
@@ -21,6 +23,8 @@ export default function HeroMedia({ alt }: HeroMediaProps) {
       {HERO_VIDEO_URL && !videoFailed && (
         <video
           className={`hero-media-video h-full w-full${videoReady ? " is-ready" : ""}`}
+          width={1920}
+          height={1080}
           autoPlay
           muted
           loop
