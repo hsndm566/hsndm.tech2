@@ -776,3 +776,6 @@
 - [x] Verify tracking evidence and report whether recent scheduled runs sent messages or failed
 - [x] Collect read-only GitHub Actions, tracking.csv, and Brevo evidence for the 20 most recent tracked email records
 - [x] Reconcile the 20 records by recipient, sender, timestamp, message identifier, workflow evidence, and Brevo event status without triggering or altering any sends
+- [x] Capture read-only desktop and mobile live www.hsndm.tech homepage evidence and inspect pricing DOM visibility
+- [x] Exercise the live ATS upload path with a tiny valid PDF and capture console, network, hydration, and error-boundary evidence without modifying production
+- [x] Deliver the raw live-site diagnostic findings and requested screenshots without code or deployment changes
