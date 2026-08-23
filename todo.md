@@ -779,3 +779,6 @@
 - [x] Capture read-only desktop and mobile live www.hsndm.tech homepage evidence and inspect pricing DOM visibility
 - [x] Exercise the live ATS upload path with a tiny valid PDF and capture console, network, hydration, and error-boundary evidence without modifying production
 - [x] Deliver the raw live-site diagnostic findings and requested screenshots without code or deployment changes
+- [x] Identify the installed scraper or crawler capability and its available access requirements without using a search engine
+- [x] Perform one live public-page extraction with the identified scraper and report verbatim source evidence
+- [x] Verify Firecrawl session availability and, if enabled, fetch a raw public DeepSeek terms or privacy paragraph through the connector
