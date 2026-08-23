@@ -772,3 +772,5 @@
 - [x] Reproduce the public ATS review failure across file upload, parsing, analysis, and recovery states
 - [x] Repair only the verified ATS review defect and add regression coverage for the affected user path
 - [x] Validate ATS review success and failure recovery on desktop and 375px mobile before publication
+- [x] Inspect the AutoApply SA scheduled email workflow and recent cron runs without triggering or editing the campaign
+- [x] Verify tracking evidence and report whether recent scheduled runs sent messages or failed
