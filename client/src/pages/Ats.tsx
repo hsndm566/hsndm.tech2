@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Download, FileText, Loader2, MessageCircle, Save, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -10,6 +10,7 @@ import { applyPageSeo } from "@/lib/seo";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 const WHATSAPP_NUMBER = "966571448656";
+const REMOTE_REVIEW_FALLBACK_DELAY_MS = 8_000;
 
 export default function Ats() {
   const [text, setText] = useState("");
@@ -21,6 +22,9 @@ export default function Ats() {
   const [metadataSaved, setMetadataSaved] = useState(false);
   const [helpfulness, setHelpfulness] = useState<"yes" | "no" | null>(null);
   const [localReview, setLocalReview] = useState<AtsReview | null>(null);
+  const [remoteReviewTimedOut, setRemoteReviewTimedOut] = useState(false);
+  const reviewFallbackTimeout = useRef<number | null>(null);
+  const reviewRequestId = useRef(0);
   const { isAuthenticated } = useAuth();
   const analyze = trpc.campaign.ats.analyze.useMutation();
   const reportCvExtractionFailure = trpc.campaign.clientIssue.reportCvExtractionFailure.useMutation();
@@ -32,6 +36,10 @@ export default function Ats() {
       description: "Check your CV's ATS readiness for Saudi Arabia job applications — free browser-based preview, no file upload required.",
       path: "/ats",
     });
+  }, []);
+
+  useEffect(() => () => {
+    if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
   }, []);
 
   const choose = async (selected?: File) => {
@@ -49,17 +57,41 @@ export default function Ats() {
   const targetRole = [role, industry, city].filter(Boolean).join(" · ");
   const canAnalyze = text.trim().length >= 120;
   const review = analyze.data ?? localReview;
+  const isAnalyzing = analyze.isPending && !remoteReviewTimedOut;
   const reviewNote = review ? `ATS preview completed: ${review.score}/100 for ${targetRole || "Saudi Arabia roles"}.` : "";
   const humanReviewHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hello AutoApply SA, I completed the free ATS preview and would like a human follow-up. Target: ${targetRole || "Saudi Arabia roles"}. I will share my CV directly in this chat if needed.`)}`;
 
   const runAnalysis = () => {
-    if (!canAnalyze || analyze.isPending) return;
+    if (!canAnalyze || isAnalyzing) return;
     setLocalReview(null);
+    setRemoteReviewTimedOut(false);
+    if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
+    const requestId = reviewRequestId.current + 1;
+    reviewRequestId.current = requestId;
+    const analysisInput = { cvText: text, targetRole };
+    reviewFallbackTimeout.current = window.setTimeout(() => {
+      if (reviewRequestId.current !== requestId) return;
+      reviewFallbackTimeout.current = null;
+      setRemoteReviewTimedOut(true);
+      setLocalReview(createLocalAtsReview(analysisInput.cvText, analysisInput.targetRole));
+    }, REMOTE_REVIEW_FALLBACK_DELAY_MS);
     analyze.mutate(
-      { cvText: text, targetRole },
+      analysisInput,
       {
-        onSuccess: () => setLocalReview(null),
-        onError: () => setLocalReview(createLocalAtsReview(text, targetRole)),
+        onSuccess: () => {
+          if (reviewRequestId.current !== requestId) return;
+          if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
+          reviewFallbackTimeout.current = null;
+          setRemoteReviewTimedOut(false);
+          setLocalReview(null);
+        },
+        onError: () => {
+          if (reviewRequestId.current !== requestId) return;
+          if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
+          reviewFallbackTimeout.current = null;
+          setRemoteReviewTimedOut(false);
+          setLocalReview(createLocalAtsReview(analysisInput.cvText, analysisInput.targetRole));
+        },
       },
     );
   };
@@ -93,7 +125,7 @@ export default function Ats() {
           <p className="mt-3 text-[#151515]/70">Start with a free browser-based preview. Your file remains on this device; only extracted text is sent when you request the AI review.</p>
         </header>
 
-        <section className="space-y-4 border border-black/10 bg-white p-6" aria-busy={analyze.isPending}>
+        <section className="space-y-4 border border-black/10 bg-white p-6" aria-busy={isAnalyzing}>
           <label className="block cursor-pointer border-2 border-dashed border-black/20 p-5">
             <input className="sr-only" type="file" accept=".pdf,.docx,.txt" aria-describedby="ats-extraction-guidance" onChange={event => choose(event.target.files?.[0])} />
             <FileText className="mr-2 inline" /> <b>{file || "Choose a PDF, DOCX, or TXT CV"}</b>
@@ -105,9 +137,10 @@ export default function Ats() {
           <label className="grid gap-1 text-sm font-medium">Target role <span className="font-normal text-[#151515]/60">(optional)</span><input className="w-full border border-black/20 p-3 font-normal" value={role} onChange={event => setRole(event.target.value)} placeholder="Target role (optional)" /></label>
           <label className="grid gap-1 text-sm font-medium">CV text<textarea className="min-h-40 w-full border border-black/20 p-3 font-normal" value={text} onChange={event => { setText(event.target.value); setLocalReview(null); if (extractionError) setExtractionError(""); }} placeholder="CV text appears here after local extraction." /></label>
           <p id="ats-extraction-guidance" className={extractionError ? "text-sm text-[#b42318]" : "text-sm text-[#151515]/60"} role={extractionError ? "alert" : "status"}>{extractionError || (canAnalyze ? "Ready for a free AI ATS preview." : "Add at least 120 readable CV characters to run the preview.")}</p>
-          <button disabled={!canAnalyze || analyze.isPending} onClick={runAnalysis} className="bg-[#151515] px-5 py-3 text-white disabled:opacity-50">{analyze.isPending ? <><Loader2 className="mr-2 inline animate-spin" />Analysing CV signals…</> : <><Sparkles className="mr-2 inline" />Run free AI ATS preview</>}</button>
-          {analyze.isPending && <div role="status" className="space-y-3 border border-[#e5482a]/30 bg-[#fff7f4] p-4"><p className="text-sm font-medium">Checking structure, keywords, and evidence…</p><div className="h-3 animate-pulse bg-black/10" /><div className="h-3 w-4/5 animate-pulse bg-black/10" /><div className="h-3 w-3/5 animate-pulse bg-black/10" /></div>}
-          {analyze.error && !review && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 border border-[#b42318]/30 bg-[#fff5f4] p-4 text-sm"><span>Unable to complete the remote review. Your CV text is still here—please try again.</span><button type="button" className="border border-[#151515] px-3 py-2" disabled={!canAnalyze || analyze.isPending} onClick={runAnalysis}>Try again</button></div>}
+          <button disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis} className="bg-[#151515] px-5 py-3 text-white disabled:opacity-50">{isAnalyzing ? <><Loader2 className="mr-2 inline animate-spin" />Analysing CV signals…</> : <><Sparkles className="mr-2 inline" />Run free AI ATS preview</>}</button>
+          {isAnalyzing && <div role="status" className="space-y-3 border border-[#e5482a]/30 bg-[#fff7f4] p-4"><p className="text-sm font-medium">Checking structure, keywords, and evidence…</p><div className="h-3 animate-pulse bg-black/10" /><div className="h-3 w-4/5 animate-pulse bg-black/10" /><div className="h-3 w-3/5 animate-pulse bg-black/10" /></div>}
+          {remoteReviewTimedOut && <div role="status" className="border border-[#e5482a]/30 bg-[#fff7f4] p-4 text-sm">The AI review is taking longer than expected, so we prepared a private local ATS preview. Your result is ready below; no additional CV text was sent for this fallback.</div>}
+          {analyze.error && !review && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 border border-[#b42318]/30 bg-[#fff5f4] p-4 text-sm"><span>Unable to complete the remote review. Your CV text is still here—please try again.</span><button type="button" className="border border-[#151515] px-3 py-2" disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis}>Try again</button></div>}
         </section>
 
         {review && (

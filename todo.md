@@ -769,3 +769,6 @@
 - [x] Validate the repaired public English and Arabic mobile rendering with tests, build, and responsive full-page checks before publication
 - [x] Add a restrained mobile public-section fade-in on viewport entry without delaying or hiding section rendering
 - [x] Preserve reduced-motion behavior and validate mobile section-reveal motion with tests, production build, and 375px review
+- [x] Reproduce the public ATS review failure across file upload, parsing, analysis, and recovery states
+- [x] Repair only the verified ATS review defect and add regression coverage for the affected user path
+- [x] Validate ATS review success and failure recovery on desktop and 375px mobile before publication

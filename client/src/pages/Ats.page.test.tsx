@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from "react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   reportCvExtractionFailure: vi.fn(),
@@ -35,6 +35,10 @@ describe("ATS page local upload", () => {
       reportFailure("/ats");
       return "";
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("reports only the ATS route when file extraction fails during selection", async () => {
@@ -103,5 +107,33 @@ describe("ATS page local upload", () => {
     const tryAgainButton = getByRole("button", { name: /try again/i });
     fireEvent.click(tryAgainButton);
     expect(mutateMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("shows a local ATS preview instead of leaving a slow remote review in an indefinite loading state", async () => {
+    vi.useFakeTimers();
+    const mutateMock = vi.fn();
+    let isPendingState = false;
+    vi.mocked(await import("@/lib/trpc")).trpc.campaign.ats.analyze.useMutation = () => ({
+      data: null,
+      error: null,
+      isPending: isPendingState,
+      mutate: mutateMock,
+    } as any);
+
+    const { default: Ats } = await import("./Ats");
+    const { container, getByText, rerender } = render(<Ats />);
+    fireEvent.change(container.querySelector("textarea") as HTMLTextAreaElement, { target: { value: "A".repeat(180) } });
+    fireEvent.click(container.querySelector("button.bg-\\[\\#151515\\]") as HTMLButtonElement);
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+
+    isPendingState = true;
+    rerender(<Ats />);
+    await act(async () => {
+      vi.advanceTimersByTime(8_000);
+    });
+
+    expect(getByText(/The AI review is taking longer than expected/i)).toBeTruthy();
+    expect(container.querySelector("h2")?.textContent).toMatch(/ATS readiness:/i);
+    expect(container.querySelector("button.bg-\\[\\#151515\\]")?.getAttribute("disabled")).toBeNull();
   });
 });
