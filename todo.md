@@ -774,3 +774,5 @@
 - [x] Validate ATS review success and failure recovery on desktop and 375px mobile before publication
 - [x] Inspect the AutoApply SA scheduled email workflow and recent cron runs without triggering or editing the campaign
 - [x] Verify tracking evidence and report whether recent scheduled runs sent messages or failed
+- [x] Collect read-only GitHub Actions, tracking.csv, and Brevo evidence for the 20 most recent tracked email records
+- [x] Reconcile the 20 records by recipient, sender, timestamp, message identifier, workflow evidence, and Brevo event status without triggering or altering any sends
