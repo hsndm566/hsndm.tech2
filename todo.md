@@ -784,3 +784,8 @@
 - [x] Verify Firecrawl session availability and, if enabled, fetch a raw public DeepSeek terms or privacy paragraph through the connector
 - [x] Research and verify an open-source repository for agentic public-web search with a free or self-hostable path
 - [x] Execute the requested Firecrawl public-web query and return raw result title, URL, and description fields verbatim
+- [ ] Research and verify open-source Apify alternatives, including Crawlee, that can support public-web crawling and search
+- [ ] Define a deployable full-search architecture for the current website without changing unrelated public, dashboard, email, or infrastructure systems
+- [ ] Inventory every local Git repository and document branch, remote, last commit, and working-tree state
+- [ ] Review modified and untracked files for secrets, protect environment files, and preserve only safe changes in commits
+- [ ] Push each repository’s current branches to configured GitHub remotes and verify remote commit state without deployment or workflow execution
