@@ -6,6 +6,20 @@ import { installErrorTelemetry } from "./lib/errorTelemetry";
 import "./index.css";
 
 installErrorTelemetry();
+
+function activateDeferredFonts() {
+  document.querySelectorAll<HTMLLinkElement>('link[data-deferred-font="true"]').forEach(link => {
+    link.media = "all";
+    link.removeAttribute("data-deferred-font");
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", activateDeferredFonts, { once: true });
+} else {
+  activateDeferredFonts();
+}
+
 const DataClientProviders = lazy(() => import("./components/DataClientProviders").then(module => ({ default: module.DataClientProviders })));
 const publicHomepageRoutes = new Set(["/", "/ar"]);
 

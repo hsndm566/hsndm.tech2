@@ -22,7 +22,10 @@ describe("public marketing performance contracts", () => {
   it("keeps marketing freshness checks and remote fonts off the first-paint critical path", () => {
     expect(home).toContain("window.setTimeout(startPolling, 1_800)");
     expect(styles).not.toContain("fonts.googleapis.com");
-    expect(indexHtml).toContain('media="print" onload="this.media=\'all\'"');
+    expect(indexHtml).toContain('media="print" data-deferred-font="true"');
+    expect(indexHtml).not.toContain("onload=");
+    expect(entry).toContain("activateDeferredFonts");
+    expect(entry).toContain('link[data-deferred-font="true"]');
     expect(indexHtml).toContain("display=swap");
   });
 

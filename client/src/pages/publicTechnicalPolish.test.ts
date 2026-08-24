@@ -36,8 +36,10 @@ describe("public homepage technical polish", () => {
     expect(styles).toContain("text-align: start");
   });
 
-  it("paints deferred public sections and avoids stacked campaign bars on phone viewports", () => {
-    expect(styles).toContain(".below-fold-section { content-visibility: visible; contain-intrinsic-size: auto; }");
+  it("keeps public sections paintable without containment or JavaScript-dependent hidden states on phone viewports", () => {
+    expect(styles).not.toContain("content-visibility:");
+    expect(styles).not.toContain("contain-intrinsic-size:");
+    expect(styles).toContain(".mobile-section-reveal-target.is-visible");
     expect(home).not.toContain('className="mobile-campaign-cta"');
     expect(arabicHome).not.toContain('className="mobile-campaign-cta"');
     expect(updates).toContain(".mobile-campaign-cta { display: none !important; }");

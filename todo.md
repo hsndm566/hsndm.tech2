@@ -789,3 +789,6 @@
 - [x] Inventory every local Git repository and document branch, remote, last commit, and working-tree state
 - [x] Review modified and untracked files for secrets, protect environment files, and preserve only safe changes in commits
 - [x] Push each repository’s current branches to configured GitHub remotes and verify remote commit state without deployment or workflow execution
+- [x] Audit and remove public content-visibility containment and hidden reveal base states that can leave mobile pricing or FAQ content invisible
+- [x] Replace the CSP-blocked inline media event handler with a CSP-safe implementation while preserving the existing poster-first interactive hero behavior
+- [x] Add regression coverage proving public sections remain visible without JavaScript or IntersectionObserver and validate the public repair at 375px

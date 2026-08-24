@@ -20,6 +20,7 @@ const mobileSectionSelector = ".site-shell main > section:not(.hero)";
 export function NativeVisualEnhancements({ routeKey }: { routeKey: string }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!("IntersectionObserver" in window)) return;
 
     const root = document.documentElement;
     root.classList.add("has-native-motion");

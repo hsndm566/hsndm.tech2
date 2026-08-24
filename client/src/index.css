@@ -85,11 +85,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .section-fog { background: var(--fog); }
 .section-ink { background: var(--ink); color: var(--paper); }
 .section-accent { background: var(--signal); }
-.below-fold-section { content-visibility: auto; contain-intrinsic-size: 800px; }
-@media (max-width: 680px) {
-  /* Avoid iOS Safari retaining a skipped section's intrinsic placeholder after scroll restoration. */
-  .below-fold-section { content-visibility: visible; contain-intrinsic-size: auto; }
-}
 .privacy-panel { min-height: 100%; display: grid; align-content: center; gap: 13px; padding: clamp(28px, 4vw, 56px); color: var(--paper); background: var(--ink); }
 .privacy-panel b { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: .08em; }
 .privacy-panel p { max-width: 29rem; margin: 0; color: rgba(245,242,235,.72); font-size: 15px; line-height: 1.75; }
@@ -368,22 +363,23 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 @media (prefers-reduced-motion: no-preference) {
   .has-native-motion .site-shell .reveal-target,
   .has-native-motion .site-shell :is(main > section:not(.hero) h2, .capability-card, .process-item, .campaign-dashboard, .plan-card, .review-card, .faq-item, .map-frame) {
-    opacity: 0;
-    transform: translateY(10px);
     transition: opacity 300ms var(--polish-ease), transform 300ms var(--polish-ease);
   }
-  .has-native-motion .site-shell :is(.is-visible, .is-visible *) { opacity: revert-layer; }
-  .has-native-motion .site-shell .is-visible { opacity: 1; transform: translateY(0); }
+  .has-native-motion .site-shell .is-visible {
+    animation: public-content-arrival 300ms var(--polish-ease) both;
+  }
 }
 
-/* Phone sections remain fully rendered; only their composited entry is delayed until viewport entry. */
+/* Phone sections remain fully rendered even if JavaScript or IntersectionObserver is unavailable. */
 @media (max-width: 680px) and (prefers-reduced-motion: no-preference) {
-  .has-native-motion .site-shell .mobile-section-reveal-target {
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 300ms var(--polish-ease), transform 300ms var(--polish-ease);
+  .has-native-motion .site-shell .mobile-section-reveal-target.is-visible {
+    animation: public-content-arrival 300ms var(--polish-ease) both;
   }
-  .has-native-motion .site-shell .mobile-section-reveal-target.is-visible { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes public-content-arrival {
+  from { opacity: .96; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .site-shell :is(.button, .text-button, .plan-cta, .drop-zone, .campaign-switcher button, .dashboard-progress) {

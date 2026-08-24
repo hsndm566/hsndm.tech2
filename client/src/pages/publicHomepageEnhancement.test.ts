@@ -36,10 +36,11 @@ describe("public homepage enhancement contracts", () => {
     expect(home).toContain('trackEngagement("plan_selected"');
   });
 
-  it("uses route-derived document direction, lazy below-fold rendering, and static FAQ metadata", () => {
+  it("uses route-derived document direction, visible-by-default public sections, and static FAQ metadata", () => {
     expect(app).toContain('root.dir = isArabicRoute ? "rtl" : "ltr"');
     expect(home).toContain("<LazyMount>");
-    expect(styles).toContain("content-visibility: auto");
+    expect(styles).not.toContain("content-visibility:");
+    expect(styles).not.toContain("contain-intrinsic-size:");
     expect(html).toContain("Do you guarantee I'll get hired?");
     expect(html).toContain('hreflang="ar"');
   });
