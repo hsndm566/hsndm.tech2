@@ -783,3 +783,4 @@
 - [x] Perform one live public-page extraction with the identified scraper and report verbatim source evidence
 - [x] Verify Firecrawl session availability and, if enabled, fetch a raw public DeepSeek terms or privacy paragraph through the connector
 - [x] Research and verify an open-source repository for agentic public-web search with a free or self-hostable path
+- [x] Execute the requested Firecrawl public-web query and return raw result title, URL, and description fields verbatim
