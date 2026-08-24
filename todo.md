@@ -786,6 +786,6 @@
 - [x] Execute the requested Firecrawl public-web query and return raw result title, URL, and description fields verbatim
 - [ ] Research and verify open-source Apify alternatives, including Crawlee, that can support public-web crawling and search
 - [ ] Define a deployable full-search architecture for the current website without changing unrelated public, dashboard, email, or infrastructure systems
-- [ ] Inventory every local Git repository and document branch, remote, last commit, and working-tree state
-- [ ] Review modified and untracked files for secrets, protect environment files, and preserve only safe changes in commits
-- [ ] Push each repository’s current branches to configured GitHub remotes and verify remote commit state without deployment or workflow execution
+- [x] Inventory every local Git repository and document branch, remote, last commit, and working-tree state
+- [x] Review modified and untracked files for secrets, protect environment files, and preserve only safe changes in commits
+- [x] Push each repository’s current branches to configured GitHub remotes and verify remote commit state without deployment or workflow execution
