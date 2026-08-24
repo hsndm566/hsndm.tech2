@@ -782,3 +782,4 @@
 - [x] Identify the installed scraper or crawler capability and its available access requirements without using a search engine
 - [x] Perform one live public-page extraction with the identified scraper and report verbatim source evidence
 - [x] Verify Firecrawl session availability and, if enabled, fetch a raw public DeepSeek terms or privacy paragraph through the connector
+- [x] Research and verify an open-source repository for agentic public-web search with a free or self-hostable path
