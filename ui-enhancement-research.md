@@ -29,6 +29,12 @@ The planned use is limited to structural ideas for compact trust strips, respons
 - Repository: https://github.com/PageAI-Pro/page-ui
 - License: MIT
 
+**Bklit UI** was the chart-component library referred to as “buklit” or “bullet” in the request. Its chart components and shadcn registry are MIT-licensed, while Bklit Studio is proprietary. The compact KPI card patterns are relevant inspiration for future authenticated dashboard reporting, but are not appropriate to install on this public marketing page because they would introduce a shadcn-registry dependency and data-visualization runtime without truthful public metrics to display.
+
+- Repository: https://github.com/bklit/bklit-ui
+- Blocks: https://bklit.com/blocks
+- License: MIT for chart components; proprietary for Bklit Studio
+
 ## UX guidance
 
 The installed local `ui-ux-pro-max` skill is already available. It is adapted from Next Level Builder's MIT-licensed UI UX Pro Max source and will guide this work. The generated generic design-system colors are advisory only; they are not selected because the user explicitly requested preservation of the established warm-paper, near-black, and signal-orange HSNDM identity.

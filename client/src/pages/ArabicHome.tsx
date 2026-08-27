@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import React, { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
+import { BklitShimmeringStatus } from "@/components/BklitShimmeringStatus";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { demoLists } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
@@ -263,7 +264,7 @@ export default function ArabicHome() {
               <div className="ledger-record"><span className="record-number">03</span><div><b>جاهز للتقديم</b><small>تمت مطابقة المهارات والخبرة واللغة</small></div><ArrowUpRight size={16} /></div>
               <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> سيرتك الذاتية جاهزة</div><div><StatusDot /> جارٍ مطابقة الوظائف</div></div>
             </div>
-            <div className="hero-stats" dir="rtl"><div className="hero-stats-grid"><div><strong>500+</strong><span>معاينة · وظائف سعودية تمت مراجعتها</span></div><div><strong>24/7</strong><span>محرّك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div></div>
+            <div className="hero-stats" dir="rtl"><div className="hero-stats-grid"><div><strong>500+</strong><span>معاينة · وظائف سعودية تمت مراجعتها</span></div><div><strong>24/7</strong><span>محرّك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div><p className="hero-activity"><StatusDot /> <BklitShimmeringStatus>عمليات الحملة ضمن خطتك المعتمدة فقط</BklitShimmeringStatus></p></div>
 	          </div>
 	        </section>
 	        </SectionErrorBoundary>

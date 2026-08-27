@@ -502,6 +502,10 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .hero-stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); }
 .hero-stats-grid > div { display: grid; gap: 4px; position: relative; }
 .hero-activity { width: fit-content; min-height: 26px; margin: 0; padding: 7px 10px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(21,21,21,.18); background: rgba(255,255,255,.7); color: rgba(21,21,21,.72) !important; }
+.bklit-shimmer-status { position: relative; display: inline-block; color: inherit; isolation: isolate; }
+.bklit-shimmer-status::after { position: absolute; z-index: -1; inset: -2px -5px; content: ""; background: linear-gradient(105deg, transparent 18%, rgba(229,72,42,.16) 44%, rgba(255,255,255,.9) 50%, rgba(229,72,42,.16) 56%, transparent 82%); background-size: 230% 100%; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .bklit-shimmer-status::after { animation: bklit-status-sweep 3.8s cubic-bezier(.23,1,.32,1) infinite; } }
+@keyframes bklit-status-sweep { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 .hero-ledger { overflow: hidden; transition: transform .2s cubic-bezier(.23,1,.32,1), box-shadow .2s ease, border-color .2s ease; }
 .hero-ledger::after { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--signal); content: ""; opacity: .85; }
 .process-item { position: relative; overflow: hidden; }

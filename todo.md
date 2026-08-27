@@ -803,3 +803,4 @@
 - [ ] Adapt the forked JobSync application to use the isolated schema and existing Clerk identity without retaining a separate credential-auth system
 - [ ] Deploy only a new Railway autoapply-dashboard service and verify its public URL without touching existing websites or services
 - [x] Install and apply reusable UI/UX Pro Max guidance, research compatible open-source components, and implement theme-preserving public-site enhancements with responsive, accessibility, and performance validation.
+- [x] Extend the public-site enhancement using a selected MIT Bklit UI component pattern, retain factual data and the existing visual system, validate English/Arabic responsive behavior, and publish only after verification.

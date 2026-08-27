@@ -4,6 +4,7 @@
  */
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import HeroMedia from "@/components/HeroMedia";
+import { BklitShimmeringStatus } from "@/components/BklitShimmeringStatus";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { HomepageMediaImage } from "@/components/HomepageMediaImage";
 import { trackEngagement } from "@/lib/analytics";
@@ -539,7 +540,7 @@ export default function Home() {
                 <div><strong>24/7</strong><span>Engine in motion</span></div>
                 <div><strong>2</strong><span>Languages supported</span></div>
               </div>
-              <p className="hero-activity" aria-live="polite"><StatusDot /> {latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
+              <p className="hero-activity" aria-live="polite"><StatusDot /> <BklitShimmeringStatus>{latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</BklitShimmeringStatus></p>
             </div>
           </div>
         </section>

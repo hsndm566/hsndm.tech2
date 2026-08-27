@@ -49,9 +49,12 @@ describe("public homepage enhancement contracts", () => {
     expect(home).toContain('className="hero-stats-grid"');
     expect(home).toContain('className="hero-activity" aria-live="polite"');
     expect(arabicHome).toContain('className="hero-stats-grid"');
+    expect(home).toContain("BklitShimmeringStatus");
+    expect(arabicHome).toContain("BklitShimmeringStatus");
     expect(styles).toContain(".hero-ledger::after");
     expect(styles).toContain(".proof-grid > div::after");
     expect(styles).toContain(".process-item::before");
+    expect(styles).toContain(".bklit-shimmer-status");
     expect(styles).toContain("prefers-reduced-motion");
     expect(styles).toContain("var(--signal)");
   });
