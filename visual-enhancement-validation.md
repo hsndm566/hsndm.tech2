@@ -29,3 +29,7 @@ The refined ATS workbench was reviewed at 375×812 and 1280×900. The three labe
 ## Enquiry private-review stage
 
 The English and Arabic enquiry routes were checked at 1280×900 and 375×812. Their first-step form remains clear at each width, while the new dark `02` status rail makes the local review state explicit before the contact-option card. A local-only interaction check completed the required fields and rendered `02 / Private review` in English and `02 / مراجعة خاصة` in Arabic. Each route retained its labelled inputs, plan context, device-local CV explanation, contact-choice control, explicit authorization checkbox, and no-submission-before-approval promise. The interactive review did not select a contact option or invoke secure enquiry, email, WhatsApp, or campaign activity; the local browser console reported no errors.
+
+## Pricing comparison navigation
+
+The English and Arabic pricing routes were reviewed at 1280×900 and 375×812. The comparison retains its existing plan values, campaign-scope statements, payment-not-connected explanation, and enquiry destinations. At both widths, the table stays readable within the intended horizontal comparison container, with an explicit instruction to swipe, scroll, or use left/right arrow keys. The region now accepts keyboard focus with a signal-orange focus ring, while Arabic headings and values align to the RTL reading direction. No purchase, checkout, plan-selection, or payment behavior was introduced.
