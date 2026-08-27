@@ -149,6 +149,7 @@ export default function Enquire() {
             <div className="form-protection"><Check size={15} /> Continue to review exactly what would be shared. The selected CV remains on this device and is never sent from this form.</div>
             <button className="button button-accent" type="submit">Review contact options <ArrowRight size={18} /></button>
             <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
+            {showPreview ? <div className="enquiry-review-stage" role="status"><span className="enquiry-review-stage__label">02 / Private review</span><span className="enquiry-review-stage__status"><Check aria-hidden="true" size={15} /> You remain in control of contact.</span></div> : null}
             {showPreview && <section className="mt-6 border border-black/15 bg-white p-4 text-black" aria-labelledby="handoff-preview-title">
               <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[#e5482a]">Before you contact us</p>
               <h2 id="handoff-preview-title" className="mt-2 text-xl font-semibold">Review your shared details</h2>

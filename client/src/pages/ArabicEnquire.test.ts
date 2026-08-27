@@ -18,6 +18,15 @@ describe("bilingual enquiry handoff", () => {
     expect(arabicSource).toContain("لن يُرسل أي طلب حتى توافق على خطة الحملة");
   });
 
+  it("labels the consent-preserving review state as the second bilingual journey stage", () => {
+    expect(englishSource).toContain('className="enquiry-review-stage" role="status"');
+    expect(englishSource).toContain("02 / Private review");
+    expect(englishSource).toContain("You remain in control of contact.");
+    expect(arabicSource).toContain('className="enquiry-review-stage" role="status"');
+    expect(arabicSource).toContain("02 / مراجعة خاصة");
+    expect(arabicSource).toContain("تبقى خطوة التواصل تحت تحكمك.");
+  });
+
   it("includes canonical Saudi city and industry selections in both campaign handoffs", () => {
     expect(arabicSource).toContain("saudiCities");
     expect(arabicSource).toContain("saudiIndustries");
