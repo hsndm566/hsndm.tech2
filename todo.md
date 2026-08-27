@@ -807,3 +807,9 @@
 - [x] Extend the Bklit-inspired public proof and pricing surfaces with factual signal-card hierarchy and stronger brand-mark presence, while preserving existing messaging, prices, and public-site safety boundaries.
 - [x] Extend the existing pricing and approval-proof surfaces with an accessible operational-ledger visual system while preserving their current public copy, prices, and CTA destinations.
 - [ ] Save the referenced nextlevelbuilder UI/UX Pro Max repository as a reusable project skill and continue the public-site enhancement in focused, validated stages without changing the existing theme.
+- [x] Enhance the public ATS review journey in the established operational visual system while preserving analysis behavior, CV privacy boundaries, and the current public theme.
+- [x] Complete, test, visually verify, and publish the in-progress ATS review workbench refinement without changing its extraction, remote-review, local-fallback, or consent behavior.
+- [ ] Audit every public and authenticated route into a prioritized UI/UX Pro Max refurbishment backlog, including mobile, RTL, keyboard, loading, empty, error, and truthful-data states.
+- [ ] Refurbish the public conversion routes in small validated stages while preserving approved pricing, factual copy, SEO, consent, and CTA destinations.
+- [ ] Refurbish the authenticated dashboard and profile routes using existing protected data only, preserving clear empty/error states and no fabricated activity or metrics.
+- [ ] Run and record whole-site desktop/mobile, English/Arabic, accessibility, reduced-motion, and production-build verification before completing the refurbishment program.

@@ -116,29 +116,34 @@ export default function Ats() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f3f0e9] p-6 text-[#151515] md:p-12">
-      <div className="mx-auto max-w-3xl space-y-7">
-        <Link href="/" className="font-mono text-xs">← BACK TO AUTOAPPLY SA</Link>
-        <header>
+    <main className="ats-page min-h-screen bg-[#f3f0e9] p-6 text-[#151515] md:p-12">
+      <div className="ats-shell mx-auto max-w-3xl space-y-7">
+        <Link href="/" className="ats-backlink font-mono text-xs">← BACK TO AUTOAPPLY SA</Link>
+        <header className="ats-header">
           <p className="font-mono text-xs text-[#e5482a]">AI ATS REVIEW / SAUDI ARABIA</p>
           <h1 className="mt-3 text-4xl font-bold">Make your CV easier to read, <i>not fictional.</i></h1>
           <p className="mt-3 text-[#151515]/70">Start with a free browser-based preview. Your file remains on this device; only extracted text is sent when you request the AI review.</p>
         </header>
 
-        <section className="space-y-4 border border-black/10 bg-white p-6" aria-busy={isAnalyzing}>
-          <label className="block cursor-pointer border-2 border-dashed border-black/20 p-5">
+        <section className="ats-workbench space-y-4 border border-black/10 bg-white p-6" aria-busy={isAnalyzing}>
+          <ol className="ats-stages" aria-label="ATS preview stages">
+            <li><b>01</b><span>CV input</span></li>
+            <li><b>02</b><span>Private preview</span></li>
+            <li><b>03</b><span>Your decision</span></li>
+          </ol>
+          <label className="ats-file-drop block cursor-pointer border-2 border-dashed border-black/20 p-5">
             <input className="sr-only" type="file" accept=".pdf,.docx,.txt" aria-describedby="ats-extraction-guidance" onChange={event => choose(event.target.files?.[0])} />
             <FileText className="mr-2 inline" /> <b>{file || "Choose a PDF, DOCX, or TXT CV"}</b>
           </label>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="ats-field-grid grid gap-3 md:grid-cols-2">
             <label className="grid gap-1 text-sm font-medium">Target Saudi city<SearchableSaudiSelect options={saudiCities} value={city} onChange={setCity} placeholder="Search Saudi cities…" /></label>
             <label className="grid gap-1 text-sm font-medium">Target industry<SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={setIndustry} placeholder="Search industries…" /></label>
           </div>
-          <label className="grid gap-1 text-sm font-medium">Target role <span className="font-normal text-[#151515]/60">(optional)</span><input className="w-full border border-black/20 p-3 font-normal" value={role} onChange={event => setRole(event.target.value)} placeholder="Target role (optional)" /></label>
-          <label className="grid gap-1 text-sm font-medium">CV text<textarea className="min-h-40 w-full border border-black/20 p-3 font-normal" value={text} onChange={event => { setText(event.target.value); setLocalReview(null); if (extractionError) setExtractionError(""); }} placeholder="CV text appears here after local extraction." /></label>
-          <p id="ats-extraction-guidance" className={extractionError ? "text-sm text-[#b42318]" : "text-sm text-[#151515]/60"} role={extractionError ? "alert" : "status"}>{extractionError || (canAnalyze ? "Ready for a free AI ATS preview." : "Add at least 120 readable CV characters to run the preview.")}</p>
-          <button disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis} className="bg-[#151515] px-5 py-3 text-white disabled:opacity-50">{isAnalyzing ? <><Loader2 className="mr-2 inline animate-spin" />Analysing CV signals…</> : <><Sparkles className="mr-2 inline" />Run free AI ATS preview</>}</button>
-          {isAnalyzing && <div role="status" className="space-y-3 border border-[#e5482a]/30 bg-[#fff7f4] p-4"><p className="text-sm font-medium">Checking structure, keywords, and evidence…</p><div className="h-3 animate-pulse bg-black/10" /><div className="h-3 w-4/5 animate-pulse bg-black/10" /><div className="h-3 w-3/5 animate-pulse bg-black/10" /></div>}
+          <label className="grid gap-1 text-sm font-medium">Target role <span className="font-normal text-[#151515]/60">(optional)</span><input className="ats-input w-full border border-black/20 p-3 font-normal" value={role} onChange={event => setRole(event.target.value)} placeholder="Target role (optional)" /></label>
+          <label className="grid gap-1 text-sm font-medium">CV text<textarea className="ats-input min-h-40 w-full border border-black/20 p-3 font-normal" value={text} onChange={event => { setText(event.target.value); setLocalReview(null); if (extractionError) setExtractionError(""); }} placeholder="CV text appears here after local extraction." /></label>
+          <p id="ats-extraction-guidance" className={`ats-status ${extractionError ? "text-[#b42318]" : "text-[#151515]/60"}`} role={extractionError ? "alert" : "status"}>{extractionError || (canAnalyze ? "Ready for a free AI ATS preview." : "Add at least 120 readable CV characters to run the preview.")}</p>
+          <button disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis} className="ats-submit bg-[#151515] px-5 py-3 text-white disabled:opacity-50">{isAnalyzing ? <><Loader2 className="mr-2 inline animate-spin" />Analysing CV signals…</> : <><Sparkles className="mr-2 inline" />Run free AI ATS preview</>}</button>
+          {isAnalyzing && <div role="status" className="ats-review-pending space-y-3 border border-[#e5482a]/30 bg-[#fff7f4] p-4"><p className="text-sm font-medium">Checking structure, keywords, and evidence…</p><div className="h-3 animate-pulse bg-black/10" /><div className="h-3 w-4/5 animate-pulse bg-black/10" /><div className="h-3 w-3/5 animate-pulse bg-black/10" /></div>}
           {remoteReviewTimedOut && <div role="status" className="border border-[#e5482a]/30 bg-[#fff7f4] p-4 text-sm">The AI review is taking longer than expected, so we prepared a private local ATS preview. Your result is ready below; no additional CV text was sent for this fallback.</div>}
           {analyze.error && !review && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 border border-[#b42318]/30 bg-[#fff5f4] p-4 text-sm"><span>Unable to complete the remote review. Your CV text is still here—please try again.</span><button type="button" className="border border-[#151515] px-3 py-2" disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis}>Try again</button></div>}
         </section>

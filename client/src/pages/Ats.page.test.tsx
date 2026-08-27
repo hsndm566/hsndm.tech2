@@ -64,6 +64,18 @@ describe("ATS page local upload", () => {
     expect(getAllByTestId("saudi-select").length).toBeGreaterThanOrEqual(2);
   });
 
+  it("keeps the ATS intake as a labelled three-stage workbench without changing the privacy-first review path", async () => {
+    const { default: Ats } = await import("./Ats");
+    const { container } = render(<Ats />);
+    const workbench = container.querySelector(".ats-workbench");
+
+    expect(container.querySelector('ol[aria-label="ATS preview stages"]')).toBeTruthy();
+    expect(workbench?.textContent).toContain("CV input");
+    expect(workbench?.textContent).toContain("Private preview");
+    expect(workbench?.textContent).toContain("Your decision");
+    expect(container.textContent).toContain("Your file remains on this device");
+  });
+
   it("offers a contact-only human follow-up and saves bounded metadata for signed-in candidates", async () => {
     mocks.isAuthenticated = true;
     mocks.analysis = { score: 74, summary: "Good structure.", strengths: ["Clear headings"], gaps: ["Add metrics"], optimizedBullets: ["Improved bullet"], disclaimer: "Preview only." };

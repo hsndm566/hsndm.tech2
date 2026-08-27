@@ -515,6 +515,22 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .proof-grid > div { position: relative; overflow: hidden; transition: color .18s ease, background .18s ease; }
 .proof-grid > div::after { position: absolute; inset: auto 0 0; height: 2px; background: var(--signal); content: ""; transform: scaleX(0); transform-origin: inline-start; transition: transform .2s cubic-bezier(.23,1,.32,1); }
 .proof-step { align-self: flex-start; color: var(--signal); font-family: "DM Mono", monospace; font-size: 8px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+
+/* ATS workbench: uses the same operational notation as the public campaign journey. */
+.ats-page { background: linear-gradient(90deg, rgba(21,21,21,.035) 1px, transparent 1px) 0 0 / min(25vw, 330px) 100%, var(--fog); }
+.ats-shell { position: relative; }
+.ats-backlink { display: inline-flex; padding-block: 6px; border-bottom: 1px solid rgba(21,21,21,.3); color: var(--ink); text-decoration: none; transition: color .18s ease, border-color .18s ease; }
+.ats-header { padding-inline-start: 18px; border-inline-start: 3px solid var(--signal); }
+.ats-workbench { position: relative; overflow: hidden; box-shadow: 10px 12px 0 rgba(21,21,21,.045); }
+.ats-workbench::before { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--signal); content: ""; }
+.ats-stages { margin: -24px -24px 18px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid rgba(21,21,21,.12); list-style: none; }
+.ats-stages li { min-height: 50px; padding: 11px 14px; display: flex; align-items: center; gap: 8px; border-inline-end: 1px solid rgba(21,21,21,.12); color: rgba(21,21,21,.7); font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: .045em; text-transform: uppercase; }
+.ats-stages li:last-child { border-inline-end: 0; }.ats-stages b { color: var(--signal); font-variant-numeric: tabular-nums; }
+.ats-file-drop { position: relative; overflow: hidden; transition: border-color .18s ease, background .18s ease, transform .18s cubic-bezier(.23,1,.32,1); }.ats-file-drop::after { position: absolute; inset: auto 0 0; height: 2px; background: var(--signal); content: ""; transform: scaleX(0); transform-origin: left; transition: transform .2s cubic-bezier(.23,1,.32,1); }
+.ats-input { border-color: rgba(21,21,21,.2); outline: none; transition: border-color .18s ease, box-shadow .18s ease; }.ats-input:focus { border-color: var(--signal); box-shadow: 0 0 0 3px rgba(229,72,42,.15); }
+.ats-status { min-height: 20px; padding-inline-start: 10px; border-inline-start: 2px solid currentColor; font-family: "DM Mono", monospace; font-size: 10px; line-height: 1.5; letter-spacing: .01em; }
+.ats-submit { box-shadow: 4px 4px 0 rgba(21,21,21,.2); transition: transform .18s cubic-bezier(.23,1,.32,1), box-shadow .18s ease, background .18s ease; }.ats-review-pending { border-inline-start: 3px solid var(--signal); }
+@media (hover: hover) { .ats-backlink:hover { color: var(--signal); border-color: var(--signal); }.ats-file-drop:hover { border-color: var(--signal); background: rgba(229,72,42,.035); transform: translateY(-2px); }.ats-file-drop:hover::after { transform: scaleX(1); }.ats-submit:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(21,21,21,.2); } }
 .brand { gap: 11px; }
 .brand-mark { width: 30px; height: 30px; }
 .brand::after { width: 13px; height: 2px; display: block; background: var(--signal); content: ""; }
@@ -544,4 +560,5 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .brand::after { width: 10px; }
   .hero-activity { width: 100%; min-height: 30px; padding: 8px 9px; font-size: 8px !important; }
   .proof-step { width: 21px; flex: 0 0 21px; }
+  .ats-page { background-size: 100% 100%; }.ats-header { padding-inline-start: 13px; }.ats-workbench { padding: 18px; box-shadow: 6px 7px 0 rgba(21,21,21,.045); }.ats-stages { margin: -18px -18px 16px; grid-template-columns: 1fr; }.ats-stages li { min-height: 37px; padding: 8px 12px; border-inline-end: 0; border-bottom: 1px solid rgba(21,21,21,.1); }.ats-stages li:last-child { border-bottom: 0; }.ats-file-drop { padding: 16px; }.ats-status { font-size: 9px; }
 }
