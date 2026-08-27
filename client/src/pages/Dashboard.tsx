@@ -324,7 +324,7 @@ export default function Dashboard() {
   if (clerkDashboardEnabled && !clerkAuth.isLoaded && !clerkLoadTimedOut) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6" aria-busy="true">
-        <Card className="w-full max-w-lg border-[#151515]/10 bg-[#fbf9f5] shadow-sm">
+          <Card className="w-full max-w-lg border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5] shadow-sm" role="status" aria-live="polite">
           <CardHeader>
             <div className="mb-3 flex items-center gap-3 text-[#e5482a]"><Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" /><span className="font-mono text-[11px] uppercase tracking-[.12em]">Secure candidate access</span></div>
             <CardTitle>Connecting your private dashboard</CardTitle>
@@ -341,7 +341,7 @@ export default function Dashboard() {
   if (clerkDashboardEnabled && clerkLoadTimedOut && !clerkAuth.isLoaded) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]" role="alert">
           <CardHeader>
             <p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure access recovery</p>
             <CardTitle>Sign-in is temporarily unavailable</CardTitle>
@@ -351,10 +351,10 @@ export default function Dashboard() {
             <Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>
               Try again
             </Button>
-            <a className="flex w-full items-center justify-center gap-2 border border-[#151515]/20 px-4 py-3 text-sm font-medium transition-colors hover:border-[#e5482a] hover:text-[#e5482a]" href={`https://wa.me/966571448656?text=${dashboardHelpMessage}`} target="_blank" rel="noreferrer">
+            <a className="flex w-full items-center justify-center gap-2 border border-[#151515]/20 px-4 py-3 text-sm font-medium transition-colors hover:border-[#e5482a] hover:text-[#e5482a]" href={`https://wa.me/966571448656?text=${dashboardHelpMessage}`} target="_blank" rel="noopener noreferrer">
               Request secure report help
             </a>
-            <a className="flex w-full items-center justify-center gap-2 border border-[#e5482a] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#9c2f1e] transition-colors hover:bg-[#fff0eb]" href={`https://wa.me/966571448656?text=${dashboardPauseMessage}`} target="_blank" rel="noreferrer">
+            <a className="flex w-full items-center justify-center gap-2 border border-[#e5482a] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#9c2f1e] transition-colors hover:bg-[#fff0eb]" href={`https://wa.me/966571448656?text=${dashboardPauseMessage}`} target="_blank" rel="noopener noreferrer">
               Pause my campaign urgently / أوقف حملتي بشكل عاجل
             </a>
             <a className="block text-center text-sm underline underline-offset-4" href="/campaign-report-sample">See how application evidence is recorded</a>
@@ -368,8 +368,9 @@ export default function Dashboard() {
   if (clerkDashboardEnabled && !clerkAuth.isSignedIn) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]">
           <CardHeader>
+            <p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure workspace / sign-in required</p>
             <CardTitle>Private candidate dashboard</CardTitle>
             <CardDescription>Use your email to receive a secure passwordless sign-in link.</CardDescription>
           </CardHeader>
@@ -386,7 +387,7 @@ export default function Dashboard() {
   if (dashboardAuthenticated && (appsError || profileError || evidenceError || approvalError)) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]">
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]" role="alert">
           <CardHeader>
             <TriangleAlert className="mb-2 h-6 w-6 text-[#e5482a]" aria-hidden="true" />
             <CardTitle>We could not load your campaign data</CardTitle>

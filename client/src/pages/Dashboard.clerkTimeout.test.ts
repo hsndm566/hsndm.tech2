@@ -14,5 +14,8 @@ describe("Dashboard Clerk loading recovery", () => {
     expect(source).toContain("we do not display a report link on this public recovery screen");
     expect(source).toContain('captureClientReliabilitySignal("clerk_load_timeout"');
     expect(source).toContain("Try again");
+    expect(source).toContain('role="status" aria-live="polite"');
+    expect(source).toContain('role="alert"');
+    expect(source).toContain('rel="noopener noreferrer"');
   });
 });

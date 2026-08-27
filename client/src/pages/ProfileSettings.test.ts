@@ -12,4 +12,11 @@ describe("candidate profile settings feedback", () => {
     expect(settingsSource).toContain('label: "Undo"');
     expect(settingsSource).toContain("previousDraftRef.current");
   });
+
+  it("keeps private loading and recovery states announced and visually distinct", () => {
+    expect(settingsSource).toContain('aria-live="polite" role="status" aria-label="Loading profile settings"');
+    expect(settingsSource).toContain('role="alert"');
+    expect(settingsSource).toContain("Secure workspace / sign-in required");
+    expect(settingsSource).toContain("Private campaign preferences");
+  });
 });

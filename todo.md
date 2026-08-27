@@ -818,3 +818,4 @@
 - [x] Refine bilingual service-track hierarchy and decision cues while preserving existing services, factual scope language, WhatsApp/enquiry destinations, and RTL behavior.
 - [x] Refine the shared bilingual information-page reading hierarchy and CTA cues while preserving legal, privacy, support, case-study, and illustrative-content copy and boundaries.
 - [x] Refine bilingual campaign-status and confirmation-route state hierarchy while preserving all truthful progress, privacy, contact, and approval boundaries.
+- [x] Refine protected dashboard and settings loading, signed-out, and zero-data hierarchy while preserving authentication boundaries, real data states, and Arabic RTL behavior.

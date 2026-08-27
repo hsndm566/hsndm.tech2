@@ -73,7 +73,7 @@ function draftFromProfile(profile: ProfileSource | null | undefined): ProfileDra
 
 function SettingsSkeleton() {
   return (
-    <div className="space-y-6" aria-busy="true" aria-label="Loading profile settings">
+    <div className="space-y-6" aria-busy="true" aria-live="polite" role="status" aria-label="Loading profile settings">
       <Skeleton className="h-9 w-56 bg-[#151515]/10" />
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="rounded-xl border border-[#151515]/10 bg-[#fbf9f5] p-6 shadow-sm space-y-5">
@@ -141,7 +141,7 @@ export default function ProfileSettings() {
   if (clerkDashboardEnabled && clerkLoadTimedOut && !clerkAuth.isLoaded) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]"><CardHeader><CardTitle>Sign-in is temporarily unavailable</CardTitle><CardDescription>The secure email sign-in service did not respond. Please try again shortly.</CardDescription></CardHeader><CardContent><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>Try again</Button></CardContent></Card>
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]" role="alert"><CardHeader><p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure access recovery</p><CardTitle>Sign-in is temporarily unavailable</CardTitle><CardDescription>The secure email sign-in service did not respond. Please try again shortly.</CardDescription></CardHeader><CardContent><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>Try again</Button></CardContent></Card>
       </main>
     );
   }
@@ -149,7 +149,7 @@ export default function ProfileSettings() {
   if (clerkDashboardEnabled && !clerkAuth.isSignedIn) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5]"><CardHeader><CardTitle>Private candidate settings</CardTitle><CardDescription>Use your email to receive a secure passwordless sign-in link.</CardDescription></CardHeader><CardContent><SignInButton mode="modal" fallbackRedirectUrl="/dashboard/settings"><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">Email me a sign-in link</Button></SignInButton></CardContent></Card>
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]"><CardHeader><p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure workspace / sign-in required</p><CardTitle>Private candidate settings</CardTitle><CardDescription>Use your email to receive a secure passwordless sign-in link.</CardDescription></CardHeader><CardContent><SignInButton mode="modal" fallbackRedirectUrl="/dashboard/settings"><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]">Email me a sign-in link</Button></SignInButton></CardContent></Card>
       </main>
     );
   }
@@ -185,7 +185,7 @@ export default function ProfileSettings() {
       </header>
 
       <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 md:px-6 md:py-10">
-        <div className="flex items-start gap-3"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#151515] text-[#fbf9f5]"><Settings2 className="h-5 w-5" /></div><div><h1 className="text-2xl font-bold tracking-tight md:text-3xl">Personalise your campaign</h1><p className="mt-1 max-w-2xl text-sm leading-6 text-[#151515]/65">Keep your contact details and Saudi Arabia job preferences current so every campaign is aligned with what you want next.</p></div></div>
+        <div className="flex items-start gap-3 border-s-[3px] border-[#e5482a] ps-3"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#151515] text-[#fbf9f5]"><Settings2 className="h-5 w-5" /></div><div><p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#b82c20]">Private campaign preferences</p><h1 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Personalise your campaign</h1><p className="mt-1 max-w-2xl text-sm leading-6 text-[#151515]/65">Keep your contact details and Saudi Arabia job preferences current so every campaign is aligned with what you want next.</p></div></div>
 
         {profileLoading ? <SettingsSkeleton /> : (
           <form onSubmit={(event) => { event.preventDefault(); previousDraftRef.current = draftFromProfile(profile); updateProfileMutation.mutate(draft); }} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
