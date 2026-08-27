@@ -817,3 +817,4 @@
 - [x] Refine bilingual pricing comparison navigation and narrow-screen guidance while preserving all plan values, scope, payment boundaries, and enquiry CTA destinations.
 - [x] Refine bilingual service-track hierarchy and decision cues while preserving existing services, factual scope language, WhatsApp/enquiry destinations, and RTL behavior.
 - [x] Refine the shared bilingual information-page reading hierarchy and CTA cues while preserving legal, privacy, support, case-study, and illustrative-content copy and boundaries.
+- [x] Refine bilingual campaign-status and confirmation-route state hierarchy while preserving all truthful progress, privacy, contact, and approval boundaries.

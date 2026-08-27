@@ -32,9 +32,13 @@ export default function ThankYou() {
           <div className="thank-eyebrow">CAMPAIGN BRIEF LOGGED</div>
           <h1>{name ? `Thanks, ${name}.` : "Thanks."}<br />The next move is <i>in motion.</i></h1>
           <p>Your enquiry has reached the campaign queue. For the quickest direct response and any payment or CV-sharing instructions, continue on WhatsApp.</p>
+          <ol className="thanks-stages" aria-label="What happens next">
+            <li><span>01</span><div><b>Your brief is received</b><small>The team reviews the direction you shared.</small></div></li>
+            <li><span>02</span><div><b>You control the next message</b><small>Continue on WhatsApp only when you are ready.</small></div></li>
+          </ol>
           <div className="thanks-actions">
-            <a className="button button-paper" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Continue on WhatsApp</a>
-            <Link href="/" className="text-button light-text">Back to engine overview <ArrowRight size={17} /></Link>
+            <a className="button button-paper" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={17} /> Continue on WhatsApp</a>
+            <Link href="/" className="text-button light-text" style={{ color: "#f5f2eb" }}>Back to engine overview <ArrowRight size={17} /></Link>
           </div>
           <div className="thanks-protection"><ShieldCheck size={17} /><span><b>Response protection.</b> If you have not received a reply within one business day, send a follow-up directly on WhatsApp with your name and target role.</span></div>
         </div>

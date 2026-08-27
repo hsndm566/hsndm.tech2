@@ -69,7 +69,7 @@ export default function CampaignStatus() {
     <main className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
       <header className="border-b border-[#151515]/10 bg-[#fbf9f5]">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium hover:text-[#e5482a]">
+          <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium outline-none hover:text-[#e5482a] focus-visible:ring-2 focus-visible:ring-[#e5482a] focus-visible:ring-offset-2">
             <ArrowLeft className="h-4 w-4" /> AutoApply SA
           </Link>
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#151515]/55">Private campaign view</span>
@@ -87,7 +87,7 @@ export default function CampaignStatus() {
 
 function LoadingState() {
   return (
-    <Card className="mx-auto max-w-xl border-[#151515]/10 bg-[#fbf9f5] py-16 text-center shadow-sm">
+    <Card className="mx-auto max-w-xl border-[#151515]/10 bg-[#fbf9f5] py-16 text-center shadow-sm" role="status" aria-live="polite">
       <CardContent className="space-y-4">
         <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#e5482a]" aria-hidden="true" />
         <h1 className="text-2xl font-semibold tracking-tight">Loading your campaign update</h1>
@@ -106,7 +106,7 @@ function ErrorState({ message, kind }: { message: string; kind: "access" | "conn
           <h1 className="text-2xl font-semibold tracking-tight">{kind === "access" ? "Campaign link needed" : "Campaign updates unavailable"}</h1>
           <p className="mx-auto max-w-md text-sm leading-6 text-[#151515]/65">{message}</p>
         </div>
-        <a className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-[#151515] px-4 text-sm font-medium text-[#fbf9f5] transition-colors hover:bg-[#e5482a]" href="https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20need%20help%20accessing%20my%20private%20campaign%20status.">
+        <a className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-[#151515] px-4 text-sm font-medium outline-none transition-colors hover:bg-[#e5482a] focus-visible:ring-2 focus-visible:ring-[#e5482a] focus-visible:ring-offset-2" style={{ color: "#fbf9f5" }} href="https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20need%20help%20accessing%20my%20private%20campaign%20status." target="_blank" rel="noopener noreferrer">
           Contact AutoApply SA <ExternalLink className="h-4 w-4" />
         </a>
       </CardContent>

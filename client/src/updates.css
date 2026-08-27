@@ -76,3 +76,15 @@
   .back-to-top { inset-inline-end: 16px; bottom: max(1rem, env(safe-area-inset-bottom)); }
   .cookie-settings-trigger { inset-inline-start: auto; inset-inline-end: 12px; padding: 6px 8px; font-size: 9px; }
 }
+
+/* Confirmation-state ledger: preserves the existing dark receipt while making the next human decision explicit. */
+.thanks-stages { margin: 28px 0 0; padding: 14px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-top: 1px solid rgba(245,242,235,.18); border-bottom: 1px solid rgba(245,242,235,.18); list-style: none; }
+.thanks-stages li { min-width: 0; display: grid; grid-template-columns: 23px minmax(0, 1fr); gap: 8px; align-items: start; }
+.thanks-stages li > span { color: var(--signal); font-family: "DM Mono", monospace; font-size: 9px; line-height: 1.45; }
+.thanks-stages li div { display: grid; gap: 4px; }
+.thanks-stages b { color: var(--paper); font-family: "DM Mono", monospace; font-size: 9px; font-weight: 400; letter-spacing: .045em; text-transform: uppercase; }
+.thanks-stages small { color: rgba(245,242,235,.58); font-size: 10px; line-height: 1.45; }
+@media (max-width: 680px) { .thanks-stages { grid-template-columns: 1fr; gap: 13px; } }
+
+/* The confirmation receipt must remain within the page frame in an RTL narrow viewport. */
+.thanks-card { width: 100%; box-sizing: border-box; margin-inline: auto; }
