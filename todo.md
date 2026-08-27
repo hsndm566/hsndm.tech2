@@ -792,3 +792,14 @@
 - [x] Audit and remove public content-visibility containment and hidden reveal base states that can leave mobile pricing or FAQ content invisible
 - [x] Replace the CSP-blocked inline media event handler with a CSP-safe implementation while preserving the existing poster-first interactive hero behavior
 - [x] Add regression coverage proving public sections remain visible without JavaScript or IntersectionObserver and validate the public repair at 375px
+- [ ] Verify JobSync licensing, architecture, and Railway/Supabase/Clerk/Firecrawl/Groq integration access for an isolated AutoApply dashboard
+- [ ] Fork JobSync into an isolated AutoApply dashboard repository without altering existing sites, domains, workflows, email, or campaign systems
+- [ ] Implement candidate-owned data storage with RLS, protected job-ranking controls, and no auto-submission or portal automation
+- [ ] Implement and validate a daily read-only Saudi job discovery and Groq ranking workflow with safe storage of results
+- [ ] Deploy only the new dashboard service to Railway and report the live URL, authentication setup, schema, scheduler, and blockers
+- [x] Prepare and submit an in-chat Supabase authorization prompt so the required database and RLS setup can proceed
+- [ ] Inventory the existing autoapply-sa-phase1-dev public and portal schemas without modifying any table, policy, enum, function, or storage bucket
+- [ ] Create and validate an isolated jobsync_dashboard schema only, including dedicated RLS-protected candidate job and decision tables
+- [ ] Adapt the forked JobSync application to use the isolated schema and existing Clerk identity without retaining a separate credential-auth system
+- [ ] Deploy only a new Railway autoapply-dashboard service and verify its public URL without touching existing websites or services
+- [x] Install and apply reusable UI/UX Pro Max guidance, research compatible open-source components, and implement theme-preserving public-site enhancements with responsive, accessibility, and performance validation.

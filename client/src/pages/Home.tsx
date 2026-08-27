@@ -533,13 +533,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="hero-stats space-y-2">
-              <div className="grid grid-cols-3 gap-2">
+            <div className="hero-stats">
+              <div className="hero-stats-grid">
                 <div><strong>500+</strong><span>Preview · Saudi roles reviewed</span></div>
                 <div><strong>24/7</strong><span>Engine in motion</span></div>
                 <div><strong>2</strong><span>Languages supported</span></div>
               </div>
-              <p className="text-xs font-mono text-[#fbf9f5]/80 pt-1 border-t border-white/10">⚡ {latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
+              <p className="hero-activity" aria-live="polite"><StatusDot /> {latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</p>
             </div>
           </div>
         </section>

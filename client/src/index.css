@@ -496,3 +496,27 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .location-section .section-kicker { color: var(--signal-text); font-weight: 700; }
 .section-fog .section-kicker { color: var(--signal-text-strong); font-weight: 700; }
 .footer-brand em { color: var(--paper); }
+
+/* Source-informed public polish: compact status hierarchy and tactile rails without a new UI runtime. */
+.hero-stats { display: grid; gap: 9px; }
+.hero-stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); }
+.hero-stats-grid > div { display: grid; gap: 4px; position: relative; }
+.hero-activity { width: fit-content; min-height: 26px; margin: 0; padding: 7px 10px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(21,21,21,.18); background: rgba(255,255,255,.7); color: rgba(21,21,21,.72) !important; }
+.hero-ledger { overflow: hidden; transition: transform .2s cubic-bezier(.23,1,.32,1), box-shadow .2s ease, border-color .2s ease; }
+.hero-ledger::after { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--signal); content: ""; opacity: .85; }
+.process-item { position: relative; overflow: hidden; }
+.process-item::before { position: absolute; inset-block: 15px; inset-inline-start: 0; width: 2px; background: var(--signal); content: ""; transform: scaleY(0); transform-origin: bottom; transition: transform .2s cubic-bezier(.23,1,.32,1); }
+.active-process::before, .process-item:focus-within::before { transform: scaleY(1); }
+.proof-grid > div { position: relative; overflow: hidden; transition: color .18s ease, background .18s ease; }
+.proof-grid > div::after { position: absolute; inset: auto 0 0; height: 2px; background: var(--signal); content: ""; transform: scaleX(0); transform-origin: inline-start; transition: transform .2s cubic-bezier(.23,1,.32,1); }
+@media (hover: hover) {
+  .hero-ledger:hover { transform: translateY(-3px); border-color: rgba(229,72,42,.66); box-shadow: 0 17px 34px rgba(21,21,21,.13); }
+  .proof-grid > div:hover { color: var(--paper); background: rgba(229,72,42,.11); }
+  .proof-grid > div:hover::after { transform: scaleX(1); }
+  .process-item:hover::before { transform: scaleY(1); }
+}
+@media (max-width: 680px) {
+  .hero-stats { gap: 12px; justify-content: initial; }
+  .hero-stats-grid { gap: 0; justify-content: space-between; }
+  .hero-activity { width: 100%; min-height: 30px; padding: 8px 9px; font-size: 8px !important; }
+}

@@ -44,4 +44,15 @@ describe("public homepage enhancement contracts", () => {
     expect(html).toContain("Do you guarantee I'll get hired?");
     expect(html).toContain('hreflang="ar"');
   });
+
+  it("keeps the source-informed enhancement layer theme-preserving and bilingual", () => {
+    expect(home).toContain('className="hero-stats-grid"');
+    expect(home).toContain('className="hero-activity" aria-live="polite"');
+    expect(arabicHome).toContain('className="hero-stats-grid"');
+    expect(styles).toContain(".hero-ledger::after");
+    expect(styles).toContain(".proof-grid > div::after");
+    expect(styles).toContain(".process-item::before");
+    expect(styles).toContain("prefers-reduced-motion");
+    expect(styles).toContain("var(--signal)");
+  });
 });
