@@ -810,9 +810,9 @@
 - [x] Enhance the public ATS review journey in the established operational visual system while preserving analysis behavior, CV privacy boundaries, and the current public theme.
 - [x] Complete, test, visually verify, and publish the in-progress ATS review workbench refinement without changing its extraction, remote-review, local-fallback, or consent behavior.
 - [x] Audit every public and authenticated route into a prioritized UI/UX Pro Max refurbishment backlog, including mobile, RTL, keyboard, loading, empty, error, and truthful-data states.
-- [ ] Refurbish the public conversion routes in small validated stages while preserving approved pricing, factual copy, SEO, consent, and CTA destinations.
-- [ ] Refurbish the authenticated dashboard and profile routes using existing protected data only, preserving clear empty/error states and no fabricated activity or metrics.
-- [ ] Run and record whole-site desktop/mobile, English/Arabic, accessibility, reduced-motion, and production-build verification before completing the refurbishment program.
+- [x] Refurbish the public conversion routes in small validated stages while preserving approved pricing, factual copy, SEO, consent, and CTA destinations.
+- [x] Refurbish the authenticated dashboard and profile routes using existing protected data only, preserving clear empty/error states and no fabricated activity or metrics.
+- [x] Run and record whole-site desktop/mobile, English/Arabic, accessibility, reduced-motion, and production-build verification before completing the refurbishment program.
 - [x] Refine the English and Arabic enquiry pre-handoff review state as a clear second operational stage while preserving current contact choices, consent gating, handoff behavior, plan context, and CV-device privacy.
 - [x] Refine bilingual pricing comparison navigation and narrow-screen guidance while preserving all plan values, scope, payment boundaries, and enquiry CTA destinations.
 - [x] Refine bilingual service-track hierarchy and decision cues while preserving existing services, factual scope language, WhatsApp/enquiry destinations, and RTL behavior.
