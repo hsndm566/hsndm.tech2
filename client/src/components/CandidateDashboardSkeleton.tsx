@@ -2,8 +2,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CandidateDashboardSkeleton() {
   return (
-    <div className="space-y-8" aria-label="Loading candidate dashboard" aria-busy="true">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+    <div className="space-y-8" aria-label="Loading candidate dashboard" aria-busy="true" aria-live="polite" role="status">
+      <div className="border-s-[3px] border-[#e5482a] ps-4">
+        <p className="font-mono text-[10px] uppercase tracking-[.16em] text-[#b82c20]">Secure workspace / loading</p>
+        <p className="mt-1 text-sm leading-6 text-[#151515]/65">Preparing your private campaign view. No application records are shown until the secure session and data checks finish.</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4" aria-hidden="true">
         {Array.from({ length: 4 }).map((_, index) => (
           <div key={index} className="rounded-xl border border-[#151515]/10 bg-[#fbf9f5] p-6 shadow-sm">
             <Skeleton className="h-3 w-28 bg-[#151515]/10" />
@@ -12,7 +17,7 @@ export function CandidateDashboardSkeleton() {
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]" aria-hidden="true">
         <div className="space-y-4">
           <div className="flex flex-col gap-3 md:flex-row">
             <Skeleton className="h-10 w-full bg-[#151515]/10 md:max-w-sm" />
