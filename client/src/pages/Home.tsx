@@ -549,10 +549,10 @@ export default function Home() {
         <SectionErrorBoundary name="approval-promise" fallback={<section className="proof-strip" aria-label="Approval promise"><div className="page-frame proof-grid"><div><StatusDot /> Nothing is submitted without your go-ahead</div></div></section>}>
           <section className="proof-strip" aria-label="Approval promise">
             <div className="page-frame proof-grid">
-              <div><StatusDot /> We search and prepare</div>
-              <div><StatusDot /> You review and approve</div>
-              <div><StatusDot /> Nothing is submitted without your go-ahead</div>
-              <div><StatusDot /> Every application remains visible</div>
+              <div><span className="proof-step">01</span><StatusDot /> <span>We search and prepare</span></div>
+              <div><span className="proof-step">02</span><StatusDot /> <span>You review and approve</span></div>
+              <div><span className="proof-step">03</span><StatusDot /> <span>Nothing is submitted without your go-ahead</span></div>
+              <div><span className="proof-step">04</span><StatusDot /> <span>Every application remains visible</span></div>
             </div>
           </section>
         </SectionErrorBoundary>

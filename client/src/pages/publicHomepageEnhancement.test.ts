@@ -58,6 +58,9 @@ describe("public homepage enhancement contracts", () => {
     expect(styles).toContain(".hero-stats-grid > div::before");
     expect(styles).toContain(".plan-card::before");
     expect(styles).toContain(".brand::after");
+    expect(styles).toContain(".proof-step");
+    expect(home).toContain('className="proof-step">01');
+    expect(arabicHome).toContain('className="proof-step">01');
     expect(styles).toContain("prefers-reduced-motion");
     expect(styles).toContain("var(--signal)");
   });

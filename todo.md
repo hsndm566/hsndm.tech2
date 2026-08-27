@@ -805,3 +805,5 @@
 - [x] Install and apply reusable UI/UX Pro Max guidance, research compatible open-source components, and implement theme-preserving public-site enhancements with responsive, accessibility, and performance validation.
 - [x] Extend the public-site enhancement using a selected MIT Bklit UI component pattern, retain factual data and the existing visual system, validate English/Arabic responsive behavior, and publish only after verification.
 - [x] Extend the Bklit-inspired public proof and pricing surfaces with factual signal-card hierarchy and stronger brand-mark presence, while preserving existing messaging, prices, and public-site safety boundaries.
+- [x] Extend the existing pricing and approval-proof surfaces with an accessible operational-ledger visual system while preserving their current public copy, prices, and CTA destinations.
+- [ ] Save the referenced nextlevelbuilder UI/UX Pro Max repository as a reusable project skill and continue the public-site enhancement in focused, validated stages without changing the existing theme.

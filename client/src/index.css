@@ -514,6 +514,7 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
 .active-process::before, .process-item:focus-within::before { transform: scaleY(1); }
 .proof-grid > div { position: relative; overflow: hidden; transition: color .18s ease, background .18s ease; }
 .proof-grid > div::after { position: absolute; inset: auto 0 0; height: 2px; background: var(--signal); content: ""; transform: scaleX(0); transform-origin: inline-start; transition: transform .2s cubic-bezier(.23,1,.32,1); }
+.proof-step { align-self: flex-start; color: var(--signal); font-family: "DM Mono", monospace; font-size: 8px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
 .brand { gap: 11px; }
 .brand-mark { width: 30px; height: 30px; }
 .brand::after { width: 13px; height: 2px; display: block; background: var(--signal); content: ""; }
@@ -542,4 +543,5 @@ h2 { max-width: 730px; margin: 20px 0 19px; font-size: clamp(39px, 4vw, 61px); l
   .brand-mark { width: 26px; height: 26px; }
   .brand::after { width: 10px; }
   .hero-activity { width: 100%; min-height: 30px; padding: 8px 9px; font-size: 8px !important; }
+  .proof-step { width: 21px; flex: 0 0 21px; }
 }
