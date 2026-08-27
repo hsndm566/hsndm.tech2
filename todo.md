@@ -820,3 +820,4 @@
 - [x] Refine bilingual campaign-status and confirmation-route state hierarchy while preserving all truthful progress, privacy, contact, and approval boundaries.
 - [x] Refine protected dashboard and settings loading, signed-out, and zero-data hierarchy while preserving authentication boundaries, real data states, and Arabic RTL behavior.
 - [x] Refine protected dashboard loading skeleton hierarchy and narrow-screen stability without rendering or inferring any candidate data before it is available.
+- [x] Verify the user-reported absence of visible refurbishment changes by comparing the managed project deployment with the external public domain, then resolve only a verified serving or cache mismatch.
