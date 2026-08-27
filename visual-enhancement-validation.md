@@ -33,3 +33,7 @@ The English and Arabic enquiry routes were checked at 1280×900 and 375×812. Th
 ## Pricing comparison navigation
 
 The English and Arabic pricing routes were reviewed at 1280×900 and 375×812. The comparison retains its existing plan values, campaign-scope statements, payment-not-connected explanation, and enquiry destinations. At both widths, the table stays readable within the intended horizontal comparison container, with an explicit instruction to swipe, scroll, or use left/right arrow keys. The region now accepts keyboard focus with a signal-orange focus ring, while Arabic headings and values align to the RTL reading direction. No purchase, checkout, plan-selection, or payment behavior was introduced.
+
+## Services decision hierarchy
+
+The English and Arabic services pages were reviewed at 1280×900 and 375×812. The page now introduces the two existing service tracks with a concise, factual choice note and uses numbered operational labels, signal rails, and consistently sized action controls to distinguish the job-search and business-system conversations. The cards stack without clipping on a phone and retain their RTL order in Arabic. Initial visual review identified action text obscured by a more-specific global link rule; explicit white label color was restored and the desktop and mobile renders were rechecked. Neither route starts work, collects payment, or changes the existing enquiry/WhatsApp destinations.

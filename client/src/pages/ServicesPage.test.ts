@@ -11,4 +11,13 @@ describe("ServicesPage", () => {
     expect(source).toContain("أنظمة الويب والتشغيل");
     expect(source).toContain("لا تُجمع مدفوعات من هذه الصفحة");
   });
+
+  it("makes the two bilingual service routes explicit and keeps the external discussion link safely isolated", () => {
+    expect(source).toContain("01 / JOB SEARCH");
+    expect(source).toContain("02 / BUSINESS SYSTEM");
+    expect(source).toContain("01 / البحث عن عمل");
+    expect(source).toContain("02 / نظام أعمال");
+    expect(source).toContain("CHOOSE A STARTING POINT");
+    expect(source).toContain('rel="noopener noreferrer"');
+  });
 });

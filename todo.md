@@ -815,3 +815,4 @@
 - [ ] Run and record whole-site desktop/mobile, English/Arabic, accessibility, reduced-motion, and production-build verification before completing the refurbishment program.
 - [x] Refine the English and Arabic enquiry pre-handoff review state as a clear second operational stage while preserving current contact choices, consent gating, handoff behavior, plan context, and CV-device privacy.
 - [x] Refine bilingual pricing comparison navigation and narrow-screen guidance while preserving all plan values, scope, payment boundaries, and enquiry CTA destinations.
+- [x] Refine bilingual service-track hierarchy and decision cues while preserving existing services, factual scope language, WhatsApp/enquiry destinations, and RTL behavior.
