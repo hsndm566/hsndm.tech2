@@ -37,3 +37,7 @@ The English and Arabic pricing routes were reviewed at 1280×900 and 375×812. T
 ## Services decision hierarchy
 
 The English and Arabic services pages were reviewed at 1280×900 and 375×812. The page now introduces the two existing service tracks with a concise, factual choice note and uses numbered operational labels, signal rails, and consistently sized action controls to distinguish the job-search and business-system conversations. The cards stack without clipping on a phone and retain their RTL order in Arabic. Initial visual review identified action text obscured by a more-specific global link rule; explicit white label color was restored and the desktop and mobile renders were rechecked. Neither route starts work, collects payment, or changes the existing enquiry/WhatsApp destinations.
+
+## Information-page reading guide
+
+The English how-it-works, support, privacy, terms, case-study, and campaign-report sample routes were reviewed at 1280×900. Their Arabic counterparts were reviewed at 375×812. The shared page layout now provides a bilingual reading guide with visible numbered anchors before the existing section cards, and each card is an explicit labelled landmark target. Across the long Arabic legal and illustrative pages, headings, guide links, cards, notices, and the campaign CTA remain readable with a stable RTL stack and no observed clipping or overflow. The implementation retains the original policy, support, owner-reported, and illustrative-content wording; it adds only navigational structure, focus feedback, and visual hierarchy.

@@ -1,7 +1,6 @@
-import { ArrowLeft, ArrowUpRight, ShieldCheck } from "lucide-react";
-import { Link } from "wouter";
 import { useEffect } from "react";
 import { applyPageSeo } from "@/lib/seo";
+import { InformationPageLayout } from "@/components/InformationPageLayout";
 
 type PageKind = "how" | "support" | "privacy" | "terms" | "case" | "sample";
 type Section = { heading: string; detail: string };
@@ -89,5 +88,5 @@ export default function InformationPage({ kind, language = "en" }: { kind: PageK
       ? (language === "ar" ? "دعم حملات التقديم في السعودية | AutoApply SA" : "Saudi Job Campaign Support | AutoApply SA")
       : `${content.title} | AutoApply SA`;
   useEffect(() => { applyPageSeo({ title: seoTitle, description: content.intro, path }); }, [content.intro, path, seoTitle]);
-  return <main className="min-h-screen bg-[#f3f0e9] text-[#151515]" lang={language === "ar" ? "ar" : "en"} dir={language === "ar" ? "rtl" : "ltr"}><header className="border-b border-black/10 bg-[#fbf9f5]"><div className="page-frame flex items-center justify-between py-5"><Link href={root} className="font-bold">AutoApply <em className="text-[#e5482a]">SA</em></Link><Link href={root} className="flex items-center gap-1 font-mono text-xs">{language === "ar" ? "العودة للرئيسية" : "BACK TO HOME"}<ArrowLeft size={14} /></Link></div></header><section className="page-frame max-w-4xl py-16"><p className="font-mono text-xs text-[#e5482a]">{content.kicker}</p><h1 className="mt-4 text-4xl font-bold tracking-tight md:text-6xl">{content.title}</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-black/70">{content.intro}</p>{content.reviewNote ? <aside className="mt-7 border-s-4 border-[#e5482a] bg-white p-4 text-sm leading-6 text-black/75" role="note">{content.reviewNote}</aside> : null}<div className="mt-12 grid gap-5 md:grid-cols-2">{content.sections.map((section, index) => <article key={section.heading} className="border border-black/10 bg-white p-6"><span className="font-mono text-xs text-[#e5482a]">{String(index + 1).padStart(2, "0")}</span><h2 className="mt-3 text-xl font-bold">{section.heading}</h2><p className="mt-3 leading-7 text-black/70">{section.detail}</p></article>)}</div><div className="mt-12 flex flex-col items-start justify-between gap-5 border border-black/10 bg-[#151515] p-7 text-white md:flex-row md:items-center"><div><div className="flex items-center gap-2 text-sm"><ShieldCheck size={17} className="text-[#e5482a]" /><b>{language === "ar" ? "الخطوة التالية تبقى بيدك" : "Your next step remains yours"}</b></div><p className="mt-2 text-sm text-white/70">{language === "ar" ? "ابدأ بملخص واضح، ثم أكّد ما تريد إرساله." : "Start with a clear brief, then confirm what you want to send."}</p></div><Link href={language === "ar" ? "/ar/enquire" : "/enquire"} className="flex items-center gap-2 bg-[#f3f0e9] px-5 py-3 font-mono text-xs" style={{ color: "#151515" }}>{language === "ar" ? "ابدأ الحملة" : "START A CAMPAIGN"}<ArrowUpRight size={15} /></Link></div></section></main>;
+  return <InformationPageLayout content={content} language={language} root={root} />;
 }
