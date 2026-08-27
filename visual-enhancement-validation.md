@@ -17,3 +17,5 @@ The independent style review found the established operational-ledger identity c
 ## Bklit status-pattern extension
 
 The later Bklit UI status-pattern extension was checked at 375×812 in English and Arabic. The first viewport retains readable bilingual hero copy, primary campaign CTA, and the existing editorial visual hierarchy. The campaign activity treatment remains below the primary conversion content, so it does not compete with the CTA or fixed mobile contact controls. The animation is CSS-only and disabled under reduced-motion preferences.
+
+The desktop metric-card refinement was initially found to overlap the English hero’s campaign-note area. The final correction returns metrics and the status chip to normal document flow at widths above 680px, so the hero expands to fit them instead of overlaying the campaign copy. The corrected 1440×900 English and Arabic renders show the approval copy, CTAs, ledger, factual metric cards, and status treatment as separate readable regions.

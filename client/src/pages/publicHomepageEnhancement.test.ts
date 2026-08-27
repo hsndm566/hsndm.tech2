@@ -55,6 +55,9 @@ describe("public homepage enhancement contracts", () => {
     expect(styles).toContain(".proof-grid > div::after");
     expect(styles).toContain(".process-item::before");
     expect(styles).toContain(".bklit-shimmer-status");
+    expect(styles).toContain(".hero-stats-grid > div::before");
+    expect(styles).toContain(".plan-card::before");
+    expect(styles).toContain(".brand::after");
     expect(styles).toContain("prefers-reduced-motion");
     expect(styles).toContain("var(--signal)");
   });
