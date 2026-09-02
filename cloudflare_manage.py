@@ -1,26 +1,28 @@
-import urllib.request
 import json
+import os
+import urllib.request
 
-zone_id = "f5249271f49ed2d34cb62a00d2ad078a"
-tokens = [
-    ("Token 1", "cfat_kT3VgHHyYX1DELLFJ3gnFC7yXF6t9vyzmftzMAqP1ccef33f"),
-    ("Token 2", "cfat_6FeUBmiKPxKc3D2YSICZCS0AQhNuckfJJ4kFf4to6b621ae5")
-]
 
-for label, token in tokens:
-    print(f"Testing {label} for DNS records...")
+def main() -> None:
+    zone_id = os.environ.get("CLOUDFLARE_ZONE_ID", "").strip()
+    token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
+    if not zone_id or not token:
+        raise SystemExit("Set CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_TOKEN before running this helper.")
+
     req = urllib.request.Request(
         f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records",
         headers={
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json"
-        }
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
     )
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-            print(f"  {label} SUCCESS:", data.get("success"))
-            for r in data.get("result", []):
-                print(f"    {r.get('type')} {r.get('name')} -> {r.get('content')}")
-    except Exception as e:
-        print(f"  {label} FAILED:", e)
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        data = json.loads(resp.read().decode())
+
+    print("Cloudflare DNS records:", "ok" if data.get("success") else "failed")
+    for record in data.get("result", []):
+        print(f"{record.get('type')} {record.get('name')} -> {record.get('content')}")
+
+
+if __name__ == "__main__":
+    main()
