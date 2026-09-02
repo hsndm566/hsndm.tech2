@@ -36,6 +36,15 @@ describe("public homepage enhancement contracts", () => {
     expect(home).toContain('trackEngagement("plan_selected"');
   });
 
+  it("routes bilingual account actions to the Cloudflare-hosted portal", () => {
+    expect(home).toContain('href="https://app.hsndm.tech/sign-in"');
+    expect(home).toContain('href="https://app.hsndm.tech/sign-up"');
+    expect(home).toContain("Create account");
+    expect(arabicHome).toContain('href="https://app.hsndm.tech/sign-in"');
+    expect(arabicHome).toContain('href="https://app.hsndm.tech/sign-up"');
+    expect(arabicHome).toContain("إنشاء حساب");
+  });
+
   it("uses route-derived document direction, visible-by-default public sections, and static FAQ metadata", () => {
     expect(app).toContain('root.dir = isArabicRoute ? "rtl" : "ltr"');
     expect(home).toContain("<LazyMount>");
@@ -65,3 +74,4 @@ describe("public homepage enhancement contracts", () => {
     expect(styles).toContain("var(--signal)");
   });
 });
+

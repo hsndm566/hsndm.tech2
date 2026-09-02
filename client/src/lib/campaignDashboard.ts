@@ -1,6 +1,6 @@
 /**
  * Public campaign API origin. DNS routes this hostname to the isolated AutoApply SA
- * Render backend so candidate links never expose an infrastructure-provider URL.
+ * Edge API so candidate links never expose an infrastructure-provider URL.
  */
 export const CAMPAIGN_API_BASE = "https://api.hsndm.tech";
 
@@ -194,3 +194,4 @@ export function getCvVersionTag(application: VerifiedApplication, allApplication
   const versionNum = index >= 0 ? index + 1 : 1;
   return `CV v${versionNum}`;
 }
+

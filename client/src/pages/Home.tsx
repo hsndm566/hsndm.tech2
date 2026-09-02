@@ -443,7 +443,10 @@ export default function Home() {
         <Link className="mobile-ats-link" href="/ats">ATS check</Link>
         <div className="nav-actions">
           <LanguageTransitionLink className="language-toggle is-english" href="/ar" lang="ar"><span>English</span><span>العربية</span></LanguageTransitionLink>
-          <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
+          <div className="account-actions" aria-label="Account actions">
+            <a className="account-sign-in" href="https://app.hsndm.tech/sign-in">Sign in</a>
+            <a className="button button-ink button-small" href="https://app.hsndm.tech/sign-up">Create account <ArrowUpRight size={15} /></a>
+          </div>
           <button
             className="mobile-menu-button"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -468,6 +471,8 @@ export default function Home() {
               </button>
             ))}
             <Link href="/ats"><span>06</span> Free ATS review <ArrowDownRight size={18} /></Link>
+            <a href="https://app.hsndm.tech/sign-in"><span>07</span> Sign in <ArrowDownRight size={18} /></a>
+            <a className="mobile-account-primary" href="https://app.hsndm.tech/sign-up"><span>08</span> Create your account <ArrowDownRight size={18} /></a>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               Talk to the team <MessageCircle size={18} />
             </a>
@@ -938,3 +943,4 @@ export default function Home() {
     </div>
   );
 }
+

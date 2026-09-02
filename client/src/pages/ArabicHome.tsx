@@ -237,9 +237,13 @@ export default function ArabicHome() {
         <Link className="mobile-ats-link" href="/ats">فحص ATS</Link>
         <div className="nav-actions">
           <LanguageTransitionLink href="/" className="language-toggle is-arabic"><span>English</span><span>العربية</span></LanguageTransitionLink>
+          <div className="account-actions" aria-label="إجراءات الحساب">
+            <a className="account-sign-in" href="https://app.hsndm.tech/sign-in">تسجيل الدخول</a>
+            <a className="button button-ink button-small" href="https://app.hsndm.tech/sign-up">إنشاء حساب <ArrowUpRight size={15} /></a>
+          </div>
           <button className="mobile-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={menuOpen}>{menuOpen ? <X size={21} /> : <Menu size={22} />}</button>
         </div>
-        {menuOpen && <nav className="mobile-nav" aria-label="روابط الجوال"><a href="#how" onClick={() => setMenuOpen(false)}><span>01</span> كيف يعمل <MoveLeft size={18} /></a><a href="#reviews" onClick={() => setMenuOpen(false)}><span>02</span> لمن تناسب الخدمة <MoveLeft size={18} /></a><a href="#approval" onClick={() => setMenuOpen(false)}><span>03</span> ما الذي توافق عليه <MoveLeft size={18} /></a><a href="#pricing" onClick={() => setMenuOpen(false)}><span>04</span> الباقات <MoveLeft size={18} /></a><Link href="/ats" onClick={() => setMenuOpen(false)}><span>05</span> فحص ATS المجاني <MoveLeft size={18} /></Link></nav>}
+        {menuOpen && <nav className="mobile-nav" aria-label="روابط الجوال"><a href="#how" onClick={() => setMenuOpen(false)}><span>01</span> كيف يعمل <MoveLeft size={18} /></a><a href="#reviews" onClick={() => setMenuOpen(false)}><span>02</span> لمن تناسب الخدمة <MoveLeft size={18} /></a><a href="#approval" onClick={() => setMenuOpen(false)}><span>03</span> ما الذي توافق عليه <MoveLeft size={18} /></a><a href="#pricing" onClick={() => setMenuOpen(false)}><span>04</span> الباقات <MoveLeft size={18} /></a><Link href="/ats" onClick={() => setMenuOpen(false)}><span>05</span> فحص ATS المجاني <MoveLeft size={18} /></Link><a href="https://app.hsndm.tech/sign-in"><span>06</span> تسجيل الدخول <MoveLeft size={18} /></a><a className="mobile-account-primary" href="https://app.hsndm.tech/sign-up"><span>07</span> إنشاء حساب <MoveLeft size={18} /></a></nav>}
       </header>
 
       <SectionErrorBoundary name="arabic-marketing-home" fallback={<main id="top" dir="rtl" />}>
@@ -344,3 +348,4 @@ export default function ArabicHome() {
     </div>
   );
 }
+
