@@ -1,0 +1,6 @@
+name = "hsndm-tech"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "dist/public"
+
+[vars]
+VITE_API_BASE_URL = "https://api.hsndm.tech"
