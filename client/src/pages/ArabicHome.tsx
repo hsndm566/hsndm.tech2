@@ -23,7 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import React, { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
-import HeroMedia from "@/components/HeroMedia";
+import { SaudiHero } from "@/components/SaudiHero";
 import { BklitShimmeringStatus } from "@/components/BklitShimmeringStatus";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { demoLists } from "@/lib/careerTaxonomy";
@@ -228,7 +228,7 @@ export default function ArabicHome() {
       <a className="skip-link" href="#how">انتقل إلى شرح الخدمة</a>
       <header className="topbar" aria-label="التنقل الرئيسي">
         <Link className="brand" href="/ar" aria-label="الصفحة الرئيسية AutoApply SA">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
+          <ArrowUpRight className="saudi-brand-symbol" size={28} aria-hidden="true" />
           <span>AutoApply <em>SA</em></span>
         </Link>
         <nav className="desktop-nav" aria-label="روابط الصفحة">
@@ -249,28 +249,7 @@ export default function ArabicHome() {
       <SectionErrorBoundary name="arabic-marketing-home" fallback={<main id="top" dir="rtl" />}>
       <main id="top">
         <SectionErrorBoundary name="arabic-hero" fallback={<section className="hero" aria-labelledby="arabic-hero-heading"><div className="hero-content page-frame"><div className="hero-lead"><h1 id="arabic-hero-heading">نُعِدّ طلباتك للوظائف. وأنت توافق قبل الإرسال.</h1><p>أخبرنا بالوظائف التي تريدها. لا يُرسل أي شيء حتى توافق.</p></div></div></section>}>
-        <section className="hero" aria-labelledby="arabic-hero-heading">
-          <HeroMedia alt="محترف يراجع طلبات توظيف عبر جهاز محمول" />
-          <div className="hero-structure" aria-hidden="true"><span className="hero-grid-line one" /><span className="hero-grid-line two" /><span className="hero-grid-line three" /></div>
-          <div className="hero-content page-frame" dir="rtl">
-            <div className="hero-lead" dir="rtl">
-              <div className="eyebrow light"><StatusDot /> دعم حملة بعد موافقتك <span /> جدة، المملكة العربية السعودية</div>
-              <h1 id="arabic-hero-heading"><span data-anime-hero-word>نُعِدّ طلباتك</span><br /><span data-anime-hero-word>للوظائف.</span>{" "}<span data-anime-hero-word>وأنت توافق</span><br /><i><span data-anime-hero-word>قبل الإرسال.</span></i></h1>
-              <p>أخبرنا بالوظائف التي تريدها. نبحث عن فرص حقيقية ونكتب طلبات مخصّصة لكل فرصة. لا يُرسل أي شيء حتى توافق.</p>
-              <div className="hero-actions"><a className="button button-ink" href="#pricing" onClick={() => trackEngagement("hero_start_campaign_click", { page: window.location.pathname, language: "Arabic" })}>ابدأ خطة التقديم <ArrowUpRight size={18} /></a><a className="text-button light-text" href="#how" onClick={() => trackEngagement("hero_see_plans_click", { page: window.location.pathname, language: "Arabic" })}>كيف تعمل الخدمة؟ <MoveLeft size={18} /></a></div>
-              <p className="mt-2 text-xs font-mono text-[#151515]/70">لا يتم إرسال أي طلب أو دفع اليوم.</p>
-              <div className="hero-note">ابتداءً من 99 ريال شهرياً <b /> دون بطاقة لبدء المحادثة</div>
-              <div className="hero-trust-row" aria-label="معلومات موثوقة عن الحملة"><span><ShieldCheck size={14} /> توافق على الوظائف المستهدفة</span><span>تحدد الحجم والتواريخ</span><span>يمكنك الإيقاف في أي وقت</span><span>كل طلب مسجّل</span><span>دعم مركّز على السعودية</span></div>
-            </div>
-            <div className="hero-ledger" dir="rtl" aria-label="حالة محرك التقديم">
-              <div className="ledger-topline"><span>محرّك التقديم</span><span>نشط / على مدار 24 ساعة</span></div>
-              <div className="ledger-route"><div><StatusDot /> تمت قراءة السيرة الذاتية</div><span /><div><StatusDot /> جارٍ مطابقة الوظائف</div><span /><div><StatusDot tone="quiet" /> جارٍ التقديم</div></div>
-              <div className="ledger-record"><span className="record-number">03</span><div><b>جاهز للتقديم</b><small>تمت مطابقة المهارات والخبرة واللغة</small></div><ArrowUpRight size={16} /></div>
-              <div className="ledger-queue"><div className="queue-heading"><span>قائمة الحملة / معاينة</span><b>جدة · السعودية</b></div><div><StatusDot /> سيرتك الذاتية جاهزة</div><div><StatusDot /> جارٍ مطابقة الوظائف</div></div>
-            </div>
-            <div className="hero-stats" dir="rtl"><div className="hero-stats-grid"><div><strong>500+</strong><span>معاينة · وظائف سعودية تمت مراجعتها</span></div><div><strong>24/7</strong><span>محرّك يعمل على مدار الساعة</span></div><div><strong>2</strong><span>لغتان مدعومتان</span></div></div><p className="hero-activity"><StatusDot /> <BklitShimmeringStatus>عمليات الحملة ضمن خطتك المعتمدة فقط</BklitShimmeringStatus></p></div>
-	          </div>
-	        </section>
+        <SaudiHero arabic />
 	        </SectionErrorBoundary>
 
 

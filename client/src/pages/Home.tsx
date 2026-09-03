@@ -3,7 +3,7 @@
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
-import HeroMedia from "@/components/HeroMedia";
+import { SaudiHero } from "@/components/SaudiHero";
 import { BklitShimmeringStatus } from "@/components/BklitShimmeringStatus";
 import { DeferredExplainerVideo } from "@/components/DeferredExplainerVideo";
 import { HomepageMediaImage } from "@/components/HomepageMediaImage";
@@ -427,7 +427,7 @@ export default function Home() {
       <a className="skip-link" href="#how">Skip to how it works</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
+          <ArrowUpRight className="saudi-brand-symbol" size={28} aria-hidden="true" />
           <span>AutoApply <em>SA</em></span>
         </a>
 
@@ -483,72 +483,7 @@ export default function Home() {
       <SectionErrorBoundary name="marketing-home" fallback={<main id="top" />}>
       <main id="top">
         <SectionErrorBoundary name="hero" fallback={<section className="hero" aria-labelledby="hero-heading"><div className="hero-content page-frame"><div className="hero-lead"><h1 id="hero-heading">We prepare your job applications. You approve before we send.</h1><p>Tell us the roles you want. Nothing goes out until you say yes.</p></div></div></section>}>
-        <section className="hero" aria-labelledby="hero-heading">
-          <HeroMedia alt="Professional reviewing a job application at a laptop" />
-          <div className="hero-structure" aria-hidden="true">
-            <span className="hero-grid-line one" />
-            <span className="hero-grid-line two" />
-            <span className="hero-grid-line three" />
-          </div>
-          <div className="hero-content page-frame">
-            <div className="hero-lead">
-              <div className="eyebrow light"><StatusDot /> Approval-led campaign support <span /> Jeddah, Saudi Arabia</div>
-              <h1 id="hero-heading">
-                <span data-anime-hero-word>We prepare</span>{" "}<span data-anime-hero-word>your job</span><br />
-                <span data-anime-hero-word>applications.</span>{" "}<span data-anime-hero-word>You approve</span><br />
-                <span data-anime-hero-word>before we send.</span>
-              </h1>
-              <p>
-                Tell us the roles you want. We find real openings and draft tailored applications for each one. Nothing goes out until you say yes.
-              </p>
-              <div className="hero-actions">
-                <button className="button button-ink" onClick={() => { trackEngagement("hero_start_campaign_click", { page: window.location.pathname }); scrollTo("pricing"); }}>Start your campaign plan <ArrowDownRight size={18} /></button>
-                <button className="text-button light-text" onClick={() => { trackEngagement("hero_see_plans_click", { page: window.location.pathname }); scrollTo("how"); }}>
-                  See how it works <MoveRight size={18} />
-                </button>
-              </div>
-              <p className="mt-2 text-xs font-mono text-[#151515]/70">No payment or application is sent today.</p>
-              <div className="hero-note">From 99 SAR / month <b /> no card needed to begin a conversation</div>
-              <div className="hero-trust-row" aria-label="Campaign trust details"><span><ShieldCheck size={14} /> You approve role targets</span><span>Set volume &amp; dates</span><span>Pause anytime</span><span>Every application is logged</span><span>Saudi-focused support</span></div>
-            </div>
-
-              <div className="hero-ledger" aria-label="Application engine status">
-                <div className="ledger-topline">
-                  <span>APPLICATION ENGINE</span>
-                  <span>LIVE / 24H</span>
-                </div>
-              <div className="ledger-route">
-                <div><StatusDot /> CV read</div>
-                <span />
-                <div><StatusDot /> Roles matched</div>
-                <span />
-                <div><StatusDot tone="quiet" /> Applying</div>
-              </div>
-              <div className="ledger-record">
-                <span className="record-number">03</span>
-                <div>
-                  <b>Ready to apply</b>
-                  <small>Skills, experience & language mapped</small>
-                </div>
-                <ArrowUpRight size={16} />
-              </div>
-              <div className="ledger-queue" aria-label="Saudi Arabia campaign workflow preview">
-                <div className="queue-heading"><span>CAMPAIGN QUEUE / PREVIEW</span><b>JEDDAH · SA</b></div>
-                <div><StatusDot /> Your CV is ready</div>
-                <div><StatusDot /> Roles being matched</div>
-              </div>
-            </div>
-
-            <div className="hero-stats">
-              <div className="hero-stats-grid">
-                <div><strong>500+</strong><span>Preview · Saudi roles reviewed</span></div>
-                <div><strong>24/7</strong><span>Engine in motion</span></div>
-                <div><strong>2</strong><span>Languages supported</span></div>
-              </div>
-              <p className="hero-activity" aria-live="polite"><StatusDot /> <BklitShimmeringStatus>{latestActivityText.includes("operations") ? latestActivityText : `Last application sent: ${latestActivityText}`}</BklitShimmeringStatus></p>
-            </div>
-          </div>
-        </section>
+        <SaudiHero />
         </SectionErrorBoundary>
 
         <SectionErrorBoundary name="approval-promise" fallback={<section className="proof-strip" aria-label="Approval promise"><div className="page-frame proof-grid"><div><StatusDot /> Nothing is submitted without your go-ahead</div></div></section>}>
