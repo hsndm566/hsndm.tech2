@@ -1,0 +1,69 @@
+/* A calmer editorial hierarchy, shared by the English and Arabic marketing pages. */
+.site-shell .topbar { height: 82px; background: rgba(245,242,235,.96); backdrop-filter: blur(16px); }
+.site-shell .brand { font-size: 20px; }
+.site-shell .account-actions .button { border-radius: 7px; }
+.site-shell .hero { background: #f8f6f1; }
+.site-shell .hero-content { min-height: 700px; padding-block: 64px 40px; }
+.site-shell .hero-lead { width: min(660px, 57%); padding: 24px; margin-inline-start: -24px; border-radius: 18px; background: rgba(248,246,241,.94); }
+.site-shell .hero-lead h1 { margin-block: 25px 24px; font-size: clamp(40px,4.4vw,64px); line-height: 1.06; letter-spacing: -.065em; text-wrap: balance; }
+.site-shell .hero-lead > p:not(.font-mono) { max-width: 33rem; font-size: 16px; line-height: 1.8; }
+.site-shell .hero-lead .eyebrow { line-height: 1.8; color: var(--signal-text-strong); }
+.site-shell .hero-actions { gap: 20px; margin-top: 28px; }
+.site-shell .hero-actions .button { min-height: 54px; padding-inline: 24px; border-radius: 8px; }
+.site-shell .hero-trust-row { max-width: 36rem; gap: 9px 16px; padding-top: 16px; font-size: 10px; }
+.site-shell .hero-ledger { border-radius: 16px; padding: 24px; background: rgba(255,255,255,.97); border-color: rgba(21,21,21,.13); box-shadow: 0 24px 60px rgba(50,39,23,.1); }
+.site-shell .ledger-topline { padding-bottom: 16px; line-height: 1.6; }
+.site-shell .ledger-record { padding-block: 24px; }
+.site-shell .record-number { color: var(--signal-text); }
+.site-shell .ledger-queue { border-radius: 8px; }
+.site-shell .hero-stats-grid > div { border-radius: 6px; background: rgba(248,246,241,.93); }
+.site-shell .hero-activity { border-radius: 6px; }
+.site-shell .proof-grid { padding-block: 12px; gap: 10px; }
+.site-shell .proof-grid > div { line-height: 1.7; }
+.site-shell .section-summary { font-size: 16px; line-height: 1.9; }
+.site-shell .process-content p { font-size: 14px; line-height: 1.9; }
+.site-shell .process-content h3 { letter-spacing: -.04em; }
+.site-shell .plan-card { border-radius: 10px; }
+.site-shell .faq-item button { min-height: 76px; }
+.site-shell .faq-answer p { font-size: 14px; line-height: 1.85; }
+.site-shell .faq-item.open .faq-answer { max-height: 650px; }
+.site-shell .button:focus-visible, .site-shell a:focus-visible, .site-shell button:focus-visible { outline: 3px solid var(--signal-text); outline-offset: 5px; }
+.site-shell[lang="ar"] .hero-lead { background: rgba(248,246,241,.94); }
+.site-shell[lang="ar"] .hero-lead h1 { font-size: clamp(36px,4.1vw,59px); line-height: 1.52; letter-spacing: normal; }
+.site-shell[lang="ar"] .hero-lead p, .site-shell[lang="ar"] .process-content p { line-height: 2; }
+.site-shell[lang="ar"] .process-content h3 { letter-spacing: normal; }
+@media (min-width: 1100px) {
+  .site-shell .hero-ledger { width: min(35%,420px); inset-inline-end: 0; top: 145px; }
+}
+@media (max-width: 1100px) {
+  .site-shell .desktop-nav { gap: 14px; margin-inline-end: 18px; }
+  .site-shell .hero-lead h1 { font-size: clamp(38px,5vw,56px); }
+}
+@media (max-width: 800px) {
+  .site-shell .topbar { height: 72px; }
+  .site-shell .hero-content { min-height: 0; padding-block: 30px; }
+  .site-shell .hero-lead { width: 100%; margin: 0; padding: 24px; background: rgba(248,246,241,.97); }
+  .site-shell .hero-lead h1 { font-size: clamp(34px,7vw,52px); }
+  .site-shell .hero-ledger { position: relative; inset: auto; width: 100%; max-width: none; margin-top: 24px; }
+  .site-shell .hero-stats { width: 100%; position: static; margin-top: 24px; }
+  .site-shell .hero-media { opacity: .4; }
+  .site-shell .hero-structure { opacity: .3; }
+  .site-shell .proof-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .site-shell .proof-grid > div { padding: 14px; border: 0; }
+  .site-shell .proof-grid > div:first-child { padding-inline-start: 14px; }
+}
+@media (max-width: 480px) {
+  .site-shell .page-frame { width: calc(100% - 32px); }
+  .site-shell .hero-lead { padding: 20px 16px; }
+  .site-shell .hero-lead h1 { font-size: 35px; line-height: 1.13; }
+  .site-shell[lang="ar"] .hero-lead h1 { font-size: 34px; line-height: 1.55; }
+  .site-shell .hero-actions { flex-direction: column; align-items: stretch; gap: 16px; }
+  .site-shell .hero-actions .text-button { min-height: 44px; justify-content: center; }
+  .site-shell .hero-ledger { padding: 20px; }
+  .site-shell .hero-lead .eyebrow { font-size: 9px; flex-wrap: wrap; }
+  .site-shell .mobile-nav a, .site-shell .mobile-nav button { min-height: 44px; }
+  .site-shell .faq-answer p { padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell *, .site-shell *::before, .site-shell *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

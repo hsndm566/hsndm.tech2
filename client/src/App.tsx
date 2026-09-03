@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import "./updates.css";
 import "./saudi-experience.css";
 import "./public-content-policy.css";
+import "./interface-refinement.css";
 
 const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
 const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
