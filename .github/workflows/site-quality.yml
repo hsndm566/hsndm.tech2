@@ -1,0 +1,67 @@
+name: Public Site Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-site-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Production static build
+        run: pnpm build:pages
+
+      - name: Verify public-site checklist
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s dist/public/index.html
+          test -s dist/public/404.html
+          test -s dist/public/robots.txt
+          test -s dist/public/sitemap.xml
+          test -s dist/public/llms.txt
+          grep -q 'rel="canonical"' dist/public/index.html
+          grep -q 'ProfessionalService' dist/public/index.html
+          grep -q 'AutoApply SA' dist/public/index.html
+          grep -q 'Page Not Found | AutoApply SA' dist/public/404.html
+          grep -q 'https://www.hsndm.tech/sitemap.xml' dist/public/robots.txt
+          if find dist/public -type f -name '*.map' -print -quit | grep -q .; then
+            echo 'Production source maps found unexpectedly.' >&2
+            exit 1
+          fi
+          if grep -R -E '<title>\s*(Vite|React|Vite \+ React)' dist/public --include='*.html'; then
+            echo 'Default framework title found in production output.' >&2
+            exit 1
+          fi
