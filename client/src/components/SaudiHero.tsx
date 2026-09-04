@@ -43,7 +43,7 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
         </div>
       </div>
     </div>
-    <div className="saudi-market page-frame"><span>{t ? "مصمم للبحث الوظيفي داخل السعودية" : "BUILT AROUND THE SAUDI JOB SEARCH"}</span><div>{t ? "الرياض" : "Riyadh"}<i/>{t ? "جدة" : "Jeddah"}<i/>{t ? "الدمام" : "Dammam"}<i/>{t ? "ومدن أخرى" : "And beyond"}</div><span>{t ? "العربية + English" : "العربية + English"}</span></div>
+    <div className="saudi-market page-frame"><span>{t ? "مصمم للبحث الوظيفي داخل السعودية" : "BUILT AROUND THE SAUDI JOB SEARCH"}</span><div>{t ? "الرياض" : "Riyadh"}<i/><a className="saudi-jeddah-tab" href="#jeddah">{t ? "جدة · موقعنا" : "Jeddah · Our base"} <ArrowUpRight size={13}/></a><i/>{t ? "الدمام" : "Dammam"}<i/>{t ? "ومدن أخرى" : "And beyond"}</div><span>{t ? "العربية + English" : "العربية + English"}</span></div>
 
     <div className="saudi-visual-gallery page-frame" aria-label={t ? "مرئيات AutoApply SA" : "AutoApply SA visuals"}>
       <figure className="saudi-visual-card saudi-visual-card-wide"><img src={HERO_VISUAL} alt={t ? "AutoApply SA — عمليات حملة التقديم" : "AutoApply SA campaign operations"} width={1600} height={1000} loading="lazy" decoding="async" /><figcaption><b>AutoApply SA</b><span>{t ? "عمليات الحملة" : "Campaign operations"}</span></figcaption></figure>
