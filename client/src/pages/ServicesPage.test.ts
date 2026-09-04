@@ -4,20 +4,28 @@ import { describe, expect, it } from "vitest";
 const source = readFileSync(new URL("./ServicesPage.tsx", import.meta.url), "utf8");
 
 describe("ServicesPage", () => {
-  it("presents both Saudi work tracks without implying checkout or guaranteed outcomes", () => {
-    expect(source).toContain("AutoApply SA");
-    expect(source).toContain("Web & operations systems");
-    expect(source).toContain("This page does not collect payment");
-    expect(source).toContain("أنظمة الويب والتشغيل");
-    expect(source).toContain("لا تُجمع مدفوعات من هذه الصفحة");
+  it("keeps the public services page focused on AutoApply SA in both languages", () => {
+    expect(source).toContain("AUTOAPPLY SA / SERVICES");
+    expect(source).toContain("One service. A clearer job search.");
+    expect(source).toContain("AUTOAPPLY SA / الخدمات");
+    expect(source).toContain("خدمة واحدة. بحث وظيفي أوضح.");
+    expect(source).not.toContain("Web & operations systems");
+    expect(source).not.toContain("أنظمة الويب والتشغيل");
+    expect(source).not.toContain("small businesses");
   });
 
-  it("makes the two bilingual service routes explicit and keeps the external discussion link safely isolated", () => {
-    expect(source).toContain("01 / JOB SEARCH");
-    expect(source).toContain("02 / BUSINESS SYSTEM");
-    expect(source).toContain("01 / البحث عن عمل");
-    expect(source).toContain("02 / نظام أعمال");
-    expect(source).toContain("CHOOSE A STARTING POINT");
-    expect(source).toContain('rel="noopener noreferrer"');
+  it("makes targeting, preparation, approval and real AutoApply imagery explicit", () => {
+    expect(source).toContain("01 / TARGET");
+    expect(source).toContain("02 / PREPARE");
+    expect(source).toContain("03 / APPROVE");
+    expect(source).toContain("01 / الاستهداف");
+    expect(source).toContain("02 / التجهيز");
+    expect(source).toContain("03 / الموافقة");
+    expect(source).toContain("Nothing is submitted without your approval");
+    expect(source).toContain("لا يتم إرسال أي طلب دون موافقتك");
+    expect(source).toContain("autoapply-desk_635170b2.jpg");
+    expect(source).toContain("autoapply-flow_6c03602a.jpg");
+    expect(source).toContain("autoapply-hero-operations_ad007abc.jpg");
+    expect(source).toContain("imageAlt");
   });
 });
