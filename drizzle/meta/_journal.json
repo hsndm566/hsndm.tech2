@@ -71,6 +71,13 @@
       "when": 1787077914821,
       "tag": "0009_steady_ozymandias",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1788543900000,
+      "tag": "0010_application_evidence_stages",
+      "breakpoints": true
     }
   ]
 }
