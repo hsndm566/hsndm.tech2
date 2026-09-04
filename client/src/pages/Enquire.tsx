@@ -100,7 +100,14 @@ export default function Enquire() {
     <main className="journey-page">
       <header className="journey-header page-frame">
         <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+          <img
+            src="/manus-storage/autoapply-symbol_80d77010.png"
+            alt="AutoApply SA brand mark"
+            className="brand-mark"
+            width={42}
+            height={42}
+            style={{ width: 42, height: 42, objectFit: "contain", borderRadius: 12, background: "#fff", padding: 4 }}
+          />
           <span>AutoApply <em>SA</em></span>
         </Link>
         <span className="journey-status"><i /> CAMPAIGN INTAKE / STEP 01</span>
