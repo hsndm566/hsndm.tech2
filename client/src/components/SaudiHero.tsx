@@ -1,10 +1,20 @@
 import { ArrowUpRight, Check, FileText, ShieldCheck } from "lucide-react";
+import { JeddahLocationCard } from "@/components/Map";
+
+const BRAND_MARK = "/manus-storage/autoapply-symbol_80d77010.png";
+const HERO_VISUAL = "/manus-storage/autoapply-hero-operations_ad007abc.jpg";
+const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";
+const DESK_VISUAL = "/manus-storage/autoapply-desk_635170b2.jpg";
 
 export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
   const t = arabic;
   return <section className="saudi-hero" aria-labelledby={t ? "arabic-hero-heading" : "hero-heading"}>
     <div className="saudi-hero-grid page-frame">
       <div className="saudi-intro">
+        <div className="saudi-brand-lockup" aria-label="AutoApply SA">
+          <img src={BRAND_MARK} alt="AutoApply SA brand mark" width={72} height={72} decoding="async" />
+          <div><strong>AutoApply <b>SA</b></strong><span>{t ? "محرك التقديم الوظيفي للسعودية" : "Saudi job-application engine"}</span></div>
+        </div>
         <p className="saudi-eyebrow">{t ? "دعم تقديم وظيفي موجه للسعودية" : "SAUDI-FOCUSED APPLICATION SUPPORT"} <span>{t ? "جدة / السعودية" : "JEDDAH / KSA"}</span></p>
         <h1 id={t ? "arabic-hero-heading" : "hero-heading"}>
           <span data-anime-hero-word>{t ? "طلبات أكثر صلة." : "More relevant applications."}</span>
@@ -19,10 +29,14 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
         <div className="saudi-assurance"><ShieldCheck size={19}/><span>{t ? "اسمك. سيرتك. قرارك قبل الإرسال." : "Your name. Your CV. Your decision before submission."}</span></div>
       </div>
       <div className="saudi-workspace" aria-label={t ? "معاينة توضيحية وليست بيانات حساب حقيقية" : "Illustrative workspace, not real account data"}>
-        <div className="saudi-window"><span className="saudi-window-brand">AutoApply <b>SA</b></span><span>{t ? "مساحة الحملة / معاينة" : "CAMPAIGN WORKSPACE / PREVIEW"}</span></div>
+        <div className="saudi-window"><span className="saudi-window-brand"><img src={BRAND_MARK} alt="" width={28} height={28} /> AutoApply <b>SA</b></span><span>{t ? "مساحة الحملة / معاينة" : "CAMPAIGN WORKSPACE / PREVIEW"}</span></div>
         <div className="saudi-workspace-body">
           <div className="saudi-preview-heading"><div><p>{t ? "قائمة طلباتك" : "YOUR APPLICATION QUEUE"}</p><h2>{t ? "كل شيء أمامك." : "Everything in view."}</h2></div><span className="saudi-avatar" aria-hidden="true">SA</span></div>
           <div className="saudi-profile"><FileText size={26}/><div><strong>{t ? "السيرة جاهزة كبداية" : "Your profile is the starting point"}</strong><p>{t ? "الخبرات · المهارات · المدن · الأدوار المستهدفة" : "Experience · Skills · Cities · Target roles"}</p></div><Check size={18}/></div>
+          <figure className="saudi-workspace-visual">
+            <img src={FLOW_VISUAL} alt={t ? "تصور مرئي لمسار حملة AutoApply SA" : "AutoApply SA campaign workflow visual"} width={1200} height={800} loading="eager" decoding="async" />
+            <figcaption>{t ? "من المطابقة إلى الموافقة، كل خطوة أمامك" : "From matching to approval, every step stays visible"}</figcaption>
+          </figure>
           <p className="saudi-preview-label">{t ? "من المطابقة إلى الموافقة" : "FROM MATCHING TO APPROVAL"}</p>
           <ol className="saudi-steps">{(t ? [["01","مطابقة الفرصة","نربط الوظيفة بملفك واتجاهك المهني."],["02","تجهيز الطلب","نجهز الطلب والسياق المطلوب للوظيفة."],["03","مراجعتك أولاً","تراجع ما تم تجهيزه وتوافق قبل الخطوة التالية."]] : [["01","Match the opportunity","Connect the role to your profile and campaign direction."],["02","Prepare the application","Build the application context the role actually needs."],["03","Your review comes first","Check what was prepared and approve before the next step."]]).map(([n,title,body])=><li key={n}><span>{n}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol>
           <div className="saudi-preview-footer"><ShieldCheck size={16}/>{t ? "معاينة توضيحية · الموافقة مطلوبة قبل الإرسال" : "Illustrative preview · Approval required before submission"}</div>
@@ -30,5 +44,19 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
       </div>
     </div>
     <div className="saudi-market page-frame"><span>{t ? "مصمم للبحث الوظيفي داخل السعودية" : "BUILT AROUND THE SAUDI JOB SEARCH"}</span><div>{t ? "الرياض" : "Riyadh"}<i/>{t ? "جدة" : "Jeddah"}<i/>{t ? "الدمام" : "Dammam"}<i/>{t ? "ومدن أخرى" : "And beyond"}</div><span>{t ? "العربية + English" : "العربية + English"}</span></div>
+
+    <div className="saudi-visual-gallery page-frame" aria-label={t ? "مرئيات AutoApply SA" : "AutoApply SA visuals"}>
+      <figure className="saudi-visual-card saudi-visual-card-wide"><img src={HERO_VISUAL} alt={t ? "AutoApply SA — عمليات حملة التقديم" : "AutoApply SA campaign operations"} width={1600} height={1000} loading="lazy" decoding="async" /><figcaption><b>AutoApply SA</b><span>{t ? "عمليات الحملة" : "Campaign operations"}</span></figcaption></figure>
+      <figure className="saudi-visual-card"><img src={DESK_VISUAL} alt={t ? "مساحة عمل AutoApply SA" : "AutoApply SA campaign workspace"} width={1200} height={1500} loading="lazy" decoding="async" /><figcaption><b>{t ? "ملفك أولاً" : "Profile first"}</b><span>{t ? "إعداد واضح قبل بدء الحملة" : "A clear setup before the campaign starts"}</span></figcaption></figure>
+      <figure className="saudi-visual-card"><img src={FLOW_VISUAL} alt={t ? "مسار AutoApply SA" : "AutoApply SA workflow"} width={1200} height={800} loading="lazy" decoding="async" /><figcaption><b>{t ? "كل خطوة واضحة" : "Every step visible"}</b><span>{t ? "مطابقة، إعداد، مراجعة، موافقة" : "Match, prepare, review, approve"}</span></figcaption></figure>
+    </div>
+
+    <div id="jeddah" className="saudi-location-section page-frame">
+      <div className="saudi-location-heading">
+        <span>{t ? "قاعدة AutoApply SA" : "AUTOAPPLY SA / SERVICE BASE"}</span>
+        <h2>{t ? "مقرنا في جدة. نخدم الباحثين عن عمل في أنحاء المملكة." : "Based in Jeddah. Built for job seekers across Saudi Arabia."}</h2>
+      </div>
+      <JeddahLocationCard className="saudi-location-card" language={t ? "ar" : "en"} />
+    </div>
   </section>;
 }
