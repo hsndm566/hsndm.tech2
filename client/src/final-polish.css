@@ -1,0 +1,26 @@
+/* Final production polish: no generic media placeholders, strong AutoApply SA brand, visible Jeddah tab. */
+.site-shell .saudi-jeddah-tab{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#e5482a;color:#fff!important;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(229,72,42,.24);transition:transform .18s ease,background .18s ease}
+.site-shell .saudi-jeddah-tab:hover{background:#c93b22;transform:translateY(-1px)}
+.site-shell .saudi-jeddah-tab:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* Existing lazy-media surfaces use approved artwork instead of gray shimmer/skeleton blocks. */
+.homepage-media-surface{background:#151515 url('/manus-storage/autoapply-flow_6c03602a.jpg') center/cover no-repeat!important}
+.homepage-media-surface:not(.is-ready),.homepage-map-loading{animation:none!important}
+.homepage-media-loader{display:none!important}
+.homepage-media-image{opacity:1!important;transform:none!important}
+.homepage-media-video{background:#151515 url('/manus-storage/autoapply-hero-operations_ad007abc.jpg') center/cover no-repeat}
+
+/* Give formerly text-only audience cards real visual anchors from the approved AutoApply asset set. */
+.site-shell .review-card{position:relative;overflow:hidden;padding-top:0!important}
+.site-shell .review-card::before{content:"";display:block;height:150px;margin:0 -1px 20px;background-position:center;background-size:cover;border-bottom:1px solid rgba(21,21,21,.1)}
+.site-shell .review-card:nth-child(1)::before{background-image:linear-gradient(180deg,rgba(21,21,21,.04),rgba(21,21,21,.2)),url('/manus-storage/autoapply-desk_635170b2.jpg')}
+.site-shell .review-card:nth-child(2)::before{background-image:linear-gradient(180deg,rgba(21,21,21,.02),rgba(21,21,21,.22)),url('/manus-storage/autoapply-flow_6c03602a.jpg')}
+.site-shell .review-card:nth-child(3)::before{background-image:linear-gradient(180deg,rgba(21,21,21,.02),rgba(21,21,21,.24)),url('/manus-storage/autoapply-hero-operations_ad007abc.jpg')}
+
+/* Keep the header identity unmistakably orange/black and preserve the original mark. */
+.site-shell .topbar .brand{color:#151515!important}
+.site-shell .topbar .brand em{color:#e5482a!important}
+.site-shell .topbar .brand::before{background-color:#151515!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:31px 31px!important;box-shadow:0 8px 24px rgba(21,21,21,.16)!important}
+
+@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.site-shell .saudi-jeddah-tab{transition:none}.site-shell .saudi-jeddah-tab:hover{transform:none}}
