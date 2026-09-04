@@ -22,10 +22,12 @@
 .site-shell .topbar .brand em{color:#e5482a!important}
 .site-shell .topbar .brand::before{background-color:#151515!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:31px 31px!important;box-shadow:0 8px 24px rgba(21,21,21,.16)!important}
 
-/* Campaign/enquiry/thank-you/404 journey headers use a full orange/black brand image. */
-.journey-page .journey-brand{display:inline-flex!important;align-items:center!important;width:260px!important;height:64px!important;text-decoration:none!important;overflow:visible!important}
-.journey-page .journey-brand::before{content:""!important;display:block!important;width:260px!important;height:64px!important;flex:0 0 260px!important;background:transparent url('/autoapply-sa-lockup.svg') left center/contain no-repeat!important;box-shadow:none!important;border-radius:0!important}
-.journey-page .journey-brand>.brand-mark,.journey-page .journey-brand>span{display:none!important}
+/* Campaign/enquiry/thank-you/404: keep the original mark + wordmark visible, with a strong orange/black treatment. */
+.journey-page .journey-brand{display:inline-flex!important;align-items:center!important;gap:14px!important;width:auto!important;height:auto!important;color:#f4f0e8!important;text-decoration:none!important;font-size:1.35rem!important;font-weight:800!important;letter-spacing:-.045em!important;overflow:visible!important}
+.journey-page .journey-brand::before{display:none!important;content:none!important}
+.journey-page .journey-brand>.brand-mark{display:block!important;width:64px!important;height:64px!important;min-width:64px!important;object-fit:contain!important;border-radius:16px!important;background:#e5482a!important;padding:6px!important;box-shadow:0 14px 38px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.16)!important}
+.journey-page .journey-brand>span{display:inline-block!important;color:#f4f0e8!important;white-space:nowrap!important}
+.journey-page .journey-brand em{display:inline!important;color:#ff7354!important;font-style:normal!important;font-family:inherit!important;font-size:.82em!important;vertical-align:baseline!important;letter-spacing:0!important}
 
-@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}.journey-page .journey-brand{width:205px!important;height:52px!important}.journey-page .journey-brand::before{width:205px!important;height:52px!important;flex-basis:205px!important}}
+@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}.journey-page .journey-brand{gap:10px!important;font-size:1.05rem!important}.journey-page .journey-brand>.brand-mark{width:50px!important;height:50px!important;min-width:50px!important;border-radius:13px!important;padding:5px!important}}
 @media(prefers-reduced-motion:reduce){.site-shell .saudi-jeddah-tab{transition:none}.site-shell .saudi-jeddah-tab:hover{transform:none}}
