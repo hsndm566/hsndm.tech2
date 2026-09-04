@@ -28,6 +28,7 @@ const Ats = lazy(() => import("@/pages/Ats"));
 const InformationPage = lazy(() => import("@/pages/InformationPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
+const PaymentPage = lazy(() => import("@/pages/PaymentPage"));
 import { useLocation } from "wouter";
 import { getDashboardHostRedirect, isDashboardSubdomain } from "@/lib/subdomain";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -70,6 +71,10 @@ function Router() {
     if (typeof window !== "undefined") {
       if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
         setLocation("/dashboard");
+        return;
+      }
+      if (window.location.hostname === "pay.hsndm.tech" && location === "/") {
+        window.location.replace(`/pay${window.location.search}${window.location.hash}`);
       }
     }
   }, [location, setLocation]);
@@ -94,6 +99,8 @@ function Router() {
       <Route path="/services" component={() => <ServicesPage />} />
       <Route path="/ar/pricing" component={() => <PricingPage language="ar" />} />
       <Route path="/ar/services" component={() => <ServicesPage language="ar" />} />
+      <Route path="/pay" component={() => <PaymentPage />} />
+      <Route path="/pay/success" component={() => <PaymentPage success />} />
       <Route path="/how-it-works" component={() => <InformationPage kind="how" />} />
       <Route path="/support" component={() => <InformationPage kind="support" />} />
       <Route path="/case-studies" component={() => <InformationPage kind="case" />} />
