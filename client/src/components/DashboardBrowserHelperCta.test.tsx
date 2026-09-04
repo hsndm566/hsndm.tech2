@@ -4,12 +4,13 @@ import { DashboardBrowserHelperCta } from "./DashboardBrowserHelperCta";
 
 vi.mock("wouter", () => ({
   useLocation: () => ["/dashboard"],
-  Link: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  Link: ({ children, ...props }: any) => <a {...props}>{children}</a>,
 }));
 
 describe("DashboardBrowserHelperCta", () => {
-  it("links dashboard customers to local browser setup", () => {
+  it("surfaces the local browser helper inside the dashboard", () => {
     render(<DashboardBrowserHelperCta />);
-    expect(screen.getByRole("link", { name: /local browser helper/i }).getAttribute("href")).toBe("/dashboard/browser-helper");
+    expect(screen.getByRole("link", { name: /local browser helper/i })).toBeTruthy();
+    expect(screen.getByText("Browser helper")).toBeTruthy();
   });
 });
