@@ -22,6 +22,7 @@ const ArabicThankYou = lazy(() => import("@/pages/ArabicThankYou"));
 const Enquire = lazy(() => import("@/pages/Enquire"));
 const CampaignStatus = lazy(() => import("@/pages/CampaignStatus"));
 const DashboardEntry = lazy(() => import("@/routes/DashboardEntry"));
+const BrowserHelper = lazy(() => import("@/pages/BrowserHelper"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
 const Ats = lazy(() => import("@/pages/Ats"));
@@ -37,6 +38,7 @@ import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements"
 import { AnimeVisualEnhancements } from "@/components/AnimeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 import { ChatLauncherSlot } from "@/components/ChatLauncherSlot";
+import { DashboardBrowserHelperCta } from "@/components/DashboardBrowserHelperCta";
 
 function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -69,7 +71,8 @@ function Router() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isDashboardSubdomain() && location !== "/dashboard" && location !== "/dashboard/settings") {
+      const dashboardPaths = new Set(["/dashboard", "/dashboard/settings", "/dashboard/browser-helper"]);
+      if (isDashboardSubdomain() && !dashboardPaths.has(location)) {
         setLocation("/dashboard");
         return;
       }
@@ -83,6 +86,7 @@ function Router() {
     <>
       <NativeVisualEnhancements routeKey={location} />
       <AnimeVisualEnhancements routeKey={location} />
+      <DashboardBrowserHelperCta />
       <ErrorBoundary resetKey={location}>
       <Switch>
       <Route path="/" component={Home} />
@@ -91,6 +95,7 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
+      <Route path="/dashboard/browser-helper" component={BrowserHelper} />
       <Route path="/dashboard/settings" component={DashboardEntry} />
       <Route path="/dashboard" component={DashboardEntry} />
       <Route path="/thank-you" component={ThankYou} />
