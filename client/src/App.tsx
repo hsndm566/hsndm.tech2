@@ -71,7 +71,7 @@ function Router() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const dashboardPaths = new Set(["/dashboard", "/dashboard/settings", "/dashboard/browser-helper"]);
+      const dashboardPaths = new Set(["/dashboard", "/dashboard/settings", "/dashboard/browser-helper", "/sign-in", "/sign-up"]);
       if (isDashboardSubdomain() && !dashboardPaths.has(location)) {
         setLocation("/dashboard");
         return;
@@ -95,6 +95,8 @@ function Router() {
       <Route path="/ar/thank-you" component={ArabicThankYou} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/campaign/:campaignId" component={CampaignStatus} />
+      <Route path="/sign-in" component={DashboardEntry} />
+      <Route path="/sign-up" component={DashboardEntry} />
       <Route path="/dashboard/browser-helper" component={BrowserHelper} />
       <Route path="/dashboard/settings" component={DashboardEntry} />
       <Route path="/dashboard" component={DashboardEntry} />
