@@ -131,7 +131,7 @@ export const applicationEvidence = mysqlTable("application_evidence", {
   capturedAt: timestamp("capturedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 }, table => ({
-  applicationEvidenceApplicationIdx: uniqueIndex("application_evidence_application_idx").on(table.applicationId),
+  applicationEvidenceApplicationTypeIdx: uniqueIndex("application_evidence_application_type_idx").on(table.applicationId, table.evidenceType),
   applicationEvidenceCandidateIdx: index("application_evidence_candidate_idx").on(table.candidateOpenId, table.capturedAt),
 }));
 
