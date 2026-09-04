@@ -14,6 +14,7 @@ import "./saudi-experience.css";
 import "./public-content-policy.css";
 import "./interface-refinement.css";
 import "./saudi-redesign.css";
+import "./final-polish.css";
 
 const ArabicHome = lazy(() => import("@/pages/ArabicHome"));
 const ArabicEnquire = lazy(() => import("@/pages/ArabicEnquire"));
