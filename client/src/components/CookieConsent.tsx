@@ -4,6 +4,12 @@ import { consentCookieAttributes } from "@/lib/consentCookie";
 
 type ConsentChoice = "accepted" | "necessary";
 
+type AnalyticsWindow = Window & {
+  dataLayer?: unknown[][];
+  gtag?: (...args: unknown[]) => void;
+  [key: `ga-disable-${string}`]: boolean | unknown;
+};
+
 const COOKIE_NAME = "autoapply_optional_consent";
 const maxAge = 60 * 60 * 24 * 180;
 
@@ -17,7 +23,7 @@ function saveConsent(choice: ConsentChoice) {
   document.cookie = `${COOKIE_NAME}=${choice}; ${consentCookieAttributes(maxAge)}`;
 }
 
-function loadAnalytics() {
+function loadUmamiAnalytics() {
   const endpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT as string | undefined;
   const websiteId = import.meta.env.VITE_ANALYTICS_WEBSITE_ID as string | undefined;
   if (!endpoint || !websiteId || document.querySelector("script[data-autoapply-analytics]")) return;
@@ -27,6 +33,52 @@ function loadAnalytics() {
   script.dataset.websiteId = websiteId;
   script.dataset.autoapplyAnalytics = "true";
   document.head.appendChild(script);
+}
+
+function googleMeasurementId() {
+  const id = (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined)?.trim();
+  return id && /^G-[A-Z0-9]+$/i.test(id) ? id : undefined;
+}
+
+function loadGoogleAnalytics() {
+  const measurementId = googleMeasurementId();
+  if (!measurementId) return;
+
+  const analyticsWindow = window as AnalyticsWindow;
+  analyticsWindow[`ga-disable-${measurementId}`] = false;
+  analyticsWindow.dataLayer ??= [];
+  analyticsWindow.gtag ??= (...args: unknown[]) => analyticsWindow.dataLayer?.push(args);
+
+  if (!document.querySelector("script[data-autoapply-google-analytics]")) {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+    script.dataset.autoapplyGoogleAnalytics = "true";
+    document.head.appendChild(script);
+    analyticsWindow.gtag("js", new Date());
+    analyticsWindow.gtag("config", measurementId, {
+      anonymize_ip: true,
+      send_page_view: false,
+    });
+  }
+}
+
+function trackGooglePageView(location: string) {
+  const measurementId = googleMeasurementId();
+  if (!measurementId) return;
+  loadGoogleAnalytics();
+  const analyticsWindow = window as AnalyticsWindow;
+  analyticsWindow.gtag?.("event", "page_view", {
+    page_location: window.location.href,
+    page_path: location,
+    page_title: document.title,
+  });
+}
+
+function disableGoogleAnalytics() {
+  const measurementId = googleMeasurementId();
+  if (!measurementId) return;
+  (window as AnalyticsWindow)[`ga-disable-${measurementId}`] = true;
 }
 
 export function CookieConsent() {
@@ -52,12 +104,20 @@ export function CookieConsent() {
   };
 
   useEffect(() => {
-    if (consent === "accepted") loadAnalytics();
-  }, [consent]);
+    if (consent !== "accepted") {
+      disableGoogleAnalytics();
+      return;
+    }
+    loadUmamiAnalytics();
+    loadGoogleAnalytics();
+    const frame = window.requestAnimationFrame(() => trackGooglePageView(location));
+    return () => window.cancelAnimationFrame(frame);
+  }, [consent, location]);
 
   const choose = (choice: ConsentChoice) => {
     saveConsent(choice);
     setConsent(choice);
+    if (choice === "necessary") disableGoogleAnalytics();
     window.dispatchEvent(new CustomEvent("autoapply:optional-consent", { detail: { analytics: choice === "accepted" } }));
   };
 
