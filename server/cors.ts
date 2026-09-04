@@ -2,6 +2,7 @@ const productionOrigins = new Set([
   "https://hsndm.tech",
   "https://www.hsndm.tech",
   "https://dashboard.hsndm.tech",
+  "https://pay.hsndm.tech",
 ]);
 
 function isDevelopmentPreview(origin: string): boolean {
