@@ -23,9 +23,9 @@
 .site-shell .topbar .brand::before{background-color:#151515!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:31px 31px!important;box-shadow:0 8px 24px rgba(21,21,21,.16)!important}
 
 /* Campaign/enquiry/thank-you/404 journey headers use the real mark as a first-class element. */
-.journey-page .journey-brand{display:inline-flex!important;align-items:center!important;gap:11px!important;color:#f4f0e8!important;font-weight:800!important;letter-spacing:-.035em!important;text-decoration:none!important}
-.journey-page .journey-brand .brand-mark{display:block!important;width:42px!important;height:42px!important;object-fit:contain!important;border-radius:12px!important;background:#fff!important;padding:4px!important;box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 0 0 1px rgba(21,21,21,.06)!important}
+.journey-page .journey-brand{display:inline-flex!important;align-items:center!important;gap:14px!important;color:#f4f0e8!important;font-weight:800!important;font-size:1.08rem!important;letter-spacing:-.035em!important;text-decoration:none!important}
+.journey-page .journey-brand .brand-mark{display:block!important;width:64px!important;height:64px!important;min-width:64px!important;object-fit:contain!important;border-radius:16px!important;background:#fff!important;padding:5px!important;box-shadow:0 12px 34px rgba(0,0,0,.28),inset 0 0 0 1px rgba(21,21,21,.06)!important}
 .journey-page .journey-brand em{color:#ff7354!important;font-style:normal!important}
 
-@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}.journey-page .journey-brand .brand-mark{width:38px!important;height:38px!important}}
+@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}.journey-page .journey-brand{gap:10px!important;font-size:1rem!important}.journey-page .journey-brand .brand-mark{width:52px!important;height:52px!important;min-width:52px!important;border-radius:14px!important}}
 @media(prefers-reduced-motion:reduce){.site-shell .saudi-jeddah-tab{transition:none}.site-shell .saudi-jeddah-tab:hover{transform:none}}
