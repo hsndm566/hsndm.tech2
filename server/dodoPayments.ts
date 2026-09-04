@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 
 const DODO_LIVE_API = "https://live.dodopayments.com";
-const PAYMENT_RETURN_URL = process.env.DODO_PAYMENT_RETURN_URL || "https://pay.hsndm.tech/success";
+const PAYMENT_RETURN_URL = process.env.DODO_PAYMENT_RETURN_URL || "https://pay.hsndm.tech/pay/success";
 
 const planProductEnv: Record<string, string> = {
   starter: "DODO_PRODUCT_STARTER_ID",
@@ -47,6 +47,8 @@ export function registerDodoPaymentRoutes(app: Express) {
     const payload: Record<string, unknown> = {
       product_cart: [{ product_id: productId, quantity: 1 }],
       return_url: `${PAYMENT_RETURN_URL}?plan=${encodeURIComponent(plan)}`,
+      cancel_url: `https://pay.hsndm.tech/pay?plan=${encodeURIComponent(plan)}`,
+      metadata: { autoapply_plan: plan },
     };
 
     if (customerEmail) {
