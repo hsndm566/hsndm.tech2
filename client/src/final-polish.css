@@ -17,10 +17,15 @@
 .site-shell .review-card:nth-child(2)::before{background-image:linear-gradient(180deg,rgba(21,21,21,.02),rgba(21,21,21,.22)),url('/manus-storage/autoapply-flow_6c03602a.jpg')}
 .site-shell .review-card:nth-child(3)::before{background-image:linear-gradient(180deg,rgba(21,21,21,.02),rgba(21,21,21,.24)),url('/manus-storage/autoapply-hero-operations_ad007abc.jpg')}
 
-/* Keep the header identity unmistakably orange/black and preserve the original mark. */
+/* Keep the main marketing header identity unmistakably orange/black and preserve the original mark. */
 .site-shell .topbar .brand{color:#151515!important}
 .site-shell .topbar .brand em{color:#e5482a!important}
 .site-shell .topbar .brand::before{background-color:#151515!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:31px 31px!important;box-shadow:0 8px 24px rgba(21,21,21,.16)!important}
 
-@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}}
+/* Campaign/enquiry/thank-you/404 journey headers use the real mark as a first-class element. */
+.journey-page .journey-brand{display:inline-flex!important;align-items:center!important;gap:11px!important;color:#f4f0e8!important;font-weight:800!important;letter-spacing:-.035em!important;text-decoration:none!important}
+.journey-page .journey-brand .brand-mark{display:block!important;width:42px!important;height:42px!important;object-fit:contain!important;border-radius:12px!important;background:#fff!important;padding:4px!important;box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 0 0 1px rgba(21,21,21,.06)!important}
+.journey-page .journey-brand em{color:#ff7354!important;font-style:normal!important}
+
+@media(max-width:800px){.site-shell .review-card::before{height:125px}.site-shell .saudi-jeddah-tab{padding:6px 9px}.journey-page .journey-brand .brand-mark{width:38px!important;height:38px!important}}
 @media(prefers-reduced-motion:reduce){.site-shell .saudi-jeddah-tab{transition:none}.site-shell .saudi-jeddah-tab:hover{transform:none}}
