@@ -1,0 +1,7 @@
+/dashboard*
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+
+/dashboard/browser-helper
+  Cache-Control: public, max-age=300
