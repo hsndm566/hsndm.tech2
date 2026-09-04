@@ -1,6 +1,7 @@
 /** Shared client-side SEO metadata for the static routed application. */
 export const SITE_URL = "https://www.hsndm.tech";
 export const SOCIAL_IMAGE_URL = `${SITE_URL}/manus-storage/autoapply-hero-operations_ad007abc.jpg`;
+export const SOCIAL_IMAGE_ALT = "AutoApply SA job application service";
 
 type SeoOptions = {
   title: string;
@@ -33,9 +34,11 @@ export function applyPageSeo({ title, description, path, noindex = false }: SeoO
   setMeta('meta[property="og:description"]', "property", "og:description", description);
   setMeta('meta[property="og:url"]', "property", "og:url", url);
   setMeta('meta[property="og:image"]', "property", "og:image", SOCIAL_IMAGE_URL);
+  setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", SOCIAL_IMAGE_ALT);
   setMeta('meta[name="twitter:title"]', "name", "twitter:title", title);
   setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
   setMeta('meta[name="twitter:image"]', "name", "twitter:image", SOCIAL_IMAGE_URL);
+  setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", SOCIAL_IMAGE_ALT);
 
   let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {
