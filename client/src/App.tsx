@@ -38,6 +38,7 @@ import { NativeVisualEnhancements } from "@/components/NativeVisualEnhancements"
 import { AnimeVisualEnhancements } from "@/components/AnimeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 import { ChatLauncherSlot } from "@/components/ChatLauncherSlot";
+import { DashboardBrowserHelperCta } from "@/components/DashboardBrowserHelperCta";
 
 function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -85,6 +86,7 @@ function Router() {
     <>
       <NativeVisualEnhancements routeKey={location} />
       <AnimeVisualEnhancements routeKey={location} />
+      <DashboardBrowserHelperCta />
       <ErrorBoundary resetKey={location}>
       <Switch>
       <Route path="/" component={Home} />
