@@ -30,7 +30,7 @@ export default function PaymentPage({ success = false }: { success?: boolean }) 
         ? "Return to AutoApply SA after completing payment through Dodo Payments."
         : `Secure checkout for the AutoApply SA ${details.name} campaign plan.`,
       path: success ? "/pay/success" : "/pay",
-      noIndex: true,
+      noindex: true,
     });
   }, [details.name, success]);
 
