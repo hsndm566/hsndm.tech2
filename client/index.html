@@ -27,6 +27,7 @@
     <meta name="twitter:title" content="AutoApply SA — We Prepare Your Job Applications, You Approve" />
     <meta name="twitter:description" content="Tell us the roles you want. We find real openings in Saudi Arabia and prepare tailored applications — you review and approve before anything is sent." />
     <meta name="twitter:image" content="https://www.hsndm.tech/manus-storage/autoapply-hero-operations_ad007abc.jpg" />
+    <meta name="twitter:image:alt" content="AutoApply SA job application service" />
     <style>
       #app-loading-shell { min-height:100vh; box-sizing:border-box; background:#f3f0e9; color:#151515; display:flex; align-items:center; justify-content:center; padding:1.5rem; font-family:Arial,sans-serif; }
       .app-loading-card { width:min(100%,46rem); border:1px solid rgba(21,21,21,.14); background:#fbf9f5; padding:clamp(1.25rem,4vw,2.5rem); box-shadow:0 14px 40px rgba(21,21,21,.07); }
@@ -34,9 +35,10 @@
       .app-loading-title { margin:0; max-width:28rem; font-size:clamp(2rem,6vw,3.75rem); line-height:.98; letter-spacing:-.055em; }
       .app-loading-copy { margin:1rem 0 1.5rem; max-width:38rem; color:rgba(21,21,21,.68); line-height:1.55; }
       .app-loading-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:.65rem; }
-      .app-loading-block { min-height:4.5rem; border:1px solid rgba(21,21,21,.09); background:linear-gradient(110deg,#efebe4 20%,#f8f6f2 45%,#efebe4 70%); background-size:220% 100%; animation:app-loading-shimmer 1.25s linear infinite; }
-      @keyframes app-loading-shimmer { to { background-position:-220% 0; } }
-      @media (prefers-reduced-motion:reduce) { .app-loading-block { animation:none; } }
+      .app-loading-block { min-height:5.5rem; border:1px solid rgba(21,21,21,.09); background:#151515 center/cover no-repeat; }
+      .app-loading-block:first-child { background-image:linear-gradient(rgba(21,21,21,.16),rgba(21,21,21,.16)),url('/manus-storage/autoapply-hero-operations_ad007abc.jpg'); }
+      .app-loading-block:last-child { background-image:linear-gradient(rgba(21,21,21,.1),rgba(21,21,21,.1)),url('/manus-storage/autoapply-flow_6c03602a.jpg'); }
+      @media (max-width:560px) { .app-loading-grid { grid-template-columns:1fr; } }
     </style>
     <!-- Structured data is limited to the live service, current displayed prices, and no review or rating claims. -->
     <script type="application/ld+json">
@@ -44,13 +46,28 @@
         "@context": "https://schema.org",
         "@graph": [
           {
-            "@type": "Organization",
+            "@type": ["Organization", "ProfessionalService"],
             "@id": "https://www.hsndm.tech/#organization",
             "name": "AutoApply SA",
             "url": "https://www.hsndm.tech/",
+            "image": "https://www.hsndm.tech/manus-storage/autoapply-hero-operations_ad007abc.jpg",
+            "logo": "https://www.hsndm.tech/manus-storage/autoapply-symbol_80d77010.png",
             "email": "apply@hsndm.tech",
+            "telephone": "+966571448656",
+            "priceRange": "99–249 SAR/month",
+            "knowsLanguage": ["English", "Arabic"],
             "areaServed": { "@type": "Country", "name": "Saudi Arabia" },
-            "address": { "@type": "PostalAddress", "addressLocality": "Jeddah", "addressCountry": "SA" }
+            "address": { "@type": "PostalAddress", "addressLocality": "Jeddah", "addressCountry": "SA" },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+966571448656",
+              "contactType": "customer support",
+              "availableLanguage": ["English", "Arabic"]
+            },
+            "sameAs": [
+              "https://instagram.com/hsndm_",
+              "https://linkedin.com/in/hsndm"
+            ]
           },
           {
             "@type": "Service",
