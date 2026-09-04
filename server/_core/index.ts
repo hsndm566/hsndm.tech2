@@ -6,6 +6,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { registerDataBackupRoutes } from "../dataBackup";
+import { registerDodoPaymentRoutes } from "../dodoPayments";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { createAuthenticationReadinessPayload, createDatabaseHealthPayload, createHealthPayload } from "../health";
@@ -110,6 +111,7 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerDataBackupRoutes(app);
+  registerDodoPaymentRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
