@@ -19,6 +19,8 @@ export function InformationPageLayout({ content, language, root }: InformationPa
   const arabic = language === "ar";
   const enquiry = arabic ? "/ar/enquire" : "/enquire";
   const returnHome = arabic ? "العودة للرئيسية" : "BACK TO HOME";
+  const homeLabel = arabic ? "الرئيسية" : "Home";
+  const breadcrumbLabel = arabic ? "مسار التنقل" : "Breadcrumb";
   const readingGuide = arabic ? "دليل القراءة" : "READING GUIDE";
   const readingGuideLabel = arabic ? "أقسام هذه الصفحة" : "Sections on this page";
   const nextStep = arabic ? "الخطوة التالية تبقى بيدك" : "Your next step remains yours";
@@ -28,13 +30,19 @@ export function InformationPageLayout({ content, language, root }: InformationPa
   return (
     <main className="min-h-screen bg-[#f3f0e9] text-[#151515]" lang={language} dir={arabic ? "rtl" : "ltr"}>
       <header className="border-b border-black/10 bg-[#fbf9f5]">
-        <div className="page-frame flex items-center justify-between py-5">
-          <Link href={root} className="font-bold">AutoApply <em className="text-[#e5482a]">SA</em></Link>
+        <div className="page-frame flex items-center justify-between gap-5 py-5">
+          <Link href={root} className="inline-flex items-center gap-3" aria-label="AutoApply SA home">
+            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="AutoApply SA brand mark" className="h-10 w-10 rounded-xl bg-[#151515] p-1 object-contain" width={40} height={40} />
+            <span className="font-bold">AutoApply <em className="not-italic text-[#e5482a]">SA</em></span>
+          </Link>
           <Link href={root} className="flex min-h-11 items-center gap-1 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#e5482a] focus-visible:ring-offset-2">{returnHome}<ArrowLeft size={14} /></Link>
         </div>
       </header>
 
       <section className="page-frame max-w-4xl py-16">
+        <nav aria-label={breadcrumbLabel} className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs text-black/55">
+          <Link href={root} className="underline-offset-4 hover:text-[#e5482a] hover:underline">{homeLabel}</Link><span>/</span><b className="font-medium text-black/75">{content.kicker}</b>
+        </nav>
         <p className="font-mono text-xs text-[#e5482a]">{content.kicker}</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-6xl">{content.title}</h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-black/70">{content.intro}</p>
