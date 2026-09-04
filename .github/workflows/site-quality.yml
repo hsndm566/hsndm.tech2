@@ -42,6 +42,7 @@ jobs:
       - name: Production static build
         run: pnpm build:pages
 
+      # Keep this gate aligned with the files that are actually shipped by build:pages.
       - name: Verify public-site checklist
         shell: bash
         run: |
