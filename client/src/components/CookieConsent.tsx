@@ -7,7 +7,6 @@ type ConsentChoice = "accepted" | "necessary";
 type AnalyticsWindow = Window & {
   dataLayer?: unknown[][];
   gtag?: (...args: unknown[]) => void;
-  [key: `ga-disable-${string}`]: boolean | unknown;
 };
 
 const COOKIE_NAME = "autoapply_optional_consent";
@@ -40,12 +39,17 @@ function googleMeasurementId() {
   return id && /^G-[A-Z0-9]+$/i.test(id) ? id : undefined;
 }
 
+function setGoogleAnalyticsDisabled(measurementId: string, disabled: boolean) {
+  const keyedWindow = window as unknown as Record<string, unknown>;
+  keyedWindow[`ga-disable-${measurementId}`] = disabled;
+}
+
 function loadGoogleAnalytics() {
   const measurementId = googleMeasurementId();
   if (!measurementId) return;
 
   const analyticsWindow = window as AnalyticsWindow;
-  analyticsWindow[`ga-disable-${measurementId}`] = false;
+  setGoogleAnalyticsDisabled(measurementId, false);
   analyticsWindow.dataLayer ??= [];
   analyticsWindow.gtag ??= (...args: unknown[]) => analyticsWindow.dataLayer?.push(args);
 
@@ -78,7 +82,7 @@ function trackGooglePageView(location: string) {
 function disableGoogleAnalytics() {
   const measurementId = googleMeasurementId();
   if (!measurementId) return;
-  (window as AnalyticsWindow)[`ga-disable-${measurementId}`] = true;
+  setGoogleAnalyticsDisabled(measurementId, true);
 }
 
 export function CookieConsent() {
