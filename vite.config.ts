@@ -34,7 +34,6 @@ function trimLogFile(logPath: string, maxSize: number) {
     const keptLines: string[] = [];
     let keptBytes = 0;
 
-    // Keep newest lines (from end) that fit within 60% of maxSize
     const targetSize = TRIM_TARGET_BYTES;
     for (let i = lines.length - 1; i >= 0; i--) {
       const lineBytes = Buffer.byteLength(`${lines[i]}\n`, "utf-8");
@@ -54,26 +53,15 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
 
   ensureLogDir();
   const logPath = path.join(LOG_DIR, `${source}.log`);
-
-  // Format entries with timestamps
   const lines = entries.map((entry) => {
     const ts = new Date().toISOString();
     return `[${ts}] ${JSON.stringify(entry)}`;
   });
 
-  // Append to log file
   fs.appendFileSync(logPath, `${lines.join("\n")}\n`, "utf-8");
-
-  // Trim if exceeds max size
   trimLogFile(logPath, MAX_LOG_SIZE_BYTES);
 }
 
-/**
- * Vite plugin to collect browser debug logs
- * - POST /__manus__/logs: Browser sends logs, written directly to files
- * - Files: browserConsole.log, networkRequests.log, sessionReplay.log
- * - Auto-trimmed when exceeding 1MB (keeps newest entries)
- */
 function vitePluginManusDebugCollector(): Plugin {
   let resolvedConfig: ResolvedConfig | undefined;
   return {
@@ -103,14 +91,12 @@ function vitePluginManusDebugCollector(): Plugin {
     },
 
     configureServer(server: ViteDevServer) {
-      // POST /__manus__/logs: Browser sends logs (written directly to files)
       server.middlewares.use("/__manus__/logs", (req, res, next) => {
         if (req.method !== "POST") {
           return next();
         }
 
         const handlePayload = (payload: any) => {
-          // Write logs directly to files
           if (payload.consoleLogs?.length > 0) {
             writeToLogFile("browserConsole", payload.consoleLogs);
           }
@@ -155,7 +141,12 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), ...(process.env.NODE_ENV === "production" ? [] : [vitePluginManusRuntime()]), vitePluginManusDebugCollector()];
+const isProduction = process.env.NODE_ENV === "production";
+const plugins = [
+  react(),
+  tailwindcss(),
+  ...(isProduction ? [] : [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()]),
+];
 
 export default defineConfig({
   plugins,
@@ -172,6 +163,10 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: false,
+    target: "es2020",
+    modulePreload: { polyfill: false },
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -181,6 +176,10 @@ export default defineConfig({
           if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
           if (id.includes("lucide-react")) return "icons";
           if (id.includes("@tanstack") || id.includes("@trpc") || id.includes("superjson")) return "data-client";
+          if (id.includes("framer-motion") || id.includes("animejs")) return "motion";
+          if (id.includes("recharts")) return "charts";
+          if (id.includes("pdfjs-dist") || id.includes("mammoth") || id.includes("jspdf")) return "document-tools";
+          if (id.includes("/node_modules/@radix-ui/")) return "ui-primitives";
         },
       },
     },
