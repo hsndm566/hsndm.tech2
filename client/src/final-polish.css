@@ -20,12 +20,14 @@
 /* Keep the main marketing header identity unmistakably orange/black and preserve the original mark. */
 .site-shell .topbar .brand{color:#151515!important}
 .site-shell .topbar .brand em{color:#e5482a!important}
-.site-shell .topbar .brand::before{background-color:#151515!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:31px 31px!important;box-shadow:0 8px 24px rgba(21,21,21,.16)!important}
+.site-shell .topbar .brand::before{background-color:transparent!important;background-image:url('/manus-storage/autoapply-symbol_80d77010.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:contain!important;box-shadow:none!important}
+.site-shell .topbar .brand::after{display:none!important}
+.site-shell .topbar .brand span::after{display:none!important}
 
 /* Campaign/enquiry/thank-you/404: keep the original mark + wordmark visible, with a strong orange/black treatment. */
 .journey-page .journey-brand{display:inline-flex!important;align-items:center!important;gap:14px!important;width:auto!important;height:auto!important;color:#f4f0e8!important;text-decoration:none!important;font-size:1.35rem!important;font-weight:800!important;letter-spacing:-.045em!important;overflow:visible!important}
 .journey-page .journey-brand::before{display:none!important;content:none!important}
-.journey-page .journey-brand>.brand-mark{display:block!important;width:64px!important;height:64px!important;min-width:64px!important;object-fit:contain!important;border-radius:16px!important;background:#e5482a!important;padding:6px!important;box-shadow:0 14px 38px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.16)!important}
+.journey-page .journey-brand>.brand-mark{display:block!important;width:64px!important;height:64px!important;min-width:64px!important;object-fit:contain!important;border-radius:16px!important;background:#151515!important;padding:10px!important;box-shadow:0 14px 38px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.1)!important}
 .journey-page .journey-brand>span{display:inline-block!important;color:#f4f0e8!important;white-space:nowrap!important}
 .journey-page .journey-brand em{display:inline!important;color:#ff7354!important;font-style:normal!important;font-family:inherit!important;font-size:.82em!important;vertical-align:baseline!important;letter-spacing:0!important}
 

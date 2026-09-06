@@ -12,7 +12,7 @@ describe("homepage clarity release", () => {
   it("states the service plainly and keeps the approved campaign CTA paths", () => {
     const source = homeSource();
 
-    ["We prepare", "your job", "applications.", "You approve", "before we send."].forEach(word => expect(source).toContain(`>${word}</span>`));
+    expect(source).toContain("We prepare your job applications");
     expect(source).toContain("Nothing goes out until you say yes.");
     expect(source).toContain('href="/enquire"');
     expect(source).toContain("https://wa.me/966571448656");
@@ -64,8 +64,8 @@ describe("homepage clarity release", () => {
   it("keeps the Arabic hero plain-language and removes matching duplicate rendered sections", () => {
     const source = arabicHomeSource();
 
-    ["نُعِدّ طلباتك", "للوظائف.", "وأنت توافق", "قبل الإرسال."].forEach(word => expect(source).toContain(`>${word}</span>`));
-    expect(source).toContain("سيرتك الذاتية جاهزة");
+    expect(source).toContain("نُعِدّ طلباتك للوظائف");
+    expect(source).toContain("نبحث ونُعِدّ الطلبات");
     expect(source).toContain("arabic-video-explainer-heading");
     expect(source).toContain("DeferredExplainerVideo");
     expect(deferredExplainerSource()).toContain("onError={() => setHasFailed(true)}");
@@ -78,26 +78,23 @@ describe("homepage clarity release", () => {
     expect(stylesSource()).not.toContain("سنوضح لك ما تستطيع فعله.");
   });
 
-  it("keeps the bright first-screen hero complete and readable around the full motion panel in both languages", () => {
+  it("keeps the bright first-screen hero complete and readable in both languages", () => {
     const english = homeSource();
     const arabic = arabicHomeSource();
-    const styles = stylesSource();
+    const hero = readFileSync(resolve(process.cwd(), "client/src/components/SaudiHero.tsx"), "utf8");
+    const heroStyles = readFileSync(resolve(process.cwd(), "client/src/saudi-redesign.css"), "utf8");
 
-    expect(english).toContain("<HeroMedia alt=");
-    ["We prepare", "your job", "applications.", "You approve", "before we send."].forEach(word => expect(english).toContain(`>${word}</span>`));
-    expect(english).toContain("Start your campaign plan");
-    expect(english).toContain("Approved-plan operations — 24/7");
-    expect(english).toContain("Nothing goes out until you say yes.");
-    expect(arabic).toContain("<HeroMedia alt=");
-    ["نُعِدّ طلباتك", "للوظائف.", "وأنت توافق", "قبل الإرسال."].forEach(word => expect(arabic).toContain(`>${word}</span>`));
-    expect(arabic).toContain("ابدأ خطة التقديم");
-    expect(arabic).toContain("لغتان مدعومتان");
-    expect(styles).toContain(".hero { min-height: 610px");
-    expect(styles).toContain(".hero-media::after");
-    expect(styles).toContain("background: linear-gradient(90deg, rgba(255,255,255,.28)");
-    expect(styles).toContain("filter: saturate(.94) contrast(1.18) brightness(.96)");
-    expect(styles).toContain(".hero-content { height: 610px");
-    expect(styles).toContain("padding-top: calc(43vw + 20px)");
+    // The first-screen hero is the shared bilingual SaudiHero component.
+    expect(english).toContain("<SaudiHero />");
+    expect(arabic).toContain("<SaudiHero arabic />");
+    expect(hero).toContain("A smarter way to run your job search in");
+    expect(hero).toContain("طريقة أذكى لإدارة بحثك عن عمل في");
+    expect(hero).toContain("Start an enquiry");
+    expect(hero).toContain("ابدأ الطلب");
+    expect(hero).toContain("Built for focused candidates across Saudi Arabia");
+    // Dark editorial hero surface is defined in the redesign stylesheet.
+    expect(heroStyles).toContain(".saudi-hero");
+    expect(heroStyles).toContain(".saudi-intro h1");
   });
 
   it("keeps keyboard access and clear recovery paths for CV matching, video playback, and WhatsApp handoff", () => {

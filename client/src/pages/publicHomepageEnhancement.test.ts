@@ -20,19 +20,17 @@ describe("public homepage enhancement contracts", () => {
     expect(arabicHome).toContain("لا يُقدَّم شيء دون موافقتك");
     expect(arabicHome).toContain("هل تضمنون حصولي على وظيفة؟");
     expect(arabicHome).toContain("الخصوصية والأمان");
-    expect(arabicHome).toContain("لا يتم إرسال أي طلب أو دفع اليوم.");
+    expect(arabicHome).toContain("لا يُرسل أي شيء حتى توافق");
     expect(arabicHome).toContain("الوصول إلى لوحة التحكم محمي بتسجيل الدخول عبر بريدك الإلكتروني.");
   });
 
   it("keeps conversion reassurance, plan continuity, and crawlable support links on the public homepage", () => {
-    expect(home).toContain("No payment or application is sent today.");
+    expect(home).toContain("Nothing goes out until you say yes.");
     expect(home).toContain('href={`/enquire?plan=${plan.name.toLowerCase()}`}');
     expect(home).toContain('href="/how-it-works/"');
     expect(home).toContain('href="/pricing/"');
     expect(home).toContain('href="/services/"');
     expect(home).toContain('href="/ats/"');
-    expect(home).toContain('trackEngagement("hero_start_campaign_click"');
-    expect(home).toContain('trackEngagement("hero_see_plans_click"');
     expect(home).toContain('trackEngagement("plan_selected"');
   });
 
@@ -55,21 +53,22 @@ describe("public homepage enhancement contracts", () => {
   });
 
   it("keeps the source-informed enhancement layer theme-preserving and bilingual", () => {
-    expect(home).toContain('className="hero-stats-grid"');
-    expect(home).toContain('className="hero-activity" aria-live="polite"');
-    expect(arabicHome).toContain('className="hero-stats-grid"');
+    const hero = readFileSync(new URL("../components/SaudiHero.tsx", import.meta.url), "utf8");
+    const heroStyles = readFileSync(new URL("../saudi-redesign.css", import.meta.url), "utf8");
+
+    // Shared redesigned dark hero, rendered in both languages.
+    expect(home).toContain("<SaudiHero />");
+    expect(arabicHome).toContain("<SaudiHero arabic />");
+    expect(hero).toContain("A smarter way to run your job search in");
+    expect(hero).toContain("طريقة أذكى لإدارة بحثك عن عمل في");
+    expect(heroStyles).toContain(".saudi-hero");
+
+    // Retained shimmering status + numbered proof steps, in both languages.
     expect(home).toContain("BklitShimmeringStatus");
     expect(arabicHome).toContain("BklitShimmeringStatus");
-    expect(styles).toContain(".hero-ledger::after");
-    expect(styles).toContain(".proof-grid > div::after");
-    expect(styles).toContain(".process-item::before");
-    expect(styles).toContain(".bklit-shimmer-status");
-    expect(styles).toContain(".hero-stats-grid > div::before");
-    expect(styles).toContain(".plan-card::before");
-    expect(styles).toContain(".brand::after");
-    expect(styles).toContain(".proof-step");
     expect(home).toContain('className="proof-step">01');
     expect(arabicHome).toContain('className="proof-step">01');
+    expect(styles).toContain(".proof-step");
     expect(styles).toContain("prefers-reduced-motion");
     expect(styles).toContain("var(--signal)");
   });

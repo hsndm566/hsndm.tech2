@@ -9,19 +9,19 @@ const homepageMediaImage = readFileSync(new URL("../components/HomepageMediaImag
 
 describe("public homepage production-readiness contract", () => {
   it("keeps one clear primary campaign CTA and an explanatory secondary CTA in each language", () => {
-    expect(englishHome).toContain("Start your campaign plan");
-    expect(englishHome).toContain("See how it works");
-    expect(arabicHome).toContain("ابدأ خطة التقديم");
-    expect(arabicHome).toContain("كيف تعمل الخدمة؟");
+    const hero = readFileSync(new URL("../components/SaudiHero.tsx", import.meta.url), "utf8");
+    expect(hero).toContain("Start an enquiry");
+    expect(hero).toContain("See how it works");
+    expect(hero).toContain("ابدأ الطلب");
+    expect(hero).toContain("شاهد كيف تعمل");
   });
 
   it("shows only factual bilingual trust boundaries near the hero CTA", () => {
-    expect(englishHome).toContain("You approve role targets");
-    expect(englishHome).toContain("Set volume &amp; dates");
-    expect(englishHome).toContain("Every application is logged");
-    expect(arabicHome).toContain("توافق على الوظائف المستهدفة");
-    expect(arabicHome).toContain("تحدد الحجم والتواريخ");
-    expect(arabicHome).toContain("كل طلب مسجّل");
+    const hero = readFileSync(new URL("../components/SaudiHero.tsx", import.meta.url), "utf8");
+    expect(hero).toContain("Built for focused candidates across Saudi Arabia");
+    expect(hero).toContain("مصمّم للمرشحين المركّزين في أنحاء السعودية");
+    expect(englishHome).toContain("Nothing is submitted without your go-ahead");
+    expect(arabicHome).toContain("لا يُقدَّم شيء دون موافقتك");
   });
 
   it("avoids eagerly downloading decorative media while preserving a visual hero fallback", () => {

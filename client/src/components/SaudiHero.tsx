@@ -11,22 +11,16 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
   return <section className="saudi-hero" aria-labelledby={t ? "arabic-hero-heading" : "hero-heading"}>
     <div className="saudi-hero-grid page-frame">
       <div className="saudi-intro">
-        <div className="saudi-brand-lockup" aria-label="AutoApply SA">
-          <img src={BRAND_MARK} alt="AutoApply SA brand mark" width={72} height={72} decoding="async" />
-          <div><strong>AutoApply <b>SA</b></strong><span>{t ? "محرك التقديم الوظيفي للسعودية" : "Saudi job-application engine"}</span></div>
-        </div>
-        <p className="saudi-eyebrow">{t ? "دعم تقديم وظيفي موجه للسعودية" : "SAUDI-FOCUSED APPLICATION SUPPORT"} <span>{t ? "جدة / السعودية" : "JEDDAH / KSA"}</span></p>
+        <p className="saudi-eyebrow">{t ? "البحث عن عمل في السعودية، منظّم" : "SAUDI JOB SEARCH, ORGANISED"}</p>
         <h1 id={t ? "arabic-hero-heading" : "hero-heading"}>
-          <span data-anime-hero-word>{t ? "طلبات أكثر صلة." : "More relevant applications."}</span>
-          <em data-anime-hero-word>{t ? "وأنت توافق على كل خطوة." : "You approve every one."}</em>
+          {t ? <>طريقة أذكى لإدارة بحثك عن عمل في <span>السعودية.</span></> : <>A smarter way to run your job search in <span>Saudi Arabia.</span></>}
         </h1>
-        <p className="saudi-description">{t ? "حدد وجهتك المهنية. نساعدك على العثور على فرص مناسبة، وتجهيز طلبات أقوى، وإبقاء كل خطوة واضحة أمامك قبل إرسال أي طلب." : "Tell us where you want to go. AutoApply SA helps find matching opportunities, prepare stronger applications, and keep each step visible before anything is submitted."}</p>
+        <p className="saudi-description">{t ? "نظّم سيرتك الذاتية، وخصّص طلباتك، وتابع كل حملة عبر محرّك وظائف ذكي مركّز." : "Organise your CV, tailor applications, and follow each campaign with a focused AI job engine."}</p>
         <div className="saudi-actions">
-          <a href={t ? "/ar/enquire" : "/enquire"} className="saudi-primary">{t ? "ابدأ حملتك" : "Start your campaign"} <ArrowUpRight size={20}/></a>
-          <a href="#how" className="saudi-secondary">{t ? "شاهد كيف تعمل" : "See how it works"} <span aria-hidden="true">↓</span></a>
+          <a href={t ? "/ar/enquire" : "/enquire"} className="saudi-primary">{t ? "ابدأ الطلب" : "Start an enquiry"} <ArrowUpRight size={20}/></a>
+          <a href="#how" className="saudi-secondary">{t ? "شاهد كيف تعمل" : "See how it works"}</a>
         </div>
-        <p className="saudi-price">{t ? "خطط شهرية تبدأ من 99 ريال · لا توجد نتيجة توظيف مضمونة" : "Monthly plans from 99 SAR · No interview or hiring outcome is guaranteed"}</p>
-        <div className="saudi-assurance"><ShieldCheck size={19}/><span>{t ? "اسمك. سيرتك. قرارك قبل الإرسال." : "Your name. Your CV. Your decision before submission."}</span></div>
+        <p className="saudi-trust"><ShieldCheck size={17}/><span>{t ? "مصمّم للمرشحين المركّزين في أنحاء السعودية" : "Built for focused candidates across Saudi Arabia"}</span></p>
       </div>
       <div className="saudi-workspace" aria-label={t ? "معاينة توضيحية وليست بيانات حساب حقيقية" : "Illustrative workspace, not real account data"}>
         <div className="saudi-window"><span className="saudi-window-brand"><img src={BRAND_MARK} alt="" width={28} height={28} /> AutoApply <b>SA</b></span><span>{t ? "مساحة الحملة / معاينة" : "CAMPAIGN WORKSPACE / PREVIEW"}</span></div>

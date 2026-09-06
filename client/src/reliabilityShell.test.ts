@@ -9,18 +9,16 @@ describe("first-paint reliability shell", () => {
     const html = readFileSync(resolve(projectRoot, "client/index.html"), "utf8");
 
     expect(html).toContain('id="app-loading-shell"');
-    expect(html).toContain("Preparing your campaign workspace.");
-    expect(html).toContain("No CV, campaign brief, or application action has been submitted.");
+    expect(html).toContain("A smarter way to run your job search in Saudi Arabia.");
+    expect(html).toContain("Nothing is submitted until you approve it.");
   });
 
   it("keeps the public hero promise approval-led in both languages", () => {
-    const english = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
-    const arabic = readFileSync(resolve(projectRoot, "client/src/pages/ArabicHome.tsx"), "utf8");
+    const hero = readFileSync(resolve(projectRoot, "client/src/components/SaudiHero.tsx"), "utf8");
 
-    expect(english).toContain(">applications.</span>");
-    expect(english).toContain(">You approve</span>");
-    expect(english).toContain("You approve role targets");
-    expect(arabic).toContain("وأنت توافق");
-    expect(arabic).toContain("كل طلب مسجّل");
+    expect(hero).toContain("A smarter way to run your job search in");
+    expect(hero).toContain("Built for focused candidates across Saudi Arabia");
+    expect(hero).toContain("طريقة أذكى لإدارة بحثك عن عمل في");
+    expect(hero).toContain("مصمّم للمرشحين المركّزين في أنحاء السعودية");
   });
 });

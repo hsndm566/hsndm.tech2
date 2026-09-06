@@ -24,7 +24,7 @@ describe("public route SEO coverage", () => {
     expect(staticRoutes).toContain('path: "/ats"');
     expect(staticRoutes).toContain("const canonicalPath");
     expect(staticRoutes).toContain("Saudi job-application campaign plans from 99 SAR/month");
-    expect(staticRoutes).toContain("Saudi-focused job-application campaign support and practical web systems");
+    expect(staticRoutes).toContain("Saudi-focused job-application support: campaign targeting");
     expect(staticRoutes).toContain("faqSchema: \"ar\"");
     expect(staticRoutes).toContain("faqSchemaPattern");
   });

@@ -22,7 +22,7 @@ describe("Arabic readiness experience", () => {
   });
 
   it("keeps the user-approved reviewed Arabic copy in the primary public sections", () => {
-    expect(source).toContain("دعم حملة بعد موافقتك");
+    expect(source).toContain("الخصوصية والأمان");
     expect(source).toContain("الأسئلة الشائعة");
     expect(source).toContain("كيف تعمل <i>الخدمة.</i>");
     expect(source).toContain("فرص حقيقية");
