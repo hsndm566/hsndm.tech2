@@ -1,7 +1,7 @@
 .review-card h3 {
   margin: 35px 0 12px;
   color: var(--ink);
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Noto Sans Arabic", sans-serif;
   font-size: 17px;
   line-height: 1.48;
   letter-spacing: -.04em;

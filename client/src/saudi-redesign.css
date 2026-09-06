@@ -31,8 +31,8 @@
 .site-shell .saudi-hero-grid{display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:clamp(34px,5vw,78px);padding-block:90px 72px}
 .site-shell .saudi-brand-lockup{display:inline-flex;align-items:center;gap:12px;margin-bottom:25px;padding:8px 13px 8px 8px;border:1px solid rgba(255,255,255,.18);border-radius:16px;background:rgba(0,0,0,.32);box-shadow:0 18px 50px rgba(0,0,0,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .site-shell .saudi-brand-lockup img{width:48px;height:48px;display:block;object-fit:contain;border-radius:11px;background:#fff;padding:4px;box-shadow:inset 0 0 0 1px rgba(21,21,21,.06)}
-.site-shell .saudi-brand-lockup div{display:grid;gap:2px;text-align:start}.site-shell .saudi-brand-lockup strong{color:#fff;font-size:1rem;letter-spacing:-.035em}.site-shell .saudi-brand-lockup strong b{color:#ff7354}.site-shell .saudi-brand-lockup span{color:rgba(255,255,255,.58);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.045em;text-transform:uppercase}
-.site-shell .saudi-eyebrow{display:flex;align-items:center;gap:14px;color:#ff7a5c;font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin:0 0 26px}
+.site-shell .saudi-brand-lockup div{display:grid;gap:2px;text-align:start}.site-shell .saudi-brand-lockup strong{color:#fff;font-size:1rem;letter-spacing:-.035em}.site-shell .saudi-brand-lockup strong b{color:#ff7354}.site-shell .saudi-brand-lockup span{color:rgba(255,255,255,.58);font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.62rem;letter-spacing:.045em;text-transform:uppercase}
+.site-shell .saudi-eyebrow{display:flex;align-items:center;gap:14px;color:#ff7a5c;font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin:0 0 26px}
 .site-shell .saudi-eyebrow::before{content:"";width:34px;height:1px;background:#e5482a;flex:0 0 34px}
 .site-shell .saudi-intro h1{color:#f4f0e8;font-size:clamp(2.9rem,5.4vw,5.5rem);line-height:.98;letter-spacing:-.045em;font-weight:800;margin:0 0 24px;text-wrap:balance;max-width:16ch}
 .site-shell .saudi-intro h1 span{color:#f4f0e8}
@@ -50,11 +50,11 @@
 .site-shell .saudi-workspace{position:relative;background:rgba(250,248,243,.97);color:#151515;border:1px solid rgba(255,255,255,.2);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.34);overflow:hidden;transform:perspective(1400px) rotateY(-3deg) rotateX(1deg)}
 .site-shell .saudi-workspace::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.58),transparent 34%)}
 .site-shell .saudi-window{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 23px;background:#fff;border-bottom:1px solid rgba(21,21,21,.12)}
-.site-shell .saudi-window>span:last-child{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.06em;color:#77736b}
+.site-shell .saudi-window>span:last-child{font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.66rem;letter-spacing:.06em;color:#77736b}
 .site-shell .saudi-window-brand{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.9rem}.site-shell .saudi-window-brand img{width:28px;height:28px;object-fit:contain;border-radius:7px}.site-shell .saudi-window-brand b{color:#e5482a}
 .site-shell .saudi-workspace-body{padding:25px}
 .site-shell .saudi-preview-heading{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:21px}
-.site-shell .saudi-preview-heading p,.site-shell .saudi-preview-label{color:#77736b;font-family:'DM Mono',monospace;font-size:.66rem;font-weight:500;letter-spacing:.06em;margin:0 0 9px;text-transform:uppercase}
+.site-shell .saudi-preview-heading p,.site-shell .saudi-preview-label{color:#77736b;font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.66rem;font-weight:500;letter-spacing:.06em;margin:0 0 9px;text-transform:uppercase}
 .site-shell .saudi-preview-heading h2{font-size:1.75rem;letter-spacing:-.045em;color:#151515;line-height:1.2;margin:0}
 .site-shell .saudi-avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#151515;color:#fff;font-size:.76rem;flex-shrink:0;font-weight:800}
 .site-shell .saudi-profile{display:flex;align-items:center;gap:14px;background:#fff5f2;padding:17px;border:1px solid rgba(229,72,42,.18);border-radius:14px;margin-bottom:18px}
@@ -66,10 +66,10 @@
 .site-shell .saudi-workspace-visual figcaption{position:absolute;z-index:1;left:14px;right:14px;bottom:12px;color:#fff;font-size:.72rem;font-weight:650}
 .site-shell .saudi-steps{padding:0;margin:0;list-style:none}
 .site-shell .saudi-steps li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(21,21,21,.1)}
-.site-shell .saudi-steps li>span{display:grid;place-items:center;border-radius:9px;background:#f0ece4;color:#e5482a;width:34px;height:34px;font-family:'DM Mono',monospace;font-size:.7rem;flex-shrink:0}
+.site-shell .saudi-steps li>span{display:grid;place-items:center;border-radius:9px;background:#f0ece4;color:#e5482a;width:34px;height:34px;font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.7rem;flex-shrink:0}
 .site-shell .saudi-steps h3{margin:0 0 4px;font-size:.9rem;font-weight:700}.site-shell .saudi-steps p{margin:0;font-size:.78rem;line-height:1.55;color:#6d6a63}
 .site-shell .saudi-preview-footer{display:flex;align-items:center;gap:8px;font-size:.7rem;color:#6d6a63;margin-top:18px;line-height:1.5}.site-shell .saudi-preview-footer svg{color:#1f6a4a}
-.site-shell .saudi-market{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:22px;border-top:1px solid rgba(255,255,255,.17);padding-block:24px;color:rgba(255,255,255,.58);font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase}
+.site-shell .saudi-market{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:22px;border-top:1px solid rgba(255,255,255,.17);padding-block:24px;color:rgba(255,255,255,.58);font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase}
 .site-shell .saudi-market>div{display:flex;gap:16px;align-items:center;color:#fff}.site-shell .saudi-market i{width:5px;height:5px;border-radius:50%;background:#e5482a}
 
 /* Real imagery instead of generic visual placeholders */
@@ -83,7 +83,7 @@
 /* Restored Jeddah location block */
 .site-shell .saudi-location-section{display:grid;grid-template-columns:.72fr 1.28fr;gap:28px;align-items:stretch;padding-bottom:84px}
 .site-shell .saudi-location-heading{padding:34px;border:1px solid rgba(255,255,255,.16);border-radius:22px;background:linear-gradient(145deg,rgba(229,72,42,.18),rgba(255,255,255,.045));display:flex;flex-direction:column;justify-content:flex-end;min-height:320px}
-.site-shell .saudi-location-heading span{color:#ff9a82;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase}.site-shell .saudi-location-heading h2{margin:14px 0 0;color:#fff;font-size:clamp(1.7rem,2.8vw,3rem);line-height:1.04;letter-spacing:-.05em}
+.site-shell .saudi-location-heading span{color:#ff9a82;font-family:'DM Mono',"Noto Sans Arabic",monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase}.site-shell .saudi-location-heading h2{margin:14px 0 0;color:#fff;font-size:clamp(1.7rem,2.8vw,3rem);line-height:1.04;letter-spacing:-.05em}
 .site-shell .saudi-location-card{min-height:320px!important;border-radius:22px!important;border-color:rgba(255,255,255,.14)!important;background:linear-gradient(115deg,rgba(235,231,222,.9),rgba(244,240,232,.96)),url('/manus-storage/autoapply-desk_635170b2.jpg') center/cover no-repeat!important;box-shadow:0 24px 70px rgba(0,0,0,.18)!important}
 .site-shell .saudi-location-card>div:last-child{border-radius:16px!important;border-color:rgba(21,21,21,.11)!important}
 
@@ -96,6 +96,9 @@
 .site-shell .section-kicker{color:#d54124}.site-shell .section-kicker.inverse{color:#ff987f}
 
 .site-shell[dir="rtl"] .saudi-intro h1{letter-spacing:0;line-height:1.25;font-size:clamp(3rem,5vw,5.5rem)}
+.site-shell[dir="rtl"] .saudi-intro{text-align:center}
+.site-shell[dir="rtl"] .saudi-eyebrow,.site-shell[dir="rtl"] .saudi-actions,.site-shell[dir="rtl"] .saudi-trust{justify-content:center}
+.site-shell[dir="rtl"] .saudi-intro h1,.site-shell[dir="rtl"] .saudi-description{margin-inline:auto}
 .site-shell[dir="rtl"] .saudi-eyebrow,.site-shell[dir="rtl"] .saudi-preview-heading p,.site-shell[dir="rtl"] .saudi-preview-label{letter-spacing:0}
 .site-shell[dir="rtl"] .saudi-workspace{transform:perspective(1400px) rotateY(3deg) rotateX(1deg)}
 .site-shell[dir="rtl"] .saudi-workspace-visual figcaption,.site-shell[dir="rtl"] .saudi-visual-card figcaption{text-align:right}
