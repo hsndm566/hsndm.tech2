@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
-import { startLogin } from "@/const";
 import { SignInButton } from "@clerk/clerk-react";
 import { isDashboardSubdomain } from "@/lib/subdomain";
 import { useClerkSession } from "@/components/ClerkSessionBoundary";
@@ -97,19 +95,18 @@ export default function Dashboard() {
       return 0;
     }
   });
-  const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
   const clerkAuth = useClerkSession();
   const clerkDashboardEnabled = clerkAuth.enabled && (isDashboardSubdomain() || window.location.pathname === "/dashboard");
-  const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
-  const dashboardAuthLoading = clerkDashboardEnabled ? !clerkAuth.isLoaded : authLoading;
+  const dashboardAuthenticated = clerkDashboardEnabled && Boolean(clerkAuth.isSignedIn);
+  const dashboardAuthLoading = clerkDashboardEnabled && !clerkAuth.isLoaded;
   const candidateIdentity = clerkDashboardEnabled
     ? {
         name: clerkAuth.user?.fullName?.trim() || "Candidate",
         email: clerkAuth.user?.primaryEmailAddress?.emailAddress || "",
       }
     : {
-        name: user?.name || "Candidate",
-        email: user?.email || "",
+        name: "Candidate",
+        email: "",
       };
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
   const dashboardHelpMessage = encodeURIComponent("Hi AutoApply SA — I need help accessing my candidate dashboard or requesting a secure campaign report.");
@@ -321,6 +318,21 @@ export default function Dashboard() {
     }
   };
 
+  if (!clerkAuth.enabled) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6">
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]" role="alert">
+          <CardHeader>
+            <p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure access recovery</p>
+            <CardTitle>Sign-in is temporarily unavailable</CardTitle>
+            <CardDescription>The dashboard authentication configuration is unavailable. No campaign data has been exposed or changed.</CardDescription>
+          </CardHeader>
+          <CardContent><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>Try again</Button></CardContent>
+        </Card>
+      </main>
+    );
+  }
+
   if (clerkDashboardEnabled && !clerkAuth.isLoaded && !clerkLoadTimedOut) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] text-[#151515] grid place-items-center p-6" aria-busy="true">
@@ -404,12 +416,12 @@ export default function Dashboard() {
   }
 
   if (dashboardAuthenticated && !appsLoading && !profileLoading && !evidenceLoading && !approvalLoading && applications.length === 0) {
-    const fullName = clerkDashboardEnabled ? clerkAuth.user?.fullName : user?.name;
-    const email = clerkDashboardEnabled ? clerkAuth.user?.primaryEmailAddress?.emailAddress : user?.email;
+    const fullName = clerkAuth.user?.fullName;
+    const email = clerkAuth.user?.primaryEmailAddress?.emailAddress;
     return (
       <FirstLoginDashboard
         identity={{ fullName, email }}
-        onSignOut={() => { void (clerkDashboardEnabled ? clerkAuth.signOut() : logout()); }}
+        onSignOut={() => { void clerkAuth.signOut(); }}
         approval={campaignApproval ?? undefined}
         approvalLoading={approvalLoading}
         approvalPending={campaignApprovalMutation.isPending}
@@ -448,16 +460,13 @@ export default function Dashboard() {
                 <Link href="/dashboard/settings"><Button variant="outline" size="sm" className="gap-1.5" aria-label="Open profile settings"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Settings</span></Button></Link>
                 <span className="min-w-0 max-w-[12rem] truncate text-sm font-medium flex items-center gap-1.5 bg-[#f3f0e9] px-3 py-1.5 rounded-full border border-[#151515]/10">
                   <User className="w-3.5 h-3.5 text-[#e5482a]" /> {candidateIdentity.name || candidateIdentity.email || "Candidate"}
-                  {user?.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-blue-600 ml-1" />}
                 </span>
-                <Button variant="outline" size="sm" onClick={() => clerkDashboardEnabled ? clerkAuth.signOut() : logout()} className="gap-1.5">
+                <Button variant="outline" size="sm" onClick={() => clerkAuth.signOut()} className="gap-1.5">
                   <LogOut className="w-4 h-4" /> Sign Out
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => startLogin()} size="sm" className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2">
-                <LogIn className="w-4 h-4" /> Sign In
-              </Button>
+              <Link href="/sign-in"><Button size="sm" className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2"><LogIn className="w-4 h-4" /> Sign In</Button></Link>
             )}
           </div>
         </div>
@@ -474,9 +483,7 @@ export default function Dashboard() {
                   AutoApply SA securely links your submitted applications to your candidate account so you can track interviews, offers, and active submissions in real time.
                 </p>
               </div>
-              <Button onClick={() => startLogin()} size="lg" className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2">
-                <LogIn className="w-5 h-5" /> Sign In with Manus
-              </Button>
+              <Link href="/sign-in"><Button size="lg" className="bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2"><LogIn className="w-5 h-5" /> Sign in securely</Button></Link>
             </CardContent>
           </Card>
         ) : (
@@ -940,3 +947,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

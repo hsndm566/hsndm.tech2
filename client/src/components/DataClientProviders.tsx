@@ -1,5 +1,4 @@
 import { trpc } from "@/lib/trpc";
-import { COOKIE_NAME } from "@shared/const";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { useState, type ReactNode } from "react";
@@ -35,19 +34,6 @@ function createTrpcClient() {
         async headers() {
           const clerkToken = await getClerkToken();
           if (clerkToken) return { Authorization: `Bearer ${clerkToken}` };
-
-          try {
-            const raw = sessionStorage.getItem("manus-cookie");
-            if (raw) {
-              const prefix = `${COOKIE_NAME}=`;
-              const pair = raw.split(";").find(value => value.trim().startsWith(prefix));
-              const token = pair?.trim().slice(prefix.length);
-              if (token) return { Authorization: `Bearer ${token}` };
-            }
-          } catch {
-            // sessionStorage can be unavailable in a restricted browser context.
-          }
-
           return {};
         },
         fetch(input, init) {
@@ -68,3 +54,4 @@ export function DataClientProviders({ children }: DataClientProvidersProps) {
     </trpc.Provider>
   );
 }
+
