@@ -2,7 +2,6 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { registerDataBackupRoutes } from "../dataBackup";
@@ -109,7 +108,6 @@ async function startServer() {
     }
   });
   registerStorageProxy(app);
-  registerOAuthRoutes(app);
   registerDataBackupRoutes(app);
   registerDodoPaymentRoutes(app);
   // tRPC API
@@ -141,3 +139,4 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
+
