@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { SignInButton } from "@clerk/clerk-react";
-import { useAuth as useManusAuth } from "@/_core/hooks/useAuth";
 import { useClerkSession } from "@/components/ClerkSessionBoundary";
-import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { isDashboardSubdomain } from "@/lib/subdomain";
 import { SearchableSaudiSelect } from "@/components/SearchableSaudiSelect";
@@ -90,11 +88,10 @@ function SettingsSkeleton() {
 }
 
 export default function ProfileSettings() {
-  const { user, isAuthenticated, logout, loading: authLoading } = useManusAuth();
   const clerkAuth = useClerkSession();
   const clerkUser = clerkAuth.user;
   const clerkDashboardEnabled = clerkAuth.enabled && (isDashboardSubdomain() || window.location.pathname.startsWith("/dashboard"));
-  const dashboardAuthenticated = clerkDashboardEnabled ? Boolean(clerkAuth.isSignedIn) : isAuthenticated;
+  const dashboardAuthenticated = clerkDashboardEnabled && Boolean(clerkAuth.isSignedIn);
   const [clerkLoadTimedOut, setClerkLoadTimedOut] = useState(false);
   const [draft, setDraft] = useState<ProfileDraft>(defaultDraft);
   const previousDraftRef = useRef<ProfileDraft | null>(null);
@@ -134,6 +131,14 @@ export default function ProfileSettings() {
 
   const setField = <K extends keyof ProfileDraft>(field: K, value: ProfileDraft[K]) => setDraft((current) => ({ ...current, [field]: value }));
 
+  if (!clerkAuth.enabled) {
+    return (
+      <main className="min-h-screen bg-[#f3f0e9] grid place-items-center p-6">
+        <Card className="w-full max-w-md border-[#151515]/10 border-s-[3px] border-s-[#e5482a] bg-[#fbf9f5]" role="alert"><CardHeader><p className="font-mono text-[11px] uppercase tracking-[.12em] text-[#e5482a]">Secure access recovery</p><CardTitle>Sign-in is temporarily unavailable</CardTitle><CardDescription>The dashboard authentication configuration is unavailable. Your profile remains private and unchanged.</CardDescription></CardHeader><CardContent><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a]" onClick={() => window.location.reload()}>Try again</Button></CardContent></Card>
+      </main>
+    );
+  }
+
   if (clerkDashboardEnabled && !clerkAuth.isLoaded && !clerkLoadTimedOut) {
     return <main className="min-h-screen bg-[#f3f0e9] p-6" aria-busy="true"><SettingsSkeleton /></main>;
   }
@@ -154,19 +159,19 @@ export default function ProfileSettings() {
     );
   }
 
-  if (dashboardAuthLoading(authLoading, clerkDashboardEnabled, clerkAuth.isLoaded)) {
+  if (!clerkAuth.isLoaded) {
     return <main className="min-h-screen bg-[#f3f0e9] p-6"><SettingsSkeleton /></main>;
   }
 
   if (!dashboardAuthenticated) {
     return (
       <main className="min-h-screen bg-[#f3f0e9] grid place-items-center p-6">
-        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5] text-center"><CardHeader><CardTitle>Sign in to edit your profile</CardTitle><CardDescription>Your preferences are private and only visible to your candidate account.</CardDescription></CardHeader><CardContent><Button onClick={() => startLogin()} className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2"><LogIn className="h-4 w-4" /> Candidate Sign In</Button></CardContent></Card>
+        <Card className="w-full max-w-md border-[#151515]/10 bg-[#fbf9f5] text-center"><CardHeader><CardTitle>Sign in to edit your profile</CardTitle><CardDescription>Your preferences are private and only visible to your candidate account.</CardDescription></CardHeader><CardContent><Link href="/sign-in"><Button className="w-full bg-[#151515] text-[#fbf9f5] hover:bg-[#e5482a] gap-2"><LogIn className="h-4 w-4" /> Candidate Sign In</Button></Link></CardContent></Card>
       </main>
     );
   }
 
-  const accountLabel = clerkDashboardEnabled ? clerkUser?.primaryEmailAddress?.emailAddress : user?.email;
+  const accountLabel = clerkUser?.primaryEmailAddress?.emailAddress;
 
   return (
     <div className="min-h-screen bg-[#f3f0e9] text-[#151515] font-sans antialiased">
@@ -178,8 +183,8 @@ export default function ProfileSettings() {
             <div className="min-w-0"><p className="truncate text-base font-bold tracking-tight md:text-xl">Profile settings</p><p className="truncate text-xs text-[#151515]/55">{accountLabel || "Private candidate account"}</p></div>
           </div>
           <div className="flex items-center justify-between gap-3 md:justify-end">
-            <span className="hidden items-center gap-2 rounded-full border border-[#151515]/10 bg-[#f3f0e9] px-3 py-1.5 text-sm font-medium sm:flex"><UserRound className="h-3.5 w-3.5 text-[#e5482a]" /> {user?.name || clerkUser?.fullName || "Candidate"}</span>
-            <Button variant="outline" size="sm" onClick={() => clerkDashboardEnabled ? clerkAuth.signOut() : logout()} className="gap-1.5"><LogOut className="h-4 w-4" /> Sign Out</Button>
+            <span className="hidden items-center gap-2 rounded-full border border-[#151515]/10 bg-[#f3f0e9] px-3 py-1.5 text-sm font-medium sm:flex"><UserRound className="h-3.5 w-3.5 text-[#e5482a]" /> {clerkUser?.fullName || "Candidate"}</span>
+            <Button variant="outline" size="sm" onClick={() => clerkAuth.signOut()} className="gap-1.5"><LogOut className="h-4 w-4" /> Sign Out</Button>
           </div>
         </div>
       </header>
@@ -214,6 +219,3 @@ export default function ProfileSettings() {
   );
 }
 
-function dashboardAuthLoading(authLoading: boolean, clerkDashboardEnabled: boolean, clerkIsLoaded: boolean) {
-  return clerkDashboardEnabled ? !clerkIsLoaded : authLoading;
-}
