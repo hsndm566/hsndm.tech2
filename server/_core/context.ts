@@ -2,7 +2,6 @@ import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 import type { User } from "../../drizzle/schema";
 import { verifyToken } from "@clerk/backend";
 import { getUserByOpenId, upsertUser } from "../db";
-import { sdk } from "./sdk";
 
 export type TrpcContext = {
   req: CreateExpressContextOptions["req"];
@@ -10,7 +9,14 @@ export type TrpcContext = {
   user: User | null;
 };
 
-async function authenticateClerkRequest(req: CreateExpressContextOptions["req"]): Promise<User | null> {
+const productionAuthorizedParties = ["https://dashboard.hsndm.tech"];
+const developmentAuthorizedParties = [
+  ...productionAuthorizedParties,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+
+export async function authenticateClerkRequest(req: CreateExpressContextOptions["req"]): Promise<User | null> {
   const secretKey = process.env.CLERK_SECRET_KEY;
   const authorization = req.headers.authorization;
   if (!secretKey || !authorization?.startsWith("Bearer ")) return null;
@@ -19,7 +25,12 @@ async function authenticateClerkRequest(req: CreateExpressContextOptions["req"])
   if (!token) return null;
 
   try {
-    const payload = await verifyToken(token, { secretKey });
+    const payload = await verifyToken(token, {
+      secretKey,
+      authorizedParties: process.env.NODE_ENV === "production"
+        ? productionAuthorizedParties
+        : developmentAuthorizedParties,
+    });
     if (!payload.sub) return null;
 
     const openId = `clerk:${payload.sub}`.slice(0, 64);
@@ -33,18 +44,7 @@ async function authenticateClerkRequest(req: CreateExpressContextOptions["req"])
 export async function createContext(
   opts: CreateExpressContextOptions
 ): Promise<TrpcContext> {
-  let user: User | null = null;
-
-  try {
-    user = await sdk.authenticateRequest(opts.req);
-  } catch (error) {
-    // Authentication is optional for public procedures.
-    user = null;
-  }
-
-  if (!user) {
-    user = await authenticateClerkRequest(opts.req);
-  }
+  const user = await authenticateClerkRequest(opts.req);
 
   return {
     req: opts.req,
@@ -52,3 +52,4 @@ export async function createContext(
     user,
   };
 }
+
