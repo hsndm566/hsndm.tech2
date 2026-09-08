@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   reportCvExtractionFailure: vi.fn(),
   extractAtsCvText: vi.fn(),
   saveResumeMetadata: vi.fn(),
+  resetAnalysis: vi.fn(),
   isAuthenticated: false,
   analysis: null as null | { score: number; summary: string; strengths: string[]; gaps: string[]; optimizedBullets: string[]; disclaimer: string },
 }));
@@ -14,7 +15,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/trpc", () => ({
   trpc: {
     campaign: {
-      ats: { analyze: { useMutation: () => ({ data: mocks.analysis, error: null, isPending: false, mutate: vi.fn() }) } },
+      ats: { analyze: { useMutation: () => ({ data: mocks.analysis, error: null, isPending: false, mutate: vi.fn(), reset: mocks.resetAnalysis }) } },
       clientIssue: { reportCvExtractionFailure: { useMutation: () => ({ mutate: mocks.reportCvExtractionFailure }) } },
       applications: { profile: { update: { useMutation: () => ({ mutate: mocks.saveResumeMetadata, isPending: false }) } } },
     },
@@ -29,6 +30,7 @@ describe("ATS page local upload", () => {
   beforeEach(() => {
     mocks.reportCvExtractionFailure.mockReset();
     mocks.saveResumeMetadata.mockReset();
+    mocks.resetAnalysis.mockReset();
     mocks.isAuthenticated = false;
     mocks.analysis = null;
     mocks.extractAtsCvText.mockReset().mockImplementation(async (_file: File, reportFailure: (route: "/ats") => void) => {
@@ -98,6 +100,7 @@ describe("ATS page local upload", () => {
       error: errorState,
       isPending: isPendingState,
       mutate: mutateMock,
+      reset: mocks.resetAnalysis,
     } as any);
 
     const { default: Ats } = await import("./Ats");
@@ -130,6 +133,7 @@ describe("ATS page local upload", () => {
       error: null,
       isPending: isPendingState,
       mutate: mutateMock,
+      reset: mocks.resetAnalysis,
     } as any);
 
     const { default: Ats } = await import("./Ats");
@@ -147,5 +151,19 @@ describe("ATS page local upload", () => {
     expect(getByText(/The AI review is taking longer than expected/i)).toBeTruthy();
     expect(container.querySelector("h2")?.textContent).toMatch(/ATS readiness:/i);
     expect(container.querySelector("button.bg-\\[\\#151515\\]")?.getAttribute("disabled")).toBeNull();
+  });
+
+  it("invalidates a previous review when pasted CV text changes", async () => {
+    mocks.analysis = { score: 74, summary: "Previous CV", strengths: ["Clear headings"], gaps: ["Add metrics"], optimizedBullets: ["Improved bullet"], disclaimer: "Preview only." };
+    mocks.resetAnalysis.mockImplementation(() => { mocks.analysis = null; });
+    const { default: Ats } = await import("./Ats");
+    const { container } = render(<Ats />);
+
+    expect(container.textContent).toContain("Previous CV");
+
+    fireEvent.change(container.querySelector("textarea") as HTMLTextAreaElement, { target: { value: "B".repeat(130) } });
+
+    expect(mocks.resetAnalysis).toHaveBeenCalledTimes(1);
+    expect(container.textContent).not.toContain("Previous CV");
   });
 });

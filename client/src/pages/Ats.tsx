@@ -42,8 +42,18 @@ export default function Ats() {
     if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
   }, []);
 
+  const discardReview = () => {
+    reviewRequestId.current += 1;
+    if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
+    reviewFallbackTimeout.current = null;
+    analyze.reset();
+    setLocalReview(null);
+    setRemoteReviewTimedOut(false);
+  };
+
   const choose = async (selected?: File) => {
     if (!selected) return;
+    discardReview();
     setFile(selected.name);
     setExtractionError("");
     setLocalReview(null);
@@ -63,6 +73,7 @@ export default function Ats() {
 
   const runAnalysis = () => {
     if (!canAnalyze || isAnalyzing) return;
+    analyze.reset();
     setLocalReview(null);
     setRemoteReviewTimedOut(false);
     if (reviewFallbackTimeout.current !== null) window.clearTimeout(reviewFallbackTimeout.current);
@@ -140,7 +151,7 @@ export default function Ats() {
             <label className="grid gap-1 text-sm font-medium">Target industry<SearchableSaudiSelect options={saudiIndustries} value={industry} onChange={setIndustry} placeholder="Search industries…" /></label>
           </div>
           <label className="grid gap-1 text-sm font-medium">Target role <span className="font-normal text-[#151515]/60">(optional)</span><input className="ats-input w-full border border-black/20 p-3 font-normal" value={role} onChange={event => setRole(event.target.value)} placeholder="Target role (optional)" /></label>
-          <label className="grid gap-1 text-sm font-medium">CV text<textarea className="ats-input min-h-40 w-full border border-black/20 p-3 font-normal" value={text} onChange={event => { setText(event.target.value); setLocalReview(null); if (extractionError) setExtractionError(""); }} placeholder="CV text appears here after local extraction." /></label>
+          <label className="grid gap-1 text-sm font-medium">CV text<textarea className="ats-input min-h-40 w-full border border-black/20 p-3 font-normal" value={text} onChange={event => { discardReview(); setText(event.target.value); if (extractionError) setExtractionError(""); }} placeholder="CV text appears here after local extraction." /></label>
           <p id="ats-extraction-guidance" className={`ats-status ${extractionError ? "text-[#b42318]" : "text-[#151515]/60"}`} role={extractionError ? "alert" : "status"}>{extractionError || (canAnalyze ? "Ready for a free AI ATS preview." : "Add at least 120 readable CV characters to run the preview.")}</p>
           <button disabled={!canAnalyze || isAnalyzing} onClick={runAnalysis} className="ats-submit bg-[#151515] px-5 py-3 text-white disabled:opacity-50">{isAnalyzing ? <><Loader2 className="mr-2 inline animate-spin" />Analysing CV signals…</> : <><Sparkles className="mr-2 inline" />Run free AI ATS preview</>}</button>
           {isAnalyzing && <div role="status" className="ats-review-pending space-y-3 border border-[#e5482a]/30 bg-[#fff7f4] p-4"><p className="text-sm font-medium">Checking structure, keywords, and evidence…</p><div className="h-3 animate-pulse bg-black/10" /><div className="h-3 w-4/5 animate-pulse bg-black/10" /><div className="h-3 w-3/5 animate-pulse bg-black/10" /></div>}
