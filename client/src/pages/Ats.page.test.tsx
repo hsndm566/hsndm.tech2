@@ -12,10 +12,12 @@ const mocks = vi.hoisted(() => ({
   analysis: null as null | { score: number; summary: string; strengths: string[]; gaps: string[]; optimizedBullets: string[]; disclaimer: string },
 }));
 
+const defaultAnalyzeMutation = () => ({ data: mocks.analysis, error: null, isPending: false, mutate: vi.fn(), reset: mocks.resetAnalysis } as any);
+
 vi.mock("@/lib/trpc", () => ({
   trpc: {
     campaign: {
-      ats: { analyze: { useMutation: () => ({ data: mocks.analysis, error: null, isPending: false, mutate: vi.fn(), reset: mocks.resetAnalysis }) } },
+      ats: { analyze: { useMutation: defaultAnalyzeMutation } },
       clientIssue: { reportCvExtractionFailure: { useMutation: () => ({ mutate: mocks.reportCvExtractionFailure }) } },
       applications: { profile: { update: { useMutation: () => ({ mutate: mocks.saveResumeMetadata, isPending: false }) } } },
     },
@@ -27,12 +29,13 @@ vi.mock("@/components/SearchableSaudiSelect", () => ({ SearchableSaudiSelect: ()
 vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => ({ isAuthenticated: mocks.isAuthenticated }) }));
 
 describe("ATS page local upload", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.reportCvExtractionFailure.mockReset();
     mocks.saveResumeMetadata.mockReset();
     mocks.resetAnalysis.mockReset();
     mocks.isAuthenticated = false;
     mocks.analysis = null;
+    vi.mocked(await import("@/lib/trpc")).trpc.campaign.ats.analyze.useMutation = defaultAnalyzeMutation;
     mocks.extractAtsCvText.mockReset().mockImplementation(async (_file: File, reportFailure: (route: "/ats") => void) => {
       reportFailure("/ats");
       return "";
@@ -165,5 +168,29 @@ describe("ATS page local upload", () => {
 
     expect(mocks.resetAnalysis).toHaveBeenCalledTimes(1);
     expect(container.textContent).not.toContain("Previous CV");
+  });
+
+  it("ignores a pending remote completion after pasted CV text changes", async () => {
+    const mutateMock = vi.fn();
+    let callbacks: { onSuccess?: () => void } | undefined;
+    vi.mocked(await import("@/lib/trpc")).trpc.campaign.ats.analyze.useMutation = () => ({
+      data: null,
+      error: null,
+      isPending: false,
+      mutate: mutateMock.mockImplementation((_input, options) => { callbacks = options; }),
+      reset: mocks.resetAnalysis,
+    } as any);
+    const { default: Ats } = await import("./Ats");
+    const { container } = render(<Ats />);
+    const textarea = container.querySelector("textarea") as HTMLTextAreaElement;
+
+    fireEvent.change(textarea, { target: { value: "A".repeat(130) } });
+    fireEvent.click(container.querySelector("button.bg-\\[\\#151515\\]") as HTMLButtonElement);
+    fireEvent.change(textarea, { target: { value: "B".repeat(130) } });
+    act(() => callbacks?.onSuccess?.());
+
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+    expect(mocks.resetAnalysis).toHaveBeenCalledTimes(3);
+    expect(container.querySelector("h2")).toBeNull();
   });
 });
