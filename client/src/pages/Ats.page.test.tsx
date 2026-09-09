@@ -46,6 +46,15 @@ describe("ATS page local upload", () => {
     vi.useRealTimers();
   });
 
+  it("does not promise an automatic employer acceptance threshold", async () => {
+    mocks.analysis = { score: 90, summary: "Synthetic review", strengths: [], gaps: [], optimizedBullets: [], disclaimer: "Preview only." };
+    const { default: Ats } = await import("./Ats");
+    const { container } = render(<Ats />);
+    expect(container.textContent).toContain("No score guarantees an interview or automatic acceptance.");
+    expect(container.textContent).not.toContain("pass automatically");
+    expect(container.textContent).not.toContain("reject CVs scoring below 70");
+  });
+
   it("reports only the ATS route when file extraction fails during selection", async () => {
     const { default: Ats } = await import("./Ats");
     const { container } = render(<Ats />);
