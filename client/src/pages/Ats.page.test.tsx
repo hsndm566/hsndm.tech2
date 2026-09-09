@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from "react";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -43,7 +43,17 @@ describe("ATS page local upload", () => {
   });
 
   afterEach(() => {
+    cleanup();
     vi.useRealTimers();
+  });
+
+  it("does not promise an automatic employer acceptance threshold", async () => {
+    mocks.analysis = { score: 90, summary: "Synthetic review", strengths: [], gaps: [], optimizedBullets: [], disclaimer: "Preview only." };
+    const { default: Ats } = await import("./Ats");
+    const { container } = render(<Ats />);
+    expect(container.textContent).toContain("No score guarantees an interview or automatic acceptance.");
+    expect(container.textContent).not.toContain("pass automatically");
+    expect(container.textContent).not.toContain("reject CVs scoring below 70");
   });
 
   it("reports only the ATS route when file extraction fails during selection", async () => {
