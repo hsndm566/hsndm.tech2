@@ -163,7 +163,7 @@ export default function Ats() {
           <section className="space-y-4 bg-[#151515] p-6 text-white">
             <div className="flex items-center justify-between gap-4"><h2 className="text-2xl">ATS readiness: {review.score}/100</h2><button onClick={exportResult} className="border px-3 py-2"><Download className="mr-1 inline" />Export</button></div>
             {localReview && <p className="border border-white/20 bg-white/10 p-3 text-sm">The remote review was unavailable, so this is a private local ATS preview. No new CV text was sent for this fallback.</p>}
-            <p className="text-sm text-white/80">Most Saudi ATS systems reject CVs scoring below 70. Scores above 85 pass automatically.</p>
+            <p className="text-sm text-white/80">This preview score is a guide to CV readability, not an employer's screening score. No score guarantees an interview or automatic acceptance.</p>
             <div className="flex items-center gap-3 border border-white/10 bg-white/5 p-3 text-xs" aria-label="ATS Helpful Feedback"><span>Were these results helpful?</span>{helpfulness ? <span className="font-medium text-[#e5482a]">Thank you for your feedback!</span> : <div className="flex gap-2"><button type="button" onClick={() => setHelpfulness("yes")} className="bg-white/10 px-2 py-1 hover:bg-white/25">Yes</button><button type="button" onClick={() => setHelpfulness("no")} className="bg-white/10 px-2 py-1 hover:bg-white/25">No</button></div>}</div>
             {review.score < 70 && <p className="bg-white/10 p-3 text-sm text-white">The Starter plan includes a full ATS optimization of your CV. <Link href="/pricing" className="font-medium text-[#e5482a] underline">View pricing plans →</Link></p>}
             <p>{review.summary}</p>
