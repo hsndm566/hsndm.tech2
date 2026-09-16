@@ -39,6 +39,7 @@ import { AnimeVisualEnhancements } from "@/components/AnimeVisualEnhancements";
 import { RecoveryPanel } from "@/components/RecoveryPanel";
 import { ChatLauncherSlot } from "@/components/ChatLauncherSlot";
 import { DashboardBrowserHelperCta } from "@/components/DashboardBrowserHelperCta";
+import { SocialProofNotification } from "@/components/SocialProofNotification";
 
 function DashboardHostRedirectGate({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -136,6 +137,7 @@ function App() {
           <Toaster richColors position="top-right" />
           <CookieConsent />
           <WhatsAppBusinessCta />
+          <SocialProofNotification />
           <ChatLauncherSlot />
           <DashboardHostRedirectGate>
             <Suspense fallback={<RecoveryPanel loading arabic={typeof window !== "undefined" && window.location.pathname.startsWith("/ar")} />}>
