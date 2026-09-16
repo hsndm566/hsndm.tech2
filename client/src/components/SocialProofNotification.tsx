@@ -9,10 +9,15 @@ const MOCK_SOCIAL_PROOF = [
   { name: "Yasmin", company: "STC" },
 ] as const;
 
+const MOBILE_MAX_WIDTH = 520;
+const MOBILE_MIN_BOTTOM = 76;
+const MOBILE_GAP = 12;
+
 export function SocialProofNotification() {
   const [location] = useLocation();
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
+  const [bottomOffset, setBottomOffset] = useState(20);
   const previousIndex = useRef(-1);
 
   useEffect(() => {
@@ -55,6 +60,63 @@ export function SocialProofNotification() {
     };
   }, [location]);
 
+  useEffect(() => {
+    if (location !== "/") return;
+
+    let frame = 0;
+
+    const calculateBottomOffset = () => {
+      if (window.innerWidth > MOBILE_MAX_WIDTH) {
+        setBottomOffset(20);
+        return;
+      }
+
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const selectors = [
+        '[aria-labelledby="cookie-consent-title"]',
+        ".cookie-settings-trigger",
+        'a[aria-label="Chat on WhatsApp"]',
+      ];
+
+      const obstacleTops = selectors.flatMap((selector) =>
+        Array.from(document.querySelectorAll<HTMLElement>(selector))
+          .map((element) => element.getBoundingClientRect())
+          .filter((rect) => rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < viewportHeight)
+          .map((rect) => rect.top),
+      );
+
+      const nextBottom = obstacleTops.length
+        ? Math.max(MOBILE_MIN_BOTTOM, Math.ceil(viewportHeight - Math.min(...obstacleTops) + MOBILE_GAP))
+        : MOBILE_MIN_BOTTOM;
+
+      setBottomOffset((current) => (current === nextBottom ? current : nextBottom));
+    };
+
+    const schedulePositionUpdate = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(calculateBottomOffset);
+    };
+
+    const mutationObserver = new MutationObserver(schedulePositionUpdate);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    window.addEventListener("resize", schedulePositionUpdate);
+    window.addEventListener("orientationchange", schedulePositionUpdate);
+    window.visualViewport?.addEventListener("resize", schedulePositionUpdate);
+    window.addEventListener("autoapply:optional-consent", schedulePositionUpdate as EventListener);
+
+    schedulePositionUpdate();
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      mutationObserver.disconnect();
+      window.removeEventListener("resize", schedulePositionUpdate);
+      window.removeEventListener("orientationchange", schedulePositionUpdate);
+      window.visualViewport?.removeEventListener("resize", schedulePositionUpdate);
+      window.removeEventListener("autoapply:optional-consent", schedulePositionUpdate as EventListener);
+    };
+  }, [location]);
+
   if (location !== "/") return null;
 
   const current = currentIndex === null ? null : MOCK_SOCIAL_PROOF[currentIndex];
@@ -65,7 +127,6 @@ export function SocialProofNotification() {
         #autoapply-social-proof {
           position: fixed;
           left: 20px;
-          bottom: 20px;
           z-index: 70;
           width: min(340px, calc(100vw - 40px));
           display: flex;
@@ -81,7 +142,7 @@ export function SocialProofNotification() {
           opacity: 0;
           transform: translateX(-120%);
           pointer-events: none;
-          transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+          transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease, bottom .2s ease;
         }
 
         #autoapply-social-proof.show {
@@ -145,7 +206,6 @@ export function SocialProofNotification() {
         @media (max-width: 520px) {
           #autoapply-social-proof {
             left: 12px;
-            bottom: 76px;
             width: calc(100vw - 24px);
           }
         }
@@ -163,6 +223,7 @@ export function SocialProofNotification() {
         role="status"
         aria-live="polite"
         aria-atomic="true"
+        style={{ bottom: `${bottomOffset}px` }}
       >
         <div className="asp-avatar">{current?.name.charAt(0).toUpperCase() ?? ""}</div>
         <div className="asp-content">
