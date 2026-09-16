@@ -10,7 +10,7 @@ describe("HeroMedia", () => {
     const media = readSource("client/src/lib/media.ts");
 
     expect(media).toContain('/manus-storage/autoapply-hero-seamless-mobile_1fdb8683.mp4');
-    expect(media).toContain('/manus-storage/autoapply-explainer_0911e97f.mp4');
+    expect(media).toContain('/manus-storage/autoapply-onboarding-walkthrough.mp4');
     expect(component).not.toContain('autoPlay');
     expect(component).toContain('muted');
     expect(component).toContain('loop');

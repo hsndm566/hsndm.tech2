@@ -44,6 +44,15 @@ describe("homepage clarity release", () => {
     expect(source).not.toContain("Julie copilot");
   });
 
+  it("publishes the interactive onboarding walkthrough with clear plan boundaries", () => {
+    const source = homeSource();
+
+    expect(source).toContain('id="walkthrough"');
+    expect(source).toContain("What you are paying for");
+    expect(source).toContain("What is not promised");
+    expect(source).toContain("controls poster={HERO_POSTER_URL}");
+  });
+
   it("shows the local-scan status, AI skill result wiring, alignment tooltips, and unavailable states in both landing pages", () => {
     const english = homeSource();
     const arabic = arabicHomeSource();

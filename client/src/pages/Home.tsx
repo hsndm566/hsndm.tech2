@@ -49,7 +49,7 @@ const WHATSAPP_URL =
 // deployed portal host and cannot silently target the protected automation API.
 const PORTAL_ACTIVITY_URL = "/v1/campaigns/latest-activity";
 
-import { EXPLAINER_VIDEO_URL } from "@/lib/media";
+import { EXPLAINER_VIDEO_URL, HERO_POSTER_URL } from "@/lib/media";
 const EXPLAINER_VIDEO_SRC = EXPLAINER_VIDEO_URL;
 
 const plans = [
@@ -548,6 +548,22 @@ export default function Home() {
             <div className="page-frame mt-6 text-sm"><a href="/services/" className="underline underline-offset-4">Learn about our job application support services</a></div>
           </section>
         </SectionErrorBoundary>
+
+        <section id="walkthrough" className="video-explainer section-paper below-fold-section" aria-labelledby="walkthrough-heading">
+          <div className="page-frame video-explainer-inner">
+            <div className="section-kicker"><Send size={15} /> START HERE</div>
+            <h2 id="walkthrough-heading">See exactly how AutoApply SA works.</h2>
+            <p className="section-summary">Watch the full path before you sign up: what you provide, what we prepare, what you approve, and what each plan covers.</p>
+            <LazyMount><DeferredExplainerVideo src={EXPLAINER_VIDEO_SRC} className="video-placeholder video-explainer-media video-explainer-interactive" controls poster={HERO_POSTER_URL} ariaLabel="AutoApply SA onboarding and application walkthrough" unavailableLabel="AutoApply SA walkthrough video unavailable; the written service steps remain available">
+              Your browser cannot play this walkthrough video. The written service steps and pricing remain available below.
+            </DeferredExplainerVideo></LazyMount>
+            <div className="walkthrough-note" aria-label="What your plan includes">
+              <div><strong>What you are paying for</strong><span>Campaign support, role targeting, application preparation, your approval step, and status visibility.</span></div>
+              <div><strong>What is not promised</strong><span>No guaranteed interview, offer, placement, or exact application volume.</span></div>
+              <Link href="/pricing" className="text-button">Compare plans <MoveRight size={17} /></Link>
+            </div>
+          </div>
+        </section>
 
         {legacyPublicPreviewVisible && <>
         <section id="product" className="video-explainer section-paper below-fold-section" aria-labelledby="video-explainer-heading">
