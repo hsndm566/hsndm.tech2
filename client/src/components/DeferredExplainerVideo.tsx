@@ -5,6 +5,8 @@ type DeferredExplainerVideoProps = {
   className: string;
   ariaLabel: string;
   unavailableLabel: string;
+  controls?: boolean;
+  poster?: string;
   children?: React.ReactNode;
 };
 
@@ -12,7 +14,7 @@ type DeferredExplainerVideoProps = {
  * Keeps below-fold decorative motion out of the initial page transfer. The
  * source is mounted only when the explainer is close enough to be useful.
  */
-export function DeferredExplainerVideo({ src, className, ariaLabel, unavailableLabel, children }: DeferredExplainerVideoProps) {
+export function DeferredExplainerVideo({ src, className, ariaLabel, unavailableLabel, controls = false, poster, children }: DeferredExplainerVideoProps) {
   const regionRef = useRef<HTMLDivElement>(null);
   const [isNearViewport, setIsNearViewport] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
@@ -40,7 +42,7 @@ export function DeferredExplainerVideo({ src, className, ariaLabel, unavailableL
       {isNearViewport && src && !hasFailed ? (
         <div className={`${className} homepage-media-surface${isVideoReady ? " is-ready" : ""}`} aria-busy={!isVideoReady} aria-label={ariaLabel}>
           {!isVideoReady && <span className="homepage-media-loader" aria-hidden="true"><i /><i /><i /></span>}
-          <video className="homepage-media-video" autoPlay loop muted playsInline disablePictureInPicture controlsList="nodownload noplaybackrate" preload="metadata" onLoadedData={() => setIsVideoReady(true)} onError={() => setHasFailed(true)}>
+          <video className="homepage-media-video" autoPlay loop muted playsInline disablePictureInPicture controls={controls} poster={poster} controlsList="nodownload noplaybackrate" preload="metadata" onLoadedData={() => setIsVideoReady(true)} onError={() => setHasFailed(true)}>
             <source src={src} type="video/mp4" />
             {children}
           </video>

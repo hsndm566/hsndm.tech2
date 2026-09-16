@@ -4,4 +4,4 @@
  */
 export const HERO_VIDEO_URL = "/manus-storage/autoapply-hero-seamless-mobile_1fdb8683.mp4";
 export const HERO_POSTER_URL = "/manus-storage/autoapply-hero-poster_38be584c.jpg";
-export const EXPLAINER_VIDEO_URL = "/manus-storage/autoapply-explainer_0911e97f.mp4";
+export const EXPLAINER_VIDEO_URL = "/manus-storage/autoapply-onboarding-walkthrough.mp4";
