@@ -1,7 +1,7 @@
 import { ArrowUpRight, Check, FileText, ShieldCheck } from "lucide-react";
 import { JeddahLocationCard } from "@/components/Map";
 
-const BRAND_MARK = "/manus-storage/autoapply-symbol_80d77010.png";
+const BRAND_MARK = "/autoapplysa-mark.svg";
 const HERO_VISUAL = "/manus-storage/autoapply-hero-operations_ad007abc.jpg";
 const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";
 const DESK_VISUAL = "/manus-storage/autoapply-desk_635170b2.jpg";
@@ -23,7 +23,7 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
         <p className="saudi-trust"><ShieldCheck size={17}/><span>{t ? "مصمّم للمرشحين المركّزين في أنحاء السعودية" : "Built for focused candidates across Saudi Arabia"}</span></p>
       </div>
       <div className="saudi-workspace" aria-label={t ? "معاينة توضيحية وليست بيانات حساب حقيقية" : "Illustrative workspace, not real account data"}>
-        <div className="saudi-window"><span className="saudi-window-brand"><img src={BRAND_MARK} alt="" width={28} height={28} /> AutoApply <b>SA</b></span><span>{t ? "مساحة الحملة / معاينة" : "CAMPAIGN WORKSPACE / PREVIEW"}</span></div>
+          <div className="saudi-window"><span className="saudi-window-brand"><img src={BRAND_MARK} alt="" width={28} height={28} /> AutoApply<b>Sa</b></span><span>{t ? "مساحة الحملة / معاينة" : "CAMPAIGN WORKSPACE / PREVIEW"}</span></div>
         <div className="saudi-workspace-body">
           <div className="saudi-preview-heading"><div><p>{t ? "قائمة طلباتك" : "YOUR APPLICATION QUEUE"}</p><h2>{t ? "كل شيء أمامك." : "Everything in view."}</h2></div><span className="saudi-avatar" aria-hidden="true">SA</span></div>
           <div className="saudi-profile"><FileText size={26}/><div><strong>{t ? "السيرة جاهزة كبداية" : "Your profile is the starting point"}</strong><p>{t ? "الخبرات · المهارات · المدن · الأدوار المستهدفة" : "Experience · Skills · Cities · Target roles"}</p></div><Check size={18}/></div>

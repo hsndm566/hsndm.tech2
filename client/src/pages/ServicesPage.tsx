@@ -114,7 +114,7 @@ export default function ServicesPage({ language = "en" }: { language?: "en" | "a
       <header className="border-b border-black/10 bg-[#fbf9f5]">
         <div className="page-frame flex items-center justify-between gap-5 py-5">
           <Link href={root} className="inline-flex items-center gap-3" aria-label="AutoApply SA home">
-            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="AutoApply SA brand mark" className="h-11 w-11 rounded-xl bg-[#151515] p-1 object-contain" width={44} height={44} />
+            <img src="/autoapplysa-mark.svg" alt="AutoApplySa brand mark" className="h-11 w-11 rounded-xl bg-[#065F46] p-1 object-contain" width={44} height={44} />
             <span className="font-bold">AutoApply <em className="not-italic text-[#e5482a]">SA</em></span>
           </Link>
           <Link href={root} className="font-mono text-xs">{copy.back}</Link>

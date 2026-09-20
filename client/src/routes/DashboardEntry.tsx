@@ -29,7 +29,7 @@ function CustomerAuthPage({ mode }: { mode: "sign-in" | "sign-up" }) {
       <div className="mx-auto grid w-full max-w-5xl gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
         <section className="rounded-3xl bg-[#151515] p-7 text-[#f5f2eb] shadow-2xl sm:p-10">
           <Link className="inline-flex items-center gap-3 !text-[#f5f2eb]" href="https://www.hsndm.tech/">
-            <img alt="AutoApply SA" className="h-11 w-11 rounded-xl bg-white object-contain p-1" src="/manus-storage/autoapply-symbol_80d77010.png" />
+            <img alt="AutoApplySa" className="h-11 w-11 rounded-xl bg-[#065F46] object-contain p-1" src="/autoapplysa-mark.svg" />
             <span className="text-lg font-extrabold tracking-tight">AutoApply SA</span>
           </Link>
           <p className="mt-8 font-mono text-xs font-bold uppercase tracking-[.18em] text-[#e5482a]">Candidate workspace</p>

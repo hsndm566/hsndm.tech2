@@ -101,7 +101,7 @@ export default function Enquire() {
       <header className="journey-header page-frame">
         <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
           <img
-            src="/manus-storage/autoapply-symbol_80d77010.png"
+            src="/autoapplysa-mark.svg"
             alt="AutoApply SA brand mark"
             className="brand-mark"
             width={42}

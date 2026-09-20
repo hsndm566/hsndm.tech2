@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">AutoApplySa mark</title>
+  <desc id="desc">A forward path forming an A with a palm tree.</desc>
+  <rect width="160" height="160" rx="34" fill="#065F46"/>
+  <path d="M22 124 61 34c4-9 11-14 21-14h2c9 0 16 5 20 14l34 90h-29L85 52 52 124H22Z" fill="#F8FAF7"/>
+  <path d="M80 124 100 81l15 43H80Z" fill="#065F46"/>
+  <path d="M83 115c4-13 8-22 8-31 0-9-4-15-11-19 12 2 20 10 20 22 0 10-6 18-17 28Z" fill="#065F46"/>
+  <path d="M81 68c-1-11 0-19 3-25" fill="none" stroke="#F8FAF7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M84 47c-7-2-12-5-15-10 7 0 13 2 17 6M84 47c5-6 11-9 17-9-4 6-9 9-16 11M84 45c-1-6 0-11 4-16 2 6 1 11-2 16" fill="none" stroke="#F8FAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

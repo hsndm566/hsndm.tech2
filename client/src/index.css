@@ -36,15 +36,15 @@
 :root {
   --font-ar: "Noto Sans Arabic", "Tahoma", "Arial", sans-serif;
   --font-en: "Manrope", system-ui, sans-serif;
-  --ink: #151515;
-  --paper: #f5f2eb;
-  --fog: #e8e5de;
-  --signal: #e5482a;
-  --signal-text: #c93a1c;
-  --signal-text-strong: #962711;
-  --muted-ink: #6e6c67;
-  --muted-ink-strong: #454541;
-  --line: rgba(21, 21, 21, .17);
+  --ink: #111827;
+  --paper: #f8faf7;
+  --fog: #e8f1ec;
+  --signal: #10b981;
+  --signal-text: #047857;
+  --signal-text-strong: #065f46;
+  --muted-ink: #49635a;
+  --muted-ink-strong: #24483c;
+  --line: rgba(6, 95, 70, .18);
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper);

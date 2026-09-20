@@ -16,8 +16,8 @@ export default function NotFound() {
     <main className="journey-page not-found-page">
       <header className="journey-header page-frame">
         <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
-          <span>AutoApply <em>SA</em></span>
+          <img src="/autoapplysa-mark.svg" alt="" className="brand-mark" />
+          <span>AutoApply<em>Sa</em></span>
         </Link>
         <span className="journey-status"><i /> ROUTE NOT FOUND / 404</span>
       </header>

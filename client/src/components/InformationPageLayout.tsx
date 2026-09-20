@@ -32,7 +32,7 @@ export function InformationPageLayout({ content, language, root }: InformationPa
       <header className="border-b border-black/10 bg-[#fbf9f5]">
         <div className="page-frame flex items-center justify-between gap-5 py-5">
           <Link href={root} className="inline-flex items-center gap-3" aria-label="AutoApply SA home">
-            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="AutoApply SA brand mark" className="h-10 w-10 rounded-xl bg-[#151515] p-1 object-contain" width={40} height={40} />
+            <img src="/autoapplysa-mark.svg" alt="AutoApplySa brand mark" className="h-10 w-10 rounded-xl bg-[#065F46] p-1 object-contain" width={40} height={40} />
             <span className="font-bold">AutoApply <em className="not-italic text-[#e5482a]">SA</em></span>
           </Link>
           <Link href={root} className="flex min-h-11 items-center gap-1 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#e5482a] focus-visible:ring-offset-2">{returnHome}<ArrowLeft size={14} /></Link>

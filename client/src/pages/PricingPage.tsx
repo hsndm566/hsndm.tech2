@@ -56,7 +56,7 @@ export default function PricingPage({ language = "en" }: { language?: "en" | "ar
 
   return (
     <main className="min-h-screen bg-[#f3f0e9] text-[#151515]" dir={arabic ? "rtl" : "ltr"} lang={language}>
-      <header className="border-b border-black/10 bg-[#fbf9f5]"><div className="page-frame flex items-center justify-between gap-5 py-5"><Link href={root} className="inline-flex items-center gap-3" aria-label="AutoApply SA home"><img src="/manus-storage/autoapply-symbol_80d77010.png" alt="AutoApply SA brand mark" className="h-11 w-11 rounded-xl bg-[#151515] p-1 object-contain" width={44} height={44} /><span className="font-bold">AutoApply <em className="not-italic text-[#e5482a]">SA</em></span></Link><Link href={root} className="font-mono text-xs">{c.back}</Link></div></header>
+      <header className="border-b border-black/10 bg-[#f8faf7]"><div className="page-frame flex items-center justify-between gap-5 py-5"><Link href={root} className="inline-flex items-center gap-3" aria-label="AutoApplySa home"><img src="/autoapplysa-mark.svg" alt="AutoApplySa brand mark" className="h-11 w-11 rounded-xl bg-[#065F46] p-1 object-contain" width={44} height={44} /><span className="font-bold">AutoApply <em className="not-italic text-[#10B981]">Sa</em></span></Link><Link href={root} className="font-mono text-xs">{c.back}</Link></div></header>
 
       <section className="page-frame py-16">
         <p className="font-mono text-xs text-[#e5482a]">{c.plans}</p><h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">{title}</h1><p className="mt-6 max-w-2xl text-lg leading-8 text-black/70">{description}</p><div className="mt-5 flex items-center gap-2 text-sm"><ShieldCheck size={17} className="text-[#e5482a]" /><span>{c.confirmation}</span></div>

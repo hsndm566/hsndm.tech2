@@ -427,8 +427,8 @@ export default function Home() {
       <a className="skip-link" href="#how">Skip to how it works</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AutoApply SA home">
-          <ArrowUpRight className="saudi-brand-symbol" size={28} aria-hidden="true" />
-          <span>AutoApply <em>SA</em></span>
+          <img className="brand-mark" src="/autoapplysa-mark.svg" alt="" width="34" height="34" />
+          <span>AutoApply<em>Sa</em></span>
         </a>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
@@ -877,8 +877,8 @@ export default function Home() {
       <footer className="footer">
         <div className="page-frame footer-top">
           <a className="brand footer-brand" href="#top">
-            <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" width="1920" height="1920" />
-            <span>AutoApply <em>SA</em></span>
+            <img src="/autoapplysa-mark.svg" alt="" className="brand-mark" width="160" height="160" />
+            <span>AutoApply<em>Sa</em></span>
           </a>
           <p>Approval-led Saudi job-application campaigns.<br />Jeddah built. Saudi focused.</p>
           <a className="footer-email" href="mailto:apply@hsndm.tech">apply@hsndm.tech <ArrowUpRight size={16} /></a>

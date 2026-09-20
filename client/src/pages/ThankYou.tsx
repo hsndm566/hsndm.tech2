@@ -20,8 +20,8 @@ export default function ThankYou() {
     <main className="journey-page thank-you-page">
       <header className="journey-header page-frame">
         <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
-          <span>AutoApply <em>SA</em></span>
+          <img src="/autoapplysa-mark.svg" alt="" className="brand-mark" />
+          <span>AutoApply<em>Sa</em></span>
         </Link>
         <span className="journey-status"><i /> INTAKE RECEIVED / STEP 02</span>
       </header>

@@ -100,8 +100,8 @@ export default function ArabicEnquire() {
       <a className="skip-link" href="#campaign-brief">انتقل إلى ملخص الحملة</a>
       <header className="journey-header page-frame">
         <Link href="/ar" className="brand journey-brand" aria-label="الصفحة الرئيسية لأوتوأبلاي السعودية">
-          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
-          <span>AutoApply <em>SA</em></span>
+          <img src="/autoapplysa-mark.svg" alt="" className="brand-mark" />
+          <span>AutoApply<em>Sa</em></span>
         </Link>
         <span className="journey-status"><i /> استلام الحملة / الخطوة 01</span>
       </header>
