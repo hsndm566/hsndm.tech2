@@ -1,0 +1,2 @@
+@import "tailwindcss";
+@theme inline { --color-primary: #065f46; --color-muted: #e4ede3; --color-ring: #10b981; }
