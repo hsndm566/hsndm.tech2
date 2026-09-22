@@ -10,18 +10,19 @@ type MonitorStatus = "healthy" | "degraded";
 export type AuthMonitorCheck = {
   status: MonitorStatus;
   configurationReady: boolean;
-  clerkBootstrapStatus: number | null;
+  supabaseHealthStatus: number | null;
 };
 
 type FetchLike = typeof fetch;
 
 const OWNER_ALERT_EMAIL = "hasanadam506@gmail.com";
-const CLERK_BOOTSTRAP_URL = "https://clerk.hsndm.tech/v1/environment?__clerk_api_version=2025-11-10&__clerk_js_version=5.127.2";
+
 
 function bootstrapRequest() {
   return {
     headers: {
       Accept: "application/json",
+      apikey: process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "",
       Origin: "https://www.hsndm.tech",
       Referer: "https://www.hsndm.tech/dashboard",
     },
@@ -30,16 +31,16 @@ function bootstrapRequest() {
 }
 
 export async function checkDashboardAuth(fetchImpl: FetchLike = fetch): Promise<AuthMonitorCheck> {
-  const configurationReady = Boolean(process.env.VITE_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
+  const configurationReady = Boolean(process.env.SUPABASE_URL && (process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY));
   try {
-    const response = await fetchImpl(CLERK_BOOTSTRAP_URL, bootstrapRequest());
+    const response = await fetchImpl(`${process.env.SUPABASE_URL}/auth/v1/health`, bootstrapRequest());
     return {
       status: configurationReady && response.ok ? "healthy" : "degraded",
       configurationReady,
-      clerkBootstrapStatus: response.status,
+      supabaseHealthStatus: response.status,
     };
   } catch {
-    return { status: "degraded", configurationReady, clerkBootstrapStatus: null };
+    return { status: "degraded", configurationReady, supabaseHealthStatus: null };
   }
 }
 
@@ -49,7 +50,7 @@ function monitorEvent(check: AuthMonitorCheck, recovered = false) {
     status: check.status,
     recovered,
     configuration: check.configurationReady ? "present" : "missing",
-    clerkBootstrap: check.clerkBootstrapStatus === null ? "network-error" : `http-${check.clerkBootstrapStatus}`,
+    supabaseHealth: check.supabaseHealthStatus === null ? "network-error" : `http-${check.supabaseHealthStatus}`,
   };
 }
 
@@ -60,7 +61,7 @@ export function createAuthMonitorAlertText(check: AuthMonitorCheck, recovered = 
     `AutoApply SA dashboard authentication ${state}.`,
     `Monitor: ${event.monitor}`,
     `Configuration: ${event.configuration}`,
-    `Clerk bootstrap: ${event.clerkBootstrap}`,
+    `Supabase auth health: ${event.supabaseHealth}`,
     "This operational alert contains technical status only.",
   ].join("\n");
 }
@@ -85,7 +86,7 @@ export async function reportAuthMonitorToSentry(check: AuthMonitorCheck, recover
     logger: "autoapply.auth-monitor",
     message: recovered ? "Dashboard authentication dependency recovered" : "Dashboard authentication dependency degraded",
     platform: "node",
-    tags: { monitor: event.monitor, privacy: "no-candidate-data", configuration: event.configuration, clerk_bootstrap: event.clerkBootstrap },
+    tags: { monitor: event.monitor, privacy: "no-candidate-data", configuration: event.configuration, supabase_health: event.supabaseHealth },
   };
   const envelope = `${JSON.stringify({ dsn })}\n${JSON.stringify({ type: "event" })}\n${JSON.stringify(payload)}\n`;
   try {
