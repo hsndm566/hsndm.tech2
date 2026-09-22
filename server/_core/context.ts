@@ -1,55 +1,24 @@
-import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
-import type { User } from "../../drizzle/schema";
-import { verifyToken } from "@clerk/backend";
-import { getUserByOpenId, upsertUser } from "../db";
-
-export type TrpcContext = {
-  req: CreateExpressContextOptions["req"];
-  res: CreateExpressContextOptions["res"];
-  user: User | null;
-};
-
-const productionAuthorizedParties = ["https://dashboard.hsndm.tech"];
-const developmentAuthorizedParties = [
-  ...productionAuthorizedParties,
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-];
-
-export async function authenticateClerkRequest(req: CreateExpressContextOptions["req"]): Promise<User | null> {
-  const secretKey = process.env.CLERK_SECRET_KEY;
-  const authorization = req.headers.authorization;
-  if (!secretKey || !authorization?.startsWith("Bearer ")) return null;
-
-  const token = authorization.slice("Bearer ".length).trim();
-  if (!token) return null;
-
-  try {
-    const payload = await verifyToken(token, {
-      secretKey,
-      authorizedParties: process.env.NODE_ENV === "production"
-        ? productionAuthorizedParties
-        : developmentAuthorizedParties,
-    });
-    if (!payload.sub) return null;
-
-    const openId = `clerk:${payload.sub}`.slice(0, 64);
-    await upsertUser({ openId, loginMethod: "clerk" });
-    return (await getUserByOpenId(openId)) ?? null;
-  } catch {
-    return null;
-  }
+import type { CreateExpressContextOptions } from '@trpc/server/adapters/express';
+import type { User } from '../../drizzle/schema';
+import { createClient } from '@supabase/supabase-js';
+import { getUserByOpenId, upsertUser } from '../db';
+export type TrpcContext = {req:CreateExpressContextOptions['req'];res:CreateExpressContextOptions['res'];user:User|null};
+export async function authenticateSupabaseRequest(req:CreateExpressContextOptions['req']):Promise<User|null>{
+ const url=process.env.SUPABASE_URL, key=process.env.SUPABASE_PUBLISHABLE_KEY||process.env.SUPABASE_ANON_KEY;
+ const authorization=req.headers.authorization;
+ if(!url||!key||!authorization?.startsWith('Bearer '))return null;
+ const token=authorization.slice(7).trim();if(!token)return null;
+ try{
+  const client=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
+  const {data,error}=await client.auth.getUser(token);
+  if(error||!data.user||!data.user.email_confirmed_at)return null;
+  // A reviewed, server-only map preserves existing ownership. Never map by user-editable metadata or email.
+  const map:Record<string,string>=JSON.parse(process.env.SUPABASE_LEGACY_ID_MAP||'{}');
+  const mapped=map[data.user.id];
+  if(mapped && !/^clerk:[A-Za-z0-9_]+$/.test(mapped))return null;
+  const openId=mapped||`supabase:${data.user.id}`;
+  await upsertUser({openId,loginMethod:'supabase',email:data.user.email,name:data.user.user_metadata?.full_name||null});
+  return await getUserByOpenId(openId)??null;
+ }catch{return null;}
 }
-
-export async function createContext(
-  opts: CreateExpressContextOptions
-): Promise<TrpcContext> {
-  const user = await authenticateClerkRequest(opts.req);
-
-  return {
-    req: opts.req,
-    res: opts.res,
-    user,
-  };
-}
-
+export async function createContext(opts:CreateExpressContextOptions):Promise<TrpcContext>{return {...opts,user:await authenticateSupabaseRequest(opts.req)};}
