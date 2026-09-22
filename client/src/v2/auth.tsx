@@ -1,0 +1,17 @@
+import { createClient, type Session } from '@supabase/supabase-js';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+const url = import.meta.env.VITE_SUPABASE_URL;
+const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+export const supabase = url && key ? createClient(url, key, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
+const AuthContext = createContext<{session: Session|null; loading: boolean; error: string}>({session:null,loading:true,error:''});
+export function AuthProvider({children}:{children:ReactNode}) {
+ const [session,setSession]=useState<Session|null>(null), [loading,setLoading]=useState(true),[error,setError]=useState('');
+ useEffect(()=>{ if(!supabase){setLoading(false);return;} let active=true;
+ const timer=setTimeout(()=>{if(active){setError('session');setLoading(false);}},12000);
+ const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,s)=>{if(active){setSession(s);setLoading(false);clearTimeout(timer);}});
+ supabase.auth.getSession().then(({data,error})=>{if(active){setSession(data.session);setError(error?'session':'');setLoading(false);clearTimeout(timer);}}).catch(()=>{if(active){setError('session');setLoading(false);}});
+ return()=>{active=false;clearTimeout(timer);subscription.unsubscribe();}; },[]);
+ return <AuthContext.Provider value={{session,loading,error}}>{children}</AuthContext.Provider>;
+}
+export const useSession=()=>useContext(AuthContext);
+export async function getSupabaseToken(){ if(!supabase)return null; const {data}=await supabase.auth.getSession();return data.session?.access_token??null; }
