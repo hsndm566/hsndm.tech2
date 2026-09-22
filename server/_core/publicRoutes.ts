@@ -1,4 +1,5 @@
 const exactPublicRoutes = new Set([
+  ...["", "/ar"].flatMap(prefix => ["/sign-in", "/sign-up", "/forgot-password", "/reset-password", "/auth/callback", "/onboarding", "/applications", "/settings", "/dashboard"].map(route => prefix + route)),
   "/",
   "/ar",
   "/ar/enquire",
