@@ -1,0 +1,17 @@
+{
+  "name": "AutoApply SA Portal",
+  "description": "Heroku staging target for the AutoApply SA portal backend.",
+  "repository": "https://github.com/hsndm566/hsndm.tech2",
+  "stack": "heroku-24",
+  "buildpacks": [{"url": "heroku/nodejs"}],
+  "env": {
+    "DATABASE_URL": {"description": "Existing MySQL-compatible database URL."},
+    "VITE_CLERK_PUBLISHABLE_KEY": {"description": "Existing Clerk publishable key."},
+    "CLERK_SECRET_KEY": {"description": "Existing Clerk server key."},
+    "JWT_SECRET": {"description": "Session signing value.", "generator": "secret"},
+    "VITE_API_BASE_URL": {"required": false},
+    "GROQ_API_KEY": {"required": false},
+    "SENTRY_DSN": {"required": false},
+    "VITE_SENTRY_DSN": {"required": false}
+  }
+}
