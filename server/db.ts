@@ -272,11 +272,11 @@ export async function getCandidateProfile(openId: string): Promise<CandidateProf
       preferredSeniority: "Mid-level",
       preferredLanguage: "English",
       openToRemote: false,
-      targetCity: "Jeddah",
-      targetIndustry: "Technology & Engineering",
-      salaryExpectation: "15,000 - 25,000 SAR",
-      notifyWhatsApp: true,
-      notifyEmail: true,
+      targetCity: "",
+      targetIndustry: "",
+      salaryExpectation: "",
+      notifyWhatsApp: false,
+      notifyEmail: false,
     };
     await db.insert(candidateProfiles).values(defaultProfile);
     const [created] = await db.select().from(candidateProfiles).where(eq(candidateProfiles.openId, openId));
@@ -335,7 +335,7 @@ export async function updateCandidateProfile(openId: string, data: CandidateProf
   const db = await getDb();
   if (!db) return null;
   try {
-    await db.update(candidateProfiles).set(data).where(eq(candidateProfiles.openId, openId));
+    await db.insert(candidateProfiles).values({ openId, ...data }).onDuplicateKeyUpdate({ set: { ...data, updatedAt: new Date() } });
     return await getCandidateProfile(openId);
   } catch (error) {
     console.warn("[Database] Failed to update candidate profile:", error);
