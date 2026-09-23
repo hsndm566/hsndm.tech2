@@ -1,4 +1,5 @@
 import { ENV } from "./env";
+import { captureAiGeneration } from "./posthogAi";
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
 
@@ -219,6 +220,9 @@ const resolveApiUrl = () =>
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
     : "https://forge.manus.im/v1/chat/completions";
 
+const resolveProviderName = () =>
+  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0 ? "forge-compatible" : "manus-forge";
+
 const assertApiKey = () => {
   if (!ENV.forgeApiKey) {
     throw new Error("OPENAI_API_KEY is not configured");
@@ -343,6 +347,7 @@ const fetchWithBackoff = async (
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   assertApiKey();
+  const startedAt = Date.now();
 
   const {
     messages,
@@ -410,23 +415,40 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetchWithBackoff(resolveApiUrl(), {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetchWithBackoff(resolveApiUrl(), {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${ENV.forgeApiKey}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `LLM invoke failed: ${response.status} ${response.statusText} – ${errorText}`
-    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `LLM invoke failed: ${response.status} ${response.statusText} – ${errorText}`
+      );
+    }
+
+    const result = (await response.json()) as InvokeResult;
+    await captureAiGeneration({
+      requestPayload: payload,
+      response: result,
+      startedAt,
+      provider: resolveProviderName(),
+    });
+    return result;
+  } catch (error) {
+    await captureAiGeneration({
+      requestPayload: payload,
+      error,
+      startedAt,
+      provider: resolveProviderName(),
+    });
+    throw error;
   }
-
-  return (await response.json()) as InvokeResult;
 }
 
 export type ModelInfo = {
