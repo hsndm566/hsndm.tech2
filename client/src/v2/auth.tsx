@@ -6,10 +6,10 @@ export const supabase = url && key ? createClient(url, key, { auth: { flowType: 
 const AuthContext = createContext<{session: Session|null; loading: boolean; error: string}>({session:null,loading:true,error:''});
 export function AuthProvider({children}:{children:ReactNode}) {
  const [session,setSession]=useState<Session|null>(null), [loading,setLoading]=useState(true),[error,setError]=useState('');
- useEffect(()=>{ if(!supabase){setLoading(false);return;} let active=true;
+ useEffect(()=>{ if(!supabase){setLoading(false);return;} let active=true, receivedEvent=false;
  const timer=setTimeout(()=>{if(active){setError('session');setLoading(false);}},12000);
- const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,s)=>{if(active){setSession(s);setLoading(false);clearTimeout(timer);}});
- supabase.auth.getSession().then(({data,error})=>{if(active){setSession(data.session);setError(error?'session':'');setLoading(false);clearTimeout(timer);}}).catch(()=>{if(active){setError('session');setLoading(false);}});
+ const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,s)=>{if(active){receivedEvent=true;setSession(s);setError('');setLoading(false);clearTimeout(timer);}});
+ supabase.auth.getSession().then(({data,error})=>{if(active&&!receivedEvent){setSession(data.session);setError(error?'session':'');setLoading(false);clearTimeout(timer);}}).catch(()=>{if(active&&!receivedEvent){setError('session');setLoading(false);clearTimeout(timer);}});
  return()=>{active=false;clearTimeout(timer);subscription.unsubscribe();}; },[]);
  return <AuthContext.Provider value={{session,loading,error}}>{children}</AuthContext.Provider>;
 }
