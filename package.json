@@ -4,20 +4,19 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "NODE_ENV=production vite build && node scripts/prepare-static-routes.mjs && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "build:pages": "NODE_ENV=production vite build && node scripts/prepare-static-routes.mjs",
+    "dev": "vite",
+    "build": "NODE_ENV=production vite build && node scripts/prepare-v2-routes.mjs && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build:pages": "NODE_ENV=production vite build && node scripts/prepare-v2-routes.mjs",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "dev:server": "NODE_ENV=development tsx watch server/_core/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
     "@aws-sdk/s3-request-presigner": "^3.693.0",
-    "@clerk/backend": "^3.16.6",
-    "@clerk/clerk-react": "^5.61.3",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -46,6 +45,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/react": "^10.70.0",
+    "@supabase/supabase-js": "2.116.0",
     "@tanstack/react-query": "^5.90.2",
     "@trpc/client": "^11.6.0",
     "@trpc/react-query": "^11.6.0",
@@ -114,23 +114,5 @@
     "vite-plugin-manus-runtime": "0.0.59",
     "vitest": "^2.1.4"
   },
-  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
-  "pnpm": {
-    "patchedDependencies": {
-      "wouter@3.7.1": "patches/wouter@3.7.1.patch"
-    },
-    "overrides": {
-      "tailwindcss>nanoid": "3.3.7",
-      "nanoid": "5.1.16",
-      "body-parser": "1.20.6",
-      "dompurify": "3.4.13",
-      "mermaid": "11.16.1",
-      "qs": "6.15.3",
-      "express>path-to-regexp": "0.1.13",
-      "lodash": "4.18.1",
-      "lodash-es": "4.18.1",
-      "mdast-util-to-hast": "13.2.1",
-      "uuid": "11.1.1"
-    }
-  }
+  "packageManager": "pnpm@11.19.0"
 }

@@ -13,7 +13,7 @@ type DashboardRedirectInput = {
 
 /**
  * Keeps the public website canonical at www while sending protected dashboard
- * and customer-auth paths to the first-party host configured for Clerk.
+ * and customer-auth paths to the first-party dashboard host.
  */
 export function getDashboardHostRedirect({ hostname, pathname, search = "", hash = "" }: DashboardRedirectInput): string | null {
   const isPublicCanonicalHost = hostname.toLowerCase() === "www.hsndm.tech";

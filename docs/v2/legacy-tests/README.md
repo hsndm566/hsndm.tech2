@@ -1,0 +1,1 @@
+These V1 source-contract tests target removed Clerk components, the old route graph, old SEO pricing and the old marketing layout. Retained as history outside the active test glob. V2 behavior tests live in client/src/v2 and server/supabaseContext.test.ts. Unchanged backend tests remain active.

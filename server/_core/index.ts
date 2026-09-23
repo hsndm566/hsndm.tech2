@@ -72,7 +72,7 @@ async function startServer() {
   // This endpoint confirms configuration only. It exposes neither secrets nor
   // candidate data, and provides a stable check for external uptime monitors.
   app.get("/healthz/auth", (_req, res) => {
-    const configured = Boolean(process.env.VITE_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
+    const configured = Boolean(process.env.SUPABASE_URL && (process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY));
     res.setHeader("Cache-Control", "no-store");
     res.status(configured ? 200 : 503).json(createAuthenticationReadinessPayload(configured));
   });

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { useState, type ReactNode } from "react";
 import superjson from "superjson";
-import { getClerkToken } from "@/lib/clerkToken";
+import { getSupabaseToken } from "@/v2/auth";
 
 type DataClientProvidersProps = { children: ReactNode };
 
@@ -32,8 +32,8 @@ function createTrpcClient() {
         url: `${import.meta.env.VITE_API_BASE_URL || ""}/api/trpc`,
         transformer: superjson,
         async headers() {
-          const clerkToken = await getClerkToken();
-          if (clerkToken) return { Authorization: `Bearer ${clerkToken}` };
+          const token = await getSupabaseToken();
+          if (token) return { Authorization: `Bearer ${token}` };
           return {};
         },
         fetch(input, init) {

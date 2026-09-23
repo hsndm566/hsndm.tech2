@@ -119,7 +119,6 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
-          if (id.includes("/node_modules/@clerk/clerk-react/")) return "clerk-auth";
           if (id.includes("/node_modules/@sentry/")) return "sentry-optional";
           if (id.includes("react-dom") || id.includes("/react/")) return "react-vendor";
           if (id.includes("lucide-react")) return "icons";
@@ -129,8 +128,9 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
+    host: "0.0.0.0",
     allowedHosts: [
+      "terminal.local",
       ".manuspre.computer",
       ".manus.computer",
       ".manus-asia.computer",

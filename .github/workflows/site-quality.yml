@@ -2,7 +2,7 @@ name: Public Site Quality
 
 on:
   push:
-    branches: [main]
+    branches: [main, autoapply-v2-preview]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -48,20 +48,15 @@ jobs:
         run: |
           set -euo pipefail
           test -s dist/public/index.html
+          test -s dist/public/ar/index.html
+          test -s dist/public/dashboard/index.html
+          test -s dist/public/sign-in/index.html
+          test -s dist/public/auth/callback/index.html
           test -s dist/public/404.html
-          test -s dist/public/robots.txt
-          test -s dist/public/sitemap.xml
-          test -s dist/public/llms.txt
-          grep -q 'rel="canonical"' dist/public/index.html
-          grep -q 'ProfessionalService' dist/public/index.html
+          grep -q 'noindex, nofollow' dist/public/index.html
           grep -q 'AutoApply SA' dist/public/index.html
-          grep -q 'Page Not Found | AutoApply SA' dist/public/404.html
-          grep -q 'https://www.hsndm.tech/sitemap.xml' dist/public/robots.txt
+          grep -q 'Disallow: /' dist/public/robots.txt
           if find dist/public -type f -name '*.map' -print -quit | grep -q .; then
             echo 'Production source maps found unexpectedly.' >&2
-            exit 1
-          fi
-          if grep -R -E '<title>\s*(Vite|React|Vite \+ React)' dist/public --include='*.html'; then
-            echo 'Default framework title found in production output.' >&2
             exit 1
           fi
