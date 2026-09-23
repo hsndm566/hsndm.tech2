@@ -4,6 +4,7 @@ import { httpBatchLink } from "@trpc/client";
 import { useState, type ReactNode } from "react";
 import superjson from "superjson";
 import { getSupabaseToken } from "@/v2/auth";
+import { getApiBaseUrl } from "@/v2/backend";
 
 type DataClientProvidersProps = { children: ReactNode };
 
@@ -29,7 +30,7 @@ function createTrpcClient() {
   return trpc.createClient({
     links: [
       httpBatchLink({
-        url: `${import.meta.env.VITE_API_BASE_URL || ""}/api/trpc`,
+        url: `${getApiBaseUrl()}/api/trpc`,
         transformer: superjson,
         async headers() {
           const token = await getSupabaseToken();
@@ -54,4 +55,3 @@ export function DataClientProviders({ children }: DataClientProvidersProps) {
     </trpc.Provider>
   );
 }
-
