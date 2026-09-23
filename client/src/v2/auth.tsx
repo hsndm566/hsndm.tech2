@@ -1,7 +1,8 @@
 import { createClient, type Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-const url = import.meta.env.VITE_SUPABASE_URL;
-const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+const allowProductionFallback = import.meta.env.VITE_DISABLE_SUPABASE_FALLBACK !== 'true';
+const url = import.meta.env.VITE_SUPABASE_URL || (allowProductionFallback ? 'https://ufyvelnxexjvlibhweau.supabase.co' : '');
+const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || (allowProductionFallback ? 'sb_publishable_JERSjyPdHUZtoSPwcIuvWA_YPiKYMsP' : '');
 export const supabase = url && key ? createClient(url, key, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
 const AuthContext = createContext<{session: Session|null; loading: boolean; error: string}>({session:null,loading:true,error:''});
 export function AuthProvider({children}:{children:ReactNode}) {
