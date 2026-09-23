@@ -7,6 +7,7 @@ import {LocaleProvider} from './locale';
 const mocks=vi.hoisted(()=>({data:{} as any}));
 vi.mock('./data',()=>({useWorkspaceData:()=>mocks.data,saudiWeekStart:()=>new Date('2026-09-19T21:00:00Z')}));
 vi.mock('./auth',()=>({useSession:()=>({session:{user:{id:'test-user'}}}),supabase:{auth:{signOut:vi.fn().mockResolvedValue({error:null})}}}));
+vi.mock('./backend',()=>({useBackendHealth:()=>({data:{ok:true,status:200},isLoading:false})}));
 import {Workspace} from './Workspace';
 function mount(path='/dashboard'){const memory=memoryLocation({path});render(<Router hook={memory.hook}><LocaleProvider><Workspace/></LocaleProvider></Router>);return memory;}
 beforeEach(()=>{mocks.data={profile:{data:{fullName:'Test Candidate',targetCity:'Jeddah'},isSuccess:true},apps:{data:[],refetch:vi.fn()},create:{mutate:vi.fn()},update:{mutate:vi.fn()},saveProfile:{mutateAsync:vi.fn().mockResolvedValue(undefined)},clear:vi.fn()};});
