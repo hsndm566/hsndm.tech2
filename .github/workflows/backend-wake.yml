@@ -1,0 +1,13 @@
+name: Backend Wake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake AutoApply API
+        run: curl --fail --silent --show-error --max-time 20 https://api.hsndm.tech/health
