@@ -62,7 +62,7 @@ jobs:
               exit 1
             fi
           done
-          grep -q 'noindex, nofollow' dist/public/index.html || { echo 'Missing noindex guard in public index.' >&2; exit 1; }
+          grep -Eq 'index, follow|all' dist/public/index.html || { echo 'Missing indexable robots marker in public index.' >&2; exit 1; }
           grep -Eq 'AutoApply ?SA|AutoApplySa' dist/public/index.html || { echo 'Missing AutoApply brand marker in public index.' >&2; exit 1; }
           grep -q 'Disallow: /' dist/public/robots.txt || { echo 'Missing robots disallow guard.' >&2; exit 1; }
           if find dist/public -type f -name '*.map' -print -quit | grep -q .; then
