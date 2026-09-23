@@ -12,6 +12,7 @@ import { createAuthenticationReadinessPayload, createDatabaseHealthPayload, crea
 import { isTrustedCorsOrigin } from "../cors";
 import { normalizeLatestActivityTimestamp } from "../latestActivity";
 import { AUTH_MONITOR_PATH, runDashboardAuthMonitor } from "../authMonitor";
+import { registerApplicationEmailRoutes } from "../applicationEmail";
 import { sdk } from "./sdk";
 
 async function startServer() {
@@ -108,6 +109,7 @@ async function startServer() {
     }
   });
   registerStorageProxy(app);
+  registerApplicationEmailRoutes(app);
   registerDataBackupRoutes(app);
   registerDodoPaymentRoutes(app);
   // tRPC API
@@ -139,4 +141,3 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
-
