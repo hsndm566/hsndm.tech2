@@ -5,6 +5,12 @@ const url = import.meta.env.VITE_SUPABASE_URL || (allowProductionFallback ? 'htt
 const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || (allowProductionFallback ? 'sb_publishable_JERSjyPdHUZtoSPwcIuvWA_YPiKYMsP' : '');
 export const supabase = url && key ? createClient(url, key, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
 const AuthContext = createContext<{session: Session|null; loading: boolean; error: string}>({session:null,loading:true,error:''});
+export function getPublicSiteOrigin(origin=typeof window==='undefined'?'':window.location.origin){
+ const configured=(import.meta.env.VITE_PUBLIC_SITE_URL as string|undefined)?.trim();
+ if(configured)return configured.replace(/\/$/,'');
+ try{const parsed=new URL(origin);if(parsed.hostname==='localhost'||parsed.hostname==='127.0.0.1')return 'https://www.hsndm.tech';return parsed.origin;}catch{return 'https://www.hsndm.tech';}
+}
+export function getAuthRedirectUrl(path:string,origin=typeof window==='undefined'?'':window.location.origin){return `${getPublicSiteOrigin(origin)}${path.startsWith('/')?path:`/${path}`}`;}
 export function AuthProvider({children}:{children:ReactNode}) {
  const [session,setSession]=useState<Session|null>(null), [loading,setLoading]=useState(true),[error,setError]=useState('');
  useEffect(()=>{ if(!supabase){setLoading(false);return;} let active=true, receivedEvent=false;
