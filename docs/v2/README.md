@@ -5,13 +5,13 @@ Branch: autoapply-v2-preview in hsndm566/hsndm.tech2. Production traffic has not
 ## Implemented
 - English and Arabic landing, CV text extraction, interactive source belt and range control, product illustrations, existing walkthrough video, responsive layouts.
 - Supabase-only customer auth UI, email signup/login, recovery, OAuth callback, protected routes, session timeout recovery.
-- Separate v2_profiles and v2_applications in the existing autoapply-sa-phase1-dev Supabase project. Applied migration autoapply_v2_private_workspace. RLS restricts select/insert/update by auth.uid(). Existing Clerk-owned records and policies are unchanged.
+- Separate v2_profiles and v2_applications in the existing autoapply-sa-phase1-dev Supabase project. Applied migration autoapply_v2_private_workspace. RLS restricts select/insert/update by auth.uid(). V2 customer authentication uses Supabase only.
 - V2 dashboard uses these protected Supabase tables directly. MySQL/tRPC backend remains for existing backend features and receives Supabase authentication when configured.
 - Manual application tracker, editable statuses including rejection, profile onboarding, Saudi week boundary and dates, CV analysis retained across redirect in session storage.
 
 ## Validation
 - TypeScript check passes.
-- 225 tests pass, 10 existing tests skipped. 19 obsolete V1 source-contract test files are retained under legacy-tests rather than claiming they test the replacement UI. Current backend tests remain active.
+- 229 tests pass, 7 existing tests skipped. 19 obsolete V1 source-contract test files are retained under legacy-tests rather than claiming they test the replacement UI. Current backend tests remain active.
 - Static production build passes.
 - Transactional development database checks verified own profile/application access, blocked cross-account reads/inserts and ownership reassignment. Test records rolled back.
 - Database advisors found no issues for the two new V2 tables; legacy project findings remain outside this migration.
