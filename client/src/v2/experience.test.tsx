@@ -8,7 +8,7 @@ import {Landing} from './Landing';
 import {AuthProvider} from './auth';
 import {SessionGate} from './Workspace';
 import {AuthPage} from './AuthPage';
-vi.hoisted(()=>{vi.stubEnv('VITE_SUPABASE_URL','');vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY','');vi.stubEnv('VITE_SUPABASE_ANON_KEY','');});
+vi.hoisted(()=>{vi.stubEnv('VITE_SUPABASE_URL','');vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY','');vi.stubEnv('VITE_SUPABASE_ANON_KEY','');vi.stubEnv('VITE_DISABLE_SUPABASE_FALLBACK','true');});
 function mount(node:React.ReactNode,path='/'){const {hook}=memoryLocation({path});return render(<Router hook={hook}><LocaleProvider>{node}</LocaleProvider></Router>)}
 vi.stubGlobal('ResizeObserver',class {observe(){} unobserve(){} disconnect(){}});
 afterEach(cleanup);
