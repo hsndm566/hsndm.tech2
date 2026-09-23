@@ -47,15 +47,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -s dist/public/index.html
-          test -s dist/public/ar/index.html
-          test -s dist/public/dashboard/index.html
-          test -s dist/public/sign-in/index.html
-          test -s dist/public/auth/callback/index.html
-          test -s dist/public/404.html
-          grep -q 'noindex, nofollow' dist/public/index.html
-          grep -q 'AutoApply SA' dist/public/index.html
-          grep -q 'Disallow: /' dist/public/robots.txt
+          required_files=(
+            dist/public/index.html
+            dist/public/ar/index.html
+            dist/public/dashboard/index.html
+            dist/public/sign-in/index.html
+            dist/public/auth/callback/index.html
+            dist/public/404.html
+            dist/public/robots.txt
+          )
+          for file in "${required_files[@]}"; do
+            if [ ! -s "$file" ]; then
+              echo "Missing generated public file: $file" >&2
+              exit 1
+            fi
+          done
+          grep -q 'noindex, nofollow' dist/public/index.html || { echo 'Missing noindex guard in public index.' >&2; exit 1; }
+          grep -Eq 'AutoApply ?SA|AutoApplySa' dist/public/index.html || { echo 'Missing AutoApply brand marker in public index.' >&2; exit 1; }
+          grep -q 'Disallow: /' dist/public/robots.txt || { echo 'Missing robots disallow guard.' >&2; exit 1; }
           if find dist/public -type f -name '*.map' -print -quit | grep -q .; then
             echo 'Production source maps found unexpectedly.' >&2
             exit 1
