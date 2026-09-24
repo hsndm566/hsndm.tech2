@@ -55,6 +55,7 @@ jobs:
             dist/public/auth/callback/index.html
             dist/public/404.html
             dist/public/robots.txt
+            dist/public/sitemap.xml
           )
           for file in "${required_files[@]}"; do
             if [ ! -s "$file" ]; then
@@ -64,7 +65,16 @@ jobs:
           done
           grep -Eq 'index, follow|all' dist/public/index.html || { echo 'Missing indexable robots marker in public index.' >&2; exit 1; }
           grep -Eq 'AutoApply ?SA|AutoApplySa' dist/public/index.html || { echo 'Missing AutoApply brand marker in public index.' >&2; exit 1; }
-          grep -q 'Disallow: /' dist/public/robots.txt || { echo 'Missing robots disallow guard.' >&2; exit 1; }
+          grep -q '^Allow: /$' dist/public/robots.txt || { echo 'Missing public crawl allow rule.' >&2; exit 1; }
+          if grep -q '^Disallow: /$' dist/public/robots.txt; then
+            echo 'robots.txt blocks the entire public site.' >&2
+            exit 1
+          fi
+          grep -q 'https://www.hsndm.tech/$' dist/public/sitemap.xml || { echo 'Missing public homepage in sitemap.' >&2; exit 1; }
+          if grep -Eq '/(pricing|services|ats|enquire|how-it-works|support|case-studies|campaign-report-sample)/' dist/public/sitemap.xml; then
+            echo 'Sitemap contains stale V1 URLs.' >&2
+            exit 1
+          fi
           if find dist/public -type f -name '*.map' -print -quit | grep -q .; then
             echo 'Production source maps found unexpectedly.' >&2
             exit 1
