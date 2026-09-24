@@ -1,7 +1,7 @@
 import {useMutation,useQuery,useQueryClient} from '@tanstack/react-query';
 import {supabase,useSession} from './auth';
 export type Profile={user_id:string;fullName:string;targetCity:string;targetIndustry:string;preferredLanguage:'English'|'Arabic';openToRemote:boolean;resumeFileName?:string|null;resumeSummary?:string|null};
-export type Application={id:string;user_id:string;companyName:string;roleTitle:string;city:string;status:'queued'|'applied'|'interview'|'offer'|'rejected'|'skipped';appliedAt:string|null;updatedAt:string;createdAt:string;recipientEmail?:string|null;deliveryStatus?:'unknown'|'sent'|'delivered'|'deferred'|'hard_bounce'|'soft_bounce'|'blocked'|string;responseStatus?:'none'|'action_required'|'out_of_office'|string;responseNote?:string|null;source?:string};
+export type Application={id:string;user_id:string;companyName:string;roleTitle:string;city:string;status:'queued'|'applied'|'interview'|'offer'|'rejected'|'skipped';appliedAt:string|null;updatedAt:string;createdAt:string;recipientEmail?:string|null;deliveryStatus?:'unknown'|'sent'|'delivered'|'deferred'|'hard_bounce'|'soft_bounce'|'blocked'|string;responseStatus?:'none'|'action_required'|'out_of_office'|string;responseNote?:string|null;responseUrl?:string|null;source?:string};
 function client(){if(!supabase)throw Error('Account service unavailable');return supabase;}
 export function useWorkspaceData(){
  const {session}=useSession();const id=session?.user.id;const cache=useQueryClient();
