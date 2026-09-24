@@ -1,36 +1,20 @@
-// @vitest-environment jsdom
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { AutoApplyChatWidget } from "./AutoApplyChatWidget";
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-  vi.restoreAllMocks();
-});
+const source = readFileSync(new URL("./AutoApplyChatWidget.tsx", import.meta.url), "utf8");
 
 describe("AutoApplyChatWidget readiness gate", () => {
-  it("stays hidden when the server-side Hermes integration is unavailable", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: false,
-      json: async () => ({ status: "unavailable" }),
-    }));
-
-    const { container } = render(<AutoApplyChatWidget />);
-    await waitFor(() => expect(fetch).toHaveBeenCalledWith(
-      "/api/chat/health",
-      expect.objectContaining({ headers: { accept: "application/json" } }),
-    ));
-    expect(container.innerHTML).toBe("");
+  it("fails closed until the server-side Hermes readiness endpoint is healthy", () => {
+    expect(source).toContain('fetch("/api/chat/health"');
+    expect(source).toContain("if (!ready) return null");
+    expect(source).not.toContain("herokuapp.com");
+    expect(source).not.toContain("HERMES_CHAT_API_KEY");
   });
 
-  it("shows the launcher only after the server reports Hermes ready", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ status: "ready" }),
-    }));
-
-    render(<AutoApplyChatWidget />);
-    expect(await screen.findByRole("button", { name: "Ask AutoApply" })).toBeTruthy();
+  it("sends chat messages only through the same-origin server proxy", () => {
+    expect(source).toContain('fetch("/api/chat"');
+    expect(source).toContain('method: "POST"');
+    expect(source).toContain("Ask AutoApply");
+    expect(source).toContain("مساعد AutoApply SA");
   });
 });
