@@ -4,6 +4,7 @@ import { isTrustedCorsOrigin } from "./cors";
 describe("credentialed CORS origin policy", () => {
   it("allows only the verified public origins in production", () => {
     expect(isTrustedCorsOrigin("https://www.hsndm.tech", "production")).toBe(true);
+    expect(isTrustedCorsOrigin("https://app.hsndm.tech", "production")).toBe(true);
     expect(isTrustedCorsOrigin("https://dashboard.hsndm.tech", "production")).toBe(true);
     expect(isTrustedCorsOrigin("https://untrusted.manus.space", "production")).toBe(false);
     expect(isTrustedCorsOrigin("https://evil.example", "production")).toBe(false);
