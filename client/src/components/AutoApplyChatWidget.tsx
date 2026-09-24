@@ -50,20 +50,16 @@ export function AutoApplyChatWidget() {
       });
       const payload = (await response.json()) as ChatResponse;
       if (!response.ok || !payload.reply) throw new Error(payload.error || "chat unavailable");
-      setMessages((current) => [
-        ...current,
-        { role: "assistant", content: payload.reply as string },
-      ].slice(-16));
+      const assistantMessage: Message = { role: "assistant", content: payload.reply };
+      setMessages((current) => [...current, assistantMessage].slice(-16));
     } catch {
-      setMessages((current) => [
-        ...current,
-        {
-          role: "assistant",
-          content: arabic
-            ? "تعذر الاتصال بالمساعد الآن. جرّب مرة أخرى بعد قليل."
-            : "I couldn't reach the assistant just now. Please try again shortly.",
-        },
-      ].slice(-16));
+      const errorMessage: Message = {
+        role: "assistant",
+        content: arabic
+          ? "تعذر الاتصال بالمساعد الآن. جرّب مرة أخرى بعد قليل."
+          : "I couldn't reach the assistant just now. Please try again shortly.",
+      };
+      setMessages((current) => [...current, errorMessage].slice(-16));
     } finally {
       setLoading(false);
     }
