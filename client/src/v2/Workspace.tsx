@@ -114,6 +114,8 @@ export function Workspace() {
       if (!result.ok) {
         setMessage(result.error === "brevo-not-configured"
           ? t("Email sending is not configured yet. Add BREVO_API_KEY and BREVO_SENDER_EMAIL on the backend.", "إرسال البريد غير مهيأ بعد. أضف BREVO_API_KEY و BREVO_SENDER_EMAIL في الخادم.")
+          : result.error === "application-email-endpoint-missing"
+            ? t("The application email route is not live on the API yet. The tracker still works; connect the V2 backend route before sending.", "مسار إرسال طلبات التوظيف غير مفعل على واجهة API بعد. لا يزال السجل يعمل؛ اربط مسار الخادم V2 قبل الإرسال.")
           : t("Could not send this application. Check the backend connection and try again.", "تعذّر إرسال هذا الطلب. تحقق من اتصال الخادم وحاول مجدداً."));
         trackEngagement("application_email_failed", { status: result.status, error: result.error });
         return;
