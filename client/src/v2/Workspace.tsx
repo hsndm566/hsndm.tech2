@@ -291,6 +291,7 @@ function ApplicationRow({ row, update, setMessage }: { row: Application; update:
           {row.responseStatus === "out_of_office" ? t(" · Automatic out-of-office reply", " · رد غياب تلقائي") : ""}
         </small>}
         {row.responseNote && <small className="application-note">{row.responseNote}</small>}
+        {row.responseUrl && <a className="text-link" href={row.responseUrl} target="_blank" rel="noreferrer">{t("Complete employer step", "أكمل خطوة جهة التوظيف")}<ArrowUpRight size={13} /></a>}
       </div>
       <label className="status-select">
         <span className="sr-only">{t("Application status", "حالة الطلب")}</span>
