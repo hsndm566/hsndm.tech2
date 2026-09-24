@@ -1,4 +1,5 @@
-/** Chat remains intentionally disabled unless a separately verified integration is enabled. */
+import { AutoApplyChatWidget } from "./AutoApplyChatWidget";
+
 export default function ChatLauncher() {
-  return null;
+  return <AutoApplyChatWidget />;
 }
