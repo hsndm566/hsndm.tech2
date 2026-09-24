@@ -52,7 +52,7 @@ export function State({ title, detail, retry }: { title: string; detail?: string
 export function Workspace() {
   const { t, path } = useLocale();
   const [route, navigate] = useLocation();
-  const { profile, apps, create, update, clear } = useWorkspaceData();
+  const { profile, apps, create, update, claimAccess, clear } = useWorkspaceData();
   const { session } = useSession();
   const backend = useBackendHealth();
   const jobs = useRecommendedJobs({ city: profile.data?.targetCity, role: profile.data?.targetIndustry });
@@ -61,16 +61,18 @@ export function Workspace() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    if (profile.isSuccess && !profile.data?.fullName && !route.endsWith("/onboarding")) navigate(path("/onboarding"));
-    else if (profile.data?.fullName && route.endsWith("/auth/callback")) navigate(path("/dashboard"));
-  }, [profile.data, profile.isSuccess, route, navigate, path]);
+    if (profile.data?.fullName && route.endsWith("/auth/callback")) navigate(path("/dashboard"));
+  }, [profile.data, route, navigate, path]);
 
   if (profile.isLoading) return <State title={t("Loading your workspace…", "جارٍ تحميل مساحة العمل…")} />;
   if (profile.isError) return <State title={t("Your account is signed in. Your workspace is not available yet.", "تم تسجيل دخولك، لكن مساحة العمل غير متاحة بعد.")} detail={t("We could not reach your profile service. Please try again shortly.", "تعذّر الوصول إلى خدمة ملفك. حاول مجدداً لاحقاً.")} retry />;
   if (route.endsWith("/onboarding") || route.endsWith("/settings")) return <ProfileForm existing={profile.data} settings={route.endsWith("/settings")} />;
+  if (profile.isSuccess && !profile.data?.fullName) return <CandidateAccess claimAccess={claimAccess} />;
 
   const rows = apps.data ?? [];
   const weekly = rows.filter((row) => row.appliedAt && new Date(row.appliedAt) >= saudiWeekStart()).length;
+  const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
+  const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
   const completed = [profile.data?.fullName, profile.data?.targetCity, profile.data?.resumeFileName].filter(Boolean).length;
 
   function add(event: FormEvent<HTMLFormElement>) {
@@ -179,9 +181,9 @@ export function Workspace() {
 
         <div className="metrics">
           {[
-            [weekly, t("Applications this week", "طلبات هذا الأسبوع"), t("Your recorded activity", "نشاطك المسجل")],
-            [jobs.data?.jobs.length ?? "—", t("Jobs to review", "وظائف للمراجعة"), jobs.data?.mode === "live" ? t("Live source connected", "مصدر مباشر متصل") : t("Search-backed suggestions", "اقتراحات مدعومة بالبحث")],
-            [rows.filter((row) => row.status === "queued").length, t("Saved for review", "محفوظ للمراجعة"), t("Your review queue", "قائمة المراجعة")],
+            [rows.filter((row) => row.status === "applied" || !!row.appliedAt).length, t("Applications sent", "طلبات تم إرسالها"), t(`${weekly} sent this Saudi week`, `${weekly} أُرسلت هذا الأسبوع`)],
+            [delivered, t("Confirmed delivered", "تم التسليم"), t("Employer mail server accepted them", "قبلها خادم بريد جهة التوظيف")],
+            [needsAttention, t("Needs attention", "تحتاج متابعة"), t("Forms, deferrals or delivery issues", "نماذج أو تأجيلات أو مشاكل تسليم")],
             [rows.filter((row) => row.status === "interview").length, t("Interviews", "المقابلات"), t("Your recorded activity", "نشاطك المسجل")],
           ].map(([number, label, hint], index) => (
             <article key={String(label)} className={index === 0 ? "metric-primary" : ""}><span>{label}</span><strong>{number}</strong><small>{hint}</small></article>
@@ -283,6 +285,12 @@ function ApplicationRow({ row, update, setMessage }: { row: Application; update:
         <strong>{row.roleTitle}</strong>
         <p>{row.companyName} · {row.city}</p>
         <small>{new Intl.DateTimeFormat(t("en-SA", "ar-SA"), { timeZone: "Asia/Riyadh", dateStyle: "medium" }).format(new Date(row.updatedAt))}</small>
+        {(row.deliveryStatus || row.responseStatus !== "none") && <small className="application-signal">
+          {row.deliveryStatus ? t(`Delivery: ${row.deliveryStatus.replaceAll("_"," ")}`, `التسليم: ${row.deliveryStatus.replaceAll("_"," ")}`) : ""}
+          {row.responseStatus === "action_required" ? t(" · Action required", " · إجراء مطلوب") : ""}
+          {row.responseStatus === "out_of_office" ? t(" · Automatic out-of-office reply", " · رد غياب تلقائي") : ""}
+        </small>}
+        {row.responseNote && <small className="application-note">{row.responseNote}</small>}
       </div>
       <label className="status-select">
         <span className="sr-only">{t("Application status", "حالة الطلب")}</span>
@@ -297,6 +305,40 @@ function ApplicationRow({ row, update, setMessage }: { row: Application; update:
         </select>
       </label>
     </article>
+  );
+}
+
+function CandidateAccess({ claimAccess }: { claimAccess: ReturnType<typeof useWorkspaceData>["claimAccess"] }) {
+  const { t, path } = useLocale();
+  const [, navigate] = useLocation();
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  async function claim(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    try {
+      await claimAccess.mutateAsync(code);
+      trackEngagement("candidate_access_claimed");
+      navigate(path("/dashboard"));
+    } catch {
+      setError(t("That code does not belong to this signed-in email. Check the account and code, then try again.", "هذا الرمز لا يخص البريد المسجل حالياً. تحقق من الحساب والرمز ثم حاول مجدداً."));
+    }
+  }
+  return (
+    <main className="onboarding wrap">
+      <div>
+        <span className="section-label">{t("PRIVATE CANDIDATE WORKSPACE", "مساحة مرشح خاصة")}</span>
+        <h1>{t("Connect your application history.", "اربط سجل طلباتك.")}</h1>
+        <p>{t("Enter the private access code you received. The code is also locked to your signed-in email, so another candidate cannot open your records.", "أدخل رمز الوصول الخاص الذي استلمته. الرمز مرتبط أيضاً ببريدك المسجل، لذلك لا يستطيع مرشح آخر فتح سجلك.")}</p>
+      </div>
+      <form className="panel" onSubmit={claim}>
+        <h2>{t("Candidate access code", "رمز دخول المرشح")}</h2>
+        <label>{t("Private code", "الرمز الخاص")}<input value={code} onChange={(event)=>setCode(event.target.value)} autoComplete="one-time-code" required minLength={8} maxLength={40} dir="ltr" /></label>
+        <p className="error" role="alert">{error}</p>
+        <button className="button full" disabled={claimAccess.isPending}>{claimAccess.isPending ? t("Connecting…", "جارٍ الربط…") : t("Open my dashboard", "افتح لوحة التحكم")}</button>
+        <Link href={path("/onboarding")}>{t("I am a new user without a code", "أنا مستخدم جديد بدون رمز")}</Link>
+      </form>
+    </main>
   );
 }
 
