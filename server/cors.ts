@@ -1,6 +1,7 @@
 const productionOrigins = new Set([
   "https://hsndm.tech",
   "https://www.hsndm.tech",
+  "https://app.hsndm.tech",
   "https://dashboard.hsndm.tech",
   "https://pay.hsndm.tech",
 ]);
