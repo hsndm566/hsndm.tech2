@@ -70,7 +70,7 @@ jobs:
             echo 'robots.txt blocks the entire public site.' >&2
             exit 1
           fi
-          grep -q 'https://www.hsndm.tech/$' dist/public/sitemap.xml || { echo 'Missing public homepage in sitemap.' >&2; exit 1; }
+          grep -q '<loc>https://www.hsndm.tech/</loc>' dist/public/sitemap.xml || { echo 'Missing public homepage in sitemap.' >&2; exit 1; }
           if grep -Eq '/(pricing|services|ats|enquire|how-it-works|support|case-studies|campaign-report-sample)/' dist/public/sitemap.xml; then
             echo 'Sitemap contains stale V1 URLs.' >&2
             exit 1
