@@ -14,9 +14,9 @@ afterEach(() => {
 
 describe("V2 backend client", () => {
   it("uses the production API host from every public dashboard domain", () => {
-    expect(getApiBaseUrl("https://www.hsndm.tech")).toBe("https://api.hsndm.tech");
-    expect(getApiBaseUrl("https://dashboard.hsndm.tech/dashboard")).toBe("https://api.hsndm.tech");
-    expect(getApiBaseUrl("https://app.hsndm.tech/dashboard")).toBe("https://api.hsndm.tech");
+    expect(getApiBaseUrl("https://www.hsndm.tech")).toBe("https://autoapply-sa.onrender.com");
+    expect(getApiBaseUrl("https://dashboard.hsndm.tech/dashboard")).toBe("https://autoapply-sa.onrender.com");
+    expect(getApiBaseUrl("https://app.hsndm.tech/dashboard")).toBe("https://autoapply-sa.onrender.com");
   });
 
   it("keeps local development same-origin when no API base is configured", () => {
