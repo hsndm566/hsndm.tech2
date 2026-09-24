@@ -35,7 +35,7 @@ export function getApiBaseUrl(origin = typeof window === "undefined" ? "" : wind
   if (configured) return configured.replace(/\/$/, "");
   try {
     const host = new URL(origin).hostname;
-    if (["hsndm.tech", "www.hsndm.tech", "dashboard.hsndm.tech", "app.hsndm.tech"].includes(host)) return "https://autoapply-sa.onrender.com";
+    if (["hsndm.tech", "www.hsndm.tech", "dashboard.hsndm.tech", "app.hsndm.tech"].includes(host)) return "https://api.hsndm.tech";
   } catch {
     return "";
   }
