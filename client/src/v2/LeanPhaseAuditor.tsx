@@ -1,15 +1,13 @@
-import { CheckCircle2, CircleDashed, LockKeyhole, ShieldCheck } from "lucide-react";
+import { CheckCircle2, CircleDashed, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import type { Application, Profile } from "./data";
 import { useLocale } from "./locale";
 
-export type LeanPhaseStatus = "passed" | "active" | "locked";
+export type LeanPhaseStatus = "passed" | "active" | "waiting";
 
 export type LeanAudit = {
   phases: Array<{ id: 1 | 2 | 3 | 4 | 5; status: LeanPhaseStatus; passed: boolean }>;
   currentPhase: 1 | 2 | 3 | 4 | 5;
-  canTrack: boolean;
-  canSend: boolean;
   sentCount: number;
   complete: boolean;
 };
@@ -36,7 +34,7 @@ export function auditLeanPhases({ profile, applications, deliveryReady }: AuditI
     return {
       id: (index + 1) as 1 | 2 | 3 | 4 | 5,
       passed,
-      status: passed ? "passed" as const : previousPassed ? "active" as const : "locked" as const,
+      status: passed ? "passed" as const : previousPassed ? "active" as const : "waiting" as const,
     };
   });
 
@@ -45,8 +43,6 @@ export function auditLeanPhases({ profile, applications, deliveryReady }: AuditI
   return {
     phases,
     currentPhase: active?.id ?? 5,
-    canTrack: phases[0].passed,
-    canSend: phases[2].passed,
     sentCount,
     complete: phases[4].passed,
   };
@@ -93,20 +89,20 @@ export function LeanPhaseAuditor({
   const nextAction = {
     1: t("Finish your profile and CV signal.", "أكمل ملفك وإشارة السيرة."),
     2: t("Save one real opportunity using Track a job.", "احفظ فرصة حقيقية واحدة من زر أضف وظيفة."),
-    3: t("Do not advance until the application delivery readiness check passes.", "لا تنتقل قبل نجاح فحص جاهزية إرسال الطلبات."),
+    3: t("Validate the delivery path while users can continue using the product.", "تحقق من مسار الإرسال مع استمرار المستخدمين في استخدام المنتج."),
     4: t("Send one reviewed application and verify that it appears in the tracker.", "أرسل طلباً تمت مراجعته وتأكد من ظهوره في السجل."),
     5: audit.complete
       ? t("Batch passed. Review outcomes before increasing volume.", "اجتازت الدفعة الفحص. راجع النتائج قبل زيادة الحجم.")
-      : t("Continue only until the first five-application batch is complete.", "استمر فقط حتى تكتمل أول دفعة من خمسة طلبات."),
+      : t("Use the first five applications as the initial validation batch.", "استخدم أول خمسة طلبات كدفعة التحقق الأولى."),
   }[audit.currentPhase];
 
   return (
-    <section className="lean-auditor" aria-label={t("Lean phase auditor", "مدقق مراحل لين")}>
+    <section className="lean-auditor" aria-label={t("Lean validation auditor", "مدقق تحقق لين")}>
       <div className="lean-auditor-head">
         <div>
-          <span className="section-label">{t("LEAN AUDITOR", "مدقق لين")}</span>
-          <h2>{t("One phase must pass before the next one opens.", "يجب أن تجتاز كل مرحلة الفحص قبل فتح التالية.")}</h2>
-          <p>{t("The auditor uses stored profile data, application records and delivery readiness. It does not accept self-reported completion.", "يعتمد المدقق على بيانات الملف وسجل الطلبات وجاهزية الإرسال. لا يعتمد على تأكيد يدوي.")}</p>
+          <span className="section-label">{t("VALIDATION AUDIT", "تدقيق التحقق")}</span>
+          <h2>{t("Validate in order without blocking the user.", "تحقق بالترتيب دون تعطيل المستخدم.")}</h2>
+          <p>{t("This is an internal QA view. It observes evidence in order and never disables customer actions.", "هذه شاشة تدقيق داخلية. تراجع الأدلة بالترتيب ولا تعطل إجراءات المستخدم.")}</p>
         </div>
         <span className={audit.complete ? "auditor-verdict passed" : "auditor-verdict"}>
           <ShieldCheck size={16} />
@@ -117,13 +113,13 @@ export function LeanPhaseAuditor({
       <div className="lean-phase-list">
         {audit.phases.map((phase, index) => {
           const item = copy[index];
-          const Icon = phase.status === "passed" ? CheckCircle2 : phase.status === "locked" ? LockKeyhole : CircleDashed;
+          const Icon = phase.status === "passed" ? CheckCircle2 : CircleDashed;
           return (
             <article key={phase.id} className={`lean-phase ${phase.status}`}>
               <div className="lean-phase-title">
                 <Icon size={18} />
                 <strong>{item.title}</strong>
-                <span>{phase.status === "passed" ? t("Passed", "اجتازت") : phase.status === "active" ? t("Active", "نشطة") : t("Locked", "مقفلة")}</span>
+                <span>{phase.status === "passed" ? t("Validated", "تم التحقق") : phase.status === "active" ? t("Current check", "الفحص الحالي") : t("Waiting", "بانتظار الدور")}</span>
               </div>
               <p>{item.requirement}</p>
               <small>{item.evidence}</small>
@@ -134,7 +130,7 @@ export function LeanPhaseAuditor({
 
       <div className="lean-next-action">
         <div>
-          <strong>{t("Auditor next action", "الإجراء التالي من المدقق")}</strong>
+          <strong>{t("Current audit focus", "محور التدقيق الحالي")}</strong>
           <p>{nextAction}</p>
         </div>
         {audit.currentPhase === 1 && <Link className="button small" href={path("/settings")}>{t("Complete phase 1", "أكمل المرحلة ١")}</Link>}
