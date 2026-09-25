@@ -23,46 +23,62 @@ describe("V2 backend client", () => {
     expect(getApiBaseUrl("http://localhost:5173")).toBe("");
   });
 
-  it("falls back from /health to /healthz when the first health route is unavailable", async () => {
+  it("checks the V2 health route before accepting a generic health response", async () => {
     const fetchImpl = vi.fn()
       .mockResolvedValueOnce(new Response(null, { status: 404 }))
       .mockResolvedValueOnce(new Response(null, { status: 200 }));
 
-    await expect(checkBackendHealth(fetchImpl as unknown as typeof fetch)).resolves.toEqual({ ok: true, status: 200 });
+    await expect(checkBackendHealth(fetchImpl as unknown as typeof fetch)).resolves.toEqual({
+      ok: true,
+      status: 200,
+      path: "/healthz/auth",
+    });
     expect(fetchImpl).toHaveBeenCalledTimes(2);
   });
 
-  it("returns curated job review links when the live V2 endpoint is missing", async () => {
+  it("does not substitute generic search links when the verified job API is missing", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(new Response(JSON.stringify({ detail: "Not Found" }), { status: 404 }));
-
     const result = await fetchRecommendedJobs({ city: "Jeddah", role: "Industrial Engineering" }, fetchImpl as unknown as typeof fetch);
-
-    expect(result.mode).toBe("curated");
-    expect(result.jobs).toHaveLength(3);
-    expect(result.jobs[0].matchReason).toContain("Industrial Engineering");
+    expect(result.mode).toBe("unavailable");
+    expect(result.jobs).toEqual([]);
   });
 
-  it("returns curated job review links before sign-in instead of a blank queue", async () => {
+  it("returns no synthetic jobs before sign-in", async () => {
     auth.token = null;
-
     const result = await fetchRecommendedJobs({ city: "Riyadh", role: "Operations" });
-
     expect(result).toEqual(getFallbackRecommendedJobs({ city: "Riyadh", role: "Operations" }, result.checkedAt));
+    expect(result.jobs).toEqual([]);
   });
 
-  it("labels a missing application email endpoint distinctly", async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(new Response(JSON.stringify({ detail: "Not Found" }), { status: 404 }));
+  it("accepts a send only when the backend returns provider evidence", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({
+        ok: true,
+        messageId: "<provider-message-1>",
+        application: { id: "app-1", status: "applied" },
+      }), { status: 200, headers: { "content-type": "application/json" } }),
+    );
 
     const result = await sendApplicationEmail({
       toEmail: "hiring@example.com",
-      companyName: "Hiring Co",
-      roleTitle: "Analyst",
-      city: "Jeddah",
-      candidateName: "Test Candidate",
-      candidateEmail: "candidate@example.com",
-      message: "I am interested in this role and my experience is a strong match.",
+      jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
     }, fetchImpl as unknown as typeof fetch);
 
+    expect(result).toEqual({
+      ok: true,
+      status: 200,
+      error: "",
+      messageId: "<provider-message-1>",
+      application: { id: "app-1", status: "applied" },
+    });
+  });
+
+  it("labels a missing application endpoint distinctly", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(new Response(JSON.stringify({ detail: "Not Found" }), { status: 404 }));
+    const result = await sendApplicationEmail({
+      toEmail: "hiring@example.com",
+      jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
+    }, fetchImpl as unknown as typeof fetch);
     expect(result).toEqual({ ok: false, status: 404, error: "application-email-endpoint-missing" });
   });
 });
