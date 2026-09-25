@@ -123,7 +123,7 @@ describe("V2 workspace behavior", () => {
 
   it("requires a verified selected job and refreshes the server-recorded application after send", async () => {
     mount();
-    expect(screen.getByRole("button", { name: "Send and record application" })).toBeDisabled();
+    expect((screen.getByRole("button", { name: "Send and record application" }) as HTMLButtonElement).disabled).toBe(true);
 
     fireEvent.click(screen.getByRole("button", { name: "Use this job" }));
     expect(screen.getByDisplayValue("Pronto")).toBeTruthy();
