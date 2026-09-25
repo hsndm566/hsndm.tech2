@@ -20,6 +20,7 @@ import { sendApplicationEmail, useBackendHealth, useRecommendedJobs } from "./ba
 import { type Application, saudiWeekStart, useWorkspaceData } from "./data";
 import { cities, useLocale } from "./locale";
 import { supabase, useSession } from "./auth";
+import { LeanPhaseAuditor, auditLeanPhases } from "./LeanPhaseAuditor";
 
 export function SessionGate({ children }: { children: ReactNode }) {
   const { session, loading, error } = useSession();
@@ -74,6 +75,7 @@ export function Workspace() {
   const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
   const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
   const completed = [profile.data?.fullName, profile.data?.targetCity, profile.data?.resumeFileName].filter(Boolean).length;
+  const leanAudit = auditLeanPhases({ profile: profile.data, applications: rows, backendOk: backend.data?.ok === true });
 
   function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -176,8 +178,10 @@ export function Workspace() {
               ))}
             </div>
           </div>
-          <button className="button" onClick={() => { setAdding(!adding); trackEngagement("track_job_toggled", { open: !adding }); }}><Plus size={18} />{t("Track a job", "أضف وظيفة")}</button>
+          <button className="button" disabled={!leanAudit.canTrack} onClick={() => { setAdding(!adding); trackEngagement("track_job_toggled", { open: !adding }); }}><Plus size={18} />{t("Track a job", "أضف وظيفة")}</button>
         </div>
+
+        <LeanPhaseAuditor profile={profile.data} applications={rows} backendOk={backend.data?.ok === true} />
 
         <div className="metrics">
           {[
@@ -228,6 +232,7 @@ export function Workspace() {
               <span className="tag"><MailCheck size={14} />{t("Brevo sender", "مرسل Brevo")}</span>
               <h2>{t("Send an application", "إرسال طلب تقديم")}</h2>
               <p>{t("Write the message, review the recipient, then send through the backend. Nothing leaves automatically.", "اكتب الرسالة، راجع المستلم، ثم أرسل عبر الخادم. لا يخرج شيء تلقائياً.")}</p>
+              {!leanAudit.canSend && <div className="phase-lock-note"><ShieldCheck size={16} /><span>{t("Lean Auditor locked sending until phases 1–3 pass.", "أوقف مدقق لين الإرسال حتى تجتاز المراحل ١–٣.")}</span></div>}
               <form onSubmit={send}>
                 <input type="hidden" name="candidateName" value={profile.data?.fullName || ""} readOnly />
                 <input type="hidden" name="candidateEmail" value={session?.user.email || ""} readOnly />
@@ -236,7 +241,7 @@ export function Workspace() {
                 <label>{t("Application location", "موقع التقديم")}<select name="senderCity" defaultValue={profile.data?.targetCity || "Riyadh"}>{cities.map(([en, ar]) => <option key={en} value={en}>{t(en, ar)}</option>)}</select></label>
                 <label>{t("Recipient email", "بريد المستلم")}<input name="recipientEmail" type="email" placeholder="hiring@company.com" required dir="ltr" /></label>
                 <label>{t("Application message", "رسالة التقديم")}<textarea name="applicationMessage" minLength={20} maxLength={3000} required defaultValue={t("Hello, I am interested in this role and believe my experience is a strong match. I would appreciate the chance to discuss how I can contribute.", "مرحباً، أنا مهتم بهذا الدور وأرى أن خبرتي مناسبة له. يسعدني أن أتاح لي المجال لمناقشة كيف يمكنني المساهمة.")} /></label>
-                <button className="button full" disabled={sending || !backend.data?.ok}><Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send and record application", "إرسال وتسجيل الطلب")}</button>
+                <button className="button full" disabled={sending || !backend.data?.ok || !leanAudit.canSend}><Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send and record application", "إرسال وتسجيل الطلب")}</button>
               </form>
             </section>
 
