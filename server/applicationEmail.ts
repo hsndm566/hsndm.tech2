@@ -69,6 +69,27 @@ function jobSearchUrl(role: string, city: string) {
   return `https://www.linkedin.com/jobs/search/?${query.toString()}`;
 }
 
+export async function checkApplicationDeliveryReadiness(fetchImpl: FetchLike = fetch) {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey || !process.env.BREVO_SENDER_EMAIL) {
+    return { ok: false, status: 503, reason: "brevo-not-configured" as const };
+  }
+  try {
+    const response = await fetchImpl("https://api.brevo.com/v3/account", {
+      method: "GET",
+      headers: { "api-key": apiKey, accept: "application/json" },
+      signal: AbortSignal.timeout(8_000),
+    });
+    return {
+      ok: response.ok,
+      status: response.status,
+      reason: response.ok ? "ready" as const : "brevo-readiness-failed" as const,
+    };
+  } catch {
+    return { ok: false, status: 502, reason: "brevo-readiness-failed" as const };
+  }
+}
+
 export function registerApplicationEmailRoutes(app: Express) {
   app.get("/api/v2/jobs/recommended", async (req: Request, res: Response) => {
     const user = await authenticateSupabaseRequest(req as never);
@@ -100,6 +121,15 @@ export function registerApplicationEmailRoutes(app: Express) {
     });
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({ jobs, mode: "curated", checkedAt: new Date().toISOString() });
+  });
+
+  app.get("/api/v2/applications/readiness", async (req: Request, res: Response) => {
+    const user = await authenticateSupabaseRequest(req as never);
+    if (!user) return res.status(401).json({ error: "sign-in-required" });
+    const result = await checkApplicationDeliveryReadiness();
+    if (!result.ok) return res.status(result.status).json({ error: result.reason });
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({ ok: true });
   });
 
   app.post("/api/v2/applications/send-email", async (req: Request, res: Response) => {
