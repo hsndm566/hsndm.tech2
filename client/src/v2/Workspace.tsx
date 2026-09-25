@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { trackEngagement } from "@/lib/analytics";
 import { CvUpload, clearCvDraft, cvDraft } from "./CvUpload";
-import { sendApplicationEmail, useApplicationDeliveryReadiness, useBackendHealth, useRecommendedJobs } from "./backend";
+import { sendApplicationEmail, useApplicationDeliveryReadiness, useBackendHealth, useRecommendedJobs, type RecommendedJob } from "./backend";
 import { type Application, saudiWeekStart, useWorkspaceData } from "./data";
 import { cities, useLocale } from "./locale";
 import { supabase, useSession } from "./auth";
@@ -54,13 +54,13 @@ export function Workspace() {
   const { t, path } = useLocale();
   const [route, navigate] = useLocation();
   const { profile, apps, create, update, claimAccess, clear } = useWorkspaceData();
-  const { session } = useSession();
   const backend = useBackendHealth();
   const delivery = useApplicationDeliveryReadiness();
-  const jobs = useRecommendedJobs({ city: profile.data?.targetCity, role: profile.data?.targetIndustry });
+  const jobs = useRecommendedJobs({ city: profile.data?.targetCity, role: profile.data?.targetRole || profile.data?.targetIndustry });
   const [adding, setAdding] = useState(false);
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<RecommendedJob | null>(null);
 
   useEffect(() => {
     if (profile.data?.fullName && route.endsWith("/auth/callback")) navigate(path("/dashboard"));
@@ -75,7 +75,7 @@ export function Workspace() {
   const weekly = rows.filter((row) => row.appliedAt && new Date(row.appliedAt) >= saudiWeekStart()).length;
   const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
   const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
-  const completed = [profile.data?.fullName, profile.data?.targetCity, profile.data?.resumeFileName].filter(Boolean).length;
+  const completed = [profile.data?.fullName, profile.data?.targetCity, profile.data?.targetRole, profile.data?.targetIndustry, profile.data?.experienceLevel, profile.data?.resumeStoragePath].filter(Boolean).length;
 
   function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,47 +96,51 @@ export function Workspace() {
   async function send(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
-    setSending(true);
-    const form = new FormData(event.currentTarget);
-    const companyName = String(form.get("senderCompany"));
-    const roleTitle = String(form.get("senderRole"));
-    const city = String(form.get("senderCity"));
-    const candidateEmail = session?.user.email || String(form.get("candidateEmail"));
-    const payload = {
-      toEmail: String(form.get("recipientEmail")),
-      companyName,
-      roleTitle,
-      city,
-      candidateName: profile.data?.fullName || String(form.get("candidateName")),
-      candidateEmail,
-      message: String(form.get("applicationMessage")),
-      cvSummary: profile.data?.resumeSummary || "",
-    };
 
+    if (!selectedJob) {
+      setMessage(t("Choose a verified job before sending.", "اختر وظيفة موثقة قبل الإرسال."));
+      return;
+    }
+    if (!profile.data?.resumeStoragePath) {
+      setMessage(t("Upload and save your original CV before sending.", "ارفع ملف سيرتك الأصلي واحفظه قبل الإرسال."));
+      return;
+    }
+    if (!profile.data?.targetRole || !profile.data?.targetIndustry || !profile.data?.experienceLevel) {
+      setMessage(t("Complete your role, industry, and experience preferences first.", "أكمل المسمى والمجال ومستوى الخبرة أولاً."));
+      return;
+    }
+
+    setSending(true);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     try {
-      const result = await sendApplicationEmail(payload);
+      const result = await sendApplicationEmail({
+        toEmail: String(form.get("recipientEmail")),
+        jobId: selectedJob.id,
+      });
+
       if (!result.ok) {
-        setMessage(result.error === "brevo-not-configured"
-          ? t("Email sending is not configured yet. Add BREVO_API_KEY and BREVO_SENDER_EMAIL on the backend.", "إرسال البريد غير مهيأ بعد. أضف BREVO_API_KEY و BREVO_SENDER_EMAIL في الخادم.")
-          : result.error === "application-email-endpoint-missing"
-            ? t("The application email route is not live on the API yet. The tracker still works; connect the V2 backend route before sending.", "مسار إرسال طلبات التوظيف غير مفعل على واجهة API بعد. لا يزال السجل يعمل؛ اربط مسار الخادم V2 قبل الإرسال.")
-          : result.error === "auditor-package-required"
-            ? t("The API is connected. Live email sending now needs the approved application package before Brevo dispatch.", "واجهة API متصلة. إرسال البريد الحي يحتاج الآن إلى حزمة طلب معتمدة قبل الإرسال عبر Brevo.")
-          : t("Could not send this application. Check the backend connection and try again.", "تعذّر إرسال هذا الطلب. تحقق من اتصال الخادم وحاول مجدداً."));
-        trackEngagement("application_email_failed", { status: result.status, error: result.error });
+        const failureCopy: Record<string, string> = {
+          "brevo-not-configured": t("Email delivery is not configured on the backend.", "خدمة إرسال البريد غير مهيأة على الخادم."),
+          "brevo-missing-message-id": t("The provider did not return submission evidence, so this was not marked sent.", "لم يُرجع مزود البريد دليلاً على الإرسال، لذلك لم يُسجل الطلب كمرسل."),
+          "duplicate-application": t("This verified job is already in your application history.", "هذه الوظيفة الموثقة موجودة بالفعل في سجل طلباتك."),
+          "cv-required": t("Your original CV is missing. Upload it again in Profile & settings.", "ملف سيرتك الأصلي غير موجود. ارفعه مرة أخرى من الملف والإعدادات."),
+          "preferences-required": t("Complete your role, industry, and experience preferences first.", "أكمل المسمى والمجال ومستوى الخبرة أولاً."),
+          "verified-job-not-found": t("This job is no longer in the verified job feed. Refresh the recommendations.", "لم تعد هذه الوظيفة موجودة في قائمة الوظائف الموثقة. حدّث الاقتراحات."),
+          "application-email-endpoint-missing": t("The V2 application route is not live on the production API.", "مسار التقديم V2 غير متاح على واجهة الإنتاج."),
+        };
+        setMessage(failureCopy[result.error] || t("The application was not verified as sent. Nothing has been marked as applied.", "لم يتم التحقق من إرسال الطلب، ولم يتم تسجيله كطلب مرسل."));
+        trackEngagement("application_email_failed", { status: result.status, error: result.error, jobId: selectedJob.id });
         return;
       }
-      create.mutate({ companyName, roleTitle, city, status: "applied" }, {
-        onSuccess: () => {
-          event.currentTarget.reset();
-          setMessage(t("Application sent and recorded.", "تم إرسال الطلب وتسجيله."));
-          trackEngagement("application_email_sent", { city });
-        },
-        onError: () => {
-          setMessage(t("Application email was sent, but the tracker could not be updated. Refresh and add it manually if needed.", "تم إرسال البريد، لكن تعذّر تحديث السجل. حدّث الصفحة وأضفه يدوياً عند الحاجة."));
-          trackEngagement("application_email_record_failed");
-        },
-      });
+
+      await apps.refetch();
+      formElement.reset();
+      setMessage(t(
+        `Application sent and recorded. Provider evidence: ${result.messageId}`,
+        `تم إرسال الطلب وتسجيله. دليل مزود البريد: ${result.messageId}`,
+      ));
+      trackEngagement("application_email_sent", { city: selectedJob.city, jobId: selectedJob.id, providerEvidence: true });
     } finally {
       setSending(false);
     }
@@ -229,32 +233,58 @@ export function Workspace() {
 
           <div>
             <section className="panel sender-panel">
-              <span className="tag"><MailCheck size={14} />{t("Brevo sender", "مرسل Brevo")}</span>
+              <span className="tag"><MailCheck size={14} />{t("Verified email application", "طلب بريد موثّق")}</span>
               <h2>{t("Send an application", "إرسال طلب تقديم")}</h2>
-              <p>{t("Write the message, review the recipient, then send through the backend. Nothing leaves automatically.", "اكتب الرسالة، راجع المستلم، ثم أرسل عبر الخادم. لا يخرج شيء تلقائياً.")}</p>
-              <form onSubmit={send}>
-                <input type="hidden" name="candidateName" value={profile.data?.fullName || ""} readOnly />
-                <input type="hidden" name="candidateEmail" value={session?.user.email || ""} readOnly />
-                <label>{t("Employer name", "اسم جهة التوظيف")}<input name="senderCompany" minLength={2} maxLength={150} required /></label>
-                <label>{t("Position title", "مسمى الوظيفة")}<input name="senderRole" defaultValue={profile.data?.targetIndustry || ""} minLength={2} maxLength={150} required /></label>
-                <label>{t("Application location", "موقع التقديم")}<select name="senderCity" defaultValue={profile.data?.targetCity || "Riyadh"}>{cities.map(([en, ar]) => <option key={en} value={en}>{t(en, ar)}</option>)}</select></label>
+              <p>{t("Choose a verified job first. AutoApply uses your saved profile and private CV to prepare a grounded message, then records provider evidence.", "اختر وظيفة موثقة أولاً. يستخدم AutoApply ملفك وسيرتك الخاصة لإعداد رسالة مبنية على بياناتك ثم يسجل دليل مزود البريد.")}</p>
+              <form key={selectedJob?.id || "no-selected-job"} onSubmit={send}>
+                <label>{t("Employer name", "اسم جهة التوظيف")}<input value={selectedJob?.companyName || ""} readOnly required /></label>
+                <label>{t("Position title", "مسمى الوظيفة")}<input value={selectedJob?.roleTitle || ""} readOnly required /></label>
+                <label>{t("Application location", "موقع التقديم")}<input value={selectedJob?.city || ""} readOnly required /></label>
                 <label>{t("Recipient email", "بريد المستلم")}<input name="recipientEmail" type="email" placeholder="hiring@company.com" required dir="ltr" /></label>
-                <label>{t("Application message", "رسالة التقديم")}<textarea name="applicationMessage" minLength={20} maxLength={3000} required defaultValue={t("Hello, I am interested in this role and believe my experience is a strong match. I would appreciate the chance to discuss how I can contribute.", "مرحباً، أنا مهتم بهذا الدور وأرى أن خبرتي مناسبة له. يسعدني أن أتاح لي المجال لمناقشة كيف يمكنني المساهمة.")} /></label>
-                <button className="button full" disabled={sending || !backend.data?.ok}><Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send and record application", "إرسال وتسجيل الطلب")}</button>
+                <label>{t("Generated application message", "رسالة التقديم المولّدة")}<textarea
+                  aria-label={t("Generated application message", "رسالة التقديم المولّدة")}
+                  readOnly
+                  value={selectedJob ? [
+                    `Hello ${selectedJob.companyName} team,`,
+                    "",
+                    `I am applying for the ${selectedJob.roleTitle} role in ${selectedJob.city}.`,
+                    profile.data?.resumeSummary
+                      ? `The CV keywords identified during my profile setup include: ${profile.data.resumeSummary}.`
+                      : "Please find my CV attached for your review.",
+                    "",
+                    "I would appreciate the opportunity to discuss the role.",
+                  ].join("\n") : ""}
+                /></label>
+                {selectedJob && <a href={selectedJob.url} target="_blank" rel="noreferrer">{t("Open original job posting", "افتح إعلان الوظيفة الأصلي")} <ArrowUpRight size={14} /></a>}
+                {!profile.data?.resumeStoragePath && <p className="error">{t("Your original CV must be stored before sending.", "يجب حفظ ملف سيرتك الأصلي قبل الإرسال.")}</p>}
+                <button className="button full" disabled={sending || !backend.data?.ok || !selectedJob || !profile.data?.resumeStoragePath}>
+                  <Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send and record application", "إرسال وتسجيل الطلب")}
+                </button>
               </form>
             </section>
 
             <section className="panel recommended-panel">
-              <span className="tag"><ShieldCheck size={14} />{jobs.data?.mode === "live" ? t("Live jobs", "وظائف مباشرة") : t("Review queue", "قائمة مراجعة")}</span>
+              <span className="tag"><ShieldCheck size={14} />{jobs.data?.mode === "live" ? t("Verified live jobs", "وظائف مباشرة موثّقة") : t("Verified feed unavailable", "قائمة الوظائف الموثقة غير متاحة")}</span>
               <h2>{t("Jobs to check now", "وظائف يمكن فحصها الآن")}</h2>
-              {jobs.isError ? <p role="alert">{t("Job suggestions could not load. The tracker still works.", "تعذّر تحميل الاقتراحات. لا يزال السجل يعمل.")}</p> : (
+              {jobs.isError || jobs.data?.mode !== "live" ? (
+                <p role="alert">{t("Verified jobs are unavailable right now. AutoApply will not substitute generic search links.", "الوظائف الموثقة غير متاحة حالياً. لن يستبدلها AutoApply بروابط بحث عامة.")}</p>
+              ) : !(jobs.data?.jobs ?? []).length ? (
+                <p>{t("No verified matches are available for these preferences right now.", "لا توجد مطابقات موثقة لهذه التفضيلات حالياً.")}</p>
+              ) : (
                 <div className="job-suggestions">
-                  {(jobs.data?.jobs ?? []).slice(0, 3).map((job) => (
-                    <a key={job.id} className="suggestion" href={job.url} target="_blank" rel="noreferrer" onClick={() => trackEngagement("recommended_job_opened", { source: job.source, city: job.city })}>
-                      <strong>{job.roleTitle}</strong>
-                      <span>{job.companyName} · {job.city}</span>
-                      <small>{job.matchReason}</small>
-                    </a>
+                  {(jobs.data?.jobs ?? []).slice(0, 8).map((job) => (
+                    <article key={job.id} className="suggestion">
+                      <a href={job.url} target="_blank" rel="noreferrer" onClick={() => trackEngagement("recommended_job_opened", { source: job.source, city: job.city })}>
+                        <strong>{job.roleTitle}</strong>
+                        <span>{job.companyName} · {job.city}</span>
+                        <small>{job.matchReason}</small>
+                      </a>
+                      <button type="button" className="text-link" onClick={() => {
+                        setSelectedJob(job);
+                        setMessage("");
+                        trackEngagement("verified_job_selected", { jobId: job.id, source: job.source });
+                      }}>{selectedJob?.id === job.id ? t("Selected", "تم الاختيار") : t("Use this job", "استخدم هذه الوظيفة")}</button>
+                    </article>
                   ))}
                 </div>
               )}
@@ -269,8 +299,8 @@ export function Workspace() {
 
             <section className="panel">
               <h2>{t("Profile completeness", "اكتمال الملف")}</h2>
-              <progress max={3} value={completed} />
-              <p>{completed === 3 ? t("Your essentials are ready. Keep your tracker moving.", "أساسياتك جاهزة. واصل تحديث سجل الطلبات.") : t("Name, location and CV summary", "الاسم والمدينة وملخص السيرة")}</p>
+              <progress max={6} value={completed} />
+              <p>{completed === 6 ? t("Your essentials are ready for a verified application.", "أساسياتك جاهزة لطلب تقديم موثّق.") : t("Complete your profile, preferences, and private CV.", "أكمل ملفك وتفضيلاتك وسيرتك الخاصة.")}</p>
               <Link className="next-action" href={path("/settings")} onClick={() => trackEngagement("profile_review_clicked")}><FileText size={18} />{t("Review your profile", "راجع ملفك")}<ArrowUpRight size={17} /></Link>
             </section>
           </div>
@@ -362,10 +392,18 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
       await saveProfile.mutateAsync({
         fullName: String(form.get("name")),
         targetCity: String(form.get("city")),
+        targetRole: String(form.get("role")),
         targetIndustry: String(form.get("industry")),
+        experienceLevel: String(form.get("experience")),
         preferredLanguage: t("English", "Arabic") as "English" | "Arabic",
         openToRemote: form.get("remote") === "on",
-        ...(cv ? { resumeFileName: cv.name, resumeSummary: cv.skills.join(", ").slice(0, 500) } : {}),
+        ...(cv ? { resumeSummary: cv.skills.join(", ").slice(0, 500) } : {}),
+        ...(cv?.storagePath ? {
+          resumeFileName: cv.name,
+          resumeStoragePath: cv.storagePath,
+          resumeMimeType: cv.mimeType || null,
+          resumeSizeBytes: cv.sizeBytes || null,
+        } : {}),
       });
       trackEngagement("profile_saved", { settings: !!settings, hasCv: !!cv, city: String(form.get("city")) });
       navigate(path("/dashboard"));
@@ -393,10 +431,17 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
         <div className="form-steps" aria-hidden="true"><span className="done">1</span><span>2</span><span>3</span></div>
         <label>{t("Full name", "الاسم الكامل")}<input name="name" defaultValue={existing?.fullName || ""} required minLength={2} maxLength={120} /></label>
         <label>{t("Preferred city", "المدينة المفضلة")}<select name="city" defaultValue={existing?.targetCity || "Jeddah"}>{cities.map(([en, ar]) => <option key={en} value={en}>{t(en, ar)}</option>)}</select></label>
-        <label>{t("Target role or field", "المسمى أو المجال المطلوب")}<input name="industry" defaultValue={existing?.targetIndustry || cv?.roles[0] || ""} required maxLength={64} /></label>
+        <label>{t("Target role", "المسمى المطلوب")}<input name="role" defaultValue={existing?.targetRole || cv?.roles[0] || existing?.targetIndustry || ""} required minLength={2} maxLength={120} /></label>
+        <label>{t("Target industry", "المجال المطلوب")}<input name="industry" defaultValue={existing?.targetIndustry || ""} required minLength={2} maxLength={64} /></label>
+        <label>{t("Experience level", "مستوى الخبرة")}<select name="experience" defaultValue={existing?.experienceLevel || "Entry level"}>
+          <option value="Entry level">{t("Entry level", "مبتدئ")}</option>
+          <option value="Mid-level">{t("Mid-level", "متوسط")}</option>
+          <option value="Senior">{t("Senior", "متقدم")}</option>
+          <option value="Executive">{t("Executive", "تنفيذي")}</option>
+        </select></label>
         <label className="checkbox"><input name="remote" type="checkbox" defaultChecked={existing?.openToRemote} />{t("Open to remote work", "أقبل العمل عن بُعد")}</label>
-        <div className="notice"><CheckCircle2 size={18} /><p>{t("Manual mode is active. No applications will be sent automatically.", "الوضع اليدوي مفعّل. لن تُرسل طلبات تلقائياً.")}</p></div>
-        <small>{t("Saving stores these preferences and, if selected, your CV filename and keyword summary. The original file is not uploaded.", "يحفظ هذا الإجراء تفضيلاتك واسم ملف السيرة وملخص كلماتها إن اخترتها. لا يتم رفع الملف الأصلي.")}</small>
+        <div className="notice"><CheckCircle2 size={18} /><p>{t("Applications send only after you choose a verified job and press Send.", "لا تُرسل الطلبات إلا بعد اختيار وظيفة موثقة والضغط على إرسال.")}</p></div>
+        <small>{t("Your original CV is stored privately when you upload it here. Profile preferences persist with your account.", "يُحفظ ملف سيرتك الأصلي بشكل خاص عند رفعه هنا، وتبقى تفضيلاتك محفوظة في حسابك.")}</small>
         <p className="error" role="alert">{error}</p>
         <button className="button full" disabled={saveProfile.isPending}>{saveProfile.isPending ? t("Saving…", "جارٍ الحفظ…") : t("Save and open dashboard", "حفظ وفتح لوحة التحكم")}</button>
         {settings && <Link href={path("/dashboard")}>{t("Back to dashboard", "العودة للوحة التحكم")}</Link>}
