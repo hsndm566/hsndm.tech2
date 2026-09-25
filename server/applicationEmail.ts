@@ -242,11 +242,35 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
     recipientEmail: toEmail,
     deliveryStatus: "unknown",
     responseStatus: "none",
+    responseNote: null,
     source: job.verification || "verified_public_ats",
     sourceUrl: job.canonicalUrl,
     cvStoragePath,
     jobId: job.id,
+    providerMessageId: null,
   };
+
+  const { data: existing, error: lookupError } = await client
+    .from("v2_applications")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("sourceUrl", job.canonicalUrl)
+    .maybeSingle();
+  if (lookupError) throw lookupError;
+
+  if (existing) {
+    if (existing.status === "applied" || existing.providerMessageId) throw new Error("duplicate-application");
+    const { data, error } = await client
+      .from("v2_applications")
+      .update(row)
+      .eq("id", existing.id)
+      .eq("user_id", userId)
+      .select("*")
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
   const { data, error } = await client.from("v2_applications").insert(row).select("*").single();
   if (error) {
     if (error.code === "23505") throw new Error("duplicate-application");
