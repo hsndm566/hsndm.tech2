@@ -3,7 +3,8 @@ import { JeddahLocationCard } from "@/components/Map";
 
 const BRAND_MARK = "/autoapplysa-mark.svg";
 const HERO_VISUAL = "/manus-storage/autoapply-hero-operations_ad007abc.jpg";
-const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";\nconst HERO_VIDEO = "/manus-storage/autoapply-hero-gemini-clean.mp4";
+const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";
+const HERO_VIDEO = "/manus-storage/autoapply-hero-gemini-clean.mp4";
 const DESK_VISUAL = "/manus-storage/autoapply-desk_635170b2.jpg";
 
 export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
