@@ -29,3 +29,8 @@ export function trackEngagement(eventName: string, properties: EngagementPropert
     // Analytics failures must never interrupt customer-facing actions.
   }
 }
+
+
+export function trackPageView(path: string, properties: EngagementProperties = {}) {
+  trackEngagement("page_view", { path: path.slice(0, 300), ...properties });
+}
