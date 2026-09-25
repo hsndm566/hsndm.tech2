@@ -74,4 +74,4 @@
   - `VITE_API_BASE_URL`: API origin for frontend tRPC requests.
   - `DATABASE_URL`: MySQL/TiDB connection string.
   - `JWT_SECRET`: Session cookie signing secret.
-  - `VITE_ANALYTICS_ENDPOINT` / `VITE_ANALYTICS_WEBSITE_ID`: Umami engagement tracking.
+  - `VITE_UMAMI_HOST_URL` / `VITE_UMAMI_WEBSITE_ID`: Umami engagement tracking.
