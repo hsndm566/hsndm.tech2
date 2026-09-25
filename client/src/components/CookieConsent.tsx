@@ -23,14 +23,17 @@ function saveConsent(choice: ConsentChoice) {
 }
 
 function loadUmamiAnalytics() {
-  const endpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT as string | undefined;
-  const websiteId = import.meta.env.VITE_ANALYTICS_WEBSITE_ID as string | undefined;
-  if (!endpoint || !websiteId || document.querySelector("script[data-autoapply-analytics]")) return;
+  const host = ((import.meta.env.VITE_UMAMI_HOST_URL as string | undefined)?.trim() || "https://cloud.umami.is").replace(/\/$/, "");
+  const websiteId = (import.meta.env.VITE_UMAMI_WEBSITE_ID as string | undefined)?.trim();
+  const domains = (import.meta.env.VITE_UMAMI_DOMAINS as string | undefined)?.trim();
+  if (!websiteId || document.querySelector("script[data-autoapply-analytics]")) return;
   const script = document.createElement("script");
   script.defer = true;
-  script.src = `${endpoint.replace(/\/$/, "")}/umami`;
+  script.src = `${host}/script.js`;
   script.dataset.websiteId = websiteId;
   script.dataset.autoapplyAnalytics = "true";
+  script.dataset.doNotTrack = "true";
+  if (domains) script.dataset.domains = domains;
   document.head.appendChild(script);
 }
 
