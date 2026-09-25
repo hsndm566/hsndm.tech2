@@ -3,18 +3,21 @@ import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("./AutoApplyChatWidget.tsx", import.meta.url), "utf8");
 
-describe("AutoApplyChatWidget readiness gate", () => {
-  it("fails closed until the server-side Hermes readiness endpoint is healthy", () => {
-    expect(source).toContain('fetch("/api/chat/health"');
-    expect(source).toContain("if (!ready) return null");
-    expect(source).not.toContain("herokuapp.com");
-    expect(source).not.toContain("HERMES_CHAT_API_KEY");
+describe("AutoApplyChatWidget Chatwoot bootstrap", () => {
+  it("uses the official Chatwoot SDK and fails closed when unconfigured", () => {
+    expect(source).toContain("VITE_CHATWOOT_BASE_URL");
+    expect(source).toContain("VITE_CHATWOOT_WEBSITE_TOKEN");
+    expect(source).toContain("/packs/js/sdk.js");
+    expect(source).toContain("if (!CONFIGURED) return");
+    expect(source).not.toContain("/api/chat");
+    expect(source).not.toContain("HERMES_CHAT");
   });
 
-  it("sends chat messages only through the same-origin server proxy", () => {
-    expect(source).toContain('fetch("/api/chat"');
-    expect(source).toContain('method: "POST"');
-    expect(source).toContain("Ask AutoApply");
-    expect(source).toContain("مساعد AutoApply SA");
+  it("passes only the public website inbox token to the browser SDK", () => {
+    expect(source).toContain("websiteToken: WEBSITE_TOKEN");
+    expect(source).toContain("baseUrl: BASE_URL");
+    expect(source).toContain('locale === "ar"');
+    expect(source).not.toContain("API_KEY");
+    expect(source).not.toContain("Authorization");
   });
 });
