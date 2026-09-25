@@ -9,11 +9,9 @@ const profile = {
 };
 
 describe("Lean phase auditor", () => {
-  it("locks later phases until phase one passes", () => {
+  it("keeps later validations waiting until phase one passes", () => {
     const audit = auditLeanPhases({ profile: null, applications: [], deliveryReady: false });
-    expect(audit.phases.map((phase) => phase.status)).toEqual(["active", "locked", "locked", "locked", "locked"]);
-    expect(audit.canTrack).toBe(false);
-    expect(audit.canSend).toBe(false);
+    expect(audit.phases.map((phase) => phase.status)).toEqual(["active", "waiting", "waiting", "waiting", "waiting"]);
   });
 
   it("opens the delivery phase only after a real opportunity is tracked", () => {
@@ -22,16 +20,15 @@ describe("Lean phase auditor", () => {
       applications: [{ status: "queued", appliedAt: null }],
       deliveryReady: false,
     });
-    expect(audit.phases.map((phase) => phase.status)).toEqual(["passed", "passed", "active", "locked", "locked"]);
+    expect(audit.phases.map((phase) => phase.status)).toEqual(["passed", "passed", "active", "waiting", "waiting"]);
   });
 
-  it("unlocks sending after phases one through three pass", () => {
+  it("moves the audit focus after phases one through three pass", () => {
     const audit = auditLeanPhases({
       profile,
       applications: [{ status: "queued", appliedAt: null }],
       deliveryReady: true,
     });
-    expect(audit.canSend).toBe(true);
     expect(audit.currentPhase).toBe(4);
   });
 
