@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createApplicationEmailPayload, sendApplicationEmail } from "./applicationEmail";
+import { checkApplicationDeliveryReadiness, createApplicationEmailPayload, sendApplicationEmail } from "./applicationEmail";
 
 const input = {
   toEmail: "hiring@example.com",
@@ -50,5 +50,27 @@ describe("application email sending", () => {
       method: "POST",
       headers: expect.objectContaining({ "api-key": "server-only-key" }),
     }));
+  });
+  it("validates Brevo readiness without sending email", async () => {
+    vi.stubEnv("BREVO_API_KEY", "server-only-key");
+    vi.stubEnv("BREVO_SENDER_EMAIL", "apply@hsndm.tech");
+    const fetchImpl = vi.fn().mockResolvedValue(new Response("{}", { status: 200 }));
+    const result = await checkApplicationDeliveryReadiness(fetchImpl as unknown as typeof fetch);
+
+    expect(result).toEqual({ ok: true, status: 200, reason: "ready" });
+    expect(fetchImpl).toHaveBeenCalledWith("https://api.brevo.com/v3/account", expect.objectContaining({
+      method: "GET",
+      headers: expect.objectContaining({ "api-key": "server-only-key" }),
+    }));
+  });
+
+  it("fails the readiness phase when Brevo is not configured", async () => {
+    const fetchImpl = vi.fn();
+    await expect(checkApplicationDeliveryReadiness(fetchImpl as unknown as typeof fetch)).resolves.toEqual({
+      ok: false,
+      status: 503,
+      reason: "brevo-not-configured",
+    });
+    expect(fetchImpl).not.toHaveBeenCalled();
   });
 });
