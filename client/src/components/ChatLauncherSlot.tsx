@@ -4,8 +4,9 @@ const DISABLED = import.meta.env.VITE_ENABLE_CHAT_WIDGET === "false";
 const ChatLauncher = lazy(() => import("./ChatLauncher"));
 
 /**
- * Loads the chat shell unless explicitly disabled. The widget performs its own
- * server-side readiness check and renders nothing when Hermes is unavailable.
+ * Loads the official Chatwoot bootstrap unless explicitly disabled. The
+ * bootstrap itself fails closed unless both the self-hosted Chatwoot base URL
+ * and Website Inbox token are configured.
  */
 export function ChatLauncherSlot() {
   if (DISABLED) return null;
