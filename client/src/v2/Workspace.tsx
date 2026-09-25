@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { trackEngagement } from "@/lib/analytics";
 import { CvUpload, clearCvDraft, cvDraft } from "./CvUpload";
-import { sendApplicationEmail, useBackendHealth, useRecommendedJobs } from "./backend";
+import { sendApplicationEmail, useApplicationDeliveryReadiness, useBackendHealth, useRecommendedJobs } from "./backend";
 import { type Application, saudiWeekStart, useWorkspaceData } from "./data";
 import { cities, useLocale } from "./locale";
 import { supabase, useSession } from "./auth";
@@ -56,6 +56,7 @@ export function Workspace() {
   const { profile, apps, create, update, claimAccess, clear } = useWorkspaceData();
   const { session } = useSession();
   const backend = useBackendHealth();
+  const delivery = useApplicationDeliveryReadiness();
   const jobs = useRecommendedJobs({ city: profile.data?.targetCity, role: profile.data?.targetIndustry });
   const [adding, setAdding] = useState(false);
   const [message, setMessage] = useState("");
@@ -75,7 +76,7 @@ export function Workspace() {
   const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
   const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
   const completed = [profile.data?.fullName, profile.data?.targetCity, profile.data?.resumeFileName].filter(Boolean).length;
-  const leanAudit = auditLeanPhases({ profile: profile.data, applications: rows, backendOk: backend.data?.ok === true });
+  const leanAudit = auditLeanPhases({ profile: profile.data, applications: rows, deliveryReady: delivery.data?.ok === true });
 
   function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -181,7 +182,7 @@ export function Workspace() {
           <button className="button" disabled={!leanAudit.canTrack} onClick={() => { setAdding(!adding); trackEngagement("track_job_toggled", { open: !adding }); }}><Plus size={18} />{t("Track a job", "أضف وظيفة")}</button>
         </div>
 
-        <LeanPhaseAuditor profile={profile.data} applications={rows} backendOk={backend.data?.ok === true} />
+        <LeanPhaseAuditor profile={profile.data} applications={rows} deliveryReady={delivery.data?.ok === true} />
 
         <div className="metrics">
           {[
