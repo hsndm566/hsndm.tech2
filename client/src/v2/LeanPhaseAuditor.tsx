@@ -17,15 +17,15 @@ export type LeanAudit = {
 type AuditInput = {
   profile?: Partial<Profile> | null;
   applications: Array<Pick<Application, "status" | "appliedAt">>;
-  backendOk: boolean;
+  deliveryReady: boolean;
 };
 
-export function auditLeanPhases({ profile, applications, backendOk }: AuditInput): LeanAudit {
+export function auditLeanPhases({ profile, applications, deliveryReady }: AuditInput): LeanAudit {
   const sentCount = applications.filter((row) => row.status === "applied" || Boolean(row.appliedAt)).length;
   const checks = [
     Boolean(profile?.fullName && profile?.targetCity && profile?.targetIndustry && profile?.resumeFileName),
     applications.length > 0,
-    backendOk,
+    deliveryReady,
     sentCount >= 1,
     sentCount >= 5,
   ];
@@ -55,10 +55,10 @@ export function auditLeanPhases({ profile, applications, backendOk }: AuditInput
 export function LeanPhaseAuditor({
   profile,
   applications,
-  backendOk,
+  deliveryReady,
 }: AuditInput) {
   const { t, path } = useLocale();
-  const audit = auditLeanPhases({ profile, applications, backendOk });
+  const audit = auditLeanPhases({ profile, applications, deliveryReady });
 
   const copy = [
     {
@@ -75,8 +75,8 @@ export function LeanPhaseAuditor({
     },
     {
       title: t("Phase 3 · Delivery path", "المرحلة ٣ · مسار الإرسال"),
-      requirement: t("The application backend must pass its health check.", "يجب أن يجتاز خادم التقديم فحص الصحة."),
-      evidence: backendOk ? t("Backend health check passed.", "اجتاز الخادم فحص الصحة.") : t("Backend health check has not passed yet.", "لم يجتز الخادم فحص الصحة بعد."),
+      requirement: t("The application delivery path must pass its Brevo readiness check.", "يجب أن يجتاز مسار إرسال الطلبات فحص جاهزية Brevo."),
+      evidence: deliveryReady ? t("Brevo delivery readiness passed.", "اجتاز مسار Brevo فحص الجاهزية.") : t("Brevo delivery readiness has not passed yet.", "لم يجتز مسار Brevo فحص الجاهزية بعد."),
     },
     {
       title: t("Phase 4 · First validated application", "المرحلة ٤ · أول طلب موثّق"),
@@ -93,7 +93,7 @@ export function LeanPhaseAuditor({
   const nextAction = {
     1: t("Finish your profile and CV signal.", "أكمل ملفك وإشارة السيرة."),
     2: t("Save one real opportunity using Track a job.", "احفظ فرصة حقيقية واحدة من زر أضف وظيفة."),
-    3: t("Do not advance until the backend health check passes.", "لا تنتقل قبل نجاح فحص الخادم."),
+    3: t("Do not advance until the application delivery readiness check passes.", "لا تنتقل قبل نجاح فحص جاهزية إرسال الطلبات."),
     4: t("Send one reviewed application and verify that it appears in the tracker.", "أرسل طلباً تمت مراجعته وتأكد من ظهوره في السجل."),
     5: audit.complete
       ? t("Batch passed. Review outcomes before increasing volume.", "اجتازت الدفعة الفحص. راجع النتائج قبل زيادة الحجم.")
@@ -106,7 +106,7 @@ export function LeanPhaseAuditor({
         <div>
           <span className="section-label">{t("LEAN AUDITOR", "مدقق لين")}</span>
           <h2>{t("One phase must pass before the next one opens.", "يجب أن تجتاز كل مرحلة الفحص قبل فتح التالية.")}</h2>
-          <p>{t("The auditor uses stored profile data, application records and backend health. It does not accept self-reported completion.", "يعتمد المدقق على بيانات الملف وسجل الطلبات وصحة الخادم. لا يعتمد على تأكيد يدوي.")}</p>
+          <p>{t("The auditor uses stored profile data, application records and delivery readiness. It does not accept self-reported completion.", "يعتمد المدقق على بيانات الملف وسجل الطلبات وجاهزية الإرسال. لا يعتمد على تأكيد يدوي.")}</p>
         </div>
         <span className={audit.complete ? "auditor-verdict passed" : "auditor-verdict"}>
           <ShieldCheck size={16} />
