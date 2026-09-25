@@ -81,6 +81,38 @@ export async function sendApplicationEmail(input: ApplicationEmailInput, fetchIm
   return { ok: false, status: response.status, error };
 }
 
+export async function checkApplicationDeliveryReadiness(fetchImpl: typeof fetch = fetch) {
+  const token = await getSupabaseToken();
+  if (!token) return { ok: false, status: 401, error: "sign-in-required" };
+  try {
+    const response = await fetchImpl(apiUrl("/api/v2/applications/readiness"), {
+      method: "GET",
+      credentials: "include",
+      headers: { authorization: `Bearer ${token}` },
+    });
+    if (response.ok) return { ok: true, status: response.status, error: "" };
+    let error = response.status === 404 ? "application-readiness-endpoint-missing" : "application-delivery-not-ready";
+    try {
+      const body = await response.json();
+      if (typeof body?.error === "string") error = body.error;
+    } catch {}
+    return { ok: false, status: response.status, error };
+  } catch {
+    return { ok: false, status: 0, error: "application-delivery-not-ready" };
+  }
+}
+
+export function useApplicationDeliveryReadiness() {
+  return useQuery({
+    queryKey: ["v2", "application-delivery-readiness"],
+    queryFn: () => checkApplicationDeliveryReadiness(),
+    staleTime: 60_000,
+    refetchInterval: 3 * 60_000,
+    refetchIntervalInBackground: true,
+    retry: 1,
+  });
+}
+
 export function getFallbackRecommendedJobs(params: { city?: string | null; role?: string | null }, checkedAt = new Date().toISOString()): RecommendedJobsResult {
   const city = params.city?.trim() || "Riyadh";
   const role = params.role?.trim() || "Operations";
