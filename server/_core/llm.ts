@@ -1,5 +1,5 @@
 import { ENV } from "./env";
-import { captureAiGeneration } from "./posthogAi";
+import { captureAiGeneration } from "./umamiAnalytics";
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
 
