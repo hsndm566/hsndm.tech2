@@ -3,7 +3,7 @@ import { JeddahLocationCard } from "@/components/Map";
 
 const BRAND_MARK = "/autoapplysa-mark.svg";
 const HERO_VISUAL = "/manus-storage/autoapply-hero-operations_ad007abc.jpg";
-const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";
+const FLOW_VISUAL = "/manus-storage/autoapply-flow_6c03602a.jpg";\nconst HERO_VIDEO = "/manus-storage/autoapply-hero-gemini-clean.mp4";
 const DESK_VISUAL = "/manus-storage/autoapply-desk_635170b2.jpg";
 
 export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
@@ -28,8 +28,21 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
           <div className="saudi-preview-heading"><div><p>{t ? "قائمة طلباتك" : "YOUR APPLICATION QUEUE"}</p><h2>{t ? "كل شيء أمامك." : "Everything in view."}</h2></div><span className="saudi-avatar" aria-hidden="true">SA</span></div>
           <div className="saudi-profile"><FileText size={26}/><div><strong>{t ? "السيرة جاهزة كبداية" : "Your profile is the starting point"}</strong><p>{t ? "الخبرات · المهارات · المدن · الأدوار المستهدفة" : "Experience · Skills · Cities · Target roles"}</p></div><Check size={18}/></div>
           <figure className="saudi-workspace-visual">
-            <img src={FLOW_VISUAL} alt={t ? "تصور مرئي لمسار حملة AutoApply SA" : "AutoApply SA campaign workflow visual"} width={1200} height={800} loading="eager" decoding="async" />
-            <figcaption>{t ? "من المطابقة إلى الموافقة، كل خطوة أمامك" : "From matching to approval, every step stays visible"}</figcaption>
+            <img className="saudi-workspace-fallback" src={FLOW_VISUAL} alt={t ? "تصور مرئي لمسار حملة AutoApply SA" : "AutoApply SA campaign workflow visual"} width={1200} height={675} loading="eager" decoding="async" />
+            <video
+              className="saudi-workspace-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={FLOW_VISUAL}
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <source src={HERO_VIDEO} type="video/mp4" />
+            </video>
+            <figcaption>{t ? "شاهد رحلة الطلب من المطابقة حتى الإرسال" : "Watch the application journey from match to submission"}</figcaption>
           </figure>
           <p className="saudi-preview-label">{t ? "من المطابقة إلى الموافقة" : "FROM MATCHING TO APPROVAL"}</p>
           <ol className="saudi-steps">{(t ? [["01","مطابقة الفرصة","نربط الوظيفة بملفك واتجاهك المهني."],["02","تجهيز الطلب","نجهز الطلب والسياق المطلوب للوظيفة."],["03","مراجعتك أولاً","تراجع ما تم تجهيزه وتوافق قبل الخطوة التالية."]] : [["01","Match the opportunity","Connect the role to your profile and campaign direction."],["02","Prepare the application","Build the application context the role actually needs."],["03","Your review comes first","Check what was prepared and approve before the next step."]]).map(([n,title,body])=><li key={n}><span>{n}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol>
