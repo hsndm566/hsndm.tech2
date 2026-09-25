@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("./AutoApplyChatWidget.tsx", import.meta.url), "utf8");
+const slotSource = readFileSync(new URL("./ChatLauncherSlot.tsx", import.meta.url), "utf8");
 
 describe("AutoApplyChatWidget Chatwoot bootstrap", () => {
   it("uses the official Chatwoot SDK and fails closed when unconfigured", () => {
@@ -19,5 +20,10 @@ describe("AutoApplyChatWidget Chatwoot bootstrap", () => {
     expect(source).toContain('locale === "ar"');
     expect(source).not.toContain("API_KEY");
     expect(source).not.toContain("Authorization");
+  });
+
+  it("does not require the retired generic chat feature flag", () => {
+    expect(slotSource).not.toContain("VITE_ENABLE_CHAT_WIDGET");
+    expect(slotSource).toContain("<ChatLauncher />");
   });
 });
