@@ -10,7 +10,7 @@ const profile = {
 
 describe("Lean phase auditor", () => {
   it("locks later phases until phase one passes", () => {
-    const audit = auditLeanPhases({ profile: null, applications: [], backendOk: false });
+    const audit = auditLeanPhases({ profile: null, applications: [], deliveryReady: false });
     expect(audit.phases.map((phase) => phase.status)).toEqual(["active", "locked", "locked", "locked", "locked"]);
     expect(audit.canTrack).toBe(false);
     expect(audit.canSend).toBe(false);
@@ -20,7 +20,7 @@ describe("Lean phase auditor", () => {
     const audit = auditLeanPhases({
       profile,
       applications: [{ status: "queued", appliedAt: null }],
-      backendOk: false,
+      deliveryReady: false,
     });
     expect(audit.phases.map((phase) => phase.status)).toEqual(["passed", "passed", "active", "locked", "locked"]);
   });
@@ -29,7 +29,7 @@ describe("Lean phase auditor", () => {
     const audit = auditLeanPhases({
       profile,
       applications: [{ status: "queued", appliedAt: null }],
-      backendOk: true,
+      deliveryReady: true,
     });
     expect(audit.canSend).toBe(true);
     expect(audit.currentPhase).toBe(4);
@@ -37,7 +37,7 @@ describe("Lean phase auditor", () => {
 
   it("requires five sent applications before the first batch passes", () => {
     const applications = Array.from({ length: 5 }, () => ({ status: "applied" as const, appliedAt: new Date().toISOString() }));
-    const audit = auditLeanPhases({ profile, applications, backendOk: true });
+    const audit = auditLeanPhases({ profile, applications, deliveryReady: true });
     expect(audit.complete).toBe(true);
     expect(audit.phases.every((phase) => phase.status === "passed")).toBe(true);
   });
