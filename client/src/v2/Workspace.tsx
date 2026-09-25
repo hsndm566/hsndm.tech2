@@ -111,7 +111,8 @@ export function Workspace() {
     }
 
     setSending(true);
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     try {
       const result = await sendApplicationEmail({
         toEmail: String(form.get("recipientEmail")),
@@ -134,7 +135,7 @@ export function Workspace() {
       }
 
       await apps.refetch();
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage(t(
         `Application sent and recorded. Provider evidence: ${result.messageId}`,
         `تم إرسال الطلب وتسجيله. دليل مزود البريد: ${result.messageId}`,
