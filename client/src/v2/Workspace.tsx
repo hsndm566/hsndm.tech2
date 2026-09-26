@@ -68,7 +68,8 @@ export function Workspace() {
 
   if (profile.isLoading) return <State title={t("Loading your workspace…", "جارٍ تحميل مساحة العمل…")} />;
   if (profile.isError) return <State title={t("Your account is signed in. Your workspace is not available yet.", "تم تسجيل دخولك، لكن مساحة العمل غير متاحة بعد.")} detail={t("We could not reach your profile service. Please try again shortly.", "تعذّر الوصول إلى خدمة ملفك. حاول مجدداً لاحقاً.")} retry />;
-  if (route.endsWith("/onboarding") || route.endsWith("/settings")) return <ProfileForm existing={profile.data} settings={route.endsWith("/settings")} />;
+  const normalizedRoute = route.replace(/\/+$/, "") || "/";
+  if (normalizedRoute.endsWith("/onboarding") || normalizedRoute.endsWith("/settings")) return <ProfileForm existing={profile.data} settings={normalizedRoute.endsWith("/settings")} />;
   if (profile.isSuccess && !profile.data?.fullName) return <CandidateAccess claimAccess={claimAccess} />;
 
   const rows = apps.data ?? [];
