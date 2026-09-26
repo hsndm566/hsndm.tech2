@@ -278,7 +278,7 @@ export function Workspace() {
                   /></label>
                   <a href={selectedJob.url} target="_blank" rel="noreferrer">{t("Open original job posting", "افتح إعلان الوظيفة الأصلي")} <ArrowUpRight size={14} /></a>
                   {!profile.data?.resumeStoragePath && <p className="error">{t("Your original CV must be stored before sending.", "يجب حفظ ملف سيرتك الأصلي قبل الإرسال.")}</p>}
-                  <button className="button full" disabled={sending || !backend.data?.ok || !profile.data?.resumeStoragePath}>
+                  <button className="button full" disabled={sending || !backend.data?.ok || !delivery.data?.ok || !profile.data?.resumeStoragePath}>
                     <Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send by email", "إرسال بالبريد")}
                   </button>
                 </form>
