@@ -102,7 +102,7 @@ export function Workspace() {
       setMessage(t("Choose a verified job before sending.", "اختر وظيفة موثقة قبل الإرسال."));
       return;
     }
-    if (!selectedJob.emailEligible || !selectedJob.recipientEmail) {
+    if (!selectedJob.emailEligible) {
       setMessage(t("This job does not have a verified application email.", "لا تحتوي هذه الوظيفة على بريد تقديم موثّق."));
       return;
     }
@@ -249,7 +249,7 @@ export function Workspace() {
             <section className="panel sender-panel">
               <span className="tag"><MailCheck size={14} />{t("Verified email application", "طلب بريد موثّق")}</span>
               <h2>{t("Send by email", "إرسال بالبريد")}</h2>
-              {!selectedJob?.emailEligible || !selectedJob.recipientEmail ? (
+              {!selectedJob?.emailEligible ? (
                 <div className="empty">
                   <ShieldCheck size={28} />
                   <h3>{t("Choose a job with a verified email.", "اختر وظيفة تحتوي على بريد موثّق.")}</h3>
@@ -260,8 +260,7 @@ export function Workspace() {
                   <label>{t("Employer name", "اسم جهة التوظيف")}<input value={selectedJob.companyName} readOnly required /></label>
                   <label>{t("Position title", "مسمى الوظيفة")}<input value={selectedJob.roleTitle} readOnly required /></label>
                   <label>{t("Application location", "موقع التقديم")}<input value={selectedJob.city} readOnly required /></label>
-                  <label>{t("Verified recipient", "المستلم الموثّق")}<input value={selectedJob.recipientEmail} readOnly required dir="ltr" /></label>
-                  <small>{t("Recipient verified from the existing AutoApply contact evidence store.", "تم التحقق من المستلم من سجل أدلة جهات الاتصال الحالي في AutoApply.")}</small>
+                  <div className="notice"><ShieldCheck size={18} /><p>{t("Verified employer recipient available. The address stays server-side and is rechecked immediately before send.", "يوجد مستلم موثّق لدى جهة التوظيف. يبقى العنوان على الخادم ويُعاد التحقق منه مباشرة قبل الإرسال.")}</p></div>
                   <label>{t("Generated application message", "رسالة التقديم المولّدة")}<textarea
                     aria-label={t("Generated application message", "رسالة التقديم المولّدة")}
                     readOnly
@@ -304,7 +303,7 @@ export function Workspace() {
                           ? t("Verified email available", "بريد تقديم موثّق متاح")
                           : t("No verified email — use the application page", "لا يوجد بريد موثّق — استخدم صفحة التقديم")}</small>
                       </a>
-                      {job.emailEligible && job.recipientEmail ? (
+                      {job.emailEligible ? (
                         <button type="button" className="text-link" onClick={() => {
                           setSelectedJob(job);
                           setMessage("");
