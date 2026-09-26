@@ -102,6 +102,10 @@ export function Workspace() {
       setMessage(t("Choose a verified job before sending.", "اختر وظيفة موثقة قبل الإرسال."));
       return;
     }
+    if (!selectedJob.emailEligible || !selectedJob.recipientEmail) {
+      setMessage(t("This job does not have a verified application email.", "لا تحتوي هذه الوظيفة على بريد تقديم موثّق."));
+      return;
+    }
     if (!profile.data?.resumeStoragePath) {
       setMessage(t("Upload and save your original CV before sending.", "ارفع ملف سيرتك الأصلي واحفظه قبل الإرسال."));
       return;
@@ -113,10 +117,8 @@ export function Workspace() {
 
     setSending(true);
     const formElement = event.currentTarget;
-    const form = new FormData(formElement);
     try {
       const result = await sendApplicationEmail({
-        toEmail: String(form.get("recipientEmail")),
         jobId: selectedJob.id,
       });
 
@@ -129,6 +131,17 @@ export function Workspace() {
           "preferences-required": t("Complete your role, industry, and experience preferences first.", "أكمل المسمى والمجال ومستوى الخبرة أولاً."),
           "verified-job-not-found": t("This job is no longer in the verified job feed. Refresh the recommendations.", "لم تعد هذه الوظيفة موجودة في قائمة الوظائف الموثقة. حدّث الاقتراحات."),
           "application-email-endpoint-missing": t("The V2 application route is not live on the production API.", "مسار التقديم V2 غير متاح على واجهة الإنتاج."),
+          "verified-recipient-required": t("This job does not have a verified application email.", "لا تحتوي هذه الوظيفة على بريد تقديم موثّق."),
+          "verified-recipient-stale": t("The verified employer email changed or expired. Refresh the job list.", "تغيّر بريد جهة التوظيف الموثّق أو انتهت صلاحيته. حدّث قائمة الوظائف."),
+          "auditor-rejected-application": t("The application did not pass the independent accuracy audit.", "لم يجتز طلب التقديم تدقيق الدقة المستقل."),
+          "EMAIL_OUTREACH_DISABLED": t("Verified email delivery is currently disabled on the backend.", "إرسال طلبات البريد الموثّقة معطّل حالياً على الخادم."),
+          "BREVO_CREDENTIALS_UNAVAILABLE": t("The verified email provider is not ready.", "مزود البريد الموثّق غير جاهز."),
+          "V2_ACCOUNTING_RECHECK_UNAVAILABLE": t("Application accounting could not be verified, so nothing was sent.", "تعذر التحقق من سجل الطلب، لذلك لم يتم الإرسال."),
+          "V2_APPLICATION_RESERVATION_MISSING": t("The application record could not be verified before send.", "تعذر التحقق من سجل الطلب قبل الإرسال."),
+          "V2_ACCOUNTING_RECHECK_FAILED": t("The final application verification failed before send.", "فشل التحقق النهائي من الطلب قبل الإرسال."),
+          "email-cv-pdf-required": t("Email applications require a PDF CV.", "طلبات البريد تتطلب سيرة ذاتية بصيغة PDF."),
+          "email-cv-pdf-invalid": t("The stored PDF CV could not be verified.", "تعذر التحقق من ملف السيرة الذاتية PDF المخزن."),
+          "email-delivery-uncertain": t("The provider response was uncertain. AutoApply will not retry automatically.", "نتيجة مزود البريد غير مؤكدة. لن يعيد AutoApply الإرسال تلقائياً."),
         };
         setMessage(failureCopy[result.error] || t("The application was not verified as sent. Nothing has been marked as applied.", "لم يتم التحقق من إرسال الطلب، ولم يتم تسجيله كطلب مرسل."));
         trackEngagement("application_email_failed", { status: result.status, error: result.error, jobId: selectedJob.id });
@@ -235,33 +248,41 @@ export function Workspace() {
           <div>
             <section className="panel sender-panel">
               <span className="tag"><MailCheck size={14} />{t("Verified email application", "طلب بريد موثّق")}</span>
-              <h2>{t("Send an application", "إرسال طلب تقديم")}</h2>
-              <p>{t("Choose a verified job first. AutoApply uses your saved profile and private CV to prepare a grounded message, then records provider evidence.", "اختر وظيفة موثقة أولاً. يستخدم AutoApply ملفك وسيرتك الخاصة لإعداد رسالة مبنية على بياناتك ثم يسجل دليل مزود البريد.")}</p>
-              <form key={selectedJob?.id || "no-selected-job"} onSubmit={send}>
-                <label>{t("Employer name", "اسم جهة التوظيف")}<input value={selectedJob?.companyName || ""} readOnly required /></label>
-                <label>{t("Position title", "مسمى الوظيفة")}<input value={selectedJob?.roleTitle || ""} readOnly required /></label>
-                <label>{t("Application location", "موقع التقديم")}<input value={selectedJob?.city || ""} readOnly required /></label>
-                <label>{t("Recipient email", "بريد المستلم")}<input name="recipientEmail" type="email" placeholder="hiring@company.com" required dir="ltr" /></label>
-                <label>{t("Generated application message", "رسالة التقديم المولّدة")}<textarea
-                  aria-label={t("Generated application message", "رسالة التقديم المولّدة")}
-                  readOnly
-                  value={selectedJob ? [
-                    `Hello ${selectedJob.companyName} team,`,
-                    "",
-                    `I am applying for the ${selectedJob.roleTitle} role in ${selectedJob.city}.`,
-                    profile.data?.resumeSummary
-                      ? `The CV keywords identified during my profile setup include: ${profile.data.resumeSummary}.`
-                      : "Please find my CV attached for your review.",
-                    "",
-                    "I would appreciate the opportunity to discuss the role.",
-                  ].join("\n") : ""}
-                /></label>
-                {selectedJob && <a href={selectedJob.url} target="_blank" rel="noreferrer">{t("Open original job posting", "افتح إعلان الوظيفة الأصلي")} <ArrowUpRight size={14} /></a>}
-                {!profile.data?.resumeStoragePath && <p className="error">{t("Your original CV must be stored before sending.", "يجب حفظ ملف سيرتك الأصلي قبل الإرسال.")}</p>}
-                <button className="button full" disabled={sending || !backend.data?.ok || !selectedJob || !profile.data?.resumeStoragePath}>
-                  <Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send and record application", "إرسال وتسجيل الطلب")}
-                </button>
-              </form>
+              <h2>{t("Send by email", "إرسال بالبريد")}</h2>
+              {!selectedJob?.emailEligible || !selectedJob.recipientEmail ? (
+                <div className="empty">
+                  <ShieldCheck size={28} />
+                  <h3>{t("Choose a job with a verified email.", "اختر وظيفة تحتوي على بريد موثّق.")}</h3>
+                  <p>{t("AutoApply will never ask you to guess an employer address. Jobs without a verified recipient stay browser/application-page only.", "لن يطلب منك AutoApply تخمين بريد جهة التوظيف. الوظائف التي لا تحتوي على مستلم موثّق تبقى عبر صفحة التقديم فقط.")}</p>
+                </div>
+              ) : (
+                <form key={selectedJob.id} onSubmit={send}>
+                  <label>{t("Employer name", "اسم جهة التوظيف")}<input value={selectedJob.companyName} readOnly required /></label>
+                  <label>{t("Position title", "مسمى الوظيفة")}<input value={selectedJob.roleTitle} readOnly required /></label>
+                  <label>{t("Application location", "موقع التقديم")}<input value={selectedJob.city} readOnly required /></label>
+                  <label>{t("Verified recipient", "المستلم الموثّق")}<input value={selectedJob.recipientEmail} readOnly required dir="ltr" /></label>
+                  <small>{t("Recipient verified from the existing AutoApply contact evidence store.", "تم التحقق من المستلم من سجل أدلة جهات الاتصال الحالي في AutoApply.")}</small>
+                  <label>{t("Generated application message", "رسالة التقديم المولّدة")}<textarea
+                    aria-label={t("Generated application message", "رسالة التقديم المولّدة")}
+                    readOnly
+                    value={[
+                      `Hello ${selectedJob.companyName} team,`,
+                      "",
+                      `I am applying for the ${selectedJob.roleTitle} role in ${selectedJob.city}.`,
+                      profile.data?.resumeSummary
+                        ? `The CV keywords identified during my profile setup include: ${profile.data.resumeSummary}.`
+                        : "Please find my CV attached for your review.",
+                      "",
+                      "I would appreciate the opportunity to discuss the role.",
+                    ].join("\n")}
+                  /></label>
+                  <a href={selectedJob.url} target="_blank" rel="noreferrer">{t("Open original job posting", "افتح إعلان الوظيفة الأصلي")} <ArrowUpRight size={14} /></a>
+                  {!profile.data?.resumeStoragePath && <p className="error">{t("Your original CV must be stored before sending.", "يجب حفظ ملف سيرتك الأصلي قبل الإرسال.")}</p>}
+                  <button className="button full" disabled={sending || !backend.data?.ok || !profile.data?.resumeStoragePath}>
+                    <Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send by email", "إرسال بالبريد")}
+                  </button>
+                </form>
+              )}
             </section>
 
             <section className="panel recommended-panel">
@@ -279,12 +300,19 @@ export function Workspace() {
                         <strong>{job.roleTitle}</strong>
                         <span>{job.companyName} · {job.city}</span>
                         <small>{job.matchReason}</small>
+                        <small>{job.emailEligible
+                          ? t("Verified email available", "بريد تقديم موثّق متاح")
+                          : t("No verified email — use the application page", "لا يوجد بريد موثّق — استخدم صفحة التقديم")}</small>
                       </a>
-                      <button type="button" className="text-link" onClick={() => {
-                        setSelectedJob(job);
-                        setMessage("");
-                        trackEngagement("verified_job_selected", { jobId: job.id, source: job.source });
-                      }}>{selectedJob?.id === job.id ? t("Selected", "تم الاختيار") : t("Use this job", "استخدم هذه الوظيفة")}</button>
+                      {job.emailEligible && job.recipientEmail ? (
+                        <button type="button" className="text-link" onClick={() => {
+                          setSelectedJob(job);
+                          setMessage("");
+                          trackEngagement("verified_email_job_selected", { jobId: job.id, source: job.source });
+                        }}>{selectedJob?.id === job.id ? t("Selected for email", "تم الاختيار للبريد") : t("Send by email", "إرسال بالبريد")}</button>
+                      ) : (
+                        <a className="text-link" href={job.url} target="_blank" rel="noreferrer">{t("Open application page", "فتح صفحة التقديم")} <ArrowUpRight size={13} /></a>
+                      )}
                     </article>
                   ))}
                 </div>
