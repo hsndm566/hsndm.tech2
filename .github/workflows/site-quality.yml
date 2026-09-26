@@ -39,6 +39,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: V2 bilingual parity audit
+        run: pnpm audit:bilingual
+
       - name: Production static build
         run: pnpm build:pages
 

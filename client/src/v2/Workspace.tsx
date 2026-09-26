@@ -24,7 +24,7 @@ import { LeanPhaseAuditor } from "./LeanPhaseAuditor";
 
 export function SessionGate({ children }: { children: ReactNode }) {
   const { session, loading, error } = useSession();
-  const { t, path } = useLocale();
+  const { t, path, ar } = useLocale();
   const [, navigate] = useLocation();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
 }
 
 export function State({ title, detail, retry }: { title: string; detail?: string; retry?: boolean }) {
-  const { t, path } = useLocale();
+  const { t, path, ar } = useLocale();
   return (
     <main className="state wrap">
       <FileText size={36} />
@@ -51,7 +51,7 @@ export function State({ title, detail, retry }: { title: string; detail?: string
 }
 
 export function Workspace() {
-  const { t, path } = useLocale();
+  const { t, path, ar } = useLocale();
   const [route, navigate] = useLocation();
   const { profile, apps, create, update, claimAccess, clear } = useWorkspaceData();
   const backend = useBackendHealth();
@@ -191,7 +191,7 @@ export function Workspace() {
             <h1>{t("Welcome, ", "مرحباً، ")}{profile.data?.fullName}</h1>
             <p>{t("Review matches, send applications, and keep every step recorded.", "راجع المطابقات، أرسل الطلبات، وسجّل كل خطوة.")}</p>
             <div className="onboarding-rail" aria-label={t("Workspace setup progress", "تقدم إعداد مساحة العمل")}>
-              {[[t("Profile", "الملف"), !!profile.data?.fullName], [t("Location", "المدينة"), !!profile.data?.targetCity], [t("CV signal", "إشارة السيرة"), !!profile.data?.resumeFileName]].map(([label, done]) => (
+              {[[t("Profile", "الملف"), !!profile.data?.fullName], [t("Location", "المدينة"), !!profile.data?.targetCity], [t("CV signal", "السيرة الذاتية"), !!profile.data?.resumeFileName]].map(([label, done]) => (
                 <span key={String(label)} className={done ? "done" : ""}><CheckCircle2 size={14} />{label}</span>
               ))}
             </div>
@@ -204,7 +204,7 @@ export function Workspace() {
         <div className="metrics">
           {[
             [rows.filter((row) => row.status === "applied" || !!row.appliedAt).length, t("Applications sent", "طلبات تم إرسالها"), t(`${weekly} sent this Saudi week`, `${weekly} أُرسلت هذا الأسبوع`)],
-            [delivered, t("Confirmed delivered", "تم التسليم"), t("Employer mail server accepted them", "قبلها خادم بريد جهة التوظيف")],
+            [delivered, t("Confirmed delivered", "تم تأكيد التسليم"), t("Employer mail server accepted them", "قبلها خادم بريد جهة التوظيف")],
             [needsAttention, t("Needs attention", "تحتاج متابعة"), t("Forms, deferrals or delivery issues", "نماذج أو تأجيلات أو مشاكل تسليم")],
             [rows.filter((row) => row.status === "interview").length, t("Interviews", "المقابلات"), t("Your recorded activity", "نشاطك المسجل")],
           ].map(([number, label, hint], index) => (
@@ -247,7 +247,7 @@ export function Workspace() {
 
           <div>
             <section className="panel sender-panel">
-              <span className="tag"><MailCheck size={14} />{t("Verified email application", "طلب بريد موثّق")}</span>
+              <span className="tag"><MailCheck size={14} />{t("Verified email application", "تقديم عبر بريد موثّق")}</span>
               <h2>{t("Send by email", "إرسال بالبريد")}</h2>
               {!selectedJob?.emailEligible ? (
                 <div className="empty">
@@ -285,7 +285,7 @@ export function Workspace() {
             </section>
 
             <section className="panel recommended-panel">
-              <span className="tag"><ShieldCheck size={14} />{jobs.data?.mode === "live" ? t("Verified live jobs", "وظائف مباشرة موثّقة") : t("Verified feed unavailable", "قائمة الوظائف الموثقة غير متاحة")}</span>
+              <span className="tag"><ShieldCheck size={14} />{jobs.data?.mode === "live" ? t("Verified live jobs", "وظائف منشورة وموثّقة") : t("Verified feed unavailable", "قائمة الوظائف الموثقة غير متاحة")}</span>
               <h2>{t("Jobs to check now", "وظائف يمكن فحصها الآن")}</h2>
               {jobs.isError || jobs.data?.mode !== "live" ? (
                 <p role="alert">{t("Verified jobs are unavailable right now. AutoApply will not substitute generic search links.", "الوظائف الموثقة غير متاحة حالياً. لن يستبدلها AutoApply بروابط بحث عامة.")}</p>
@@ -338,8 +338,18 @@ export function Workspace() {
   );
 }
 
+function deliveryStatusLabel(status: string) {
+  return ({ unknown: "غير معروف", sent: "تم الإرسال", delivered: "تم التسليم", deferred: "مؤجل", hard_bounce: "ارتداد نهائي", soft_bounce: "ارتداد مؤقت", blocked: "محظور" } as Record<string, string>)[status] || status.replaceAll("_", " ");
+}
+
+function responseStatusLabel(status: string, t: (en: string, ar: string) => string) {
+  const labels: Record<string, [string, string]> = { action_required: ["Action required", "إجراء مطلوب"], out_of_office: ["Automatic out-of-office reply", "رد غياب تلقائي"], none: ["", ""] };
+  const label = labels[status];
+  return label ? t(label[0], label[1]) : status.replaceAll("_", " ");
+}
+
 function ApplicationRow({ row, update, setMessage }: { row: Application; update: ReturnType<typeof useWorkspaceData>["update"]; setMessage: (message: string) => void }) {
-  const { t } = useLocale();
+  const { t, ar } = useLocale();
   return (
     <article className="job-row">
       <div className="company-monogram">{row.companyName.charAt(0)}</div>
@@ -348,10 +358,9 @@ function ApplicationRow({ row, update, setMessage }: { row: Application; update:
         <p>{row.companyName} · {row.city}</p>
         <small>{new Intl.DateTimeFormat(t("en-SA", "ar-SA"), { timeZone: "Asia/Riyadh", dateStyle: "medium" }).format(new Date(row.updatedAt))}</small>
         {(row.deliveryStatus || row.responseStatus !== "none") && <small className="application-signal">
-          {row.deliveryStatus ? t(`Delivery: ${row.deliveryStatus.replaceAll("_"," ")}`, `التسليم: ${row.deliveryStatus.replaceAll("_"," ")}`) : ""}
-          {row.responseStatus === "action_required" ? t(" · Action required", " · إجراء مطلوب") : ""}
-          {row.responseStatus === "out_of_office" ? t(" · Automatic out-of-office reply", " · رد غياب تلقائي") : ""}
-        </small>}
+          {row.deliveryStatus ? t(`Delivery: ${row.deliveryStatus.replaceAll("_"," ")}`, `التسليم: ${deliveryStatusLabel(row.deliveryStatus)}`) : ""}
+          {row.responseStatus && row.responseStatus !== "none" ? ` · ${responseStatusLabel(row.responseStatus, t)}` : ""}
+                  </small>}
         {row.responseNote && <small className="application-note">{row.responseNote}</small>}
         {row.responseUrl && <a className="text-link" href={row.responseUrl} target="_blank" rel="noreferrer">{t("Complete employer step", "أكمل خطوة جهة التوظيف")}<ArrowUpRight size={13} /></a>}
       </div>
@@ -372,7 +381,7 @@ function ApplicationRow({ row, update, setMessage }: { row: Application; update:
 }
 
 function CandidateAccess({ claimAccess }: { claimAccess: ReturnType<typeof useWorkspaceData>["claimAccess"] }) {
-  const { t, path } = useLocale();
+  const { t, path, ar } = useLocale();
   const [, navigate] = useLocation();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -390,7 +399,7 @@ function CandidateAccess({ claimAccess }: { claimAccess: ReturnType<typeof useWo
   return (
     <main className="onboarding wrap">
       <div>
-        <span className="section-label">{t("PRIVATE CANDIDATE WORKSPACE", "مساحة مرشح خاصة")}</span>
+        <span className="section-label">{t("PRIVATE CANDIDATE WORKSPACE", "مساحة المرشح الخاصة")}</span>
         <h1>{t("Connect your application history.", "اربط سجل طلباتك.")}</h1>
         <p>{t("Enter the private access code you received. The code is also locked to your signed-in email, so another candidate cannot open your records.", "أدخل رمز الوصول الخاص الذي استلمته. الرمز مرتبط أيضاً ببريدك المسجل، لذلك لا يستطيع مرشح آخر فتح سجلك.")}</p>
       </div>
@@ -406,7 +415,7 @@ function CandidateAccess({ claimAccess }: { claimAccess: ReturnType<typeof useWo
 }
 
 function ProfileForm({ existing, settings }: { existing: any; settings?: boolean }) {
-  const { t, path } = useLocale();
+  const { t, path, ar } = useLocale();
   const [, navigate] = useLocation();
   const { saveProfile } = useWorkspaceData();
   const [cv, setCv] = useState(cvDraft);

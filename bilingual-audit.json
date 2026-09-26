@@ -1,72 +1,41 @@
 {
-  "generatedAt": "2026-08-17T13:32:18.005Z",
+  "generatedAt": "2026-09-26T04:22:51.112Z",
   "passed": true,
   "checks": [
     {
-      "name": "matching public section anchors",
+      "name": "both public routes render the same V2 Landing component",
       "pass": true,
-      "details": {
-        "english": [
-          "faq",
-          "how",
-          "location",
-          "pricing",
-          "product",
-          "reviews",
-          "upload"
-        ],
-        "arabic": [
-          "faq",
-          "how",
-          "location",
-          "pricing",
-          "product",
-          "reviews",
-          "upload"
-        ]
-      }
+      "details": "App.tsx maps both / and /ar to v2/Landing.tsx."
     },
     {
-      "name": "matching published prices",
+      "name": "V2 source is audited instead of legacy marketing pages",
       "pass": true,
-      "details": {
-        "english": [
-          "99",
-          "149",
-          "249"
-        ],
-        "arabic": [
-          "99",
-          "149",
-          "249"
-        ]
-      }
+      "details": [
+        "app",
+        "landing",
+        "auth",
+        "workspace"
+      ]
     },
     {
-      "name": "shared Saudi contact and city values",
+      "name": "Saudi-localized Arabic hero and search copy is present",
       "pass": true,
-      "details": {
-        "englishMissing": [],
-        "arabicMissing": []
-      }
+      "details": "Checks the high-priority landing-page terminology."
     },
     {
-      "name": "no legacy Gulf-wide geography",
+      "name": "Arabic dashboard status maps cover provider values",
       "pass": true,
-      "details": {
-        "englishMatch": null,
-        "arabicMatch": null
-      }
+      "details": "Dynamic backend enums must not leak into Arabic UI copy."
     },
     {
-      "name": "localized Arabic readiness flow",
+      "name": "RTL directional arrows are mirrored",
       "pass": true,
-      "details": "Arabic CV readiness, WhatsApp prefill, and success feedback are present."
+      "details": "Arabic CTAs mirror directional lucide icons."
     },
     {
-      "name": "private browser-only CV handling",
+      "name": "reset-password copy uses a native Arabic action",
       "pass": true,
-      "details": "Both routes use local text extraction and communicate the file-privacy boundary."
+      "details": "Avoids the literal translated phrase استعد كلمة المرور."
     }
   ]
 }
