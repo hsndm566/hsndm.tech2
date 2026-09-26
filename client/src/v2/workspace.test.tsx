@@ -32,6 +32,22 @@ vi.mock("./backend", () => ({
         summary: "",
         matchReason: "title aligns with Engineering",
         freshness: "2026-09-25T18:10:05Z",
+        emailEligible: true,
+        recipientEmail: "careers@pronto.example",
+        recipientVerificationSource: "verified-public-listing",
+      }, {
+        id: "8df80e7c-6258-42c1-8b6f-0ccfd8f63744",
+        companyName: "Acme",
+        roleTitle: "Industrial Engineer",
+        city: "Jeddah",
+        source: "public_ats",
+        url: "https://jobs.example.com/acme-industrial-engineer",
+        summary: "",
+        matchReason: "title aligns with Industrial Engineer",
+        freshness: "2026-09-25T17:10:05Z",
+        emailEligible: false,
+        recipientEmail: null,
+        recipientVerificationSource: null,
       }],
       mode: "live",
       checkedAt: "2026-09-25T18:10:05Z",
@@ -121,24 +137,38 @@ describe("V2 workspace behavior", () => {
     );
   });
 
-  it("requires a verified selected job and refreshes the server-recorded application after send", async () => {
+  it("exposes Send by email only for a verified-recipient job and never asks for a recipient", async () => {
     mount();
-    expect((screen.getByRole("button", { name: "Send and record application" }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByText("Choose a job with a verified email.")).toBeTruthy();
+    expect(screen.queryByLabelText("Recipient email")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Use this job" }));
+    const sendButtons = screen.getAllByRole("button", { name: "Send by email" });
+    expect(sendButtons).toHaveLength(1);
+    fireEvent.click(sendButtons[0]);
+
     expect(screen.getByDisplayValue("Pronto")).toBeTruthy();
     expect(screen.getByDisplayValue("Field Engineer")).toBeTruthy();
+    expect(screen.getByDisplayValue("careers@pronto.example")).toBeTruthy();
+    expect(screen.queryByLabelText("Recipient email")).toBeNull();
 
-    fireEvent.change(screen.getByLabelText("Recipient email"), { target: { value: "hiring@example.com" } });
-    fireEvent.click(screen.getByRole("button", { name: "Send and record application" }));
+    const visibleSendButtons = screen.getAllByRole("button", { name: "Send by email" });
+    fireEvent.click(visibleSendButtons[visibleSendButtons.length - 1]);
 
     await waitFor(() => expect(mocks.sendApplicationEmail).toHaveBeenCalledWith({
-      toEmail: "hiring@example.com",
       jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
     }));
     await waitFor(() => expect(mocks.data.apps.refetch).toHaveBeenCalled());
     expect(mocks.data.create.mutate).not.toHaveBeenCalled();
     expect(await screen.findByText(/Provider evidence/)).toBeTruthy();
+  });
+
+  it("does not expose an email-send control for jobs without a verified recipient", () => {
+    mount();
+    expect(screen.getByText("Acme · Jeddah")).toBeTruthy();
+    expect(screen.getByText("No verified email — use the application page")).toBeTruthy();
+    const emailButtons = screen.getAllByRole("button", { name: "Send by email" });
+    expect(emailButtons).toHaveLength(1);
+    expect(screen.getByRole("link", { name: /Open application page/ })).toBeTruthy();
   });
 
   it("keeps form entries when profile saving fails", async () => {
