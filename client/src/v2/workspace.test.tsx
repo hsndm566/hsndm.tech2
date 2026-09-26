@@ -33,8 +33,6 @@ vi.mock("./backend", () => ({
         matchReason: "title aligns with Engineering",
         freshness: "2026-09-25T18:10:05Z",
         emailEligible: true,
-        recipientEmail: "careers@pronto.example",
-        recipientVerificationSource: "verified-public-listing",
       }, {
         id: "8df80e7c-6258-42c1-8b6f-0ccfd8f63744",
         companyName: "Acme",
@@ -46,8 +44,6 @@ vi.mock("./backend", () => ({
         matchReason: "title aligns with Industrial Engineer",
         freshness: "2026-09-25T17:10:05Z",
         emailEligible: false,
-        recipientEmail: null,
-        recipientVerificationSource: null,
       }],
       mode: "live",
       checkedAt: "2026-09-25T18:10:05Z",
@@ -148,8 +144,9 @@ describe("V2 workspace behavior", () => {
 
     expect(screen.getByDisplayValue("Pronto")).toBeTruthy();
     expect(screen.getByDisplayValue("Field Engineer")).toBeTruthy();
-    expect(screen.getByDisplayValue("careers@pronto.example")).toBeTruthy();
+    expect(screen.getByText(/Verified employer recipient available/)).toBeTruthy();
     expect(screen.queryByLabelText("Recipient email")).toBeNull();
+    expect(screen.queryByDisplayValue(/@/)).toBeNull();
 
     const visibleSendButtons = screen.getAllByRole("button", { name: "Send by email" });
     fireEvent.click(visibleSendButtons[visibleSendButtons.length - 1]);
