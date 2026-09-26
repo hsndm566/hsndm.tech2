@@ -24,8 +24,6 @@ export type RecommendedJob = {
   matchReason: string;
   freshness: string;
   emailEligible: boolean;
-  recipientEmail: string | null;
-  recipientVerificationSource: string | null;
 };
 
 export type RecommendedJobsResult = {
