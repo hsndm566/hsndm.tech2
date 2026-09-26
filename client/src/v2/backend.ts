@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getSupabaseToken } from "./auth";
 
 export type ApplicationEmailInput = {
-  toEmail: string;
   jobId: string;
 };
 
@@ -24,6 +23,7 @@ export type RecommendedJob = {
   summary: string;
   matchReason: string;
   freshness: string;
+  emailEligible: boolean;
 };
 
 export type RecommendedJobsResult = {

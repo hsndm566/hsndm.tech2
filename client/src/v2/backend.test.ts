@@ -60,7 +60,6 @@ describe("V2 backend client", () => {
     );
 
     const result = await sendApplicationEmail({
-      toEmail: "hiring@example.com",
       jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
     }, fetchImpl as unknown as typeof fetch);
 
@@ -71,12 +70,14 @@ describe("V2 backend client", () => {
       messageId: "<provider-message-1>",
       application: { id: "app-1", status: "applied" },
     });
+    expect(JSON.parse(fetchImpl.mock.calls[0][1].body as string)).toEqual({
+      jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
+    });
   });
 
   it("labels a missing application endpoint distinctly", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(new Response(JSON.stringify({ detail: "Not Found" }), { status: 404 }));
     const result = await sendApplicationEmail({
-      toEmail: "hiring@example.com",
       jobId: "199945cc-4e96-451c-bb4f-e999f37c6873",
     }, fetchImpl as unknown as typeof fetch);
     expect(result).toEqual({ ok: false, status: 404, error: "application-email-endpoint-missing" });
