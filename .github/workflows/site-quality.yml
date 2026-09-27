@@ -68,8 +68,8 @@ jobs:
           done
           grep -Eq 'index, follow|all' dist/public/index.html || { echo 'Missing indexable robots marker in public index.' >&2; exit 1; }
           grep -Eq 'AutoApply ?SA|AutoApplySa' dist/public/index.html || { echo 'Missing AutoApply brand marker in public index.' >&2; exit 1; }
-          grep -q '^Allow: /$' dist/public/robots.txt || { echo 'Missing public crawl allow rule.' >&2; exit 1; }
-          if grep -q '^Disallow: /$' dist/public/robots.txt; then
+          grep -q '^Allow: / dist/public/robots.txt || { echo 'Missing public crawl allow rule.' >&2; exit 1; }
+          if grep -q '^Disallow: / dist/public/robots.txt; then
             echo 'robots.txt blocks the entire public site.' >&2
             exit 1
           fi
@@ -82,3 +82,138 @@ jobs:
             echo 'Production source maps found unexpectedly.' >&2
             exit 1
           fi
+
+
+      - name: Read-only live production audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/autoapply-browser-audit
+          mkdir -p /tmp/autoapply-browser-audit live-audit
+          cd /tmp/autoapply-browser-audit
+          npm init -y >/dev/null 2>&1
+          npm install --silent --no-audit --no-fund puppeteer-core@24
+          cat > audit.mjs <<'NODE'
+          import puppeteer from 'puppeteer-core';
+          import fs from 'node:fs';
+          const chrome = '/usr/bin/google-chrome-stable';
+          const base = 'https://www.hsndm.tech';
+          const routes = ['/', '/ar/', '/sign-in', '/ar/sign-in', '/sign-up', '/ar/sign-up', '/privacy', '/ar/privacy', '/terms', '/ar/terms', '/dashboard'];
+          const browser = await puppeteer.launch({headless:'new', executablePath:chrome, args:['--no-sandbox','--disable-gpu']});
+          const summary = {generatedAt:new Date().toISOString(), base, routes:[], homeInteractions:{}, linkChecks:[], notes:[]};
+          async function auditRoute(route, viewport, suffix){
+            const page = await browser.newPage();
+            await page.setViewport(viewport);
+            const consoleErrors=[], pageErrors=[], failedRequests=[], badResponses=[];
+            page.on('console', m=>{ if(m.type()==='error') consoleErrors.push(m.text()); });
+            page.on('pageerror', e=>pageErrors.push(String(e)));
+            page.on('requestfailed', r=>failedRequests.push({url:r.url(),error:r.failure()?.errorText||'failed'}));
+            page.on('response', r=>{ if(r.status()>=400) badResponses.push({url:r.url(),status:r.status()}); });
+            let status=null, finalUrl=null, navError=null;
+            try{
+              const resp=await page.goto(base+route,{waitUntil:'networkidle2',timeout:45000});
+              status=resp?.status()??null; finalUrl=page.url();
+              await new Promise(r=>setTimeout(r,1200));
+            }catch(e){ navError=String(e); finalUrl=page.url(); }
+            const data=await page.evaluate(()=>{
+              const clean=s=>s?.replace(/\s+/g,' ').trim()||'';
+              const allAnchors=[...document.querySelectorAll('a')].map(a=>({text:clean(a.textContent),href:a.href,raw:a.getAttribute('href')||''}));
+              const buttons=[...document.querySelectorAll('button')].map(b=>({text:clean(b.textContent),aria:b.getAttribute('aria-label')||'',disabled:b.disabled}));
+              const inputs=[...document.querySelectorAll('input,select,textarea')].map(el=>({tag:el.tagName.toLowerCase(),type:el.getAttribute('type')||'',name:el.getAttribute('name')||'',placeholder:el.getAttribute('placeholder')||'',aria:el.getAttribute('aria-label')||'',required:el.required||false}));
+              const images=[...document.images].map(i=>({src:i.src,alt:i.alt,naturalWidth:i.naturalWidth,naturalHeight:i.naturalHeight}));
+              const videos=[...document.querySelectorAll('video')].map(v=>({src:v.currentSrc||v.querySelector('source')?.src||'',readyState:v.readyState,networkState:v.networkState,error:v.error?{code:v.error.code,message:v.error.message}:null,paused:v.paused,muted:v.muted,controls:v.controls}));
+              const details=[...document.querySelectorAll('details')].map(d=>({summary:clean(d.querySelector('summary')?.textContent),open:d.open}));
+              const missingButtonNames=[...document.querySelectorAll('button')].filter(b=>!clean(b.textContent)&&!b.getAttribute('aria-label')&&!b.getAttribute('title')).length;
+              const missingImgAlt=[...document.images].filter(i=>!i.hasAttribute('alt')).length;
+              const unlabeledInputs=[...document.querySelectorAll('input,select,textarea')].filter(el=>{
+                if(el.type==='hidden') return false;
+                const id=el.id;
+                const labelled=id&&document.querySelector('label[for="'+CSS.escape(id)+'"]');
+                return !labelled&&!el.getAttribute('aria-label')&&!el.getAttribute('aria-labelledby')&&!el.closest('label');
+              }).length;
+              const canonical=document.querySelector('link[rel=canonical]')?.href||'';
+              const metaDescription=document.querySelector('meta[name=description]')?.content||'';
+              const robots=document.querySelector('meta[name=robots]')?.content||'';
+              const h1=[...document.querySelectorAll('h1')].map(x=>clean(x.textContent));
+              const h2=[...document.querySelectorAll('h2')].map(x=>clean(x.textContent));
+              const width={scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,bodyScrollWidth:document.body.scrollWidth};
+              return {
+                title:document.title,lang:document.documentElement.lang,dir:document.documentElement.dir,
+                canonical,metaDescription,robots,h1,h2,
+                anchorCount:allAnchors.length,anchors:allAnchors,
+                buttonCount:buttons.length,buttons,inputs,images,videos,details,
+                a11y:{missingButtonNames,missingImgAlt,unlabeledInputs},
+                width,
+                bodyText:clean(document.body.innerText).slice(0,14000),
+                ids:[...document.querySelectorAll('[id]')].map(x=>x.id)
+              };
+            });
+            const fileSafe=(route==='/'?'home':route.replace(/^\//,'').replaceAll('/','-'))+'-'+suffix;
+            await page.screenshot({path:'/home/runner/work/hsndm.tech2/hsndm.tech2/live-audit/'+fileSafe+'.png',fullPage:true});
+            await page.close();
+            return {route,viewport,suffix,status,finalUrl,navError,consoleErrors:[...new Set(consoleErrors)].slice(0,30),pageErrors:[...new Set(pageErrors)].slice(0,20),failedRequests:failedRequests.slice(0,30),badResponses:badResponses.slice(0,30),...data};
+          }
+          for(const route of routes){
+            summary.routes.push(await auditRoute(route,{width:1440,height:1000},'desktop'));
+            if(route==='/'||route==='/ar/'||route==='/sign-in'||route==='/sign-up') summary.routes.push(await auditRoute(route,{width:390,height:844},'mobile'));
+          }
+          async function interactionAudit(path){
+            const page=await browser.newPage();
+            await page.setViewport({width:390,height:844});
+            await page.goto(base+path,{waitUntil:'networkidle2',timeout:45000});
+            await new Promise(r=>setTimeout(r,700));
+            const out={path};
+            const beforeTheme=await page.evaluate(()=>document.documentElement.dataset.theme||'');
+            const theme=await page.$('button.theme-toggle');
+            if(theme){await theme.click(); await new Promise(r=>setTimeout(r,150));}
+            out.theme={before:beforeTheme,after:await page.evaluate(()=>document.documentElement.dataset.theme||'')};
+            const menu=await page.$('button.mobile-menu');
+            if(menu){out.menuBefore=await page.evaluate(el=>el.getAttribute('aria-expanded'),menu);await menu.click();await new Promise(r=>setTimeout(r,150));out.menuAfter=await page.evaluate(el=>el.getAttribute('aria-expanded'),menu);}
+            const navResults=await page.evaluate(()=>{
+              const result=[];
+              for(const a of [...document.querySelectorAll('a[href*="#"]')]){
+                const raw=a.getAttribute('href')||'';
+                const hash=raw.includes('#')?'#'+raw.split('#').slice(1).join('#'):'';
+                if(hash) result.push({text:(a.textContent||'').replace(/\s+/g,' ').trim(),raw,targetExists:!!document.querySelector(hash)});
+              }
+              return result;
+            });
+            out.hashTargets=navResults;
+            const faqSummary=await page.$('.faq summary');
+            if(faqSummary){
+              out.faqBefore=await page.evaluate(el=>el.parentElement?.hasAttribute('open'),faqSummary);
+              await faqSummary.click(); await new Promise(r=>setTimeout(r,100));
+              out.faqAfter=await page.evaluate(el=>el.parentElement?.hasAttribute('open'),faqSummary);
+            }
+            await page.close(); return out;
+          }
+          summary.homeInteractions.en=await interactionAudit('/');
+          summary.homeInteractions.ar=await interactionAudit('/ar/');
+          const hrefs=[...new Set(summary.routes.filter(r=>r.route==='/'||r.route==='/ar/').flatMap(r=>r.anchors.map(a=>a.href)).filter(h=>h.startsWith(base)))];
+          const page=await browser.newPage();
+          for(const href of hrefs){
+            let result={href,status:null,finalUrl:null,error:null};
+            try{
+              const resp=await page.goto(href,{waitUntil:'domcontentloaded',timeout:25000});
+              result.status=resp?.status()??null;result.finalUrl=page.url();
+            }catch(e){result.error=String(e);result.finalUrl=page.url();}
+            summary.linkChecks.push(result);
+          }
+          await page.close();
+          await browser.close();
+          fs.writeFileSync('/home/runner/work/hsndm.tech2/hsndm.tech2/live-audit/audit.json',JSON.stringify(summary,null,2));
+          console.log(JSON.stringify({
+            routeSummary:summary.routes.map(r=>({route:r.route,suffix:r.suffix,status:r.status,finalUrl:r.finalUrl,title:r.title,h1:r.h1,overflow:r.width.scrollWidth>r.width.clientWidth,a11y:r.a11y,consoleErrors:r.consoleErrors.length,pageErrors:r.pageErrors.length,failedRequests:r.failedRequests.length,badResponses:r.badResponses.length,brokenImages:r.images.filter(i=>i.naturalWidth===0).length,videos:r.videos})),
+            homeInteractions:summary.homeInteractions,
+            brokenLinks:summary.linkChecks.filter(x=>x.error||!x.status||x.status>=400)
+          },null,2));
+          NODE
+
+          node audit.mjs | tee /home/runner/work/hsndm.tech2/hsndm.tech2/live-audit/summary.txt
+
+      - name: Upload read-only audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-site-readonly-audit
+          path: live-audit/
+          if-no-files-found: error
