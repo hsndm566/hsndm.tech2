@@ -82,3 +82,49 @@ jobs:
             echo 'Production source maps found unexpectedly.' >&2
             exit 1
           fi
+
+      - name: Live production browser verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p live-verification
+          CHROME="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No Chromium-family browser found on runner." | tee live-verification/report.txt
+            exit 0
+          fi
+
+          echo "Browser: $CHROME" | tee live-verification/report.txt
+
+          for path in "/" "/ar/"; do
+            slug="$(printf '%s' "$path" | tr '/ ' '__')"
+            [ "$slug" = "_" ] && slug="home"
+            url="https://www.hsndm.tech$path"
+            echo "" | tee -a live-verification/report.txt
+            echo "URL: $url" | tee -a live-verification/report.txt
+
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --window-size=1440,5000               --virtual-time-budget=12000               --dump-dom "$url" > "live-verification/$slug.html" 2>"live-verification/$slug-browser.log" || true
+
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --window-size=1440,5000               --virtual-time-budget=12000               --screenshot="live-verification/$slug.png" "$url" >>"live-verification/$slug-browser.log" 2>&1 || true
+
+            bytes="$(wc -c < "live-verification/$slug.html" | tr -d ' ')"
+            echo "DOM bytes: $bytes" | tee -a live-verification/report.txt
+            for marker in               "workspace-showcase"               "YOUR SEARCH, IN ONE PLACE"               "One place to move forward."               "Your opportunities"               "Application activity"               "بحثك في مكان واحد"               "كل خطواتك في مكان واحد."               "فرصك"               "نشاط الطلبات"; do
+              if grep -Fq "$marker" "live-verification/$slug.html"; then
+                echo "FOUND: $marker" | tee -a live-verification/report.txt
+              else
+                echo "MISSING: $marker" | tee -a live-verification/report.txt
+              fi
+            done
+          done
+
+          echo "" | tee -a live-verification/report.txt
+          echo "HEADERS" | tee -a live-verification/report.txt
+          curl -sSIL --max-time 20 https://www.hsndm.tech/ | sed -n '1,25p' | tee -a live-verification/report.txt || true
+
+      - name: Upload live browser evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-production-browser-verification
+          path: live-verification/
+          if-no-files-found: warn
