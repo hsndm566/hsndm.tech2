@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { FileText, UploadCloud, CheckCircle2, Loader2, LockKeyhole } from "lucide-react";
-import { Link } from "wouter";
 import { useLocale } from "./locale";
 import { FIELD_MAP } from "@/lib/careerTaxonomy";
 import { trackEngagement } from "@/lib/analytics";
@@ -44,7 +43,7 @@ export function clearCvDraft() {
 }
 
 export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }) {
-  const { t, path } = useLocale();
+  const { t } = useLocale();
   const { session } = useSession();
   const input = useRef<HTMLInputElement>(null);
   const [state, setState] = useState("idle");
@@ -181,13 +180,13 @@ export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }
         )}
       </div>
       {!onParsed && (
-        <Link
+        <a
           className="button full"
-          href={path("/sign-up")}
-          onClick={() => trackEngagement("cta_clicked", { target: "sign_up", surface: "cv_card", hasParsedCv: !!result })}
+          href="https://app.hsndm.tech/sign-up"
+          onClick={() => trackEngagement("cta_clicked", { target: "portal_sign_up", surface: "cv_card", hasParsedCv: !!result })}
         >
           {result ? t("Continue with your profile", "تابع إعداد ملفك") : t("Start free", "ابدأ مجاناً")}
-        </Link>
+        </a>
       )}
       <small className="privacy">
         <LockKeyhole size={14} />
