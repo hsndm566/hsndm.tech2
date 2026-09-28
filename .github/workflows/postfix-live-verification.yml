@@ -51,7 +51,7 @@ jobs:
           result.homeMobile=await inspect('https://www.hsndm.tech/',{width:390,height:844,screenshot:'home-mobile.png'});
           result.arHome=await inspect('https://www.hsndm.tech/ar/',{screenshot:'ar-home.png'});
           result.portalSignup=await inspect('https://app.hsndm.tech/sign-up',{screenshot:'portal-sign-up.png'});
-          result.portalSignin=await inspect('https://app.hsndm.tech/sign-in',{screenshot:'portal-sign-in.png'});
+          result.portalSignin=await inspect('https://app.hsndm.tech/sign-in',{screenshot:'portal-sign-in.png'});\n          result.portalLogin=await inspect('https://app.hsndm.tech/login',{screenshot:'portal-login.png'});
           result.portalDashboard=await inspect('https://app.hsndm.tech/dashboard',{screenshot:'portal-dashboard.png'});
           result.wwwSignup=await inspect('https://www.hsndm.tech/sign-up');
           result.wwwSignin=await inspect('https://www.hsndm.tech/sign-in');
@@ -65,7 +65,7 @@ jobs:
             arHomeAccountLinks:arHomeLinks,
             pricingLinks:result.home.links.filter(x=>/plan=/.test(x.href)),
             portalSignupOk:result.portalSignup.status===200 && /next step|Create account|إنشاء حساب/i.test(result.portalSignup.body),
-            portalSigninOk:result.portalSignin.status===200 && /Welcome back|Sign in|تسجيل الدخول/i.test(result.portalSignin.body),
+            portalSigninOk:result.portalSignin.status===200 && /Welcome back|Sign in|تسجيل الدخول/i.test(result.portalSignin.body),\n            portalLoginOk:result.portalLogin.status===200 && /Welcome back|Sign in|تسجيل الدخول/i.test(result.portalLogin.body),
             portalDashboardRedirectedToSignin:/\/sign-in/.test(result.portalDashboard.url),
             publicSignupRedirectedToPortal:result.wwwSignup.url.startsWith('https://app.hsndm.tech/'),
             publicSigninRedirectedToPortal:result.wwwSignin.url.startsWith('https://app.hsndm.tech/'),
