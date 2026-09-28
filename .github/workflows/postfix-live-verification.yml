@@ -1,0 +1,86 @@
+name: Temporary Post-Fix Live Verification
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify live public-to-portal conversion paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p live-postfix-audit /tmp/postfix-browser
+          cd /tmp/postfix-browser
+          npm init -y >/dev/null 2>&1
+          npm install --silent --no-audit --no-fund puppeteer-core@24
+          cat > verify.mjs <<'NODE'
+          import puppeteer from 'puppeteer-core';
+          import fs from 'node:fs';
+          const chrome='/usr/bin/google-chrome-stable';
+          const browser=await puppeteer.launch({headless:'new',executablePath:chrome,args:['--no-sandbox','--disable-gpu']});
+          const result={generatedAt:new Date().toISOString(),checks:[]};
+          async function inspect(url,{width=1440,height=1000,screenshot}={}){
+            const page=await browser.newPage(); await page.setViewport({width,height});
+            const consoleErrors=[],failed=[],bad=[];
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+            page.on('requestfailed',r=>failed.push({url:r.url(),error:r.failure()?.errorText||'failed'}));
+            page.on('response',r=>{if(r.status()>=400)bad.push({url:r.url(),status:r.status()})});
+            let response,status=null,error=null;
+            try{response=await page.goto(url,{waitUntil:'networkidle2',timeout:45000});status=response?.status()??null;await new Promise(r=>setTimeout(r,700));}catch(e){error=String(e)}
+            const data=await page.evaluate(()=>({
+              url:location.href, title:document.title, lang:document.documentElement.lang, dir:document.documentElement.dir,
+              h1:[...document.querySelectorAll('h1')].map(x=>(x.textContent||'').replace(/\s+/g,' ').trim()),
+              h2:[...document.querySelectorAll('h2')].map(x=>(x.textContent||'').replace(/\s+/g,' ').trim()),
+              links:[...document.querySelectorAll('a')].map(a=>({text:(a.textContent||'').replace(/\s+/g,' ').trim(),href:a.href,class:a.className})),
+              body:(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,12000),
+              overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth
+            }));
+            if(screenshot) await page.screenshot({path:'/home/runner/work/hsndm.tech2/hsndm.tech2/live-postfix-audit/'+screenshot,fullPage:true});
+            await page.close();
+            return {requested:url,status,error,consoleErrors:[...new Set(consoleErrors)],failed,bad,...data};
+          }
+          result.home=await inspect('https://www.hsndm.tech/',{screenshot:'home.png'});
+          result.homeMobile=await inspect('https://www.hsndm.tech/',{width:390,height:844,screenshot:'home-mobile.png'});
+          result.arHome=await inspect('https://www.hsndm.tech/ar/',{screenshot:'ar-home.png'});
+          result.portalSignup=await inspect('https://app.hsndm.tech/sign-up',{screenshot:'portal-sign-up.png'});
+          result.portalSignin=await inspect('https://app.hsndm.tech/sign-in',{screenshot:'portal-sign-in.png'});
+          result.portalDashboard=await inspect('https://app.hsndm.tech/dashboard',{screenshot:'portal-dashboard.png'});
+          result.wwwSignup=await inspect('https://www.hsndm.tech/sign-up');
+          result.wwwSignin=await inspect('https://www.hsndm.tech/sign-in');
+          result.wwwDashboard=await inspect('https://www.hsndm.tech/dashboard');
+          result.plans={};
+          for(const p of ['starter','pro','founder']) result.plans[p]=await inspect('https://app.hsndm.tech/sign-up?plan='+p);
+          const homeLinks=result.home.links.filter(x=>/sign-up|sign-in|app\.hsndm\.tech/.test(x.href));
+          const arHomeLinks=result.arHome.links.filter(x=>/sign-up|sign-in|app\.hsndm\.tech/.test(x.href));
+          result.summary={
+            homeAccountLinks:homeLinks,
+            arHomeAccountLinks:arHomeLinks,
+            pricingLinks:result.home.links.filter(x=>/plan=/.test(x.href)),
+            portalSignupOk:result.portalSignup.status===200 && /next step|Create account|إنشاء حساب/i.test(result.portalSignup.body),
+            portalSigninOk:result.portalSignin.status===200 && /Welcome back|Sign in|تسجيل الدخول/i.test(result.portalSignin.body),
+            portalDashboardRedirectedToSignin:/\/sign-in/.test(result.portalDashboard.url),
+            publicSignupRedirectedToPortal:result.wwwSignup.url.startsWith('https://app.hsndm.tech/'),
+            publicSigninRedirectedToPortal:result.wwwSignin.url.startsWith('https://app.hsndm.tech/'),
+            publicDashboardRedirectedToPortal:result.wwwDashboard.url.startsWith('https://app.hsndm.tech/'),
+            planQuerySurvives:Object.fromEntries(Object.entries(result.plans).map(([k,v])=>[k,new URL(v.url).searchParams.get('plan')===k])),
+            arabicCtaKeepsArabic:arHomeLinks.some(x=>/\/ar\//.test(new URL(x.href).pathname))
+          };
+          fs.writeFileSync('/home/runner/work/hsndm.tech2/hsndm.tech2/live-postfix-audit/result.json',JSON.stringify(result,null,2));
+          console.log(JSON.stringify(result.summary,null,2));
+          await browser.close();
+          NODE
+          node verify.mjs | tee /home/runner/work/hsndm.tech2/hsndm.tech2/live-postfix-audit/summary.txt
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-fix-live-verification
+          path: live-postfix-audit/
+          if-no-files-found: error
