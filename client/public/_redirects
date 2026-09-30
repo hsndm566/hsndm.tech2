@@ -1,6 +1,6 @@
 /dashboard /index.html 200
 /dashboard/* /index.html 200
-/sign-in /index.html 200
-/sign-in/* /index.html 200
-/sign-up /index.html 200
-/sign-up/* /index.html 200
+/sign-in https://app.hsndm.tech/sign-in 302
+/sign-in/* https://app.hsndm.tech/sign-in 302
+/sign-up https://app.hsndm.tech/sign-up 302
+/sign-up/* https://app.hsndm.tech/sign-up 302
