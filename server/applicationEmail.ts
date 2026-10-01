@@ -21,7 +21,23 @@ export type ApplicationEmailInput = {
 export type CvAttachment = {
   content: string;
   name: string;
+  mimeType: string;
 };
+
+export function validatePdfAttachment(attachment: CvAttachment) {
+  const name = attachment.name.trim();
+  const mimeType = attachment.mimeType.trim().toLowerCase();
+  if (!/\.pdf$/i.test(name) || mimeType !== "application/pdf") {
+    throw new Error("email-cv-pdf-required");
+  }
+
+  const bytes = Buffer.from(attachment.content, "base64");
+  const header = bytes.subarray(0, 5).toString("ascii");
+  const tail = bytes.subarray(Math.max(0, bytes.length - 2048)).toString("latin1");
+  if (!bytes.length || header !== "%PDF-" || !tail.includes("%%EOF")) {
+    throw new Error("email-cv-pdf-invalid");
+  }
+}
 
 type FetchLike = typeof fetch;
 
@@ -108,6 +124,7 @@ export function createApplicationEmailPayload(
   candidateEmail: string,
   attachment: CvAttachment,
 ) {
+  validatePdfAttachment(attachment);
   const senderEmail = process.env.BREVO_SENDER_EMAIL || "apply@hsndm.tech";
   const senderName = process.env.BREVO_SENDER_NAME || "AutoApply SA";
   const subject = `${input.candidateName} for ${input.roleTitle}`;
@@ -139,6 +156,18 @@ export async function sendApplicationEmail(
   idempotencyKey: string,
   fetchImpl: FetchLike = fetch,
 ) {
+  try {
+    validatePdfAttachment(attachment);
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : "email-cv-pdf-invalid";
+    return {
+      ok: false,
+      status: 409,
+      reason: reason === "email-cv-pdf-required" ? "email-cv-pdf-required" as const : "email-cv-pdf-invalid" as const,
+      messageId: null,
+    };
+  }
+
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey || !process.env.BREVO_SENDER_EMAIL) {
     return { ok: false, status: 503, reason: "brevo-not-configured" as const, messageId: null };
@@ -222,12 +251,22 @@ async function downloadCandidateCv(client: any, userId: string, profile: V2Profi
   const path = profile.resumeStoragePath?.trim();
   if (!path || !profile.resumeFileName) throw new Error("cv-required");
   if (!path.startsWith(`${userId}/`)) throw new Error("cv-ownership-mismatch");
+  if (!/\.pdf$/i.test(profile.resumeFileName) || profile.resumeMimeType?.trim().toLowerCase() !== "application/pdf") {
+    throw new Error("email-cv-pdf-required");
+  }
 
   const { data, error } = await client.storage.from("candidate-cvs").download(path);
   if (error || !data) throw new Error("cv-download-failed");
   const bytes = Buffer.from(await data.arrayBuffer());
   if (!bytes.length || bytes.length > 10 * 1024 * 1024) throw new Error("cv-size-invalid");
-  return { content: bytes.toString("base64"), name: profile.resumeFileName };
+
+  const attachment = {
+    content: bytes.toString("base64"),
+    name: profile.resumeFileName,
+    mimeType: profile.resumeMimeType,
+  };
+  validatePdfAttachment(attachment);
+  return attachment;
 }
 
 async function reserveApplication(client: any, userId: string, job: VerifiedJobRow, toEmail: string, cvStoragePath: string) {
@@ -411,7 +450,13 @@ export function registerApplicationEmailRoutes(app: Express) {
       const reason = error instanceof Error ? error.message : "application-email-failed";
       if (reservedApplication?.id) await markApplicationFailed(auth.client, reservedApplication.id, reason);
       if (reason === "duplicate-application") return res.status(409).json({ error: reason });
-      if (["cv-required", "cv-ownership-mismatch", "cv-size-invalid"].includes(reason)) {
+      if ([
+        "cv-required",
+        "cv-ownership-mismatch",
+        "cv-size-invalid",
+        "email-cv-pdf-required",
+        "email-cv-pdf-invalid",
+      ].includes(reason)) {
         return res.status(409).json({ error: reason });
       }
       return res.status(502).json({ error: "application-email-failed" });
