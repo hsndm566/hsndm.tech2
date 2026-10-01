@@ -251,7 +251,8 @@ async function downloadCandidateCv(client: any, userId: string, profile: V2Profi
   const path = profile.resumeStoragePath?.trim();
   if (!path || !profile.resumeFileName) throw new Error("cv-required");
   if (!path.startsWith(`${userId}/`)) throw new Error("cv-ownership-mismatch");
-  if (!/\.pdf$/i.test(profile.resumeFileName) || profile.resumeMimeType?.trim().toLowerCase() !== "application/pdf") {
+  const mimeType = profile.resumeMimeType?.trim().toLowerCase();
+  if (!/\.pdf$/i.test(profile.resumeFileName) || mimeType !== "application/pdf") {
     throw new Error("email-cv-pdf-required");
   }
 
@@ -263,7 +264,7 @@ async function downloadCandidateCv(client: any, userId: string, profile: V2Profi
   const attachment = {
     content: bytes.toString("base64"),
     name: profile.resumeFileName,
-    mimeType: profile.resumeMimeType,
+    mimeType,
   };
   validatePdfAttachment(attachment);
   return attachment;
