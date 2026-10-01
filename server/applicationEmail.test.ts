@@ -16,8 +16,9 @@ const input = {
 };
 
 const attachment = {
-  content: Buffer.from("test-cv").toString("base64"),
+  content: Buffer.from("%PDF-1.4\nAutoApply test CV\n%%EOF\n").toString("base64"),
   name: "Test Candidate CV.pdf",
+  mimeType: "application/pdf",
 };
 
 afterEach(() => vi.unstubAllEnvs());
@@ -58,6 +59,49 @@ describe("application email sending", () => {
       ok: false,
       status: 503,
       reason: "brevo-not-configured",
+      messageId: null,
+    });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+
+  it("rejects DOCX CV attachments before calling the email provider", async () => {
+    vi.stubEnv("BREVO_API_KEY", "server-only-key");
+    vi.stubEnv("BREVO_SENDER_EMAIL", "apply@hsndm.tech");
+    const fetchImpl = vi.fn();
+    const docx = {
+      content: Buffer.from("PK\\x03\\x04fake-docx").toString("base64"),
+      name: "Test Candidate CV.docx",
+      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    };
+
+    await expect(
+      sendApplicationEmail(input, "candidate@example.com", docx, "application-docx-test", fetchImpl as unknown as typeof fetch),
+    ).resolves.toEqual({
+      ok: false,
+      status: 409,
+      reason: "email-cv-pdf-required",
+      messageId: null,
+    });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("rejects a non-PDF file renamed to .pdf before calling the email provider", async () => {
+    vi.stubEnv("BREVO_API_KEY", "server-only-key");
+    vi.stubEnv("BREVO_SENDER_EMAIL", "apply@hsndm.tech");
+    const fetchImpl = vi.fn();
+    const fakePdf = {
+      content: Buffer.from("PK\\x03\\x04still-a-docx").toString("base64"),
+      name: "renamed.pdf",
+      mimeType: "application/pdf",
+    };
+
+    await expect(
+      sendApplicationEmail(input, "candidate@example.com", fakePdf, "application-fake-pdf-test", fetchImpl as unknown as typeof fetch),
+    ).resolves.toEqual({
+      ok: false,
+      status: 409,
+      reason: "email-cv-pdf-invalid",
       messageId: null,
     });
     expect(fetchImpl).not.toHaveBeenCalled();
