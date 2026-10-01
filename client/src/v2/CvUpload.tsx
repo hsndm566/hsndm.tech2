@@ -49,6 +49,7 @@ export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }
   const [state, setState] = useState("idle");
   const [error, setError] = useState("");
   const [result, setResult] = useState<CvResult | null>(cvDraft);
+  const accountUpload = Boolean(onParsed && session?.user.id);
 
   async function parse(file?: File) {
     if (!file) return;
@@ -58,8 +59,20 @@ export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }
       sizeBucket: file.size > 5 * 1024 * 1024 ? "5mb_to_10mb" : "under_5mb",
     });
 
-    if (!/\.(pdf|docx)$/i.test(file.name) || file.size > 10 * 1024 * 1024) {
-      setError(t("Choose a PDF or DOCX under 10 MB.", "اختر ملف PDF أو DOCX بحجم أقل من ١٠ ميجابايت."));
+    if (accountUpload && (!/\.pdf$/i.test(file.name) || (file.type && file.type !== "application/pdf"))) {
+      setError(t(
+        "Application CVs must be PDF files. DOCX files cannot be attached to applications.",
+        "يجب أن تكون السيرة الذاتية للتقديم بصيغة PDF. لا يمكن إرفاق ملفات DOCX بطلبات التوظيف.",
+      ));
+      trackEngagement("cv_upload_rejected", { reason: "pdf_required" });
+      return;
+    }
+
+    if ((!accountUpload && !/\.(pdf|docx)$/i.test(file.name)) || file.size > 10 * 1024 * 1024) {
+      setError(t(
+        accountUpload ? "Choose a PDF under 10 MB." : "Choose a PDF or DOCX under 10 MB.",
+        accountUpload ? "اختر ملف PDF بحجم أقل من ١٠ ميجابايت." : "اختر ملف PDF أو DOCX بحجم أقل من ١٠ ميجابايت.",
+      ));
       trackEngagement("cv_upload_rejected", { reason: "format_or_size" });
       return;
     }
@@ -130,14 +143,18 @@ export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }
     }
   }
 
-  const accountUpload = Boolean(onParsed && session?.user.id);
-
   return (
     <div className="cv-card" id="upload">
       <span className="eyebrow">{t("YOUR NEXT STEP STARTS HERE", "خطوتك القادمة تبدأ هنا")}</span>
       <h2>{t("Start with your CV.", "ابدأ بسيرتك الذاتية.")}</h2>
       <p>{t("Find the skills already in your experience.", "تعرّف على المهارات الموجودة في خبراتك.")}</p>
-      <input ref={input} type="file" accept=".pdf,.docx" hidden onChange={event => parse(event.target.files?.[0])} />
+      <input
+        ref={input}
+        type="file"
+        accept={accountUpload ? ".pdf,application/pdf" : ".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+        hidden
+        onChange={event => parse(event.target.files?.[0])}
+      />
       <button
         type="button"
         className="dropzone"
@@ -156,7 +173,9 @@ export function CvUpload({ onParsed }: { onParsed?: (result: CvResult) => void }
         <strong>
           {state === "reading" ? t("Reading your CV…", "جارٍ قراءة سيرتك…") : result ? result.name : t("Drop your CV here", "اسحب سيرتك الذاتية هنا")}
         </strong>
-        <span>{t("or click to browse · PDF / DOCX · 10 MB", "أو اضغط لاختيار الملف · PDF / DOCX · ١٠ ميجابايت")}</span>
+        <span>{accountUpload
+          ? t("or click to browse · PDF only · 10 MB", "أو اضغط لاختيار الملف · PDF فقط · ١٠ ميجابايت")
+          : t("or click to browse · PDF / DOCX · 10 MB", "أو اضغط لاختيار الملف · PDF / DOCX · ١٠ ميجابايت")}</span>
       </button>
       <div role="status" aria-live="polite">
         {error && <p className="error">{error}</p>}
