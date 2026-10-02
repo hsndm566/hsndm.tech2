@@ -4,9 +4,6 @@ import os
 
 tokens = [
     os.environ.get("CLOUDFLARE_API_TOKEN"),
-    "cfat_kT3VgHHyYX1DELLFJ3gnFC7yXF6t9vyzmftzMAqP1ccef33f",
-    "cfat_6FeUBmiKPxKc3D2YSICZCS0AQhNuckfJJ4kFf4to6b621ae5",
-    "f074c31f8a8cf832875f243aee54918d",
     os.environ.get("CLOUDFLARE_GLOBAL_API_KEY")
 ]
 
