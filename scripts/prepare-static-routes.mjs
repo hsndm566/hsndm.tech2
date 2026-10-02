@@ -79,7 +79,7 @@ const escapeHtml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&l
 const staticMeta = (indexHtml, metadata) => {
   const url = `${siteUrl}${canonicalPath(metadata.path)}`;
   let withMetadata = indexHtml
-    .replace('<html lang="en">', `<html lang="${metadata.lang}"${metadata.direction === "rtl" ? ' dir="rtl"' : ""}>`)
+    .replace(/<html lang="en"(?:\s+dir="ltr")?>/, `<html lang="${metadata.lang}" dir="${metadata.direction}">`)
     .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeHtml(metadata.description)}" />`)
     .replace(/<meta name="robots" content="[^"]*"\s*\/>/, `<meta name="robots" content="${metadata.robots || "index, follow"}" />`)
     .replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${url}" />`)
