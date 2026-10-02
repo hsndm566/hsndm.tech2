@@ -1,8 +1,9 @@
 import urllib.request
 import urllib.error
 import json
+import os
 
-token = "cfat_6FeUBmiKPxKc3D2YSICZCS0AQhNuckfJJ4kFf4to6b621ae5"
+token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
 
 req = urllib.request.Request(
     "https://api.cloudflare.com/client/v4/zones",
