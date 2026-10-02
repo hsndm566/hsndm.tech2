@@ -1,7 +1,8 @@
 import urllib.request
 import json
+import os
 
-token = "cfat_6FeUBmiKPxKc3D2YSICZCS0AQhNuckfJJ4kFf4to6b621ae5"
+token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
 zone_id = "f5249271f49ed2d34cb62a00d2ad078a"
 
 payload = {
