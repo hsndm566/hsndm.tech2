@@ -1,7 +1,8 @@
 import urllib.request
 import json
+import os
 
-token = "cfat_6FeUBmiKPxKc3D2YSICZCS0AQhNuckfJJ4kFf4to6b621ae5"
+token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
 
 for header_name in ["Authorization", "X-Auth-Key", "X-API-Key"]:
     req = urllib.request.Request(
