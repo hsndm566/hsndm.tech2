@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const output = resolve("dist/public");
+const output = resolve(process.env.AUTOAPPLY_STATIC_OUTPUT_DIR || "dist/public");
 const indexPage = resolve(output, "index.html");
 const siteUrl = "https://www.hsndm.tech";
 const canonicalPath = (path) => path === "/" ? "/" : `/${path.replace(/^\/+|\/+$/g, "")}/`;
@@ -76,6 +76,12 @@ const faqSchemas = {
 const faqSchemaPattern = /\s*<script id="homepage-faq-schema" type="application\/ld\+json">[\s\S]*?<\/script>/;
 const escapeHtml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
+const replaceLoadingFallback = (html, metadata) => html
+  .replace(/<h1 class="app-loading-title">[^<]*<\/h1>/, `<h1 class="app-loading-title">${escapeHtml(metadata.title)}</h1>`)
+  .replace(/<p class="app-loading-copy">[^<]*<\/p>/, `<p class="app-loading-copy">${escapeHtml(metadata.description)}</p>`)
+  .replace(/<h1 style="([^"]*)">[^<]*<\/h1>/, `<h1 style="$1">${escapeHtml(metadata.title)}</h1>`)
+  .replace(/<p style="max-width:36rem;color:#64716d;line-height:1.7">[^<]*<\/p>/, `<p style="max-width:36rem;color:#64716d;line-height:1.7">${escapeHtml(metadata.description)}</p>`);
+
 const staticMeta = (indexHtml, metadata) => {
   const url = `${siteUrl}${canonicalPath(metadata.path)}`;
   let withMetadata = indexHtml
@@ -89,9 +95,9 @@ const staticMeta = (indexHtml, metadata) => {
     .replace(/<meta property="og:url" content="[^"]*"\s*\/>/, `<meta property="og:url" content="${url}" />`)
     .replace(/<meta name="twitter:title" content="[^"]*"\s*\/>/, `<meta name="twitter:title" content="${escapeHtml(metadata.title)}" />`)
     .replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${escapeHtml(metadata.description)}" />`)
-    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(metadata.title)}</title>`)
-    .replace(/<h1 class="app-loading-title">[^<]*<\/h1>/, `<h1 class="app-loading-title">${escapeHtml(metadata.title)}</h1>`)
-    .replace(/<p class="app-loading-copy">[^<]*<\/p>/, `<p class="app-loading-copy">${escapeHtml(metadata.description)}</p>`);
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(metadata.title)}</title>`);
+
+  withMetadata = replaceLoadingFallback(withMetadata, metadata);
 
   if (metadata.faqSchema) {
     withMetadata = withMetadata.replace(
