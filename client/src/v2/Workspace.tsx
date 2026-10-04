@@ -53,7 +53,7 @@ export function State({ title, detail, retry }: { title: string; detail?: string
 export function Workspace() {
   const { t, path, ar } = useLocale();
   const [route, navigate] = useLocation();
-  const { profile, apps, create, update, claimAccess, clear } = useWorkspaceData();
+  const { profile, apps, entitlement, create, update, claimAccess, clear } = useWorkspaceData();
   const backend = useBackendHealth();
   const delivery = useApplicationDeliveryReadiness();
   const jobs = useRecommendedJobs({ city: profile.data?.targetCity, role: profile.data?.targetRole || profile.data?.targetIndustry });
@@ -73,6 +73,8 @@ export function Workspace() {
   if (profile.isSuccess && !profile.data?.fullName) return <CandidateAccess claimAccess={claimAccess} />;
 
   const rows = apps.data ?? [];
+  const credits = entitlement.data;
+  const remaining = credits ? Math.max(0, credits.application_limit - credits.applications_used) : 0;
   const weekly = rows.filter((row) => row.appliedAt && new Date(row.appliedAt) >= saudiWeekStart()).length;
   const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
   const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
@@ -142,13 +144,14 @@ export function Workspace() {
           "email-cv-pdf-required": t("Email applications require a PDF CV.", "طلبات البريد تتطلب سيرة ذاتية بصيغة PDF."),
           "email-cv-pdf-invalid": t("The stored PDF CV could not be verified.", "تعذر التحقق من ملف السيرة الذاتية PDF المخزن."),
           "email-delivery-uncertain": t("The provider response was uncertain. AutoApply will not retry automatically.", "نتيجة مزود البريد غير مؤكدة. لن يعيد AutoApply الإرسال تلقائياً."),
+          "application-quota-exhausted": t("You have used all applications in your plan. Upgrade to continue.", "استخدمت جميع طلبات خطتك. قم بالترقية للمتابعة."),
         };
         setMessage(failureCopy[result.error] || t("The application was not verified as sent. Nothing has been marked as applied.", "لم يتم التحقق من إرسال الطلب، ولم يتم تسجيله كطلب مرسل."));
         trackEngagement("application_email_failed", { status: result.status, error: result.error, jobId: selectedJob.id });
         return;
       }
 
-      await apps.refetch();
+      await Promise.all([apps.refetch(), entitlement.refetch()]);
       formElement.reset();
       setMessage(t(
         `Application sent and recorded. Provider evidence: ${result.messageId}`,
@@ -200,6 +203,19 @@ export function Workspace() {
         </div>
 
         {import.meta.env.VITE_SHOW_LEAN_AUDITOR === "true" && <LeanPhaseAuditor profile={profile.data} applications={rows} deliveryReady={delivery.data?.ok === true} />}
+
+        <section className="panel plan-panel" aria-label={t("Plan and application usage", "الخطة واستخدام طلبات التقديم")}>
+          <div>
+            <span className="section-label">{t("YOUR PLAN", "خطتك")}</span>
+            <h2>{credits ? ({ free: "Free", starter: "Starter", pro: "Pro", custom: "Custom" }[credits.plan_key]) : t("Plan unavailable", "الخطة غير متاحة")}</h2>
+            <p>{credits
+              ? t(`${credits.applications_used} / ${credits.application_limit} applications used`, `تم استخدام ${credits.applications_used} من أصل ${credits.application_limit} طلبات`)
+              : t("Your plan usage could not be loaded. Sending is disabled until it is available.", "تعذر تحميل استخدام خطتك. تم تعطيل الإرسال حتى تتوفر البيانات.")}</p>
+            {credits && <progress max={Math.max(1, credits.application_limit)} value={Math.min(credits.applications_used, credits.application_limit)} />}
+          </div>
+          <strong>{credits ? t(`${remaining} remaining`, `متبقي ${remaining}`) : "—"}</strong>
+          {credits && remaining === 0 && <Link className="next-action" href={path("/pricing")}>{t("Upgrade your plan", "قم بترقية خطتك")} <ArrowUpRight size={16} /></Link>}
+        </section>
 
         <div className="metrics">
           {[
@@ -277,7 +293,7 @@ export function Workspace() {
                   /></label>
                   <a href={selectedJob.url} target="_blank" rel="noreferrer">{t("Open original job posting", "افتح إعلان الوظيفة الأصلي")} <ArrowUpRight size={14} /></a>
                   {!profile.data?.resumeStoragePath && <p className="error">{t("Your original CV must be stored before sending.", "يجب حفظ ملف سيرتك الأصلي قبل الإرسال.")}</p>}
-                  <button className="button full" disabled={sending || !backend.data?.ok || !delivery.data?.ok || !profile.data?.resumeStoragePath}>
+                  <button className="button full" disabled={sending || !backend.data?.ok || !delivery.data?.ok || !profile.data?.resumeStoragePath || !credits || remaining <= 0}>
                     <Send size={17} />{sending ? t("Sending…", "جارٍ الإرسال…") : t("Send by email", "إرسال بالبريد")}
                   </button>
                 </form>
