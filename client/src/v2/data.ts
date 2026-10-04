@@ -17,6 +17,15 @@ export type Profile = {
   resumeSizeBytes?: number | null;
 };
 
+export type Entitlement = {
+  user_id: string;
+  plan_key: "free" | "starter" | "pro" | "custom";
+  application_limit: number;
+  applications_used: number;
+  plan_started_at: string;
+  plan_expires_at: string | null;
+};
+
 export type Application = {
   id: string;
   user_id: string;
@@ -59,6 +68,20 @@ export function useWorkspaceData() {
       const { data, error } = await client().from("v2_profiles").select("*").eq("user_id", id!).maybeSingle();
       if (error) throw error;
       return data as Profile | null;
+    },
+  });
+
+  const entitlement = useQuery({
+    queryKey: ["v2", id, "entitlement"],
+    enabled: !!id,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await client().from("v2_entitlements")
+        .select("user_id,plan_key,application_limit,applications_used,plan_started_at,plan_expires_at")
+        .eq("user_id", id!)
+        .maybeSingle();
+      if (error) throw error;
+      return data as Entitlement | null;
     },
   });
 
@@ -131,7 +154,7 @@ export function useWorkspaceData() {
     },
   });
 
-  return { profile, apps, saveProfile, create, update, claimAccess, clear: () => cache.clear() };
+  return { profile, apps, entitlement, saveProfile, create, update, claimAccess, clear: () => cache.clear() };
 }
 
 export function saudiWeekStart(now = new Date()) {
