@@ -63,8 +63,17 @@ revoke all on public.v2_employer_contacts from public, anon, authenticated;
 alter table public.v2_applications add column if not exists "recipientContactId" uuid references public.v2_employer_contacts(id);
 alter table public.v2_applications add column if not exists "creditReservedAt" timestamptz;
 alter table public.v2_applications add column if not exists "creditReleasedAt" timestamptz;
--- Older V2 application rows must not disclose employer addresses through customer RLS.
-update public.v2_applications set "recipientEmail" = null where "recipientEmail" is not null;
+-- Keep historical recipient addresses out of customer reads. Backend writes use service role.
+revoke select, insert, update on public.v2_applications from authenticated;
+grant select (
+  id, user_id, "companyName", "roleTitle", city, status, "appliedAt", "updatedAt", "createdAt",
+  "deliveryStatus", "responseStatus", "responseNote", "responseUrl", source, "sourceUrl",
+  "providerMessageId", "cvStoragePath", "jobId"
+) on public.v2_applications to authenticated;
+grant insert (user_id, "companyName", "roleTitle", city, status, "appliedAt", "updatedAt")
+  on public.v2_applications to authenticated;
+grant update (status, "appliedAt", "updatedAt")
+  on public.v2_applications to authenticated;
 
 create or replace function public.v2_reserve_application_credit(p_application_id uuid)
 returns table(plan_key text, application_limit integer, applications_used integer)
