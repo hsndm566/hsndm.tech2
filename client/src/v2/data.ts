@@ -36,7 +36,6 @@ export type Application = {
   appliedAt: string | null;
   updatedAt: string;
   createdAt: string;
-  recipientEmail?: string | null;
   deliveryStatus?: "unknown" | "sent" | "delivered" | "deferred" | "hard_bounce" | "soft_bounce" | "blocked" | string;
   responseStatus?: "none" | "action_required" | "out_of_office" | string;
   responseNote?: string | null;
@@ -90,7 +89,10 @@ export function useWorkspaceData() {
     enabled: !!id,
     retry: false,
     queryFn: async () => {
-      const { data, error } = await client().from("v2_applications").select("*").eq("user_id", id!).order("updatedAt", { ascending: false });
+      const { data, error } = await client().from("v2_applications")
+        .select("id,user_id,companyName,roleTitle,city,status,appliedAt,updatedAt,createdAt,deliveryStatus,responseStatus,responseNote,responseUrl,source,sourceUrl,providerMessageId,cvStoragePath,jobId")
+        .eq("user_id", id!)
+        .order("updatedAt", { ascending: false });
       if (error) throw error;
       return data as Application[];
     },
