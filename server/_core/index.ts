@@ -13,6 +13,7 @@ import { isTrustedCorsOrigin } from "../cors";
 import { normalizeLatestActivityTimestamp } from "../latestActivity";
 import { AUTH_MONITOR_PATH, runDashboardAuthMonitor } from "../authMonitor";
 import { registerApplicationEmailRoutes } from "../applicationEmail";
+import { registerNotionContactSyncRoute } from "../notionContactSync";
 import { sdk } from "./sdk";
 
 async function startServer() {
@@ -114,6 +115,7 @@ async function startServer() {
   });
   registerStorageProxy(app);
   registerApplicationEmailRoutes(app);
+  registerNotionContactSyncRoute(app);
   registerDataBackupRoutes(app);
   registerDodoPaymentRoutes(app);
   // tRPC API
