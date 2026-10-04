@@ -1,5 +1,5 @@
-/dashboard /index.html 200
-/dashboard/* /index.html 200
+/dashboard https://app.hsndm.tech/dashboard 302
+/dashboard/* https://app.hsndm.tech/dashboard 302
 /sign-in https://app.hsndm.tech/sign-in 302
 /sign-in/* https://app.hsndm.tech/sign-in 302
 /sign-up https://app.hsndm.tech/sign-up 302

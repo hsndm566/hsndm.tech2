@@ -56,7 +56,7 @@ jobs:
           required_files=(
             dist/public/index.html
             dist/public/ar/index.html
-            dist/public/dashboard/index.html
+            dist/public/_redirects
             dist/public/sign-in/index.html
             dist/public/auth/callback/index.html
             dist/public/404.html
@@ -77,6 +77,8 @@ jobs:
             exit 1
           fi
           grep -q '<loc>https://www.hsndm.tech/</loc>' dist/public/sitemap.xml || { echo 'Missing public homepage in sitemap.' >&2; exit 1; }
+          grep -q '^/dashboard https://app.hsndm.tech/dashboard 302$' dist/public/_redirects || { echo 'Dashboard does not hand off to the canonical portal.' >&2; exit 1; }
+          grep -q '^/dashboard/\* https://app.hsndm.tech/dashboard 302$' dist/public/_redirects || { echo 'Nested dashboard paths do not hand off to the canonical portal.' >&2; exit 1; }
           if grep -Eq '/(pricing|services|ats|enquire|how-it-works|support|case-studies|campaign-report-sample)/' dist/public/sitemap.xml; then
             echo 'Sitemap contains stale V1 URLs.' >&2
             exit 1
