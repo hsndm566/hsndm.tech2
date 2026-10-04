@@ -430,8 +430,9 @@ export function registerApplicationEmailRoutes(app: Express) {
 
     let reservedApplication: any = null;
     let sendStarted = false;
+    let service: any = null;
     try {
-      const service = createV2ServiceClient();
+      service = createV2ServiceClient();
       if (!service) return res.status(503).json({ error: "private-contact-service-unavailable" });
       const [profile, job] = await Promise.all([
         loadProfile(auth.client, auth.user.id),
