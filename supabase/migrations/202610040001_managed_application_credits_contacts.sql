@@ -47,6 +47,7 @@ create table if not exists public.v2_employer_contacts (
   verification_status text not null check (verification_status in ('verified','approved','unverified','rejected')),
   source text not null default 'notion',
   source_record_id text unique,
+  sync_batch_id text,
   last_verified_at timestamptz,
   active boolean not null default true,
   do_not_send boolean not null default false,
