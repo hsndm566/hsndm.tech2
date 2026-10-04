@@ -87,6 +87,10 @@ beforeEach(() => {
       isSuccess: true,
     },
     apps: { data: [], refetch: vi.fn().mockResolvedValue(undefined) },
+    entitlement: {
+      data: { user_id: "test-user", plan_key: "free", application_limit: 5, applications_used: 0, plan_started_at: "2026-10-04T00:00:00Z", plan_expires_at: null },
+      refetch: vi.fn().mockResolvedValue(undefined),
+    },
     create: { mutate: vi.fn(), isPending: false },
     update: { mutate: vi.fn() },
     saveProfile: { mutateAsync: vi.fn().mockResolvedValue(undefined), isPending: false },
@@ -112,6 +116,15 @@ describe("V2 workspace behavior", () => {
     mount();
     expect(screen.getByRole("heading", { name: "Your next opportunity starts here." })).toBeTruthy();
     expect(screen.queryByText("Example company")).toBeNull();
+  });
+
+  it("shows plan credits and blocks verified sends when the allowance is exhausted", async () => {
+    mocks.data.entitlement.data.applications_used = 5;
+    mount();
+    expect(screen.getByText("0 remaining")).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Send by email" })[0]);
+    const sendButton = screen.getAllByRole("button", { name: "Send by email" }).at(-1) as HTMLButtonElement;
+    expect(sendButton.disabled).toBe(true);
   });
 
   it("shows a recoverable service error", () => {
