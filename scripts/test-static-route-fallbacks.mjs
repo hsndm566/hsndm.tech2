@@ -9,6 +9,7 @@ import { promisify } from "node:util";
 const run = promisify(execFile);
 const output = await mkdtemp(join(tmpdir(), "autoapply-static-routes-"));
 const index = await readFile(new URL("../client/index.html", import.meta.url), "utf8");
+const app = await readFile(new URL("../client/src/App.tsx", import.meta.url), "utf8");
 
 try {
   await writeFile(join(output, "index.html"), index);
@@ -24,6 +25,8 @@ try {
   assert.match(arabic, /<html lang="ar" dir="rtl">/);
   assert.match(arabic, /أخبرنا بالوظائف التي تريدها/);
   assert.doesNotMatch(arabic, /Organise your Saudi job search/);
+  assert.doesNotMatch(app, /https:\/\/app\.hsndm\.tech\/login/);
+  assert.match(app, /https:\/\/app\.hsndm\.tech\/sign-in/);
 
   console.log("Static English/Arabic route fallbacks verified.");
 } finally {
