@@ -145,6 +145,9 @@ export function Workspace() {
           "email-cv-pdf-invalid": t("The stored PDF CV could not be verified.", "تعذر التحقق من ملف السيرة الذاتية PDF المخزن."),
           "email-delivery-uncertain": t("The provider response was uncertain. AutoApply will not retry automatically.", "نتيجة مزود البريد غير مؤكدة. لن يعيد AutoApply الإرسال تلقائياً."),
           "application-quota-exhausted": t("You have used all applications in your plan. Upgrade to continue.", "استخدمت جميع طلبات خطتك. قم بالترقية للمتابعة."),
+          "private-contact-service-unavailable": t("Verified contact routing is not configured yet. No email was sent.", "لم يتم إعداد توجيه جهات الاتصال الموثّقة. لم يتم إرسال أي بريد."),
+          "application-credit-reservation-failed": t("Your application allowance could not be secured, so nothing was sent.", "تعذر حجز رصيد التقديم، لذلك لم يتم إرسال أي شيء."),
+
         };
         setMessage(failureCopy[result.error] || t("The application was not verified as sent. Nothing has been marked as applied.", "لم يتم التحقق من إرسال الطلب، ولم يتم تسجيله كطلب مرسل."));
         trackEngagement("application_email_failed", { status: result.status, error: result.error, jobId: selectedJob.id });
