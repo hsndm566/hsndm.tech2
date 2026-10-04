@@ -1,9 +1,8 @@
 import type { Express, Request, Response } from "express";
 import { z } from "zod";
-import { authenticateV2Request, safeAttachmentName } from "./v2Supabase";
+import { authenticateV2Request, createV2ServiceClient, safeAttachmentName } from "./v2Supabase";
 
 const applicationSendRequest = z.object({
-  toEmail: z.string().trim().email().max(320),
   jobId: z.string().uuid(),
 });
 
@@ -51,6 +50,17 @@ type VerifiedJobRow = {
   lastSeenAt: string;
   verifiedUntil: string;
   verification: string;
+};
+
+type VerifiedContactRow = {
+  id: string;
+  company_name: string;
+  normalized_company_name: string;
+  recipient_email: string;
+  verification_status: string;
+  last_verified_at: string | null;
+  active: boolean;
+  do_not_send: boolean;
 };
 
 type V2ProfileRow = {
@@ -237,6 +247,30 @@ async function loadVerifiedJob(client: any, jobId: string) {
   return data as VerifiedJobRow | null;
 }
 
+function normalizeCompanyName(value: string) {
+  return value.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^a-z0-9\\u0600-\\u06ff]+/g, "");
+}
+
+async function loadVerifiedContact(service: any, job: VerifiedJobRow) {
+  const normalized = normalizeCompanyName(job.company);
+  if (!normalized) return null;
+  const verifiedAfter = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+  const { data, error } = await service
+    .from("v2_employer_contacts")
+    .select("id,company_name,normalized_company_name,recipient_email,verification_status,last_verified_at,active,do_not_send")
+    .eq("normalized_company_name", normalized)
+    .in("verification_status", ["verified", "approved"])
+    .eq("active", true)
+    .eq("do_not_send", false)
+    .gte("last_verified_at", verifiedAfter)
+    .limit(2);
+  if (error) throw error;
+  if (!Array.isArray(data) || data.length !== 1) return null;
+  const contact = data[0] as VerifiedContactRow;
+  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contact.recipient_email)) return null;
+  return contact;
+}
+
 async function loadProfile(client: any, userId: string) {
   const { data, error } = await client
     .from("v2_profiles")
@@ -270,7 +304,7 @@ async function downloadCandidateCv(client: any, userId: string, profile: V2Profi
   return attachment;
 }
 
-async function reserveApplication(client: any, userId: string, job: VerifiedJobRow, toEmail: string, cvStoragePath: string) {
+async function reserveApplication(client: any, userId: string, job: VerifiedJobRow, contactId: string, cvStoragePath: string) {
   const now = new Date().toISOString();
   const row = {
     user_id: userId,
@@ -279,7 +313,7 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
     city: job.location || "Saudi Arabia",
     status: "queued",
     updatedAt: now,
-    recipientEmail: toEmail,
+    recipientContactId: contactId,
     deliveryStatus: "unknown",
     responseStatus: "none",
     responseNote: null,
@@ -298,18 +332,7 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
     .maybeSingle();
   if (lookupError) throw lookupError;
 
-  if (existing) {
-    if (existing.status === "applied" || existing.providerMessageId) throw new Error("duplicate-application");
-    const { data, error } = await client
-      .from("v2_applications")
-      .update(row)
-      .eq("id", existing.id)
-      .eq("user_id", userId)
-      .select("*")
-      .single();
-    if (error) throw error;
-    return data;
-  }
+  if (existing) throw new Error("duplicate-application");
 
   const { data, error } = await client.from("v2_applications").insert(row).select("*").single();
   if (error) {
@@ -319,10 +342,10 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
   return data;
 }
 
-async function markApplicationFailed(client: any, applicationId: string, reason: string) {
+async function markApplicationFailed(client: any, applicationId: string, reason: string, uncertain = false) {
   await client
     .from("v2_applications")
-    .update({ status: "queued", deliveryStatus: "blocked", responseNote: reason, updatedAt: new Date().toISOString() })
+    .update({ status: "queued", deliveryStatus: uncertain ? "unknown" : "blocked", responseNote: reason, updatedAt: new Date().toISOString() })
     .eq("id", applicationId);
 }
 
@@ -361,12 +384,13 @@ export function registerApplicationEmailRoutes(app: Express) {
         .limit(100);
       if (error) throw error;
 
+      const service = createV2ServiceClient();
       const ranked = ((data || []) as VerifiedJobRow[])
         .map(job => ({ job, score: scoreJob(job, role, city) }))
         .filter(item => item.score > 0)
         .sort((a, b) => b.score - a.score || Date.parse(b.job.lastSeenAt) - Date.parse(a.job.lastSeenAt))
         .slice(0, 8)
-        .map(({ job }) => ({
+        .map(async ({ job }) => ({
           id: job.id,
           companyName: job.company,
           roleTitle: job.title,
@@ -376,10 +400,12 @@ export function registerApplicationEmailRoutes(app: Express) {
           summary: (job.description || "Verified public ATS posting.").slice(0, 500),
           matchReason: matchReason(job, role, city),
           freshness: job.lastSeenAt,
+          emailEligible: service ? Boolean(await loadVerifiedContact(service, job)) : false,
         }));
 
       res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json({ jobs: ranked, mode: "live", checkedAt: new Date().toISOString() });
+      const resolvedJobs = await Promise.all(ranked);
+      return res.status(200).json({ jobs: resolvedJobs, mode: "live", checkedAt: new Date().toISOString() });
     } catch {
       res.setHeader("Cache-Control", "no-store");
       return res.status(502).json({ error: "verified-job-source-unavailable" });
@@ -403,7 +429,10 @@ export function registerApplicationEmailRoutes(app: Express) {
     if (!auth.user.email) return res.status(409).json({ error: "candidate-email-required" });
 
     let reservedApplication: any = null;
+    let sendStarted = false;
     try {
+      const service = createV2ServiceClient();
+      if (!service) return res.status(503).json({ error: "private-contact-service-unavailable" });
       const [profile, job] = await Promise.all([
         loadProfile(auth.client, auth.user.id),
         loadVerifiedJob(auth.client, parsed.data.jobId),
@@ -413,6 +442,8 @@ export function registerApplicationEmailRoutes(app: Express) {
         return res.status(409).json({ error: "preferences-required" });
       }
       if (!job) return res.status(404).json({ error: "verified-job-not-found" });
+      const contact = await loadVerifiedContact(service, job);
+      if (!contact) return res.status(409).json({ error: "verified-recipient-required" });
       if (!profile.resumeStoragePath || !profile.resumeFileName) return res.status(409).json({ error: "cv-required" });
 
       const attachment = await downloadCandidateCv(auth.client, auth.user.id, profile);
@@ -420,12 +451,18 @@ export function registerApplicationEmailRoutes(app: Express) {
         auth.client,
         auth.user.id,
         job,
-        parsed.data.toEmail,
+        contact.id,
         profile.resumeStoragePath,
       );
+      const { error: creditError } = await auth.client.rpc("v2_reserve_application_credit", { p_application_id: reservedApplication.id });
+      if (creditError) {
+        await markApplicationFailed(auth.client, reservedApplication.id, creditError.message);
+        const quota = /quota-exhausted|plan-expired/i.test(creditError.message);
+        return res.status(quota ? 402 : 409).json({ error: quota ? "application-quota-exhausted" : creditError.message.includes("duplicate") ? "duplicate-application" : "application-credit-reservation-failed" });
+      }
 
       const emailInput: ApplicationEmailInput = {
-        toEmail: parsed.data.toEmail,
+        toEmail: contact.recipient_email,
         companyName: job.company,
         roleTitle: job.title,
         city: job.location || "Saudi Arabia",
@@ -433,6 +470,7 @@ export function registerApplicationEmailRoutes(app: Express) {
         message: buildGroundedApplicationMessage(profile, job),
       };
 
+      sendStarted = true;
       const result = await sendApplicationEmail(
         emailInput,
         auth.user.email,
@@ -441,16 +479,34 @@ export function registerApplicationEmailRoutes(app: Express) {
       );
 
       if (!result.ok || !result.messageId) {
-        await markApplicationFailed(auth.client, reservedApplication.id, result.reason);
-        return res.status(result.status).json({ error: result.reason });
+        const uncertain = result.reason === "brevo-missing-message-id" || result.status >= 500;
+        await markApplicationFailed(auth.client, reservedApplication.id, result.reason, uncertain);
+        if (!uncertain && result.status >= 400 && result.status < 500) {
+          await auth.client.rpc("v2_release_application_credit", { p_application_id: reservedApplication.id });
+        }
+        return res.status(result.status).json({ error: uncertain ? "email-delivery-uncertain" : result.reason });
       }
 
       const application = await markApplicationSent(auth.client, reservedApplication.id, result.messageId);
       return res.status(200).json({ ok: true, messageId: result.messageId, application });
     } catch (error) {
       const reason = error instanceof Error ? error.message : "application-email-failed";
-      if (reservedApplication?.id) await markApplicationFailed(auth.client, reservedApplication.id, reason);
+      if (reservedApplication?.id) {
+        await markApplicationFailed(auth.client, reservedApplication.id, reason, sendStarted);
+        if (!sendStarted) {
+          const { data: reservation } = await auth.client
+            .from("v2_applications")
+            .select("deliveryStatus,creditReservedAt")
+            .eq("id", reservedApplication.id)
+            .maybeSingle();
+          if (reservation?.creditReservedAt && reservation.deliveryStatus === "blocked") {
+            await auth.client.rpc("v2_release_application_credit", { p_application_id: reservedApplication.id });
+          }
+        }
+      }
       if (reason === "duplicate-application") return res.status(409).json({ error: reason });
+      if (/quota-exhausted|plan-expired/.test(reason)) return res.status(402).json({ error: "application-quota-exhausted" });
+      if (sendStarted) return res.status(502).json({ error: "email-delivery-uncertain" });
       if ([
         "cv-required",
         "cv-ownership-mismatch",
