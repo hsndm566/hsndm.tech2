@@ -448,7 +448,7 @@ export function registerApplicationEmailRoutes(app: Express) {
 
       const attachment = await downloadCandidateCv(auth.client, auth.user.id, profile);
       reservedApplication = await reserveApplication(
-        auth.client,
+        service,
         auth.user.id,
         job,
         contact.id,
@@ -456,7 +456,7 @@ export function registerApplicationEmailRoutes(app: Express) {
       );
       const { error: creditError } = await auth.client.rpc("v2_reserve_application_credit", { p_application_id: reservedApplication.id });
       if (creditError) {
-        await markApplicationFailed(auth.client, reservedApplication.id, creditError.message);
+        await markApplicationFailed(service, reservedApplication.id, creditError.message);
         const quota = /quota-exhausted|plan-expired/i.test(creditError.message);
         return res.status(quota ? 402 : 409).json({ error: quota ? "application-quota-exhausted" : creditError.message.includes("duplicate") ? "duplicate-application" : "application-credit-reservation-failed" });
       }
@@ -480,21 +480,32 @@ export function registerApplicationEmailRoutes(app: Express) {
 
       if (!result.ok || !result.messageId) {
         const uncertain = result.reason === "brevo-missing-message-id" || result.status >= 500;
-        await markApplicationFailed(auth.client, reservedApplication.id, result.reason, uncertain);
+        await markApplicationFailed(service, reservedApplication.id, result.reason, uncertain);
         if (!uncertain && result.status >= 400 && result.status < 500) {
           await auth.client.rpc("v2_release_application_credit", { p_application_id: reservedApplication.id });
         }
         return res.status(result.status).json({ error: uncertain ? "email-delivery-uncertain" : result.reason });
       }
 
-      const application = await markApplicationSent(auth.client, reservedApplication.id, result.messageId);
-      return res.status(200).json({ ok: true, messageId: result.messageId, application });
+      const application = await markApplicationSent(service, reservedApplication.id, result.messageId);
+      return res.status(200).json({
+        ok: true,
+        messageId: result.messageId,
+        application: {
+          id: application.id,
+          companyName: application.companyName,
+          roleTitle: application.roleTitle,
+          status: application.status,
+          appliedAt: application.appliedAt,
+          deliveryStatus: application.deliveryStatus,
+        },
+      });
     } catch (error) {
       const reason = error instanceof Error ? error.message : "application-email-failed";
       if (reservedApplication?.id) {
-        await markApplicationFailed(auth.client, reservedApplication.id, reason, sendStarted);
+        await markApplicationFailed(service, reservedApplication.id, reason, sendStarted);
         if (!sendStarted) {
-          const { data: reservation } = await auth.client
+          const { data: reservation } = await service
             .from("v2_applications")
             .select("deliveryStatus,creditReservedAt")
             .eq("id", reservedApplication.id)
