@@ -251,24 +251,14 @@ function normalizeCompanyName(value: string) {
   return value.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^a-z0-9\\u0600-\\u06ff]+/g, "");
 }
 
-async function loadVerifiedContact(service: any, job: VerifiedJobRow) {
+async function hasVerifiedContact(service: any, job: VerifiedJobRow) {
   const normalized = normalizeCompanyName(job.company);
-  if (!normalized) return null;
-  const verifiedAfter = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
-  const { data, error } = await service
-    .from("v2_employer_contacts")
-    .select("id,company_name,normalized_company_name,recipient_email,verification_status,last_verified_at,active,do_not_send")
-    .eq("normalized_company_name", normalized)
-    .in("verification_status", ["verified", "approved"])
-    .eq("active", true)
-    .eq("do_not_send", false)
-    .gte("last_verified_at", verifiedAfter)
-    .limit(2);
+  if (!normalized) return false;
+  const { data, error } = await service.rpc("has_eligible_employer_contact", {
+    p_company_name_normalized: normalized,
+  });
   if (error) throw error;
-  if (!Array.isArray(data) || data.length !== 1) return null;
-  const contact = data[0] as VerifiedContactRow;
-  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contact.recipient_email)) return null;
-  return contact;
+  return data === true;
 }
 
 async function loadProfile(client: any, userId: string) {
@@ -400,7 +390,7 @@ export function registerApplicationEmailRoutes(app: Express) {
           summary: (job.description || "Verified public ATS posting.").slice(0, 500),
           matchReason: matchReason(job, role, city),
           freshness: job.lastSeenAt,
-          emailEligible: service ? Boolean(await loadVerifiedContact(service, job)) : false,
+          emailEligible: service ? await hasVerifiedContact(service, job) : false,
         }));
 
       res.setHeader("Cache-Control", "no-store");
@@ -443,27 +433,26 @@ export function registerApplicationEmailRoutes(app: Express) {
         return res.status(409).json({ error: "preferences-required" });
       }
       if (!job) return res.status(404).json({ error: "verified-job-not-found" });
-      const contact = await loadVerifiedContact(service, job);
-      if (!contact) return res.status(409).json({ error: "verified-recipient-required" });
       if (!profile.resumeStoragePath || !profile.resumeFileName) return res.status(409).json({ error: "cv-required" });
 
       const attachment = await downloadCandidateCv(auth.client, auth.user.id, profile);
-      reservedApplication = await reserveApplication(
-        service,
-        auth.user.id,
-        job,
-        contact.id,
-        profile.resumeStoragePath,
-      );
-      const { error: creditError } = await auth.client.rpc("v2_reserve_application_credit", { p_application_id: reservedApplication.id });
-      if (creditError) {
-        await markApplicationFailed(service, reservedApplication.id, creditError.message);
-        const quota = /quota-exhausted|plan-expired/i.test(creditError.message);
-        return res.status(quota ? 402 : 409).json({ error: quota ? "application-quota-exhausted" : creditError.message.includes("duplicate") ? "duplicate-application" : "application-credit-reservation-failed" });
+      const normalizedCompanyName = normalizeCompanyName(job.company);
+      const { data: reservation, error: reservationError } = await service.rpc("reserve_v2_application_send", {
+        p_user_id: auth.user.id,
+        p_job_id: job.id,
+        p_cv_storage_path: profile.resumeStoragePath,
+        p_company_name_normalized: normalizedCompanyName,
+      });
+      if (reservationError || !reservation?.reservationId || !reservation?.applicationId || !reservation?.recipientEmail) {
+        const reason = reservationError?.message || "application-reservation-failed";
+        if (/quota-exceeded|plan-expired/i.test(reason)) return res.status(402).json({ error: "application-quota-exhausted" });
+        if (/duplicate-application/i.test(reason)) return res.status(409).json({ error: "duplicate-application" });
+        if (/recipient|contact|verified/i.test(reason)) return res.status(409).json({ error: "verified-recipient-required" });
+        return res.status(409).json({ error: "application-credit-reservation-failed" });
       }
-
+      reservedApplication = { id: reservation.applicationId, reservationId: reservation.reservationId };
       const emailInput: ApplicationEmailInput = {
-        toEmail: contact.recipient_email,
+        toEmail: reservation.recipientEmail,
         companyName: job.company,
         roleTitle: job.title,
         city: job.location || "Saudi Arabia",
@@ -482,13 +471,36 @@ export function registerApplicationEmailRoutes(app: Express) {
       if (!result.ok || !result.messageId) {
         const uncertain = result.reason === "brevo-missing-message-id" || result.status >= 500;
         await markApplicationFailed(service, reservedApplication.id, result.reason, uncertain);
-        if (!uncertain && result.status >= 400 && result.status < 500) {
-          await auth.client.rpc("v2_release_application_credit", { p_application_id: reservedApplication.id });
+        if (uncertain) {
+          await service.rpc("mark_v2_application_send_uncertain", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_provider_message_id: result.messageId || null,
+          });
+        } else if (result.status >= 400 && result.status < 500) {
+          await service.rpc("release_v2_application_send", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_failure_code: result.reason,
+          });
         }
         return res.status(result.status).json({ error: uncertain ? "email-delivery-uncertain" : result.reason });
       }
 
-      const application = await markApplicationSent(service, reservedApplication.id, result.messageId);
+      const { data: finalized, error: finalizeError } = await service.rpc("finalize_v2_application_send", {
+        p_reservation_id: reservedApplication.reservationId,
+        p_provider_message_id: result.messageId,
+      });
+      if (finalizeError || !finalized?.ok) {
+        await service.rpc("mark_v2_application_send_uncertain", {
+          p_reservation_id: reservedApplication.reservationId,
+          p_provider_message_id: result.messageId,
+        });
+        return res.status(502).json({ error: "application-finalization-uncertain" });
+      }
+      const application = await service.from("v2_applications")
+        .select("id,companyName,roleTitle,status,appliedAt,deliveryStatus")
+        .eq("id", reservedApplication.id)
+        .single()
+        .then((result: any) => result.data);
       return res.status(200).json({
         ok: true,
         messageId: result.messageId,
@@ -505,15 +517,11 @@ export function registerApplicationEmailRoutes(app: Express) {
       const reason = error instanceof Error ? error.message : "application-email-failed";
       if (reservedApplication?.id) {
         await markApplicationFailed(service, reservedApplication.id, reason, sendStarted);
-        if (!sendStarted) {
-          const { data: reservation } = await service
-            .from("v2_applications")
-            .select("deliveryStatus,creditReservedAt")
-            .eq("id", reservedApplication.id)
-            .maybeSingle();
-          if (reservation?.creditReservedAt && reservation.deliveryStatus === "blocked") {
-            await auth.client.rpc("v2_release_application_credit", { p_application_id: reservedApplication.id });
-          }
+        if (!sendStarted && reservedApplication.reservationId) {
+          await service.rpc("release_v2_application_send", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_failure_code: reason,
+          });
         }
       }
       if (reason === "duplicate-application") return res.status(409).json({ error: reason });
