@@ -130,3 +130,59 @@ textarea{display:block;width:100%;min-height:118px;padding:12px 14px;border:1px 
 html[dir=rtl] .showcase-progress{inset-inline-end:auto;inset-inline-start:2.7%}
 @media(max-width:800px){.workspace-showcase{padding:68px 0 62px}.workspace-showcase-copy{margin-bottom:30px}.laptop-stage{max-width:760px}.laptop-lid{width:94%}.showcase-sidebar{padding-inline:6%}.workspace-showcase-foot{margin-top:28px}}
 @media(max-width:600px){.workspace-showcase{padding:58px 0 52px}.workspace-showcase-copy h2{font-size:38px}.workspace-showcase-copy p{font-size:13px}.laptop-stage{width:112%;margin-inline:-6%}.laptop-lid{width:96%;padding:6px 6px 8px;border-radius:15px 15px 8px 8px}.laptop-screen{border-radius:8px}.showcase-app{grid-template-columns:18% 82%}.showcase-sidebar{padding:5% 6%}.showcase-brand strong{display:none}.showcase-sidebar nav span{justify-content:center;padding:6px}.showcase-sidebar nav span{font-size:0}.showcase-sidebar nav svg{width:11px}.showcase-sidebar-foot{font-size:0;justify-content:center}.showcase-main{padding:3%}.showcase-job{padding:6%}.laptop-base{height:14px}.workspace-showcase-foot{gap:7px}.workspace-showcase-foot span{padding:7px 9px;font-size:9px}}
+
+/* Quiet glass refinement: existing layout, branding and components remain intact. */
+:root{--ui-radius:22px;--ui-shadow:0 12px 36px rgba(8,40,30,.055),0 1px 3px rgba(8,40,30,.035)}
+.site-header{-webkit-backdrop-filter:blur(24px) saturate(145%);backdrop-filter:blur(24px) saturate(145%)}
+.hero:before{opacity:.45}
+.auth-card,.panel,.cv-card,.feature-panel,.pricing-card,.control-card,.metrics article{border-radius:var(--ui-radius);box-shadow:var(--ui-shadow),inset 0 1px 0 rgba(255,255,255,.36)}
+.auth-card,.panel,.cv-card{border-color:color-mix(in srgb,var(--line) 80%,transparent);-webkit-backdrop-filter:blur(20px) saturate(135%);backdrop-filter:blur(20px) saturate(135%)}
+.hero .cv-card{background:color-mix(in srgb,var(--surface) 91%,transparent);box-shadow:0 24px 64px rgba(0,20,15,.22),inset 0 1px 0 rgba(255,255,255,.7)}
+.button{border-radius:14px;min-height:48px;box-shadow:0 5px 15px rgba(6,95,70,.16),inset 0 1px 0 rgba(255,255,255,.2)}
+.button:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(6,95,70,.22)}
+.button:before{display:none}
+.button:disabled{transform:none;box-shadow:none}
+input:not([type=checkbox]),select,textarea{border-radius:12px;min-height:48px;transition:border-color .18s,box-shadow .18s;background:color-mix(in srgb,var(--surface) 88%,transparent)}
+input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 16%,transparent)}
+textarea{font:inherit;line-height:1.7}
+.dropzone{border-radius:16px;transition:border-color .2s,background .2s;min-height:180px}
+.dropzone:hover:not(:disabled){border-color:var(--primary);background:color-mix(in srgb,var(--surface-soft) 88%,transparent)}
+.dropzone strong{overflow-wrap:anywhere}
+.auth-page{gap:clamp(32px,6vw,84px)}
+.auth-card h2,.panel h2{letter-spacing:-.035em}
+.trial-note{font-size:14px;line-height:1.8;color:var(--muted);margin-bottom:24px}
+.setup-steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.setup-steps span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--muted);background:color-mix(in srgb,var(--surface) 70%,transparent)}
+.history-import{display:block;margin-top:18px;border:0;background:none;padding:0;text-align:start;color:var(--primary);font-size:12px}
+.plan-panel{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px;background:linear-gradient(120deg,color-mix(in srgb,var(--surface) 90%,transparent),color-mix(in srgb,var(--surface-soft) 64%,transparent))}
+.plan-panel .section-label{margin-bottom:8px}
+.plan-panel h2{font-size:26px;margin-bottom:8px}
+.plan-panel p{margin-bottom:12px;font-size:14px}
+.plan-panel>div{flex:1;max-width:640px}
+.plan-panel>strong{font-size:20px;white-space:nowrap}
+.plan-panel progress{width:100%;height:6px;appearance:none;border:0;border-radius:999px;background:var(--line);overflow:hidden}
+.plan-panel progress::-webkit-progress-bar{background:var(--line);border-radius:999px}
+.plan-panel progress::-webkit-progress-value{background:var(--primary);border-radius:999px}
+.plan-panel progress::-moz-progress-bar{background:var(--primary);border-radius:999px}
+.reservation-note{display:block;margin-bottom:10px;color:var(--muted)}
+.workspace-heading{margin-bottom:28px}
+.workspace-grid .panel{margin-bottom:20px}
+.job-row{border-radius:14px;transition:background .18s}
+.job-row:hover{background:color-mix(in srgb,var(--surface-soft) 50%,transparent)}
+.suggestion{border-radius:15px;padding:16px;box-shadow:none}
+.suggestion:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(8,40,30,.06)}
+.notice{border-radius:12px;line-height:1.75}
+.auth-card>p[role=status]:empty,.error:empty{display:none}
+.auth-card>p[role=status]:not(:empty){padding:12px 14px;margin-top:18px;border:1px solid var(--line);border-radius:12px;font-size:14px}
+@media(max-width:600px){
+ .plan-panel{align-items:flex-start;flex-wrap:wrap;gap:16px;padding:22px}
+ .plan-panel>div{flex-basis:100%}
+ .plan-panel>strong{font-size:18px}
+ .plan-panel .next-action{margin-inline-start:auto}
+ .setup-steps{gap:6px}.setup-steps span{font-size:10px;padding:6px 8px}
+ .button{min-height:48px}.hero-grid{gap:32px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
