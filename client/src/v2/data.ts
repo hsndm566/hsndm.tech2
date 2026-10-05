@@ -75,8 +75,8 @@ export function useWorkspaceData() {
     enabled: !!id,
     retry: false,
     queryFn: async () => {
-      const { data, error } = await client().from("v2_entitlements")
-        .select("user_id,plan_key,application_limit,applications_used,plan_started_at,plan_expires_at")
+      const { data, error } = await client().from("v2_user_entitlements")
+        .select("user_id,plan_key,application_limit,applications_used,plan_started_at,plan_expires_at,applications_reserved,billing_period")
         .eq("user_id", id!)
         .maybeSingle();
       if (error) throw error;
