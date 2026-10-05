@@ -2,11 +2,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { Express, Request, Response } from "express";
 import { createV2ServiceClient } from "./v2Supabase";
 
-const PLAN_LIMITS: Record<string, number> = { free: 5, starter: 50, pro: 100, founder: 100 };
+const PLAN_LIMITS: Record<string, number> = { free: 5, starter: 50, pro: 100 };
 const PLAN_PRODUCTS: Record<string, string> = {
   starter: "DODO_PRODUCT_STARTER_ID",
   pro: "DODO_PRODUCT_PRO_ID",
-  founder: "DODO_PRODUCT_FOUNDER_ID",
 };
 
 function header(req: Request, name: string) {
@@ -89,12 +88,36 @@ export function registerDodoWebhookRoute(app: Express) {
       const service = createV2ServiceClient();
       if (!service) return res.status(503).json({ error: "entitlement-service-unavailable" });
 
-      const { data: result, error } = await service.rpc("v2_apply_payment_entitlement", {
-        p_payment_id: paymentId,
-        p_customer_email: email,
-        p_plan_key: plan,
-        p_application_limit: PLAN_LIMITS[plan],
-      });
+      const userId = typeof data?.metadata?.autoapply_user_id === "string" ? data.metadata.autoapply_user_id : "";
+      const billingPeriod = typeof data?.metadata?.autoapply_billing_period === "string"
+        ? data.metadata.autoapply_billing_period
+        : "package";
+      const subscriptionId = typeof data?.subscription_id === "string" ? data.subscription_id : null;
+      const expiresAt = typeof data?.next_billing_date === "string" ? data.next_billing_date : null;
+      let result: any;
+      let error: any;
+      if (userId) {
+        const response = await service.rpc("apply_dodo_payment_success", {
+          p_webhook_id: header(req, "webhook-id"),
+          p_payment_id: paymentId,
+          p_user_id: userId,
+          p_plan_key: plan,
+          p_billing_period: billingPeriod,
+          p_subscription_id: subscriptionId,
+          p_plan_expires_at: expiresAt,
+        });
+        result = response.data;
+        error = response.error;
+      } else {
+        const response = await service.rpc("v2_apply_payment_entitlement", {
+          p_payment_id: paymentId,
+          p_customer_email: email,
+          p_plan_key: plan,
+          p_application_limit: PLAN_LIMITS[plan],
+        });
+        result = response.data;
+        error = response.error;
+      }
       if (error) {
         console.error("Dodo entitlement grant failed", { paymentId, plan, error: error.message });
         return res.status(502).json({ error: "entitlement-grant-failed" });
