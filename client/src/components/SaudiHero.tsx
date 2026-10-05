@@ -36,10 +36,12 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               poster={FLOW_VISUAL}
               aria-hidden="true"
               tabIndex={-1}
+              controls={false}
+              disablePictureInPicture
             >
               <source src={HERO_VIDEO} type="video/mp4" />
             </video>
