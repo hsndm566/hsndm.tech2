@@ -74,7 +74,8 @@ export function Workspace() {
 
   const rows = apps.data ?? [];
   const credits = entitlement.data;
-  const remaining = credits ? Math.max(0, credits.application_limit - credits.applications_used) : 0;
+  const committedUsage = credits ? credits.applications_used + (credits.applications_reserved || 0) : 0;
+  const remaining = credits ? Math.max(0, credits.application_limit - committedUsage) : 0;
   const weekly = rows.filter((row) => row.appliedAt && new Date(row.appliedAt) >= saudiWeekStart()).length;
   const delivered = rows.filter((row) => row.deliveryStatus === "delivered").length;
   const needsAttention = rows.filter((row) => row.responseStatus === "action_required" || ["deferred","hard_bounce","soft_bounce","blocked"].includes(row.deliveryStatus || "")).length;
@@ -212,9 +213,9 @@ export function Workspace() {
             <span className="section-label">{t("YOUR PLAN", "خطتك")}</span>
             <h2>{credits ? ({ free: "Free", starter: "Starter", pro: "Pro", custom: "Custom" }[credits.plan_key]) : t("Plan unavailable", "الخطة غير متاحة")}</h2>
             <p>{credits
-              ? t(`${credits.applications_used} / ${credits.application_limit} applications used`, `تم استخدام ${credits.applications_used} من أصل ${credits.application_limit} طلبات`)
+              ? t(`${committedUsage} / ${credits.application_limit} applications used`, `تم استخدام ${committedUsage} من أصل ${credits.application_limit} طلبات`)
               : t("Your plan usage could not be loaded. Sending is disabled until it is available.", "تعذر تحميل استخدام خطتك. تم تعطيل الإرسال حتى تتوفر البيانات.")}</p>
-            {credits && <progress max={Math.max(1, credits.application_limit)} value={Math.min(credits.applications_used, credits.application_limit)} />}
+            {credits && <progress max={Math.max(1, credits.application_limit)} value={Math.min(committedUsage, credits.application_limit)} />}
           </div>
           <strong>{credits ? t(`${remaining} remaining`, `متبقي ${remaining}`) : "—"}</strong>
           {credits && remaining === 0 && <Link className="next-action" href={path("/pricing")}>{t("Upgrade your plan", "قم بترقية خطتك")} <ArrowUpRight size={16} /></Link>}
