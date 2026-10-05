@@ -98,7 +98,7 @@ export function registerDodoWebhookRoute(app: Express) {
       let error: any;
       if (userId) {
         const response = await service.rpc("apply_dodo_payment_success", {
-          p_webhook_id: header(req, "webhook-id"),
+          p_webhook_id: header(req, "webhook-id") || paymentId,
           p_payment_id: paymentId,
           p_user_id: userId,
           p_plan_key: plan,
