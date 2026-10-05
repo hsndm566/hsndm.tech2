@@ -445,8 +445,8 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
   const [cv, setCv] = useState(cvDraft);
   const [importHistory, setImportHistory] = useState(false);
   const { claimAccess } = useWorkspaceData();
-  if (importHistory) return <CandidateAccess claimAccess={claimAccess} />;
   const [error, setError] = useState("");
+  if (importHistory) return <CandidateAccess claimAccess={claimAccess} />;
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
