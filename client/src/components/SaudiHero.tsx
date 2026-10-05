@@ -36,7 +36,7 @@ export function SaudiHero({ arabic = false }: { arabic?: boolean }) {
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               poster={FLOW_VISUAL}
               aria-hidden="true"
               tabIndex={-1}
