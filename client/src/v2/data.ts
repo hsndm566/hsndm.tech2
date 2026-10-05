@@ -22,6 +22,8 @@ export type Entitlement = {
   plan_key: "free" | "starter" | "pro" | "custom";
   application_limit: number;
   applications_used: number;
+  applications_reserved?: number;
+  billing_period?: "package" | "monthly";
   plan_started_at: string;
   plan_expires_at: string | null;
 };
