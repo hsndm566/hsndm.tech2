@@ -186,3 +186,7 @@ textarea{font:inherit;line-height:1.7}
  html{scroll-behavior:auto}
  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Complete explicit dark-mode surface tokens, independent of OS preference. */
+[data-theme=dark]{--surface:#0d211c;--surface-soft:#102b24;--glass-border:rgba(167,243,208,.16)}
+[data-theme=dark] .hero .cv-card{background:rgba(13,33,28,.92);color:var(--ink);border-color:var(--glass-border)}
