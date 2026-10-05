@@ -13,6 +13,7 @@ import { isTrustedCorsOrigin } from "../cors";
 import { normalizeLatestActivityTimestamp } from "../latestActivity";
 import { AUTH_MONITOR_PATH, runDashboardAuthMonitor } from "../authMonitor";
 import { registerApplicationEmailRoutes } from "../applicationEmail";
+import { registerDodoWebhookRoute } from "../dodoWebhook";
 import { registerNotionContactSyncRoute } from "../notionContactSync";
 import { sdk } from "./sdk";
 
@@ -20,6 +21,8 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
   app.set("trust proxy", 1);
+  registerDodoWebhookRoute(app);
+
   app.use((req, res, next) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
