@@ -70,7 +70,7 @@ export function Workspace() {
   if (profile.isError) return <State title={t("Your account is signed in. Your workspace is not available yet.", "تم تسجيل دخولك، لكن مساحة العمل غير متاحة بعد.")} detail={t("We could not reach your profile service. Please try again shortly.", "تعذّر الوصول إلى خدمة ملفك. حاول مجدداً لاحقاً.")} retry />;
   const normalizedRoute = route.replace(/\/+$/, "") || "/";
   if (normalizedRoute.endsWith("/onboarding") || normalizedRoute.endsWith("/settings")) return <ProfileForm existing={profile.data} settings={normalizedRoute.endsWith("/settings")} />;
-  if (profile.isSuccess && !profile.data?.fullName) return <CandidateAccess claimAccess={claimAccess} />;
+  if (profile.isSuccess && !profile.data?.fullName) return <ProfileForm existing={profile.data} />;
 
   const rows = apps.data ?? [];
   const credits = entitlement.data;
@@ -162,7 +162,10 @@ export function Workspace() {
         `تم إرسال الطلب وتسجيله. دليل مزود البريد: ${result.messageId}`,
       ));
       trackEngagement("application_email_sent", { city: selectedJob.city, jobId: selectedJob.id, providerEvidence: true });
+    } catch {
+      setMessage(t("We could not confirm the result. Refresh your application history before trying again.", "تعذر تأكيد النتيجة. حدّث سجل طلباتك قبل المحاولة مجدداً."));
     } finally {
+      await Promise.all([apps.refetch(), entitlement.refetch()]);
       setSending(false);
     }
   }
@@ -215,7 +218,8 @@ export function Workspace() {
             <p>{credits
               ? t(`${committedUsage} / ${credits.application_limit} applications used`, `تم استخدام ${committedUsage} من أصل ${credits.application_limit} طلبات`)
               : t("Your plan usage could not be loaded. Sending is disabled until it is available.", "تعذر تحميل استخدام خطتك. تم تعطيل الإرسال حتى تتوفر البيانات.")}</p>
-            {credits && <progress max={Math.max(1, credits.application_limit)} value={Math.min(committedUsage, credits.application_limit)} />}
+            {credits && (credits.applications_reserved || 0) > 0 && <small className="reservation-note">{t(`${credits.applications_reserved} application(s) pending confirmation — included in your allowance.`, `${credits.applications_reserved} طلبات بانتظار التأكيد — محسوبة ضمن رصيدك.`)}</small>}
+            {credits && <progress aria-label={t("Application allowance used", "رصيد التقديم المستخدم")} max={Math.max(1, credits.application_limit)} value={Math.min(committedUsage, credits.application_limit)} />}
           </div>
           <strong>{credits ? t(`${remaining} remaining`, `متبقي ${remaining}`) : "—"}</strong>
           {credits && remaining === 0 && <Link className="next-action" href={path("/pricing")}>{t("Upgrade your plan", "قم بترقية خطتك")} <ArrowUpRight size={16} /></Link>}
@@ -249,7 +253,7 @@ export function Workspace() {
           <section className="panel tracker">
             <div className="panel-heading">
               <h2>{t("Your application activity", "نشاط طلباتك")}</h2>
-              <button className="icon-button" aria-label={t("Refresh applications", "تحديث الطلبات")} onClick={() => { apps.refetch(); trackEngagement("applications_refreshed"); }}><RefreshCw size={17} /></button>
+              <button className="icon-button" aria-label={t("Refresh applications", "تحديث الطلبات")} onClick={() => { apps.refetch(); entitlement.refetch(); trackEngagement("applications_refreshed"); }}><RefreshCw size={17} /></button>
             </div>
             {apps.isError ? (
               <p role="alert">{t("Applications could not be loaded. Use refresh to retry.", "تعذّر تحميل الطلبات. اضغط التحديث للمحاولة.")}</p>
@@ -439,6 +443,9 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
   const [, navigate] = useLocation();
   const { saveProfile } = useWorkspaceData();
   const [cv, setCv] = useState(cvDraft);
+  const [importHistory, setImportHistory] = useState(false);
+  const { claimAccess } = useWorkspaceData();
+  if (importHistory) return <CandidateAccess claimAccess={claimAccess} />;
   const [error, setError] = useState("");
 
   async function save(event: FormEvent<HTMLFormElement>) {
@@ -482,10 +489,12 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
           <p>{t("These details shape the first dashboard view without sending applications automatically.", "تشكّل هذه التفاصيل أول عرض في لوحة التحكم دون إرسال طلبات تلقائياً.")}</p>
         </div>
         <CvUpload onParsed={setCv} />
+        {existing?.resumeFileName && !cv && <p className="notice"><FileText size={18} />{t(`Saved CV: ${existing.resumeFileName}. Upload only to replace it.`, `السيرة المحفوظة: ${existing.resumeFileName}. ارفع ملفاً فقط لاستبدالها.`)}</p>}
       </div>
       <form className="panel" onSubmit={save}>
         <h2>{t("Your preferences", "تفضيلاتك")}</h2>
-        <div className="form-steps" aria-hidden="true"><span className="done">1</span><span>2</span><span>3</span></div>
+        {!settings && <p className="trial-note">{t("Your Free plan starts with 5 applications. Set up your profile, then choose what to send. No payment required.", "تبدأ خطتك المجانية بـ٥ طلبات تقديم. أكمل ملفك ثم اختر الطلبات التي تريد إرسالها. لا يلزم الدفع.")}</p>}
+        <div className="setup-steps" aria-label={t("Setup steps", "خطوات الإعداد")}><span><FileText size={15} />{t("Upload PDF", "ارفع PDF")}</span><span><Settings size={15} />{t("Set preferences", "حدد تفضيلاتك")}</span><span><CheckCircle2 size={15} />{t("Review jobs", "راجع الوظائف")}</span></div>
         <label>{t("Full name", "الاسم الكامل")}<input name="name" defaultValue={existing?.fullName || ""} required minLength={2} maxLength={120} /></label>
         <label>{t("Preferred city", "المدينة المفضلة")}<select name="city" defaultValue={existing?.targetCity || "Jeddah"}>{cities.map(([en, ar]) => <option key={en} value={en}>{t(en, ar)}</option>)}</select></label>
         <label>{t("Target role", "المسمى المطلوب")}<input name="role" defaultValue={existing?.targetRole || cv?.roles[0] || existing?.targetIndustry || ""} required minLength={2} maxLength={120} /></label>
@@ -501,6 +510,7 @@ function ProfileForm({ existing, settings }: { existing: any; settings?: boolean
         <small>{t("Your original CV is stored privately when you upload it here. Profile preferences persist with your account.", "يُحفظ ملف سيرتك الأصلي بشكل خاص عند رفعه هنا، وتبقى تفضيلاتك محفوظة في حسابك.")}</small>
         <p className="error" role="alert">{error}</p>
         <button className="button full" disabled={saveProfile.isPending}>{saveProfile.isPending ? t("Saving…", "جارٍ الحفظ…") : t("Save and open dashboard", "حفظ وفتح لوحة التحكم")}</button>
+        {!settings && <button type="button" className="text-link history-import" onClick={() => setImportHistory(true)}>{t("Already have a private history code? Import it", "لديك رمز خاص لسجل سابق؟ اربطه بحسابك")}</button>}
         {settings && <Link href={path("/dashboard")}>{t("Back to dashboard", "العودة للوحة التحكم")}</Link>}
       </form>
     </main>
