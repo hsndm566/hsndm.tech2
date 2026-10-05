@@ -42,7 +42,7 @@ function verifiedStatus(value: string) {
   return ["verified", "approved", "verified and approved", "current official", "official source"].includes(normalized) ? "verified" : "unverified";
 }
 
-function parseContact(page: NotionPage, batchId: string) {
+function parseContact(page: NotionPage) {
   const properties = page.properties || {};
   const company = toText(getProperty(properties, ["Company", "Company Name", "Employer"]));
   const email = toText(getProperty(properties, ["HR Email", "Recruitment Email", "Contact Email", "Email"])).toLowerCase();
@@ -138,7 +138,7 @@ export function registerNotionContactSyncRoute(app: Express) {
         );
         const pages = Array.isArray(result?.results) ? result.results as NotionPage[] : [];
         pagesRead += pages.length;
-        contacts.push(...pages.map(page => parseContact(page, batchId)).filter(Boolean));
+        contacts.push(...pages.map(page => parseContact(page)).filter(Boolean));
         cursor = result?.has_more && typeof result?.next_cursor === "string" ? result.next_cursor : undefined;
       } while (cursor);
 
