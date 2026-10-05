@@ -57,20 +57,28 @@ function parseContact(page: NotionPage, batchId: string) {
   const active = sendStatus === "ready" && ["recruitment", "careers"].includes(contactType) && !doNotSend;
   const normalizedCompanyName = company.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^a-z0-9\u0600-\u06ff]+/g, "");
   if (!page.id || !company || !normalizedCompanyName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  const verificationStatus = verifiedStatus(verification) === "verified" ? "current_official" : "unverified";
+  const status = doNotSend ? "do_not_send" : sendStatus === "ready" ? "ready" : sendStatus === "sent" ? "sent" : "needs_verification";
   return {
+    source_record_id: page.id,
     company_name: company,
     normalized_company_name: normalizedCompanyName,
     company_domain: companyDomain || null,
     recipient_email: email,
+    normalized_recipient_email: email,
     recipient_type: toText(getProperty(properties, ["Recipient Type", "Contact Type"])) || "recruitment",
-    verification_status: verifiedStatus(verification),
-    source: "notion",
-    source_record_id: page.id,
+    purpose: "job_application",
+    verification_status: verificationStatus,
+    status,
+    source_type: "notion",
+    source_url: null,
+    source_first_party_confirmed: verificationStatus === "current_official",
     last_verified_at: verifiedAt || null,
     active,
     do_not_send: doNotSend,
-    sync_batch_id: batchId,
-    updated_at: new Date().toISOString(),
+    sector: null,
+    target_role: null,
+    notes: null,
   };
 }
 
@@ -121,7 +129,7 @@ export function registerNotionContactSyncRoute(app: Express) {
 
       let cursor: string | undefined;
       let pagesRead = 0;
-      let contactsUpserted = 0;
+      const contacts: any[] = [];
       do {
         const result = await notionRequest(
           `https://api.notion.com/v1/data_sources/${encodeURIComponent(dataSourceId)}/query`,
@@ -130,25 +138,24 @@ export function registerNotionContactSyncRoute(app: Express) {
         );
         const pages = Array.isArray(result?.results) ? result.results as NotionPage[] : [];
         pagesRead += pages.length;
-        const contacts = pages.map(page => parseContact(page, batchId)).filter(Boolean);
-        if (contacts.length) {
-          const { error } = await service.from("v2_employer_contacts").upsert(contacts, { onConflict: "source_record_id" });
-          if (error) throw new Error("contact-upsert-failed");
-          contactsUpserted += contacts.length;
-        }
+        contacts.push(...pages.map(page => parseContact(page, batchId)).filter(Boolean));
         cursor = result?.has_more && typeof result?.next_cursor === "string" ? result.next_cursor : undefined;
       } while (cursor);
 
-      const { error: deactivateError } = await service.from("v2_employer_contacts")
-        .update({ active: false, updated_at: new Date().toISOString() })
-        .eq("source", "notion")
-        .or(`sync_batch_id.is.null,sync_batch_id.neq.${batchId}`);
-      if (deactivateError) throw new Error("stale-contact-deactivation-failed");
+      if (!contacts.length) return res.status(409).json({ error: "notion-contact-snapshot-empty" });
+      const { data: syncResult, error: syncError } = await service.rpc("sync_employer_contacts", {
+        p_sync_id: batchId,
+        p_source_data_source_id: dataSourceId,
+        p_contacts: contacts,
+      });
+      if (syncError) throw new Error("contact-sync-failed");
 
       return res.status(200).json({
         ok: true,
         pagesRead,
-        contactsUpserted,
+        contactsUpserted: Number(syncResult?.imported || 0),
+        eligible: Number(syncResult?.eligible || 0),
+        suppressed: Number(syncResult?.suppressed || 0),
         checkedAt: new Date().toISOString(),
       });
     } catch {
