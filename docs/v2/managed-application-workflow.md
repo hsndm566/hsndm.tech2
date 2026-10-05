@@ -4,7 +4,7 @@ This branch adds a staged backend path for metered email applications. It extend
 
 ## Employer contacts
 
-The private runtime table is `public.v2_employer_contacts`. It has no customer grants or customer-facing API route. Email delivery resolves an exact normalized company-name match and requires one unique contact that is current, explicitly send-ready, of type Recruitment or Careers, not marked Do Not Send, and verified within 90 days. Ambiguous or stale matches are unavailable.
+The private runtime table is `autoapply_private.employer_contacts` and is written through the server-side sync RPC. It has no customer grants or customer-facing API route. Email delivery resolves an exact normalized company-name match and requires one unique contact that is current, explicitly send-ready, of type Recruitment or Careers, not marked Do Not Send, and verified within 90 days. Ambiguous or stale matches are unavailable.
 
 The current operator source is the existing Notion data source **AutoApply SA — Contacts CRM**. The API sends the complete snapshot to the database sync function only after pagination succeeds, so stale rows are deactivated atomically. Its schema was inspected and the sync maps:
 
