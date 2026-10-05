@@ -7,7 +7,6 @@ const PAYMENT_RETURN_URL = process.env.DODO_PAYMENT_RETURN_URL || "https://pay.h
 const planProductEnv: Record<string, string> = {
   starter: "DODO_PRODUCT_STARTER_ID",
   pro: "DODO_PRODUCT_PRO_ID",
-  founder: "DODO_PRODUCT_FOUNDER_ID",
 };
 
 function productIdForPlan(plan: string): string | null {
