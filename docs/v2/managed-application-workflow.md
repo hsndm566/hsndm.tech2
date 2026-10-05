@@ -6,7 +6,7 @@ This branch adds a staged backend path for metered email applications. It extend
 
 The private runtime table is `public.v2_employer_contacts`. It has no customer grants or customer-facing API route. Email delivery resolves an exact normalized company-name match and requires one unique contact that is current, explicitly send-ready, of type Recruitment or Careers, not marked Do Not Send, and verified within 90 days. Ambiguous or stale matches are unavailable.
 
-The current operator source is the existing Notion data source **AutoApply SA — Contacts CRM**. Its schema was inspected and the sync maps:
+The current operator source is the existing Notion data source **AutoApply SA — Contacts CRM**. The API sends the complete snapshot to the database sync function only after pagination succeeds, so stale rows are deactivated atomically. Its schema was inspected and the sync maps:
 
 - `Company` → company name
 - `Email` → private recipient
@@ -57,4 +57,4 @@ The authenticated browser sends only `jobId`. The server resolves the email with
 5. Only after a reviewed contact is marked Ready and current, test one application using an approved test account and test recipient. Verify the Brevo message ID, application row, and 1/5 usage.
 6. Verify quota exhaustion, duplicate send, definite provider rejection/refund, and uncertain provider response behavior before production rollout.
 
-Paid-plan checkout completion is not connected to entitlements in this change. Existing Dodo checkout creation alone is not payment proof; a signed Dodo webhook and product-to-credit mapping are a separate release gate. The Notion sync endpoint is callable but requires a scheduler to run automatically.
+Paid-plan checkout completion is now connected through the signed Dodo `payment.succeeded` webhook. The webhook is idempotent, uses authenticated checkout metadata when present, and updates the authoritative `v2_user_entitlements` ledger. Product IDs still must be configured before enabling paid checkout. The Notion sync endpoint is callable but requires a scheduler to run automatically.
