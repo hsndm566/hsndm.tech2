@@ -1,9 +1,8 @@
 import type { Express, Request, Response } from "express";
 import { z } from "zod";
-import { authenticateV2Request, safeAttachmentName } from "./v2Supabase";
+import { authenticateV2Request, createV2ServiceClient, safeAttachmentName } from "./v2Supabase";
 
 const applicationSendRequest = z.object({
-  toEmail: z.string().trim().email().max(320),
   jobId: z.string().uuid(),
 });
 
@@ -51,6 +50,17 @@ type VerifiedJobRow = {
   lastSeenAt: string;
   verifiedUntil: string;
   verification: string;
+};
+
+type VerifiedContactRow = {
+  id: string;
+  company_name: string;
+  normalized_company_name: string;
+  recipient_email: string;
+  verification_status: string;
+  last_verified_at: string | null;
+  active: boolean;
+  do_not_send: boolean;
 };
 
 type V2ProfileRow = {
@@ -237,6 +247,20 @@ async function loadVerifiedJob(client: any, jobId: string) {
   return data as VerifiedJobRow | null;
 }
 
+function normalizeCompanyName(value: string) {
+  return value.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^a-z0-9\\u0600-\\u06ff]+/g, "");
+}
+
+async function hasVerifiedContact(service: any, job: VerifiedJobRow) {
+  const normalized = normalizeCompanyName(job.company);
+  if (!normalized) return false;
+  const { data, error } = await service.rpc("has_eligible_employer_contact", {
+    p_company_name_normalized: normalized,
+  });
+  if (error) throw error;
+  return data === true;
+}
+
 async function loadProfile(client: any, userId: string) {
   const { data, error } = await client
     .from("v2_profiles")
@@ -270,7 +294,7 @@ async function downloadCandidateCv(client: any, userId: string, profile: V2Profi
   return attachment;
 }
 
-async function reserveApplication(client: any, userId: string, job: VerifiedJobRow, toEmail: string, cvStoragePath: string) {
+async function reserveApplication(client: any, userId: string, job: VerifiedJobRow, contactId: string, cvStoragePath: string) {
   const now = new Date().toISOString();
   const row = {
     user_id: userId,
@@ -279,7 +303,7 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
     city: job.location || "Saudi Arabia",
     status: "queued",
     updatedAt: now,
-    recipientEmail: toEmail,
+    recipientContactId: contactId,
     deliveryStatus: "unknown",
     responseStatus: "none",
     responseNote: null,
@@ -298,18 +322,7 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
     .maybeSingle();
   if (lookupError) throw lookupError;
 
-  if (existing) {
-    if (existing.status === "applied" || existing.providerMessageId) throw new Error("duplicate-application");
-    const { data, error } = await client
-      .from("v2_applications")
-      .update(row)
-      .eq("id", existing.id)
-      .eq("user_id", userId)
-      .select("*")
-      .single();
-    if (error) throw error;
-    return data;
-  }
+  if (existing) throw new Error("duplicate-application");
 
   const { data, error } = await client.from("v2_applications").insert(row).select("*").single();
   if (error) {
@@ -319,10 +332,10 @@ async function reserveApplication(client: any, userId: string, job: VerifiedJobR
   return data;
 }
 
-async function markApplicationFailed(client: any, applicationId: string, reason: string) {
+async function markApplicationFailed(client: any, applicationId: string, reason: string, uncertain = false) {
   await client
     .from("v2_applications")
-    .update({ status: "queued", deliveryStatus: "blocked", responseNote: reason, updatedAt: new Date().toISOString() })
+    .update({ status: "queued", deliveryStatus: uncertain ? "unknown" : "blocked", responseNote: reason, updatedAt: new Date().toISOString() })
     .eq("id", applicationId);
 }
 
@@ -361,12 +374,13 @@ export function registerApplicationEmailRoutes(app: Express) {
         .limit(100);
       if (error) throw error;
 
+      const service = createV2ServiceClient();
       const ranked = ((data || []) as VerifiedJobRow[])
         .map(job => ({ job, score: scoreJob(job, role, city) }))
         .filter(item => item.score > 0)
         .sort((a, b) => b.score - a.score || Date.parse(b.job.lastSeenAt) - Date.parse(a.job.lastSeenAt))
         .slice(0, 8)
-        .map(({ job }) => ({
+        .map(async ({ job }) => ({
           id: job.id,
           companyName: job.company,
           roleTitle: job.title,
@@ -376,10 +390,12 @@ export function registerApplicationEmailRoutes(app: Express) {
           summary: (job.description || "Verified public ATS posting.").slice(0, 500),
           matchReason: matchReason(job, role, city),
           freshness: job.lastSeenAt,
+          emailEligible: service ? await hasVerifiedContact(service, job) : false,
         }));
 
       res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json({ jobs: ranked, mode: "live", checkedAt: new Date().toISOString() });
+      const resolvedJobs = await Promise.all(ranked);
+      return res.status(200).json({ jobs: resolvedJobs, mode: "live", checkedAt: new Date().toISOString() });
     } catch {
       res.setHeader("Cache-Control", "no-store");
       return res.status(502).json({ error: "verified-job-source-unavailable" });
@@ -403,7 +419,11 @@ export function registerApplicationEmailRoutes(app: Express) {
     if (!auth.user.email) return res.status(409).json({ error: "candidate-email-required" });
 
     let reservedApplication: any = null;
+    let sendStarted = false;
+    let service: any = null;
     try {
+      service = createV2ServiceClient();
+      if (!service) return res.status(503).json({ error: "private-contact-service-unavailable" });
       const [profile, job] = await Promise.all([
         loadProfile(auth.client, auth.user.id),
         loadVerifiedJob(auth.client, parsed.data.jobId),
@@ -416,16 +436,23 @@ export function registerApplicationEmailRoutes(app: Express) {
       if (!profile.resumeStoragePath || !profile.resumeFileName) return res.status(409).json({ error: "cv-required" });
 
       const attachment = await downloadCandidateCv(auth.client, auth.user.id, profile);
-      reservedApplication = await reserveApplication(
-        auth.client,
-        auth.user.id,
-        job,
-        parsed.data.toEmail,
-        profile.resumeStoragePath,
-      );
-
+      const normalizedCompanyName = normalizeCompanyName(job.company);
+      const { data: reservation, error: reservationError } = await service.rpc("reserve_v2_application_send", {
+        p_user_id: auth.user.id,
+        p_job_id: job.id,
+        p_cv_storage_path: profile.resumeStoragePath,
+        p_company_name_normalized: normalizedCompanyName,
+      });
+      if (reservationError || !reservation?.reservationId || !reservation?.applicationId || !reservation?.recipientEmail) {
+        const reason = reservationError?.message || "application-reservation-failed";
+        if (/quota-exceeded|plan-expired/i.test(reason)) return res.status(402).json({ error: "application-quota-exhausted" });
+        if (/duplicate-application/i.test(reason)) return res.status(409).json({ error: "duplicate-application" });
+        if (/recipient|contact|verified/i.test(reason)) return res.status(409).json({ error: "verified-recipient-required" });
+        return res.status(409).json({ error: "application-credit-reservation-failed" });
+      }
+      reservedApplication = { id: reservation.applicationId, reservationId: reservation.reservationId };
       const emailInput: ApplicationEmailInput = {
-        toEmail: parsed.data.toEmail,
+        toEmail: reservation.recipientEmail,
         companyName: job.company,
         roleTitle: job.title,
         city: job.location || "Saudi Arabia",
@@ -433,6 +460,7 @@ export function registerApplicationEmailRoutes(app: Express) {
         message: buildGroundedApplicationMessage(profile, job),
       };
 
+      sendStarted = true;
       const result = await sendApplicationEmail(
         emailInput,
         auth.user.email,
@@ -441,16 +469,64 @@ export function registerApplicationEmailRoutes(app: Express) {
       );
 
       if (!result.ok || !result.messageId) {
-        await markApplicationFailed(auth.client, reservedApplication.id, result.reason);
-        return res.status(result.status).json({ error: result.reason });
+        const uncertain = result.reason === "brevo-missing-message-id" || result.status >= 500;
+        await markApplicationFailed(service, reservedApplication.id, result.reason, uncertain);
+        if (uncertain) {
+          await service.rpc("mark_v2_application_send_uncertain", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_provider_message_id: result.messageId || null,
+          });
+        } else if (result.status >= 400 && result.status < 500) {
+          await service.rpc("release_v2_application_send", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_failure_code: result.reason,
+          });
+        }
+        return res.status(result.status).json({ error: uncertain ? "email-delivery-uncertain" : result.reason });
       }
 
-      const application = await markApplicationSent(auth.client, reservedApplication.id, result.messageId);
-      return res.status(200).json({ ok: true, messageId: result.messageId, application });
+      const { data: finalized, error: finalizeError } = await service.rpc("finalize_v2_application_send", {
+        p_reservation_id: reservedApplication.reservationId,
+        p_provider_message_id: result.messageId,
+      });
+      if (finalizeError || !finalized?.ok) {
+        await service.rpc("mark_v2_application_send_uncertain", {
+          p_reservation_id: reservedApplication.reservationId,
+          p_provider_message_id: result.messageId,
+        });
+        return res.status(502).json({ error: "application-finalization-uncertain" });
+      }
+      const application = await service.from("v2_applications")
+        .select("id,companyName,roleTitle,status,appliedAt,deliveryStatus")
+        .eq("id", reservedApplication.id)
+        .single()
+        .then((result: any) => result.data);
+      return res.status(200).json({
+        ok: true,
+        messageId: result.messageId,
+        application: {
+          id: application.id,
+          companyName: application.companyName,
+          roleTitle: application.roleTitle,
+          status: application.status,
+          appliedAt: application.appliedAt,
+          deliveryStatus: application.deliveryStatus,
+        },
+      });
     } catch (error) {
       const reason = error instanceof Error ? error.message : "application-email-failed";
-      if (reservedApplication?.id) await markApplicationFailed(auth.client, reservedApplication.id, reason);
+      if (reservedApplication?.id) {
+        await markApplicationFailed(service, reservedApplication.id, reason, sendStarted);
+        if (!sendStarted && reservedApplication.reservationId) {
+          await service.rpc("release_v2_application_send", {
+            p_reservation_id: reservedApplication.reservationId,
+            p_failure_code: reason,
+          });
+        }
+      }
       if (reason === "duplicate-application") return res.status(409).json({ error: reason });
+      if (/quota-exhausted|plan-expired/.test(reason)) return res.status(402).json({ error: "application-quota-exhausted" });
+      if (sendStarted) return res.status(502).json({ error: "email-delivery-uncertain" });
       if ([
         "cv-required",
         "cv-ownership-mismatch",

@@ -87,6 +87,10 @@ beforeEach(() => {
       isSuccess: true,
     },
     apps: { data: [], refetch: vi.fn().mockResolvedValue(undefined) },
+    entitlement: {
+      data: { user_id: "test-user", plan_key: "free", application_limit: 5, applications_used: 0, plan_started_at: "2026-10-04T00:00:00Z", plan_expires_at: null },
+      refetch: vi.fn().mockResolvedValue(undefined),
+    },
     create: { mutate: vi.fn(), isPending: false },
     update: { mutate: vi.fn() },
     saveProfile: { mutateAsync: vi.fn().mockResolvedValue(undefined), isPending: false },
@@ -101,17 +105,35 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("V2 workspace behavior", () => {
-  it("offers private candidate access before onboarding", async () => {
+  it("takes a new free customer directly to profile setup", async () => {
     mocks.data.profile.data = null;
     mount();
+    expect(await screen.findByRole("heading", { name: "Your preferences" })).toBeTruthy();
+    expect(screen.getByText(/Your Free plan starts with 5 applications/)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /Already have a private history code/ }));
     expect(await screen.findByRole("heading", { name: "Connect your application history." })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "I am a new user without a code" })).toBeTruthy();
   });
 
   it("renders the real empty state without illustrative account records", () => {
     mount();
     expect(screen.getByRole("heading", { name: "Your next opportunity starts here." })).toBeTruthy();
     expect(screen.queryByText("Example company")).toBeNull();
+  });
+
+  it("shows plan credits and blocks verified sends when the allowance is exhausted", async () => {
+    mocks.data.entitlement.data.applications_used = 5;
+    mount();
+    expect(screen.getByText("0 remaining")).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Send by email" })[0]);
+    const sendButton = screen.getAllByRole("button", { name: "Send by email" }).at(-1) as HTMLButtonElement;
+    expect(sendButton.disabled).toBe(true);
+  });
+
+  it("subtracts pending reservations from the allowance", () => {
+    mocks.data.entitlement.data.applications_reserved = 5;
+    mount();
+    expect(screen.getByText("0 remaining")).toBeTruthy();
+    expect(screen.getByText(/pending confirmation/)).toBeTruthy();
   });
 
   it("shows a recoverable service error", () => {
