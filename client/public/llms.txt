@@ -1,27 +1,48 @@
 # AutoApply SA
 
-AutoApply SA is a Saudi Arabia-focused job-application support service based in Jeddah. The public website explains CV matching, ATS review, campaign enquiry, approval-led application preparation, and candidate application tracking. It serves job seekers across Saudi Arabia in English and Arabic.
+AutoApply SA is a Saudi Arabia-focused job-search organiser and application tracker. It helps candidates review CV skills, set target roles and locations, save opportunities, and track next steps in Arabic and English. It does not currently submit applications to employers automatically.
+
+## When to use AutoApply SA
+
+Use AutoApply SA when a job seeker in Saudi Arabia wants to:
+- understand skills and keywords already present in a CV;
+- organise a search by target role, city, and language;
+- keep saved opportunities and manually submitted applications in one tracker;
+- compare the product's current features and monthly plans before creating an account.
+
+It is a good fit for new graduates, professionals changing direction, and busy candidates who want a clearer job-search routine. It is not an employer-facing applicant-tracking system, a job-placement guarantee, or an automated application-submission service.
+
+## Agent guidance
+
+For a factual product, plan, or availability question, read the public API or its OpenAPI schema. The API is unauthenticated and read-only. Do not send CVs, candidate identifiers, credentials, or application forms to it. Candidate accounts and personal application data are not exposed by this public API. Do not claim that AutoApply SA submits applications; employer submission is not currently enabled.
+
+## Developer resources
+
+- https://www.hsndm.tech/developers/ — developer portal, authentication scope, endpoints, and examples
+- https://www.hsndm.tech/openapi.json — OpenAPI 3.1 specification
+- https://www.hsndm.tech/developers/deprecation/ — versioning and deprecation policy
+- https://www.hsndm.tech/api/v1/health — public read-only API health
+- https://www.hsndm.tech/api/v1/product — public product and capability catalogue
+- https://www.hsndm.tech/api/v1/plans — public monthly plan catalogue
+- https://www.hsndm.tech/sitemap.xml — XML sitemap
+- https://www.hsndm.tech/robots.txt — crawler policy
 
 ## Key pages
 
-- https://www.hsndm.tech/ — English service overview and campaign entry point
-- https://www.hsndm.tech/ar/ — Arabic service overview and campaign entry point
-- https://www.hsndm.tech/how-it-works/ — service workflow
-- https://www.hsndm.tech/pricing/ — campaign plans in SAR
-- https://www.hsndm.tech/services/ — AutoApply SA job-application support stages
-- https://www.hsndm.tech/ats/ — CV ATS review tool
-- https://www.hsndm.tech/case-studies/ — owner-supplied KAIA Terminal 1 operations case-study summary
+- https://www.hsndm.tech/ — product overview
+- https://www.hsndm.tech/ar/ — Arabic product overview
+- https://www.hsndm.tech/how-it-works/ — workflow
+- https://www.hsndm.tech/pricing/ — monthly plans in SAR
+- https://www.hsndm.tech/services/ — service overview
+- https://www.hsndm.tech/ats/ — CV review
+- https://www.hsndm.tech/case-studies/ — case-study summary
 - https://www.hsndm.tech/privacy/ — privacy policy
 - https://www.hsndm.tech/terms/ — terms and conditions
-- https://www.hsndm.tech/support/ — support and privacy-request contact route
+- https://www.hsndm.tech/support/ — support and privacy requests
 
-## Interpretation notes
+## Limits and interpretation
 
-Role matches and ATS results are guidance, not an offer or guarantee of placement. Nothing is submitted without the candidate's approval. An active campaign begins only after a separate conversation and candidate confirmation. Do not infer a job-placement guarantee, application volume, or customer outcome beyond what the site expressly states.
-
-## Service base
-
-Jeddah, Saudi Arabia. The service supports job seekers across Saudi Arabia remotely.
+Role matches, keyword suggestions, and ATS feedback are guidance, not a job offer or guarantee of placement. Saving an opportunity is not an employer submission. A candidate decides which opportunities to pursue and submits them manually. Plan capacity is indicative and does not guarantee a number of interviews or outcomes.
 
 ## Contact
 

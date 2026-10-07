@@ -1,0 +1,374 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AutoApply SA Public API",
+    "version": "1.0.0",
+    "summary": "Read-only public product catalogue for AutoApply SA",
+    "description": "This API exposes public product information, monthly plan details, and health for the public catalogue service. It does not expose candidate accounts, CVs, private application records, or employer submission. No authentication is required for these read-only endpoints.",
+    "termsOfService": "https://www.hsndm.tech/terms/",
+    "contact": {
+      "name": "AutoApply SA support",
+      "email": "apply@hsndm.tech",
+      "url": "https://www.hsndm.tech/developers/"
+    },
+    "license": {
+      "name": "Public product information"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.hsndm.tech",
+      "description": "Production public API"
+    }
+  ],
+  "externalDocs": {
+    "description": "Versioning, rate limits, and deprecation policy",
+    "url": "https://www.hsndm.tech/developers/deprecation/"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "operationId": "getPublicApiHealth",
+        "summary": "Check public catalogue API health",
+        "description": "Returns the status and scope of the public read-only catalogue API. This does not test candidate account or application services.",
+        "tags": [
+          "Public catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "The public catalogue API is available.",
+            "headers": {
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/RateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/RateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/RateLimitReset"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimitPolicy"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/product": {
+      "get": {
+        "operationId": "getPublicProduct",
+        "summary": "Read AutoApply SA product details",
+        "description": "Returns the product's public purpose, supported languages, intended users, capabilities, and current limitations. Does not include personal candidate data.",
+        "tags": [
+          "Public catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Public product information.",
+            "headers": {
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/RateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/RateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/RateLimitReset"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimitPolicy"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "operationId": "listPublicPlans",
+        "summary": "List public monthly plans",
+        "description": "Returns the current public plan names, monthly prices in SAR, and feature summaries. Confirm price and terms on the website before purchase.",
+        "tags": [
+          "Public catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Public plan catalogue.",
+            "headers": {
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/RateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/RateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/RateLimitReset"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimitPolicy"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plans"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "headers": {
+      "RateLimitLimit": {
+        "description": "Maximum requests per client key for the current 60-second edge-instance window.",
+        "schema": {
+          "type": "integer",
+          "example": 60
+        }
+      },
+      "RateLimitRemaining": {
+        "description": "Requests remaining in the current window for this edge instance.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "example": 59
+        }
+      },
+      "RateLimitReset": {
+        "description": "Seconds until this edge-instance window resets.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 52
+        }
+      },
+      "RateLimitPolicy": {
+        "description": "Quota policy; 60 requests per 60-second edge-instance window.",
+        "schema": {
+          "type": "string",
+          "example": "60;w=60"
+        }
+      },
+      "RetryAfter": {
+        "description": "Seconds to wait before retrying after HTTP 429.",
+        "schema": {
+          "type": "integer",
+          "example": 52
+        }
+      }
+    },
+    "responses": {
+      "RateLimited": {
+        "description": "The per-edge-instance rate limit was reached.",
+        "headers": {
+          "RateLimit-Limit": {
+            "$ref": "#/components/headers/RateLimitLimit"
+          },
+          "RateLimit-Remaining": {
+            "$ref": "#/components/headers/RateLimitRemaining"
+          },
+          "RateLimit-Reset": {
+            "$ref": "#/components/headers/RateLimitReset"
+          },
+          "RateLimit-Policy": {
+            "$ref": "#/components/headers/RateLimitPolicy"
+          },
+          "Retry-After": {
+            "$ref": "#/components/headers/RetryAfter"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Health": {
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "apiVersion",
+          "scope"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          },
+          "service": {
+            "type": "string"
+          },
+          "apiVersion": {
+            "type": "string",
+            "example": "v1"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "read-only-public-catalog"
+            ]
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "market",
+          "languages",
+          "intendedUsers",
+          "capabilities",
+          "limitations"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "market": {
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intendedUsers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Plan": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "price",
+          "features"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Plans": {
+        "type": "object",
+        "required": [
+          "currency",
+          "billingInterval",
+          "plans",
+          "note"
+        ],
+        "properties": {
+          "currency": {
+            "type": "string",
+            "enum": [
+              "SAR"
+            ]
+          },
+          "billingInterval": {
+            "type": "string",
+            "enum": [
+              "month"
+            ]
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Plan"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error",
+          "message"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "documentation": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}

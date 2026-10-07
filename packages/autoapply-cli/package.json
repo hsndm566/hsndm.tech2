@@ -1,0 +1,20 @@
+{
+  "name": "autoapply-sa-cli",
+  "version": "0.1.0",
+  "description": "Read the public AutoApply SA product catalogue from a terminal",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "autoapply-sa": "./bin/autoapply.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/autoapply.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  }
+}
