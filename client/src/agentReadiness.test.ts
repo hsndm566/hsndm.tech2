@@ -33,6 +33,7 @@ describe("agent readiness content and public API", () => {
     expect(organization.contactPoint.telephone).toBeTruthy();
     expect(sitemap).toContain("<lastmod>2026-10-07</lastmod>");
     expect(sitemap).toContain("https://www.hsndm.tech/developers/");
+    expect(sitemap).not.toMatch(/\/(pricing|services|ats|enquire|how-it-works|support|case-studies|campaign-report-sample)\//);
   });
 
   it("gives agents specific use guidance and links discoverable developer resources", () => {
