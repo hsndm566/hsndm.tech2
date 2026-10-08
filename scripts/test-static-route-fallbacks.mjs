@@ -19,6 +19,8 @@ try {
 
   const english = await readFile(join(output, "enquire", "index.html"), "utf8");
   const arabic = await readFile(join(output, "ar", "index.html"), "utf8");
+  const about = await readFile(join(output, "about", "index.html"), "utf8");
+  const contact = await readFile(join(output, "contact", "index.html"), "utf8");
 
   assert.match(english, /<html lang="en" dir="ltr">/);
   assert.match(english, /Start a Campaign \| AutoApply SA/);
@@ -27,6 +29,13 @@ try {
   assert.doesNotMatch(arabic, /Organise your Saudi job search/);
   assert.doesNotMatch(app, /https:\/\/app\.hsndm\.tech\/login/);
   assert.match(app, /https:\/\/app\.hsndm\.tech\/sign-in/);
+  assert.match(app, /\/about/);
+  assert.match(app, /\/contact/);
+  assert.match(about, /About AutoApply SA \| Saudi Job Search Workspace/);
+  assert.match(contact, /Contact AutoApply SA \| Account and Privacy Help/);
+  const visibleText = (html) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  assert.ok(visibleText(about).length > 500, "About fallback should remain useful without JavaScript");
+  assert.ok(visibleText(contact).length > 500, "Contact fallback should remain useful without JavaScript");
 
   console.log("Static English/Arabic route fallbacks verified.");
 } finally {

@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { onRequest as markdownMiddleware } from "../../functions/_middleware.js";
 import { onRequest as publicApi } from "../../functions/api/v1/[[path]].js";
@@ -8,6 +9,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const app = readFileSync(new URL("./App.tsx", import.meta.url), "utf8");
 const llms = readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8");
 const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+const robots = readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8").replace(/\r\n?/g, "\n");
 const openapi = JSON.parse(readFileSync(new URL("../public/openapi.json", import.meta.url), "utf8"));
 const developerDocs = readFileSync(new URL("../public/developers/index.html", import.meta.url), "utf8");
 const deprecationDocs = readFileSync(new URL("../public/developers/deprecation/index.html", import.meta.url), "utf8");
@@ -27,13 +29,23 @@ describe("agent readiness content and public API", () => {
     const schemaText = html.match(/<script type="application\/ld\+json" data-autoapply-schema="site">([\s\S]*?)<\/script>/)?.[1] || "";
     const schema = JSON.parse(schemaText);
     const organization = schema["@graph"].find((entity) => entity["@type"] === "Organization");
+    const website = schema["@graph"].find((entity) => entity["@type"] === "WebSite");
     expect(organization.description).toContain("Saudi Arabia");
     expect(organization.address["@type"]).toBe("PostalAddress");
     expect(organization.contactPoint.email).toBeTruthy();
     expect(organization.contactPoint.telephone).toBeTruthy();
-    expect(sitemap).toContain("<lastmod>2026-10-07</lastmod>");
+    expect(website.alternateName).toContain("Saudi Arabia");
+    expect(sitemap).toContain("<lastmod>2026-10-08</lastmod>");
     expect(sitemap).toContain("https://www.hsndm.tech/developers/");
+    expect(sitemap).toContain("https://www.hsndm.tech/about/");
+    expect(sitemap).toContain("https://www.hsndm.tech/contact/");
     expect(sitemap).not.toMatch(/\/(pricing|services|ats|enquire|how-it-works|support|case-studies|campaign-report-sample)\//);
+  });
+
+  it("explicitly permits major AI crawlers while keeping private candidate routes out of robots discovery", () => {
+    for (const crawler of ["ChatGPT-User", "ClaudeBot", "Google-Extended", "ora-agent", "DeepSeekBot"]) {
+      expect(robots).toContain(`User-agent: ${crawler}\nAllow: /\nDisallow: /campaign/\nDisallow: /dashboard/`);
+    }
   });
 
   it("gives agents specific use guidance and links discoverable developer resources", () => {
@@ -101,8 +113,8 @@ describe("agent readiness content and public API", () => {
   });
 
   it("makes the CLI help command executable without a network request", () => {
-    const cliPath = new URL("../../packages/autoapply-cli/bin/autoapply.mjs", import.meta.url);
-    const result = spawnSync(process.execPath, [cliPath.pathname, "--help"], { encoding: "utf8" });
+    const cliPath = fileURLToPath(new URL("../../packages/autoapply-cli/bin/autoapply.mjs", import.meta.url));
+    const result = spawnSync(process.execPath, [cliPath, "--help"], { encoding: "utf8" });
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("autoapply-sa api product");
   });
