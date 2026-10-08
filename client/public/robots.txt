@@ -1,3 +1,30 @@
+# This file permits public discovery only. Private candidate paths remain
+# disallowed, and any edge security policy must continue to allow these agents.
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /campaign/
+Disallow: /dashboard/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /campaign/
+Disallow: /dashboard/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /campaign/
+Disallow: /dashboard/
+
+User-agent: ora-agent
+Allow: /
+Disallow: /campaign/
+Disallow: /dashboard/
+
+User-agent: DeepSeekBot
+Allow: /
+Disallow: /campaign/
+Disallow: /dashboard/
+
 User-agent: *
 Allow: /
 Disallow: /campaign/

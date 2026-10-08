@@ -36,6 +36,8 @@ For a factual product, plan, or availability question, read the public API or it
 - https://www.hsndm.tech/services/ — service overview
 - https://www.hsndm.tech/ats/ — CV review
 - https://www.hsndm.tech/case-studies/ — case-study summary
+- https://www.hsndm.tech/about/ — service purpose and operating boundaries
+- https://www.hsndm.tech/contact/ — public contact and privacy-request guidance
 - https://www.hsndm.tech/privacy/ — privacy policy
 - https://www.hsndm.tech/terms/ — terms and conditions
 - https://www.hsndm.tech/support/ — support and privacy requests
