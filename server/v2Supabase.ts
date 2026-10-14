@@ -38,6 +38,15 @@ export async function authenticateV2Request(req: Pick<Request, "headers">): Prom
   }
 }
 
+export function createV2ServiceClient(): SupabaseClient | null {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return null;
+  return createClient(url, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+}
+
 export function safeAttachmentName(name: string) {
   const cleaned = name.replace(/[\\/\r\n"]/g, "_").trim().slice(0, 180);
   return cleaned || "CV.pdf";

@@ -1,0 +1,165 @@
+import { randomUUID, timingSafeEqual } from "node:crypto";
+import type { Express, Request, Response } from "express";
+import { createV2ServiceClient } from "./v2Supabase";
+
+const NOTION_VERSION = "2026-03-11";
+const DEFAULT_NOTION_DATABASE_ID = "35df33702d624d07b4b69d55e11cc1c4";
+const DEFAULT_NOTION_DATA_SOURCE_ID = "e22e718f-3141-41a9-aa5d-40fdc3aa98f9";
+type NotionPage = { id?: string; properties?: Record<string, any> };
+
+function normalizeKey(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function propertyValue(value: any): string | boolean | null {
+  if (!value || typeof value !== "object") return null;
+  if (typeof value.email === "string") return value.email;
+  if (typeof value.url === "string") return value.url;
+  if (typeof value.checkbox === "boolean") return value.checkbox;
+  if (typeof value.date?.start === "string") return value.date.start;
+  if (typeof value.number === "number") return String(value.number);
+  const values = Array.isArray(value.title) ? value.title
+    : Array.isArray(value.rich_text) ? value.rich_text
+    : null;
+  if (values) return values.map((part: any) => part?.plain_text || part?.text?.content || "").join("").trim();
+  if (typeof value.select?.name === "string") return value.select.name;
+  if (typeof value.status?.name === "string") return value.status.name;
+  return null;
+}
+
+function getProperty(properties: Record<string, any>, aliases: string[]) {
+  const wanted = new Set(aliases.map(normalizeKey));
+  const match = Object.entries(properties).find(([key]) => wanted.has(normalizeKey(key)));
+  return match ? propertyValue(match[1]) : null;
+}
+
+function toText(value: string | boolean | null) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function verifiedStatus(value: string) {
+  const normalized = value.trim().toLowerCase();
+  return ["verified", "approved", "verified and approved", "current official", "official source"].includes(normalized) ? "verified" : "unverified";
+}
+
+function parseContact(page: NotionPage) {
+  const properties = page.properties || {};
+  const company = toText(getProperty(properties, ["Company", "Company Name", "Employer"]));
+  const email = toText(getProperty(properties, ["HR Email", "Recruitment Email", "Contact Email", "Email"])).toLowerCase();
+  const companyDomain = toText(getProperty(properties, ["Company Domain", "Domain", "Website Domain"])).toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const verification = toText(getProperty(properties, ["Verification", "Email Verification Status", "Verification Status", "Email Status"]));
+  const rawVerifiedAt = toText(getProperty(properties, ["Last Verified", "Last Verified At", "Verified At"]));
+  const verifiedAt = rawVerifiedAt && Number.isFinite(Date.parse(rawVerifiedAt)) ? new Date(rawVerifiedAt).toISOString() : "";
+  const sendStatus = toText(getProperty(properties, ["Send Status", "Status"])).toLowerCase();
+  const contactType = toText(getProperty(properties, ["Contact Type", "Recipient Type"])).toLowerCase();
+  const doNotSendValue = getProperty(properties, ["Do Not Send", "DNC", "Suppressed"]);
+  const doNotSend = doNotSendValue === true || (typeof doNotSendValue === "string" && ["yes", "true", "do not send"].includes(doNotSendValue.toLowerCase()));
+  const active = sendStatus === "ready" && ["recruitment", "careers"].includes(contactType) && !doNotSend;
+  const normalizedCompanyName = company.normalize("NFKC").toLocaleLowerCase("en-US").replace(/[^a-z0-9\u0600-\u06ff]+/g, "");
+  if (!page.id || !company || !normalizedCompanyName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  const verificationStatus = verifiedStatus(verification) === "verified" ? "current_official" : "unverified";
+  const status = doNotSend ? "do_not_send" : sendStatus === "ready" ? "ready" : sendStatus === "sent" ? "sent" : "needs_verification";
+  return {
+    source_record_id: page.id,
+    company_name: company,
+    normalized_company_name: normalizedCompanyName,
+    company_domain: companyDomain || null,
+    recipient_email: email,
+    normalized_recipient_email: email,
+    recipient_type: toText(getProperty(properties, ["Recipient Type", "Contact Type"])) || "recruitment",
+    purpose: "job_application",
+    verification_status: verificationStatus,
+    status,
+    source_type: "notion",
+    source_url: null,
+    source_first_party_confirmed: verificationStatus === "current_official",
+    last_verified_at: verifiedAt || null,
+    active,
+    do_not_send: doNotSend,
+    sector: null,
+    target_role: null,
+    notes: null,
+  };
+}
+
+function sameSecret(actual: string | undefined, expected: string | undefined) {
+  if (!actual || !expected) return false;
+  const left = Buffer.from(actual);
+  const right = Buffer.from(expected);
+  return left.length === right.length && timingSafeEqual(left, right);
+}
+
+async function notionRequest(url: string, token: string, body?: unknown) {
+  const response = await fetch(url, {
+    method: body === undefined ? "GET" : "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Notion-Version": NOTION_VERSION,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    signal: AbortSignal.timeout(20_000),
+  });
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(`notion-http-${response.status}`);
+  return payload;
+}
+
+export function registerNotionContactSyncRoute(app: Express) {
+  app.post("/api/v2/admin/notion-sync", async (req: Request, res: Response) => {
+    if (!sameSecret(req.headers["x-autoapply-sync-token"] as string | undefined, process.env.NOTION_SYNC_SECRET)) {
+      return res.status(401).json({ error: "sync-authentication-required" });
+    }
+    const notionToken = process.env.NOTION_API_KEY;
+    const databaseId = process.env.NOTION_DATABASE_ID || DEFAULT_NOTION_DATABASE_ID;
+    const service = createV2ServiceClient();
+    if (!notionToken || !databaseId || !service) {
+      return res.status(503).json({ error: "notion-sync-not-configured" });
+    }
+
+    const batchId = randomUUID();
+    try {
+      let dataSourceId = process.env.NOTION_DATA_SOURCE_ID || DEFAULT_NOTION_DATA_SOURCE_ID;
+      if (!dataSourceId) {
+        const database = await notionRequest(`https://api.notion.com/v1/databases/${encodeURIComponent(databaseId)}`, notionToken);
+        dataSourceId = Array.isArray(database?.data_sources) ? database.data_sources[0]?.id : undefined;
+      }
+      if (!dataSourceId) return res.status(409).json({ error: "notion-data-source-not-found" });
+
+      let cursor: string | undefined;
+      let pagesRead = 0;
+      const contacts: any[] = [];
+      do {
+        const result = await notionRequest(
+          `https://api.notion.com/v1/data_sources/${encodeURIComponent(dataSourceId)}/query`,
+          notionToken,
+          { page_size: 100, ...(cursor ? { start_cursor: cursor } : {}) },
+        );
+        const pages = Array.isArray(result?.results) ? result.results as NotionPage[] : [];
+        pagesRead += pages.length;
+        contacts.push(...pages.map(page => parseContact(page)).filter(Boolean));
+        cursor = result?.has_more && typeof result?.next_cursor === "string" ? result.next_cursor : undefined;
+      } while (cursor);
+
+      if (!contacts.length) return res.status(409).json({ error: "notion-contact-snapshot-empty" });
+      const { data: syncResult, error: syncError } = await service.rpc("sync_employer_contacts", {
+        p_sync_id: batchId,
+        p_source_data_source_id: dataSourceId,
+        p_contacts: contacts,
+      });
+      if (syncError) throw new Error("contact-sync-failed");
+
+      return res.status(200).json({
+        ok: true,
+        pagesRead,
+        contactsUpserted: Number(syncResult?.imported || 0),
+        eligible: Number(syncResult?.eligible || 0),
+        suppressed: Number(syncResult?.suppressed || 0),
+        checkedAt: new Date().toISOString(),
+      });
+    } catch {
+      return res.status(502).json({ error: "notion-sync-failed" });
+    }
+  });
+}

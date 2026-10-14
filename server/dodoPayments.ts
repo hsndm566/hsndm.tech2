@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import { authenticateV2Request } from "./v2Supabase";
 
 const DODO_LIVE_API = "https://live.dodopayments.com";
 const PAYMENT_RETURN_URL = process.env.DODO_PAYMENT_RETURN_URL || "https://pay.hsndm.tech/pay/success";
@@ -6,7 +7,6 @@ const PAYMENT_RETURN_URL = process.env.DODO_PAYMENT_RETURN_URL || "https://pay.h
 const planProductEnv: Record<string, string> = {
   starter: "DODO_PRODUCT_STARTER_ID",
   pro: "DODO_PRODUCT_PRO_ID",
-  founder: "DODO_PRODUCT_FOUNDER_ID",
 };
 
 function productIdForPlan(plan: string): string | null {
@@ -44,11 +44,17 @@ export function registerDodoPaymentRoutes(app: Express) {
     const customerEmail = typeof req.body?.email === "string" ? req.body.email.trim() : "";
     const customerName = typeof req.body?.name === "string" ? req.body.name.trim() : "";
 
+    const auth = await authenticateV2Request(req);
+    const metadata: Record<string, string> = {
+      autoapply_plan: plan,
+      ...(customerEmail ? { autoapply_email: customerEmail.toLowerCase() } : {}),
+      ...(auth?.user.id ? { autoapply_user_id: auth.user.id } : {}),
+    };
     const payload: Record<string, unknown> = {
       product_cart: [{ product_id: productId, quantity: 1 }],
       return_url: `${PAYMENT_RETURN_URL}?plan=${encodeURIComponent(plan)}`,
       cancel_url: `https://pay.hsndm.tech/pay?plan=${encodeURIComponent(plan)}`,
-      metadata: { autoapply_plan: plan },
+      metadata,
     };
 
     if (customerEmail) {

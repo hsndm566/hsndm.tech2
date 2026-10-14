@@ -17,6 +17,17 @@ export type Profile = {
   resumeSizeBytes?: number | null;
 };
 
+export type Entitlement = {
+  user_id: string;
+  plan_key: "free" | "starter" | "pro" | "custom";
+  application_limit: number;
+  applications_used: number;
+  applications_reserved?: number;
+  billing_period?: "package" | "monthly";
+  plan_started_at: string;
+  plan_expires_at: string | null;
+};
+
 export type Application = {
   id: string;
   user_id: string;
@@ -27,7 +38,6 @@ export type Application = {
   appliedAt: string | null;
   updatedAt: string;
   createdAt: string;
-  recipientEmail?: string | null;
   deliveryStatus?: "unknown" | "sent" | "delivered" | "deferred" | "hard_bounce" | "soft_bounce" | "blocked" | string;
   responseStatus?: "none" | "action_required" | "out_of_office" | string;
   responseNote?: string | null;
@@ -62,12 +72,29 @@ export function useWorkspaceData() {
     },
   });
 
+  const entitlement = useQuery({
+    queryKey: ["v2", id, "entitlement"],
+    enabled: !!id,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await client().from("v2_user_entitlements")
+        .select("user_id,plan_key,application_limit,applications_used,plan_started_at,plan_expires_at,applications_reserved,billing_period")
+        .eq("user_id", id!)
+        .maybeSingle();
+      if (error) throw error;
+      return data as Entitlement | null;
+    },
+  });
+
   const apps = useQuery({
     queryKey: appsKey,
     enabled: !!id,
     retry: false,
     queryFn: async () => {
-      const { data, error } = await client().from("v2_applications").select("*").eq("user_id", id!).order("updatedAt", { ascending: false });
+      const { data, error } = await client().from("v2_applications")
+        .select("id,user_id,companyName,roleTitle,city,status,appliedAt,updatedAt,createdAt,deliveryStatus,responseStatus,responseNote,responseUrl,source,sourceUrl,providerMessageId,cvStoragePath,jobId")
+        .eq("user_id", id!)
+        .order("updatedAt", { ascending: false });
       if (error) throw error;
       return data as Application[];
     },
@@ -131,7 +158,7 @@ export function useWorkspaceData() {
     },
   });
 
-  return { profile, apps, saveProfile, create, update, claimAccess, clear: () => cache.clear() };
+  return { profile, apps, entitlement, saveProfile, create, update, claimAccess, clear: () => cache.clear() };
 }
 
 export function saudiWeekStart(now = new Date()) {

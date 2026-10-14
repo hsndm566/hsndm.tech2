@@ -27,6 +27,10 @@ Enable Google in Supabase Auth and allow the final preview origin's /auth/callba
 - No Sites deployment has been created because Sites provisions a separate source repository and the directive prohibits creating another repository. The implementation stays in the requested GitHub repository.
 - Full comparison to all reference-page sections at all requested viewport sizes remains incomplete. Current checks establish rendering and basic interactions, not pixel-level equivalence.
 
+## Managed application workflow
+
+See [managed-application-workflow.md](./managed-application-workflow.md) for the private Notion contact sync, credit accounting, operator checklist, and rollout gates.
+
 ## Development
 pnpm install --frozen-lockfile
 pnpm dev
