@@ -1,0 +1,14 @@
+{
+  "name": "AutoApply SA",
+  "short_name": "AutoApply SA",
+  "description": "Saudi-focused job search support with review-led application tracking.",
+  "start_url": "https://www.hsndm.tech/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#05241d",
+  "theme_color": "#05241d",
+  "icons": [
+    {"src":"/pwa-icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/pwa-icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
