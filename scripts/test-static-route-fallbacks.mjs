@@ -61,6 +61,7 @@ try {
   assert.match(app, /routeSeoState/);
   assert.match(app, /noindex:routeState\.noindex/);
   assert.match(app, /Page not found/);
+  assert.match(app, /!routeState\.known\?t\('Page not found \| AutoApply SA'/);
   assert.match(app, /https:\/\/app\.hsndm\.tech\/sign-in/);
   assert.doesNotMatch(app, /https:\/\/app\.hsndm\.tech\/login/);
   assert.match(about, /About AutoApply SA \| Saudi Job Search Workspace/);
