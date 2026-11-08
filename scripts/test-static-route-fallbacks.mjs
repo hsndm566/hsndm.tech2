@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, access, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -17,27 +17,61 @@ try {
     env: { ...process.env, AUTOAPPLY_STATIC_OUTPUT_DIR: output },
   });
 
-  const english = await readFile(join(output, "enquire", "index.html"), "utf8");
-  const arabic = await readFile(join(output, "ar", "index.html"), "utf8");
-  const about = await readFile(join(output, "about", "index.html"), "utf8");
-  const contact = await readFile(join(output, "contact", "index.html"), "utf8");
+  const readRoute = (route) => readFile(join(output, route, "index.html"), "utf8");
+  const englishHome = await readFile(join(output, "index.html"), "utf8");
+  const arabicHome = await readRoute("ar");
+  const pricing = await readRoute("pricing");
+  const arabicPricing = await readRoute("ar/pricing");
+  const services = await readRoute("services");
+  const enquiry = await readRoute("enquire");
+  const arabicEnquiry = await readRoute("ar/enquire");
+  const about = await readRoute("about");
+  const contact = await readRoute("contact");
+  const notFound = await readFile(join(output, "404.html"), "utf8");
 
-  assert.match(english, /<html lang="en" dir="ltr">/);
-  assert.match(english, /Start a Campaign \| AutoApply SA/);
-  assert.match(arabic, /<html lang="ar" dir="rtl">/);
-  assert.match(arabic, /أخبرنا بالوظائف التي تريدها/);
-  assert.doesNotMatch(arabic, /Organise your Saudi job search/);
-  assert.doesNotMatch(app, /https:\/\/app\.hsndm\.tech\/login/);
+  assert.match(englishHome, /AutoApply SA \| Organise your Saudi job search/);
+  assert.match(arabicHome, /<html lang="ar" dir="rtl">/);
+  assert.match(arabicHome, /نظّم بحثك عن عمل في السعودية/);
+  assert.match(arabicHome, /لا يعني إرسال طلب إلى جهة عمل/);
+  assert.doesNotMatch(arabicHome, /أخبرنا بالوظائف التي تريدها/);
+  assert.doesNotMatch(arabicHome, /homepage-faq-schema/);
+
+  const assertAlias = (html, canonical) => {
+    assert.match(html, /<meta name="robots" content="noindex, follow"/);
+    assert.match(html, new RegExp(`<link rel="canonical" href="https://www\\.hsndm\\.tech${canonical.replaceAll("/", "\\/")}"`));
+  };
+  assertAlias(pricing, "/contact/");
+  assertAlias(arabicPricing, "/ar/contact/");
+  assertAlias(services, "/");
+  assertAlias(await readRoute("ar/services"), "/ar/");
+  assertAlias(await readRoute("how-it-works"), "/");
+  assertAlias(await readRoute("ar/how-it-works"), "/ar/");
+  assertAlias(await readRoute("support"), "/contact/");
+  assertAlias(await readRoute("ar/support"), "/ar/contact/");
+  assertAlias(enquiry, "/contact/");
+  assertAlias(arabicEnquiry, "/ar/contact/");
+  assertAlias(await readRoute("ats"), "/");
+  assertAlias(await readRoute("ar/ats"), "/ar/");
+
+  for (const retired of ["thank-you", "ar/thank-you", "case-studies", "ar/case-studies", "campaign-report-sample", "ar/campaign-report-sample"]) {
+    await assert.rejects(access(join(output, retired)), { code: "ENOENT" });
+  }
+
+  assert.match(app, /LegacyRouteAlias/);
+  assert.match(app, /routeSeoState/);
+  assert.match(app, /noindex:routeState\.noindex/);
+  assert.match(app, /Page not found/);
   assert.match(app, /https:\/\/app\.hsndm\.tech\/sign-in/);
-  assert.match(app, /\/about/);
-  assert.match(app, /\/contact/);
+  assert.doesNotMatch(app, /https:\/\/app\.hsndm\.tech\/login/);
   assert.match(about, /About AutoApply SA \| Saudi Job Search Workspace/);
   assert.match(contact, /Contact AutoApply SA \| Account and Privacy Help/);
+  assert.match(notFound, /name="robots" content="noindex, nofollow"/);
+
   const visibleText = (html) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   assert.ok(visibleText(about).length > 500, "About fallback should remain useful without JavaScript");
   assert.ok(visibleText(contact).length > 500, "Contact fallback should remain useful without JavaScript");
 
-  console.log("Static English/Arabic route fallbacks verified.");
+  console.log("Static routes, bilingual aliases, metadata, and retired-page behavior verified.");
 } finally {
   await rm(output, { recursive: true, force: true });
 }
