@@ -3,8 +3,8 @@ import { getLegacyRouteAlias, legacyRouteAliases } from "./LegacyRouteAlias";
 
 describe("legacy route aliases", () => {
   it("maps English and Arabic legacy routes to current pages or sections", () => {
-    expect(legacyRouteAliases["/pricing"].target).toBe("/contact");
-    expect(legacyRouteAliases["/ar/pricing"].target).toBe("/ar/contact");
+    expect(legacyRouteAliases["/pricing"].target).toBe("/#pricing");
+    expect(legacyRouteAliases["/ar/pricing"].target).toBe("/ar/#pricing");
     expect(legacyRouteAliases["/services"].target).toBe("/#features");
     expect(legacyRouteAliases["/ar/services"].target).toBe("/ar/#features");
     expect(legacyRouteAliases["/how-it-works"].target).toBe("/#how");

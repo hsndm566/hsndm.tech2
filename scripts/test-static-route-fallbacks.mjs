@@ -40,8 +40,8 @@ try {
     assert.match(html, /<meta name="robots" content="noindex, follow"/);
     assert.match(html, new RegExp(`<link rel="canonical" href="https://www\\.hsndm\\.tech${canonical.replaceAll("/", "\\/")}"`));
   };
-  assertAlias(pricing, "/contact/");
-  assertAlias(arabicPricing, "/ar/contact/");
+  assertAlias(pricing, "/");
+  assertAlias(arabicPricing, "/ar/");
   assertAlias(services, "/");
   assertAlias(await readRoute("ar/services"), "/ar/");
   assertAlias(await readRoute("how-it-works"), "/");

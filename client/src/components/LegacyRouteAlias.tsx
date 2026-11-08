@@ -10,8 +10,8 @@ const alias = (
 ) => ({ target, canonicalPath, language, title, description, linkLabel });
 
 export const legacyRouteAliases = {
-  "/pricing": alias("/contact", "/contact", "en", "Pricing information | AutoApply SA", "Contact AutoApply SA for current pricing information. Any fees and service scope are confirmed before payment.", "Contact AutoApply SA"),
-  "/ar/pricing": alias("/ar/contact", "/ar/contact", "ar", "معلومات الأسعار | AutoApply SA", "تواصل مع AutoApply SA لمعرفة الأسعار الحالية. يتم تأكيد الرسوم ونطاق الخدمة قبل الدفع.", "تواصل مع AutoApply SA"),
+  "/pricing": alias("/#pricing", "/", "en", "Plans and pricing | AutoApply SA", "See current AutoApply SA plans and monthly prices on the homepage.", "View plans and pricing"),
+  "/ar/pricing": alias("/ar/#pricing", "/ar", "ar", "الباقات والأسعار | AutoApply SA", "اطلع على باقات AutoApply SA وأسعارها الشهرية الحالية في الصفحة الرئيسية.", "عرض الباقات والأسعار"),
   "/services": alias("/#features", "/", "en", "Current features | AutoApply SA", "Explore the current AutoApply SA job-search features on the homepage.", "Explore current features"),
   "/ar/services": alias("/ar/#features", "/ar", "ar", "المزايا الحالية | AutoApply SA", "استكشف مزايا AutoApply SA الحالية لتنظيم البحث عن عمل في الصفحة الرئيسية.", "استكشف المزايا الحالية"),
   "/how-it-works": alias("/#how", "/", "en", "How AutoApply SA works", "See how AutoApply SA helps you organise your Saudi job search.", "See how it works"),
