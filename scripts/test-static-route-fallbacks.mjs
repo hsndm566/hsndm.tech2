@@ -10,6 +10,7 @@ const run = promisify(execFile);
 const output = await mkdtemp(join(tmpdir(), "autoapply-static-routes-"));
 const index = await readFile(new URL("../client/index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../client/src/App.tsx", import.meta.url), "utf8");
+const landing = await readFile(new URL("../client/src/v2/Landing.tsx", import.meta.url), "utf8");
 
 try {
   await writeFile(join(output, "index.html"), index);
@@ -27,6 +28,10 @@ try {
   const arabicEnquiry = await readRoute("ar/enquire");
   const about = await readRoute("about");
   const contact = await readRoute("contact");
+  const privacy = await readRoute("privacy");
+  const arabicPrivacy = await readRoute("ar/privacy");
+  const terms = await readRoute("terms");
+  const arabicTerms = await readRoute("ar/terms");
   const notFound = await readFile(join(output, "404.html"), "utf8");
 
   assert.match(englishHome, /AutoApply SA \| Organise your Saudi job search/);
@@ -35,12 +40,35 @@ try {
   assert.match(arabicHome, /لا يعني إرسال طلب إلى جهة عمل/);
   assert.doesNotMatch(arabicHome, /أخبرنا بالوظائف التي تريدها/);
   assert.doesNotMatch(arabicHome, /homepage-faq-schema/);
+  assert.match(arabicHome, /كيف تساعدك مساحة البحث/);
+  assert.doesNotMatch(landing, /يمكنك يمكنك/);
+  assert.match(landing, /يمكنك قراءة نص سيرتك على جهازك/);
 
   const assertAlias = (html, canonical) => {
     assert.match(html, /<meta name="robots" content="noindex, follow"/);
     assert.match(html, new RegExp(`<link rel="canonical" href="https://www\\.hsndm\\.tech${canonical.replaceAll("/", "\\/")}"`));
   };
   assertAlias(pricing, "/");
+  const assertAlternates = (html, english, arabic) => {
+    assert.match(html, new RegExp(`hreflang="en" href="https://www\\.hsndm\\.tech${english.replaceAll("/", "\\/")}"`));
+    assert.match(html, new RegExp(`hreflang="ar" href="https://www\\.hsndm\\.tech${arabic.replaceAll("/", "\\/")}"`));
+    assert.match(html, new RegExp(`hreflang="x-default" href="https://www\\.hsndm\\.tech${english.replaceAll("/", "\\/")}"`));
+  };
+  assertAlternates(about, "/about/", "/ar/about/");
+  assertAlternates(await readRoute("ar/about"), "/about/", "/ar/about/");
+  assertAlternates(contact, "/contact/", "/ar/contact/");
+  assertAlternates(privacy, "/privacy/", "/ar/privacy/");
+  assertAlternates(arabicPrivacy, "/privacy/", "/ar/privacy/");
+  assertAlternates(terms, "/terms/", "/ar/terms/");
+  assertAlternates(arabicTerms, "/terms/", "/ar/terms/");
+  assert.doesNotMatch(pricing, /hreflang=/);
+  assert.doesNotMatch(arabicPricing, /hreflang=/);
+  assert.match(privacy, /CV text extraction happens in your browser/);
+  assert.match(arabicPrivacy, /تتم قراءة نص السيرة داخل متصفحك/);
+  assert.match(terms, /Saving a job is not an employer submission/);
+  assert.match(arabicTerms, /حفظ وظيفة لا يعني إرسال طلب إلى جهة عمل/);
+  assert.doesNotMatch(privacy, /How the job-search workspace helps/);
+  assert.doesNotMatch(terms, /How the job-search workspace helps/);
   assertAlias(arabicPricing, "/ar/");
   assertAlias(services, "/");
   assertAlias(await readRoute("ar/services"), "/ar/");
@@ -58,6 +86,13 @@ try {
   }
 
   assert.match(app, /LegacyRouteAlias/);
+  assert.match(app, /const LazyAuthPage=lazy\(\(\)=>import\('\.\/v2\/AuthPage'\)/);
+  assert.match(app, /const LazyWorkspaceRoute=lazy\(\(\)=>import\('\.\/v2\/Workspace'\)/);
+  assert.match(app, /<Suspense fallback=/);
+  assert.equal((app.match(/<LazyAuthPage mode=/g) || []).length, 4);
+  assert.match(app, /<LazyWorkspaceRoute\/>/);
+  assert.doesNotMatch(app, /import \{AuthPage\} from/);
+  assert.doesNotMatch(app, /import \{Workspace,SessionGate\} from/);
   assert.match(app, /routeSeoState/);
   assert.match(app, /noindex:routeState\.noindex/);
   assert.match(app, /Page not found/);

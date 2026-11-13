@@ -35,7 +35,7 @@ describe("agent readiness content and public API", () => {
     expect(organization.contactPoint.email).toBeTruthy();
     expect(organization.contactPoint.telephone).toBeTruthy();
     expect(website.alternateName).toContain("Saudi Arabia");
-    expect(sitemap).toContain("<lastmod>2026-10-08</lastmod>");
+    expect(sitemap.match(/<lastmod>2026-11-13<\/lastmod>/g)).toHaveLength(10);
     expect(sitemap).toContain("https://www.hsndm.tech/developers/");
     expect(sitemap).toContain("https://www.hsndm.tech/about/");
     expect(sitemap).toContain("https://www.hsndm.tech/contact/");
